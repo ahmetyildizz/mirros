@@ -5,7 +5,7 @@ const SECRET = new TextEncoder().encode(
   process.env.NEXTAUTH_SECRET ?? "changeme-in-production"
 );
 
-const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/auth/logout"];
+const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/auth/logout", "/api/admin/seed"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

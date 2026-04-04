@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
-export async function POST() {
+export async function POST(req: NextRequest) {
+  const secret = req.headers.get("x-seed-secret");
+  if (secret !== "mirros-seed-2026") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   await db.$executeRawUnsafe('TRUNCATE "Score","Guess","Answer","Round","Insight","Game" CASCADE');
   await db.$executeRawUnsafe('TRUNCATE "RoomParticipant","Room" CASCADE');
   await db.$executeRawUnsafe('TRUNCATE "Question" CASCADE');
