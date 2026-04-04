@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Auth (NextAuth adapter) ──────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Core ─────────────────────────────────────────────────────
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  username  String?   @unique
+  avatarUrl String?
+  createdAt DateTime  @default(now())
+
+  accounts    Account[]
+  sessions    Session[]
+  hostedRooms Room[]    @relation("HostedRooms")
+  guestRooms  Room[]    @relation("GuestRooms")
+  answers     Answer[]
+  guesses     Guess[]
+  scores      Score[]
+  insightsA   Insight[] @relation("InsightUserA")
+  insightsB   Insight[] @relation("InsightUserB")
+}
+
+model Room {
+  id        String     @id @default(cuid())
+  code      String     @unique
+  status    RoomStatus @default(WAITING)
+  hostId    String
+  guestId   String?
+  createdAt DateTime   @default(now())
+
+  host  User   @relation("HostedRooms", fields: [hostId], references: [id])
+  guest User?  @relation("GuestRooms",  fields: [guestId], references: [id])
+  games Game[]
+}
+
+model Game {
+  id          String     @id @default(cuid())
+  roomId      String
+  totalRounds Int        @default(5)
+  status      GameStatus @default(ACTIVE)
+  startedAt   DateTime   @default(now())
+  finishedAt  DateTime?
+
+  room     Room      @relation(fields: [roomId], references: [id])
+  rounds   Round[]
+  scores   Score[]
+  insights Insight[]
+}
+
+model Round {
+  id         String      @id @default(cuid())
+  gameId     String
+  number     Int
+  questionId String
+  answererId String
+  guesserId  String
+  status     RoundStatus @default(ANSWERING)
+
+  game     Game     @relation(fields: [gameId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+  answers  Answer[]
+  guesses  Guess[]
+  score    Score?
+}
+
+model Answer {
+  id          String   @id @default(cuid())
+  roundId     String
+  userId      String
+  content     String
+  submittedAt DateTime @default(now())
+
+  round Round @relation(fields: [roundId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+}
+
+model Guess {
+  id          String   @id @default(cuid())
+  roundId     String
+  userId      String
+  content     String
+  submittedAt DateTime @default(now())
+
+  round Round @relation(fields: [roundId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+}
+
+model Score {
+  id         String     @id @default(cuid())
+  roundId    String     @unique
+  gameId     String
+  guesserId  String
+  matchLevel MatchLevel
+  points     Int
+  createdAt  DateTime   @default(now())
+
+  round   Round @relation(fields: [roundId], references: [id])
+  game    Game  @relation(fields: [gameId], references: [id])
+  guesser User  @relation(fields: [guesserId], references: [id])
+}
+
+model Question {
+  id         String     @id @default(cuid())
+  text       String
+  category   String
+  difficulty Difficulty @default(EASY)
+  language   String     @default("tr")
+  isActive   Boolean    @default(true)
+
+  rounds Round[]
+}
+
+model Insight {
+  id         String   @id @default(cuid())
+  gameId     String
+  userAId    String
+  userBId    String
+  text       String
+  patternKey String
+  createdAt  DateTime @default(now())
+
+  game  Game @relation(fields: [gameId], references: [id])
+  userA User @relation("InsightUserA", fields: [userAId], references: [id])
+  userB User @relation("InsightUserB", fields: [userBId], references: [id])
+}
+
+// ─── Enums ────────────────────────────────────────────────────
+
+enum RoomStatus {
+  WAITING
+  ACTIVE
+  FINISHED
+}
+
+enum GameStatus {
+  ACTIVE
+  FINISHED
+}
+
+enum RoundStatus {
+  ANSWERING
+  GUESSING
+  SCORED
+}
+
+enum MatchLevel {
+  EXACT
+  CLOSE
+  WRONG
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
