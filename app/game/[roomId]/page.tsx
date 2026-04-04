@@ -5,24 +5,26 @@ import { useRouter } from "next/navigation";
 import { useGameStore } from "@/store/game.store";
 import { useGameState } from "@/hooks/useGameState";
 
-import { GameHeader }   from "@/components/game/GameHeader";
-import { QuestionCard } from "@/components/game/QuestionCard";
-import { AnswerInput }  from "@/components/game/AnswerInput";
-import { GuessInput }   from "@/components/game/GuessInput";
-import { Button }       from "@/components/ui/button";
-import { sounds }       from "@/lib/sounds";
+import { GameHeader }           from "@/components/game/GameHeader";
+import { QuestionCard }         from "@/components/game/QuestionCard";
+import { AnswerInput }          from "@/components/game/AnswerInput";
+import { GuessInput }           from "@/components/game/GuessInput";
+import { MultipleChoiceInput }  from "@/components/game/MultipleChoiceInput";
+import { Button }               from "@/components/ui/button";
+import { sounds }               from "@/lib/sounds";
 
 export default function GamePage({ params }: { params: Promise<{ roomId: string }> }) {
   const { roomId } = use(params);
   const router     = useRouter();
 
   const {
-    gameId, state, question, myRole, answererId,
-    players, playerScores, lastRoundScore,
+    gameId, state, question, myRole, answererId, gameMode,
+    players, playerScores, lastRoundScore, lastQuizResults,
     currentRound, totalRounds, activeRoundId,
     guessCount, totalGuessers,
     setGameState, setMyRole, setAnswererId,
   } = useGameStore();
+  const isQuiz = gameMode === "QUIZ";
 
   const [myUserId, setMyUserId]   = useState<string | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
@@ -33,18 +35,22 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
       .then((r) => r.json())
       .then((data) => {
         setMyUserId(data.id);
-        // answererId zaten store'da, karşılaştır
-        const currentAnswererId = useGameStore.getState().answererId;
-        setMyRole(currentAnswererId === data.id ? "answerer" : "guesser");
+        const store = useGameStore.getState();
+        if (store.gameMode === "QUIZ") {
+          setMyRole("guesser"); // quiz'de herkese "guesser" = cevapçı
+        } else {
+          setMyRole(store.answererId === data.id ? "answerer" : "guesser");
+        }
       })
       .catch(() => {});
   }, [setMyRole]);
 
-  // answererId değişince myRole güncelle
+  // answererId değişince myRole güncelle (sadece social mod)
   useEffect(() => {
+    if (isQuiz) return;
     if (!myUserId || !answererId) return;
     setMyRole(answererId === myUserId ? "answerer" : "guesser");
-  }, [answererId, myUserId, setMyRole]);
+  }, [answererId, myUserId, setMyRole, isQuiz]);
 
   useGameState(gameId ?? "", myUserId ?? "");
 
@@ -69,19 +75,22 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   // Scoring sonuçlarına göre ses
   useEffect(() => {
-    if (state !== "SCORING" || !lastRoundScore) return;
-    const best = lastRoundScore.guessResults.reduce(
-      (b, g) => g.points > b ? g.points : b, 0
-    );
-    if (best >= 10)     sounds.exact();
-    else if (best >= 5) sounds.close();
-    else                sounds.wrong();
+    if (state !== "SCORING") return;
+    if (isQuiz && lastQuizResults) {
+      const anyCorrect = lastQuizResults.results.some((r) => r.correct);
+      anyCorrect ? sounds.exact() : sounds.wrong();
+    } else if (!isQuiz && lastRoundScore) {
+      const best = lastRoundScore.guessResults.reduce((b, g) => g.points > b ? g.points : b, 0);
+      if (best >= 10) sounds.exact();
+      else if (best >= 5) sounds.close();
+      else sounds.wrong();
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  // SCORING state'e girilince 5sn geri sayım + otomatik geçiş (answerer)
+  // SCORING state'e girilince 5sn geri sayım + otomatik geçiş (answerer, sadece social)
   useEffect(() => {
-    if (state !== "SCORING" || !isAnswerer) return;
+    if (state !== "SCORING" || isQuiz || !isAnswerer) return;
     setCountdown(5);
     const interval = setInterval(() => {
       setCountdown((c) => {
@@ -135,13 +144,15 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     <main style={styles.page}>
       <GameHeader roundNumber={currentRound} totalRounds={totalRounds} />
 
-      {/* Spotlight göstergesi */}
-      <div style={styles.spotlight}>
-        <span style={styles.spotlightLabel}>Soru:</span>
-        <span style={styles.spotlightName}>
-          {isAnswerer ? "Sen" : (spotlightPlayer?.username ?? "?")}
-        </span>
-      </div>
+      {/* Spotlight göstergesi (sadece social) */}
+      {!isQuiz && (
+        <div style={styles.spotlight}>
+          <span style={styles.spotlightLabel}>Soru:</span>
+          <span style={styles.spotlightName}>
+            {isAnswerer ? "Sen" : (spotlightPlayer?.username ?? "?")}
+          </span>
+        </div>
+      )}
 
       {/* Oyuncu skorları */}
       <div style={styles.scoreBar}>
@@ -168,17 +179,28 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
         {/* ANSWERING */}
         {state === "ANSWERING" && (
-          isAnswerer
-            ? <AnswerInput onSubmit={submitAnswer} />
-            : <div style={styles.waitBox}>
-                <p style={styles.waitText}>
-                  <strong>{spotlightPlayer?.username ?? "Spotlight oyuncu"}</strong> cevaplıyor...
-                </p>
-              </div>
+          isQuiz ? (
+            // Quiz: herkes cevap verir
+            question.options
+              ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} />
+              : <AnswerInput onSubmit={submitAnswer} />
+          ) : (
+            // Social: sadece answererId cevap verir
+            isAnswerer
+              ? (question.options
+                  ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText />
+                  : <AnswerInput onSubmit={submitAnswer} />
+                )
+              : <div style={styles.waitBox}>
+                  <p style={styles.waitText}>
+                    <strong>{spotlightPlayer?.username ?? "Spotlight oyuncu"}</strong> cevaplıyor...
+                  </p>
+                </div>
+          )
         )}
 
-        {/* GUESSING */}
-        {state === "GUESSING" && (
+        {/* GUESSING (sadece social) */}
+        {!isQuiz && state === "GUESSING" && (
           isAnswerer
             ? (
               <div style={styles.waitBox}>
@@ -201,43 +223,40 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 )}
               </div>
             )
-            : <GuessInput
-                opponentName={spotlightPlayer?.username ?? "Spotlight oyuncu"}
-                onSubmit={submitGuess}
-              />
+            : (question.options
+                ? <MultipleChoiceInput
+                    options={question.options}
+                    onSubmit={submitGuess}
+                    allowFreeText
+                  />
+                : <GuessInput
+                    opponentName={spotlightPlayer?.username ?? "Spotlight oyuncu"}
+                    onSubmit={submitGuess}
+                  />
+              )
         )}
 
-        {/* SCORING */}
-        {state === "SCORING" && lastRoundScore && (
+        {/* SCORING — Social */}
+        {!isQuiz && state === "SCORING" && lastRoundScore && (
           <div style={styles.scoringBox}>
             <div style={styles.scoringScroll}>
               <div style={styles.answerReveal}>
                 <span style={styles.answerLabel}>Gerçek cevap</span>
                 <span style={styles.answerText}>{lastRoundScore.answer}</span>
               </div>
-
               <div style={styles.guessList}>
                 {lastRoundScore.guessResults.map((g) => (
                   <div key={g.userId} style={{
                     ...styles.guessRow,
-                    borderColor: g.matchLevel === "EXACT" ? "var(--exact)"
-                                : g.matchLevel === "CLOSE" ? "var(--close)"
-                                : "var(--bg-elevated)",
+                    borderColor: g.matchLevel === "EXACT" ? "var(--exact)" : g.matchLevel === "CLOSE" ? "var(--close)" : "var(--bg-elevated)",
                   }}>
-                    <div style={styles.guessAvatar}>
-                      {(g.username ?? "?")[0].toUpperCase()}
-                    </div>
+                    <div style={styles.guessAvatar}>{(g.username ?? "?")[0].toUpperCase()}</div>
                     <div style={styles.guessInfo}>
                       <span style={styles.guessUsername}>{g.username}</span>
                       <span style={styles.guessText}>{g.guess}</span>
                     </div>
                     <div style={styles.guessPoints}>
-                      <span style={{
-                        color: g.matchLevel === "EXACT" ? "var(--exact)"
-                             : g.matchLevel === "CLOSE" ? "var(--close)"
-                             : "var(--fg-muted)",
-                        fontWeight: 700,
-                      }}>
+                      <span style={{ color: g.matchLevel === "EXACT" ? "var(--exact)" : g.matchLevel === "CLOSE" ? "var(--close)" : "var(--fg-muted)", fontWeight: 700 }}>
                         {g.matchLevel === "EXACT" ? "+10" : g.matchLevel === "CLOSE" ? "+5" : "0"}
                       </span>
                     </div>
@@ -245,12 +264,8 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 ))}
               </div>
             </div>
-
             {isAnswerer && (
-              <Button
-                onClick={() => { setCountdown(null); advanceToNext(); }}
-                style={styles.nextBtn}
-              >
+              <Button onClick={() => { setCountdown(null); advanceToNext(); }} style={styles.nextBtn}>
                 {countdown !== null ? `Sonraki Round (${countdown})` : "Sonraki Round"}
               </Button>
             )}
@@ -259,6 +274,38 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 Spotlight oyuncu sonraki soruya geçiyor...
               </p>
             )}
+          </div>
+        )}
+
+        {/* SCORING — Quiz */}
+        {isQuiz && state === "SCORING" && lastQuizResults && (
+          <div style={styles.scoringBox}>
+            <div style={styles.scoringScroll}>
+              <div style={styles.answerReveal}>
+                <span style={styles.answerLabel}>Doğru cevap</span>
+                <span style={styles.answerText}>{lastQuizResults.correctAnswer}</span>
+              </div>
+              <div style={styles.guessList}>
+                {lastQuizResults.results.map((r) => (
+                  <div key={r.userId} style={{
+                    ...styles.guessRow,
+                    borderColor: r.correct ? "var(--exact)" : "var(--bg-elevated)",
+                  }}>
+                    <div style={styles.guessAvatar}>{(r.username ?? "?")[0].toUpperCase()}</div>
+                    <div style={styles.guessInfo}>
+                      <span style={styles.guessUsername}>{r.username}</span>
+                      <span style={styles.guessText}>{r.answer}</span>
+                    </div>
+                    <span style={{ color: r.correct ? "var(--exact)" : "var(--fg-muted)", fontWeight: 700 }}>
+                      {r.correct ? "+10" : "0"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p style={{ color: "var(--fg-secondary)", textAlign: "center", fontSize: "0.85rem" }}>
+              Sonraki soru geliyor...
+            </p>
           </div>
         )}
       </div>

@@ -27,12 +27,14 @@ model User {
 // ─── Room ─────────────────────────────────────────────────────
 
 model Room {
-  id        String     @id @default(cuid())
-  code      String     @unique
-  status    RoomStatus @default(WAITING)
-  hostId    String
-  maxPlayers Int       @default(8)
-  createdAt DateTime   @default(now())
+  id         String     @id @default(cuid())
+  code       String     @unique
+  status     RoomStatus @default(WAITING)
+  hostId     String
+  maxPlayers Int        @default(8)
+  gameMode   GameMode   @default(SOCIAL)
+  ageGroup   AgeGroup?
+  createdAt  DateTime   @default(now())
 
   host         User              @relation("HostedRooms", fields: [hostId], references: [id])
   participants RoomParticipant[]
@@ -72,7 +74,7 @@ model Round {
   gameId     String
   number     Int
   questionId String
-  answererId String
+  answererId String?     // null for quiz mode
   status     RoundStatus @default(ANSWERING)
 
   game     Game     @relation(fields: [gameId], references: [id])
@@ -91,6 +93,8 @@ model Answer {
 
   round Round @relation(fields: [roundId], references: [id])
   user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([roundId, userId])
 }
 
 model Guess {
@@ -129,6 +133,10 @@ model Question {
   difficulty Difficulty @default(EASY)
   language   String     @default("tr")
   isActive   Boolean    @default(true)
+  gameMode   GameMode   @default(SOCIAL)
+  ageGroup   AgeGroup?
+  options    Json?      // string[] — multiple choice options
+  correct    String?    // correct answer for quiz mode
 
   rounds Round[]
 }
@@ -176,4 +184,15 @@ enum Difficulty {
   EASY
   MEDIUM
   HARD
+}
+
+enum GameMode {
+  SOCIAL
+  QUIZ
+}
+
+enum AgeGroup {
+  CHILD
+  ADULT
+  WISE
 }

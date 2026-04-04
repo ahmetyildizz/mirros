@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
+import { startGame } from "@/lib/services/game.service";
 
 const bodySchema = z.object({ code: z.string().min(4).max(8) });
 
@@ -15,18 +16,16 @@ export async function POST(req: NextRequest) {
     where:   { code: body.data.code.toUpperCase() },
     include: { participants: { include: { user: true }, orderBy: { joinedAt: "asc" } } },
   });
-  if (!room) return NextResponse.json({ error: "Oda bulunamadı" }, { status: 404 });
-  if (room.status !== "WAITING") return NextResponse.json({ error: "Oyun başladı veya bitti" }, { status: 409 });
+  if (!room)                          return NextResponse.json({ error: "Oda bulunamadı" }, { status: 404 });
+  if (room.status !== "WAITING")      return NextResponse.json({ error: "Oyun başladı veya bitti" }, { status: 409 });
   if (room.participants.length >= room.maxPlayers)
     return NextResponse.json({ error: "Oda dolu" }, { status: 409 });
 
-  // Zaten katılmışsa tekrar ekleme
   const alreadyIn = room.participants.some((p) => p.userId === user.id);
   if (!alreadyIn) {
     await db.roomParticipant.create({ data: { roomId: room.id, userId: user.id } });
   }
 
-  // Güncel katılımcı listesini çek
   const updated = await db.room.findUnique({
     where:   { id: room.id },
     include: { participants: { include: { user: true }, orderBy: { joinedAt: "asc" } } },
@@ -37,16 +36,20 @@ export async function POST(req: NextRequest) {
     username: p.user.username ?? p.user.email,
   }));
 
-  // Odadaki herkese yeni oyuncuyu bildir
   await pusherServer.trigger(`room-${room.id}`, "player-joined", {
     userId:   user.id,
     username: user.email,
     players,
   });
 
-  // Oda aktif hale getir (2+ oyuncu varsa)
+  // Oda aktif (2+ oyuncu)
   if (!alreadyIn && updated && updated.participants.length >= 2) {
     await db.room.update({ where: { id: room.id }, data: { status: "ACTIVE" } });
+  }
+
+  // Oda doldu → otomatik başlat
+  if (!alreadyIn && updated && updated.participants.length >= room.maxPlayers) {
+    try { await startGame(room.id); } catch {}
   }
 
   return NextResponse.json({ id: room.id, code: room.code, players });

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
 
-const bodySchema = z.object({ content: z.string().min(1).max(120) });
+const bodySchema = z.object({ content: z.string().min(1).max(200) });
 
 export async function POST(
   req: NextRequest,
@@ -15,23 +15,104 @@ export async function POST(
   const body = bodySchema.safeParse(await req.json());
   if (!body.success) return NextResponse.json({ error: "Geçersiz içerik" }, { status: 400 });
 
-  const round = await db.round.findUnique({ where: { id: roundId } });
-  if (!round)                          return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
-  if (round.answererId !== user.id)    return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
-  if (round.status !== "ANSWERING")    return NextResponse.json({ error: "Bu round cevap kabul etmiyor" }, { status: 409 });
+  const round = await db.round.findUnique({
+    where:   { id: roundId },
+    include: { game: { include: { room: { include: { participants: true } } } } },
+  });
+  if (!round)                       return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
+  if (round.status !== "ANSWERING") return NextResponse.json({ error: "Bu round cevap kabul etmiyor" }, { status: 409 });
 
-  const answer = await db.answer.create({
-    data: { roundId, userId: user.id, content: body.data.content },
+  const isQuiz = round.game.room.gameMode === "QUIZ";
+
+  // SOCIAL: sadece answererId cevap verebilir
+  if (!isQuiz && round.answererId !== user.id) {
+    return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
+  }
+
+  // Daha önce cevap verdiyse güncelle
+  const answer = await db.answer.upsert({
+    where:  { roundId_userId: { roundId, userId: user.id } },
+    create: { roundId, userId: user.id, content: body.data.content },
+    update: { content: body.data.content },
   });
 
-  await db.round.update({ where: { id: roundId }, data: { status: "GUESSING" } });
+  if (isQuiz) {
+    const totalParticipants = round.game.room.participants.length;
+    const answerCount       = await db.answer.count({ where: { roundId } });
+    const allAnswered       = answerCount >= totalParticipants;
 
-  const game = await db.game.findUnique({ where: { id: round.gameId } });
-  await pusherServer.trigger(`game-${round.gameId}`, "answer-submitted", {
-    roundId,
-    answererId: user.id,
-    roomId: game?.roomId,
-  });
+    await pusherServer.trigger(`game-${round.gameId}`, "answer-submitted", {
+      roundId,
+      userId:        user.id,
+      answerCount,
+      totalParticipants,
+      allAnswered,
+    });
+
+    if (allAnswered) {
+      // Otomatik skor tetikle
+      await scoreQuizRound(roundId, round.gameId);
+    }
+  } else {
+    // SOCIAL: cevap verildi → guessing başlasın
+    await db.round.update({ where: { id: roundId }, data: { status: "GUESSING" } });
+    await pusherServer.trigger(`game-${round.gameId}`, "answer-submitted", {
+      roundId, answererId: user.id, roomId: round.game.roomId,
+    });
+  }
 
   return NextResponse.json(answer, { status: 201 });
+}
+
+async function scoreQuizRound(roundId: string, gameId: string) {
+  const round = await db.round.findUnique({
+    where:   { id: roundId },
+    include: {
+      question: true,
+      answers:  { include: { user: { select: { id: true, username: true, email: true } } } },
+      game:     { include: { room: { include: { participants: true } } } },
+    },
+  });
+  if (!round || round.status === "SCORED") return;
+
+  const correct = round.question.correct ?? "";
+  const results: { userId: string; username: string; answer: string; correct: boolean; points: number }[] = [];
+
+  for (const ans of round.answers) {
+    const isCorrect = ans.content.trim().toLowerCase() === correct.trim().toLowerCase();
+    const points    = isCorrect ? 10 : 0;
+
+    await db.score.upsert({
+      where:  { roundId_guesserId: { roundId, guesserId: ans.userId } },
+      create: { roundId, gameId, guesserId: ans.userId, matchLevel: isCorrect ? "EXACT" : "WRONG", points },
+      update: { matchLevel: isCorrect ? "EXACT" : "WRONG", points },
+    });
+
+    results.push({
+      userId:   ans.userId,
+      username: ans.user.username ?? ans.user.email,
+      answer:   ans.content,
+      correct:  isCorrect,
+      points,
+    });
+  }
+
+  await db.round.update({ where: { id: roundId }, data: { status: "SCORED" } });
+
+  const allScores = await db.score.findMany({ where: { gameId } });
+  const playerScores: Record<string, number> = {};
+  for (const s of allScores) {
+    playerScores[s.guesserId] = (playerScores[s.guesserId] ?? 0) + s.points;
+  }
+
+  await pusherServer.trigger(`game-${gameId}`, "quiz-round-scored", {
+    roundId,
+    correctAnswer: correct,
+    results,
+    playerScores,
+  });
+
+  // Otomatik ilerle (quiz'de manuel onay yok)
+  const { advanceGame } = await import("@/lib/services/game.service");
+  await advanceGame(gameId, round.number);
 }

@@ -29,6 +29,14 @@ export interface RoundScore {
   guessResults: GuessResult[];
 }
 
+export interface QuizResult {
+  userId:   string;
+  username: string;
+  answer:   string;
+  correct:  boolean;
+  points:   number;
+}
+
 interface GameStore {
   gameId:        string | null;
   roomId:        string | null;
@@ -37,58 +45,64 @@ interface GameStore {
   currentRound:  number;
   totalRounds:   number;
   state:         GameState;
-  question:      { id: string; text: string; category: string } | null;
+  question:      { id: string; text: string; category: string; options: string[] | null } | null;
   myRole:        "answerer" | "guesser" | null;
   activeRoundId: string | null;
-  answererId:    string | null;  // spotlight oyuncusu
+  answererId:    string | null;
+  gameMode:      "SOCIAL" | "QUIZ" | null;
 
   // Oyuncular
   players:       Player[];
-  playerScores:  Record<string, number>; // userId → toplam puan
+  playerScores:  Record<string, number>;
 
   // Round sonuçları
-  lastRoundScore: RoundScore | null;
+  lastRoundScore:    RoundScore | null;
+  lastQuizResults:   { correctAnswer: string; results: QuizResult[] } | null;
 
-  // Tahmin durumu (guessing aşamasında kim gönderdi)
+  // Tahmin durumu
   guessCount:    number;
   totalGuessers: number;
 
   // Actions
-  setGameId:        (id: string) => void;
-  setRoomId:        (id: string) => void;
-  setRoomCode:      (code: string) => void;
-  setIsHostPlayer:  (v: boolean) => void;
-  setGameState:     (state: GameState) => void;
-  setCurrentRound:  (n: number) => void;
-  setTotalRounds:   (n: number) => void;
-  setActiveRoundId: (id: string) => void;
-  setQuestion:      (q: GameStore["question"]) => void;
-  setMyRole:        (role: GameStore["myRole"]) => void;
-  setAnswererId:    (id: string) => void;
-  setPlayers:       (players: Player[]) => void;
-  setPlayerScores:  (scores: Record<string, number>) => void;
-  setLastRoundScore:(score: RoundScore) => void;
-  setGuessProgress: (count: number, total: number) => void;
-  reset:            () => void;
+  setGameId:          (id: string) => void;
+  setRoomId:          (id: string) => void;
+  setRoomCode:        (code: string) => void;
+  setIsHostPlayer:    (v: boolean) => void;
+  setGameState:       (state: GameState) => void;
+  setCurrentRound:    (n: number) => void;
+  setTotalRounds:     (n: number) => void;
+  setActiveRoundId:   (id: string) => void;
+  setQuestion:        (q: GameStore["question"]) => void;
+  setMyRole:          (role: GameStore["myRole"]) => void;
+  setAnswererId:      (id: string | null) => void;
+  setPlayers:         (players: Player[]) => void;
+  setPlayerScores:    (scores: Record<string, number>) => void;
+  setLastRoundScore:  (score: RoundScore) => void;
+  setLastQuizResults: (r: GameStore["lastQuizResults"]) => void;
+  setGuessProgress:   (count: number, total: number) => void;
+  setGameMode:        (mode: "SOCIAL" | "QUIZ") => void;
+  reset:              () => void;
 }
 
 const initialState = {
-  gameId:         null,
-  roomId:         null,
-  roomCode:       null,
-  isHostPlayer:   null,
-  currentRound:   0,
-  totalRounds:    10,
-  activeRoundId:  null,
-  answererId:     null,
-  state:          "WAITING" as GameState,
-  question:       null,
-  myRole:         null,
-  players:        [],
-  playerScores:   {},
-  lastRoundScore: null,
-  guessCount:     0,
-  totalGuessers:  0,
+  gameId:           null,
+  roomId:           null,
+  roomCode:         null,
+  isHostPlayer:     null,
+  currentRound:     0,
+  totalRounds:      10,
+  activeRoundId:    null,
+  answererId:       null,
+  state:            "WAITING" as GameState,
+  question:         null,
+  myRole:           null,
+  players:          [],
+  playerScores:     {},
+  lastRoundScore:   null,
+  lastQuizResults:  null,
+  guessCount:       0,
+  totalGuessers:    0,
+  gameMode:         null,
 };
 
 export const useGameStore = create<GameStore>((set) => ({
@@ -106,7 +120,9 @@ export const useGameStore = create<GameStore>((set) => ({
   setAnswererId:     (answererId) => set({ answererId }),
   setPlayers:        (players) => set({ players }),
   setPlayerScores:   (playerScores) => set({ playerScores }),
-  setLastRoundScore: (lastRoundScore) => set({ lastRoundScore }),
-  setGuessProgress:  (guessCount, totalGuessers) => set({ guessCount, totalGuessers }),
+  setLastRoundScore:  (lastRoundScore) => set({ lastRoundScore }),
+  setLastQuizResults: (lastQuizResults) => set({ lastQuizResults }),
+  setGuessProgress:   (guessCount, totalGuessers) => set({ guessCount, totalGuessers }),
+  setGameMode:        (gameMode) => set({ gameMode }),
   reset:             () => set(initialState),
 }));

@@ -12,6 +12,7 @@ export async function GET(
   const room = await db.room.findUnique({
     where:   { id: roomId },
     include: {
+      host: { select: { id: true, username: true, email: true } },
       participants: {
         orderBy: { joinedAt: "asc" },
         include: { user: { select: { id: true, username: true, email: true } } },
@@ -27,5 +28,15 @@ export async function GET(
     isHost:   p.userId === room.hostId,
   }));
 
-  return NextResponse.json({ id: room.id, code: room.code, status: room.status, players });
+  return NextResponse.json({
+    id:         room.id,
+    code:       room.code,
+    status:     room.status,
+    gameMode:   room.gameMode,
+    ageGroup:   room.ageGroup,
+    maxPlayers: room.maxPlayers,
+    hostId:     room.hostId,
+    hostName:   room.host.username ?? room.host.email,
+    players,
+  });
 }

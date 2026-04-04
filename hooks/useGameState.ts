@@ -4,15 +4,31 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useGameStore } from "@/store/game.store";
-import type { Player, GuessResult } from "@/store/game.store";
+import type { Player, GuessResult, QuizResult } from "@/store/game.store";
 
 interface RoundStartedPayload {
-  roundId:          string;
-  roundNumber:      number;
-  questionId:       string;
-  answererId:       string;
-  questionText?:    string;
+  roundId:           string;
+  roundNumber:       number;
+  questionId:        string;
+  answererId:        string | null;
+  questionText?:     string;
   questionCategory?: string;
+  questionOptions?:  string[] | null;
+}
+
+interface QuizRoundScoredPayload {
+  roundId:       string;
+  correctAnswer: string;
+  results:       QuizResult[];
+  playerScores:  Record<string, number>;
+}
+
+interface AnswerSubmittedPayload {
+  roundId:          string;
+  userId:           string;
+  answerCount:      number;
+  totalParticipants:number;
+  allAnswered:      boolean;
 }
 
 interface GuessSubmittedPayload {
@@ -47,7 +63,7 @@ export function useGameState(gameId: string, myUserId: string) {
   const {
     setGameState, setQuestion, setMyRole, setCurrentRound,
     setActiveRoundId, setAnswererId, setPlayerScores,
-    setLastRoundScore, setGuessProgress, setPlayers,
+    setLastRoundScore, setLastQuizResults, setGuessProgress, setPlayers,
   } = useGameStore();
 
   useEffect(() => {
@@ -59,16 +75,25 @@ export function useGameState(gameId: string, myUserId: string) {
       setGameState("ANSWERING");
       setActiveRoundId(data.roundId);
       setCurrentRound(data.roundNumber);
-      setAnswererId(data.answererId);
-      setMyRole(data.answererId === myUserId ? "answerer" : "guesser");
+      setAnswererId(data.answererId ?? null);
+      setMyRole(data.answererId ? (data.answererId === myUserId ? "answerer" : "guesser") : "guesser");
       setGuessProgress(0, 0);
       if (data.questionText) {
-        setQuestion({ id: data.questionId, text: data.questionText, category: data.questionCategory ?? "" });
+        setQuestion({ id: data.questionId, text: data.questionText, category: data.questionCategory ?? "", options: data.questionOptions ?? null });
       }
     });
 
-    channel.bind("answer-submitted", () => {
-      setGameState("GUESSING");
+    channel.bind("answer-submitted", (data: AnswerSubmittedPayload) => {
+      // SOCIAL: herkese guessing state'i
+      if (!data.userId) { setGameState("GUESSING"); return; }
+      // QUIZ: kaç kişi cevapladı bilgisi güncelle
+      setGuessProgress(data.answerCount ?? 0, data.totalParticipants ?? 0);
+    });
+
+    channel.bind("quiz-round-scored", (data: QuizRoundScoredPayload) => {
+      setLastQuizResults({ correctAnswer: data.correctAnswer, results: data.results });
+      setPlayerScores(data.playerScores);
+      setGameState("SCORING");
     });
 
     channel.bind("guess-submitted", (data: GuessSubmittedPayload) => {
@@ -97,7 +122,7 @@ export function useGameState(gameId: string, myUserId: string) {
       pusher.unsubscribe(`game-${gameId}`);
     };
   }, [gameId, myUserId, router, setGameState, setQuestion, setMyRole, setCurrentRound,
-      setActiveRoundId, setAnswererId, setPlayerScores, setLastRoundScore, setGuessProgress, setPlayers]);
+      setActiveRoundId, setAnswererId, setPlayerScores, setLastRoundScore, setLastQuizResults, setGuessProgress, setPlayers]);
 }
 
 /** Bekleme odası için: oyuncular listesini dinle */
