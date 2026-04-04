@@ -10,6 +10,7 @@ import { QuestionCard } from "@/components/game/QuestionCard";
 import { AnswerInput }  from "@/components/game/AnswerInput";
 import { GuessInput }   from "@/components/game/GuessInput";
 import { Button }       from "@/components/ui/button";
+import { sounds }       from "@/lib/sounds";
 
 export default function GamePage({ params }: { params: Promise<{ roomId: string }> }) {
   const { roomId } = use(params);
@@ -51,6 +52,12 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     if (!gameId) router.replace("/");
   }, [gameId, router]);
 
+  // State değişince ses çal
+  useEffect(() => {
+    if (state === "ANSWERING") sounds.newRound();
+    if (state === "GUESSING")  sounds.tick();
+  }, [state]);
+
   // Tüm tahminler gelince skoru otomatik hesapla (answerer)
   useEffect(() => {
     if (state !== "GUESSING" || !isAnswerer) return;
@@ -59,6 +66,18 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guessCount, totalGuessers]);
+
+  // Scoring sonuçlarına göre ses
+  useEffect(() => {
+    if (state !== "SCORING" || !lastRoundScore) return;
+    const best = lastRoundScore.guessResults.reduce(
+      (b, g) => g.points > b ? g.points : b, 0
+    );
+    if (best >= 10)     sounds.exact();
+    else if (best >= 5) sounds.close();
+    else                sounds.wrong();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   // SCORING state'e girilince 5sn geri sayım + otomatik geçiş (answerer)
   useEffect(() => {
