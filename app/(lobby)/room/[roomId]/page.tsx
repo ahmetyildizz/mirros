@@ -52,7 +52,7 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
       channel.unbind_all();
       pusher.unsubscribe(`room-${roomId}`);
     };
-  }, [roomId, router, setGameId, setGameState, setQuestion, setCurrentRound, setActiveRoundId, setMyRole, setUser]);
+  }, [roomId, router, setGameId, setGameState, setQuestion, setCurrentRound, setActiveRoundId, setMyRole]);
 
   const handleStartGame = async () => {
     setStarting(true);
