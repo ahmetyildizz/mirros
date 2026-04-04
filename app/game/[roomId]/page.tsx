@@ -166,38 +166,40 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
         {/* SCORING */}
         {state === "SCORING" && lastRoundScore && (
           <div style={styles.scoringBox}>
-            <div style={styles.answerReveal}>
-              <span style={styles.answerLabel}>Gerçek cevap</span>
-              <span style={styles.answerText}>{lastRoundScore.answer}</span>
-            </div>
+            <div style={styles.scoringScroll}>
+              <div style={styles.answerReveal}>
+                <span style={styles.answerLabel}>Gerçek cevap</span>
+                <span style={styles.answerText}>{lastRoundScore.answer}</span>
+              </div>
 
-            <div style={styles.guessList}>
-              {lastRoundScore.guessResults.map((g) => (
-                <div key={g.userId} style={{
-                  ...styles.guessRow,
-                  borderColor: g.matchLevel === "EXACT" ? "var(--exact)"
-                              : g.matchLevel === "CLOSE" ? "var(--close)"
-                              : "var(--bg-elevated)",
-                }}>
-                  <div style={styles.guessAvatar}>
-                    {(g.username ?? "?")[0].toUpperCase()}
+              <div style={styles.guessList}>
+                {lastRoundScore.guessResults.map((g) => (
+                  <div key={g.userId} style={{
+                    ...styles.guessRow,
+                    borderColor: g.matchLevel === "EXACT" ? "var(--exact)"
+                                : g.matchLevel === "CLOSE" ? "var(--close)"
+                                : "var(--bg-elevated)",
+                  }}>
+                    <div style={styles.guessAvatar}>
+                      {(g.username ?? "?")[0].toUpperCase()}
+                    </div>
+                    <div style={styles.guessInfo}>
+                      <span style={styles.guessUsername}>{g.username}</span>
+                      <span style={styles.guessText}>{g.guess}</span>
+                    </div>
+                    <div style={styles.guessPoints}>
+                      <span style={{
+                        color: g.matchLevel === "EXACT" ? "var(--exact)"
+                             : g.matchLevel === "CLOSE" ? "var(--close)"
+                             : "var(--fg-muted)",
+                        fontWeight: 700,
+                      }}>
+                        {g.matchLevel === "EXACT" ? "+10" : g.matchLevel === "CLOSE" ? "+5" : "0"}
+                      </span>
+                    </div>
                   </div>
-                  <div style={styles.guessInfo}>
-                    <span style={styles.guessUsername}>{g.username}</span>
-                    <span style={styles.guessText}>{g.guess}</span>
-                  </div>
-                  <div style={styles.guessPoints}>
-                    <span style={{
-                      color: g.matchLevel === "EXACT" ? "var(--exact)"
-                           : g.matchLevel === "CLOSE" ? "var(--close)"
-                           : "var(--fg-muted)",
-                      fontWeight: 700,
-                    }}>
-                      {g.matchLevel === "EXACT" ? "+10" : g.matchLevel === "CLOSE" ? "+5" : "0"}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
             {isAnswerer && (
@@ -236,7 +238,8 @@ const styles = {
   guessProgress: { display: "flex", alignItems: "center", gap: "0.4rem" },
   progressDot:   { width: 10, height: 10, borderRadius: "50%", transition: "background 0.3s" },
   nextBtn:       { background: "var(--accent)", color: "#fff", borderRadius: 12, fontWeight: 600, padding: "0.875rem", width: "100%" },
-  scoringBox:    { display: "flex", flexDirection: "column" as const, gap: "0.75rem" },
+  scoringBox:    { display: "flex", flexDirection: "column" as const, gap: "0.75rem", flex: 1 },
+  scoringScroll: { flex: 1, overflowY: "auto" as const, display: "flex", flexDirection: "column" as const, gap: "0.75rem" },
   answerReveal:  { background: "var(--bg-elevated)", borderRadius: 12, padding: "1rem", display: "flex", flexDirection: "column" as const, gap: "0.25rem" },
   answerLabel:   { color: "var(--fg-secondary)", fontSize: "0.75rem" },
   answerText:    { color: "var(--exact)", fontWeight: 700, fontSize: "1.2rem" },
