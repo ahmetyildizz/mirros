@@ -49,10 +49,10 @@ export async function POST(
   });
   if (!game) return NextResponse.json({ error: "Oyun bulunamadı" }, { status: 404 });
 
-  const exactCount = game.scores.filter((s) => s.matchLevel === "EXACT").length;
-  const closeCount = game.scores.filter((s) => s.matchLevel === "CLOSE").length;
-  const wrongCount = game.scores.filter((s) => s.matchLevel === "WRONG").length;
-  const totalPoints = game.scores.reduce((s, sc) => s + sc.points, 0);
+  const exactCount  = game.scores.filter((s: { matchLevel: string }) => s.matchLevel === "EXACT").length;
+  const closeCount  = game.scores.filter((s: { matchLevel: string }) => s.matchLevel === "CLOSE").length;
+  const wrongCount  = game.scores.filter((s: { matchLevel: string }) => s.matchLevel === "WRONG").length;
+  const totalPoints = game.scores.reduce((acc: number, sc: { points: number }) => acc + sc.points, 0);
   const familiarity = Math.round((totalPoints / (game.totalRounds * 10)) * 100);
 
   const text = generateInsight(familiarity, exactCount, closeCount, wrongCount, game.totalRounds);
