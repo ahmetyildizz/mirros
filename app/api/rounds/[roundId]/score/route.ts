@@ -3,7 +3,6 @@ import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
 import { scoreRound, getPoints } from "@/lib/services/scoring.service";
-import { advanceGame } from "@/lib/services/game.service";
 
 export async function POST(
   _req: NextRequest,
@@ -65,9 +64,6 @@ export async function POST(
     guessResults,
     playerScores,
   });
-
-  // Sonraki round veya oyun sonu
-  await advanceGame(round.gameId, round.number);
 
   return NextResponse.json({ scores, playerScores });
 }

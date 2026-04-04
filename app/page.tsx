@@ -1,12 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { CreateRoom } from "@/components/lobby/CreateRoom";
 import { JoinRoom } from "@/components/lobby/JoinRoom";
 import { useGameStore } from "@/store/game.store";
 
-export default function LobbyPage() {
-  const router = useRouter();
+function LobbyContent() {
+  const router      = useRouter();
+  const params      = useSearchParams();
+  const joinCode    = params.get("code") ?? "";
   const { setRoomId, setRoomCode, setIsHostPlayer } = useGameStore();
 
   const handleCreated = (roomId: string, roomCode: string) => {
@@ -67,8 +70,16 @@ export default function LobbyPage() {
           <div style={{ flex: 1, height: 1, background: "var(--fg-muted)" }} />
         </div>
 
-        <JoinRoom onJoined={handleJoined} />
+        <JoinRoom onJoined={handleJoined} initialCode={joinCode} />
       </div>
     </main>
+  );
+}
+
+export default function LobbyPage() {
+  return (
+    <Suspense>
+      <LobbyContent />
+    </Suspense>
   );
 }

@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface Props {
-  onJoined: (roomId: string) => void;
+  onJoined:     (roomId: string) => void;
+  initialCode?: string;
 }
 
-export function JoinRoom({ onJoined }: Props) {
-  const [code, setCode] = useState("");
+export function JoinRoom({ onJoined, initialCode = "" }: Props) {
+  const [code, setCode] = useState(initialCode);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 

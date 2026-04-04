@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useGameStore } from "@/store/game.store";
@@ -34,6 +34,23 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
   const [players, setPlayers]       = useState<Player[]>(storedPlayers);
   const [starting, setStarting]     = useState(false);
   const [startError, setStartError] = useState<string | null>(null);
+  const [copied, setCopied]         = useState(false);
+
+  const handleCopy = useCallback(() => {
+    if (!roomCode) return;
+    const joinUrl = `${window.location.origin}/join?code=${roomCode}`;
+    navigator.clipboard.writeText(joinUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [roomCode]);
+
+  const handleWhatsApp = useCallback(() => {
+    if (!roomCode) return;
+    const joinUrl = `${window.location.origin}/join?code=${roomCode}`;
+    const text = encodeURIComponent(`Mirros'ta benimle oyna! Oda kodun: ${roomCode}\n${joinUrl}`);
+    window.open(`https://wa.me/?text=${text}`, "_blank");
+  }, [roomCode]);
 
   const { setGameId, setGameState, setQuestion, setCurrentRound, setTotalRounds,
           setActiveRoundId, setMyRole, setAnswererId, setPlayers: storePlayers } = useGameStore();
@@ -117,7 +134,14 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
         <div style={styles.codeBox}>
           <p style={styles.label}>Oda kodu</p>
           <p style={styles.code}>{roomCode ?? "—"}</p>
-          <p style={styles.hint}>Bu kodu arkadaşlarınla paylaş</p>
+          <div style={styles.shareRow}>
+            <button onClick={handleCopy} style={styles.shareBtn}>
+              {copied ? "✓ Kopyalandı" : "Linki Kopyala"}
+            </button>
+            <button onClick={handleWhatsApp} style={{ ...styles.shareBtn, background: "#25D366" }}>
+              WhatsApp
+            </button>
+          </div>
         </div>
 
         {/* Oyuncu listesi */}
@@ -191,4 +215,6 @@ const styles = {
   dots:        { display: "flex", gap: "0.3rem" },
   dot:         { width: 6, height: 6, borderRadius: "50%", background: "var(--accent)", display: "inline-block", animation: "pulse 1.2s ease-in-out infinite" },
   startBtn:    { width: "100%", padding: "0.875rem", background: "var(--accent)", color: "#fff", border: "none", borderRadius: 12, fontWeight: 700, fontSize: "1rem" },
+  shareRow:    { display: "flex", gap: "0.5rem", justifyContent: "center", marginTop: "0.5rem" },
+  shareBtn:    { flex: 1, padding: "0.5rem 0.75rem", background: "var(--bg-elevated)", color: "var(--fg-primary)", border: "1px solid var(--fg-muted)", borderRadius: 8, fontWeight: 600, fontSize: "0.8rem", cursor: "pointer" },
 };

@@ -82,6 +82,11 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     await fetch(`/api/rounds/${activeRoundId}/score`, { method: "POST" });
   }
 
+  async function advanceToNext() {
+    if (!activeRoundId) return;
+    await fetch(`/api/rounds/${activeRoundId}/next`, { method: "POST" });
+  }
+
   return (
     <main style={styles.page}>
       <GameHeader roundNumber={currentRound} totalRounds={totalRounds} />
@@ -197,7 +202,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
             {isAnswerer && (
               <Button
-                onClick={() => setGameState("ANSWERING")}
+                onClick={advanceToNext}
                 style={styles.nextBtn}
               >
                 Sonraki Round
