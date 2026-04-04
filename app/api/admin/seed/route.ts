@@ -38,7 +38,7 @@ export async function POST() {
     { text: "Sevdiğine nasıl sevgini gösterirsin?", category: "İlişki" },
   ];
   for (const q of social) {
-    await db.question.create({ data: { text: q.text, category: q.category, gameMode: "SOCIAL", options: q.options ?? null, isActive: true } });
+    await db.question.create({ data: { text: q.text, category: q.category, gameMode: "SOCIAL", options: q.options ? q.options : undefined, isActive: true } });
   }
 
   const quizChild: Array<{ text: string; category: string; options: string[]; correct: string }> = [
