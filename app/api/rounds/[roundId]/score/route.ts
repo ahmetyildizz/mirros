@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
-import { scoreRound, getPoints, calculateFamiliarity } from "@/lib/services/scoring.service";
+import { scoreRound, getPoints } from "@/lib/services/scoring.service";
 import { advanceGame } from "@/lib/services/game.service";
 
 export async function POST(
@@ -14,36 +14,60 @@ export async function POST(
 
   const round = await db.round.findUnique({
     where:   { id: roundId },
-    include: { answers: true, guesses: true, game: true },
+    include: {
+      answers: true,
+      guesses: { include: { user: { select: { id: true, username: true, email: true } } } },
+      game:    { include: { room: { include: { participants: true } } } },
+    },
   });
   if (!round)                    return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
   if (round.status === "SCORED") return NextResponse.json({ error: "Zaten skorlandı" }, { status: 409 });
 
   const answer = round.answers.find((a) => a.userId === round.answererId);
-  const guess  = round.guesses.find((g) => g.userId === round.guesserId);
-  if (!answer || !guess) return NextResponse.json({ error: "Cevap veya tahmin eksik" }, { status: 422 });
+  if (!answer) return NextResponse.json({ error: "Cevap henüz gönderilmedi" }, { status: 422 });
 
-  const matchLevel = scoreRound(answer.content, guess.content);
-  const points     = getPoints(matchLevel);
+  // Tüm tahminleri değerlendir (her guesser için ayrı skor)
+  const scores: { id: string; gameId: string; roundId: string; guesserId: string; matchLevel: string; points: number; createdAt: Date }[] = [];
+  const guessResults: { userId: string; username: string; guess: string; matchLevel: string; points: number }[] = [];
 
-  const score = await db.score.create({
-    data: { roundId, gameId: round.gameId, guesserId: round.guesserId, matchLevel, points },
-  });
+  for (const guess of round.guesses) {
+    const matchLevel = scoreRound(answer.content, guess.content);
+    const points     = getPoints(matchLevel);
+
+    const score = await db.score.upsert({
+      where:  { roundId_guesserId: { roundId, guesserId: guess.userId } },
+      create: { roundId, gameId: round.gameId, guesserId: guess.userId, matchLevel, points },
+      update: { matchLevel, points },
+    });
+    scores.push(score);
+    guessResults.push({
+      userId:    guess.userId,
+      username:  guess.user.username ?? guess.user.email,
+      guess:     guess.content,
+      matchLevel,
+      points,
+    });
+  }
 
   await db.round.update({ where: { id: roundId }, data: { status: "SCORED" } });
 
-  const allScores   = await db.score.findMany({ where: { gameId: round.gameId } });
-  const totalPoints = allScores.reduce((s, sc) => s + sc.points, 0);
-  const familiarity = calculateFamiliarity(totalPoints, round.game.totalRounds);
+  // Her oyuncunun toplam puanı
+  const allScores = await db.score.findMany({ where: { gameId: round.gameId } });
+  const playerScores: Record<string, number> = {};
+  for (const s of allScores) {
+    playerScores[s.guesserId] = (playerScores[s.guesserId] ?? 0) + s.points;
+  }
 
   await pusherServer.trigger(`game-${round.gameId}`, "round-scored", {
-    roundId, matchLevel, points, familiarity,
-    answer: answer.content,
-    guess:  guess.content,
+    roundId,
+    answererId: round.answererId,
+    answer:     answer.content,
+    guessResults,
+    playerScores,
   });
 
   // Sonraki round veya oyun sonu
   await advanceGame(round.gameId, round.number);
 
-  return NextResponse.json({ ...score, familiarity });
+  return NextResponse.json({ scores, playerScores });
 }

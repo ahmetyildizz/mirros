@@ -5,75 +5,108 @@ export type GameState =
   | "ANSWERING"
   | "GUESSING"
   | "SCORING"
-  | "INSIGHT"
   | "END";
 
 export type MatchLevel = "EXACT" | "CLOSE" | "WRONG";
 
-export interface ScoreResult {
-  roundId: string;
+export interface Player {
+  id:       string;
+  username: string;
+}
+
+export interface GuessResult {
+  userId:    string;
+  username:  string;
+  guess:     string;
   matchLevel: MatchLevel;
-  points: number;
+  points:    number;
+}
+
+export interface RoundScore {
+  roundId:     string;
+  answererId:  string;
+  answer:      string;
+  guessResults: GuessResult[];
 }
 
 interface GameStore {
-  gameId: string | null;
-  roomId: string | null;
-  roomCode: string | null;
-  isHostPlayer: boolean | null;
-  currentRound: number;
-  state: GameState;
-  question: { id: string; text: string; category: string } | null;
-  myRole: "answerer" | "guesser" | null;
-  scores: ScoreResult[];
-  insight: string | null;
-  familiarity: number;
-
+  gameId:        string | null;
+  roomId:        string | null;
+  roomCode:      string | null;
+  isHostPlayer:  boolean | null;
+  currentRound:  number;
+  totalRounds:   number;
+  state:         GameState;
+  question:      { id: string; text: string; category: string } | null;
+  myRole:        "answerer" | "guesser" | null;
   activeRoundId: string | null;
+  answererId:    string | null;  // spotlight oyuncusu
 
-  setGameId: (id: string) => void;
-  setRoomId: (id: string) => void;
-  setRoomCode: (code: string) => void;
-  setIsHostPlayer: (v: boolean) => void;
-  setGameState: (state: GameState) => void;
-  setCurrentRound: (n: number) => void;
+  // Oyuncular
+  players:       Player[];
+  playerScores:  Record<string, number>; // userId → toplam puan
+
+  // Round sonuçları
+  lastRoundScore: RoundScore | null;
+
+  // Tahmin durumu (guessing aşamasında kim gönderdi)
+  guessCount:    number;
+  totalGuessers: number;
+
+  // Actions
+  setGameId:        (id: string) => void;
+  setRoomId:        (id: string) => void;
+  setRoomCode:      (code: string) => void;
+  setIsHostPlayer:  (v: boolean) => void;
+  setGameState:     (state: GameState) => void;
+  setCurrentRound:  (n: number) => void;
+  setTotalRounds:   (n: number) => void;
   setActiveRoundId: (id: string) => void;
-  setQuestion: (q: GameStore["question"]) => void;
-  setMyRole: (role: GameStore["myRole"]) => void;
-  addScore: (score: ScoreResult) => void;
-  setInsight: (text: string) => void;
-  setFamiliarity: (score: number) => void;
-  reset: () => void;
+  setQuestion:      (q: GameStore["question"]) => void;
+  setMyRole:        (role: GameStore["myRole"]) => void;
+  setAnswererId:    (id: string) => void;
+  setPlayers:       (players: Player[]) => void;
+  setPlayerScores:  (scores: Record<string, number>) => void;
+  setLastRoundScore:(score: RoundScore) => void;
+  setGuessProgress: (count: number, total: number) => void;
+  reset:            () => void;
 }
 
 const initialState = {
-  gameId: null,
-  roomId: null,
-  roomCode: null,
-  isHostPlayer: null,
-  currentRound: 0,
-  activeRoundId: null,
-  state: "WAITING" as GameState,
-  question: null,
-  myRole: null,
-  scores: [],
-  insight: null,
-  familiarity: 0,
+  gameId:         null,
+  roomId:         null,
+  roomCode:       null,
+  isHostPlayer:   null,
+  currentRound:   0,
+  totalRounds:    10,
+  activeRoundId:  null,
+  answererId:     null,
+  state:          "WAITING" as GameState,
+  question:       null,
+  myRole:         null,
+  players:        [],
+  playerScores:   {},
+  lastRoundScore: null,
+  guessCount:     0,
+  totalGuessers:  0,
 };
 
 export const useGameStore = create<GameStore>((set) => ({
   ...initialState,
-  setGameId:        (gameId) => set({ gameId }),
-  setRoomId:        (roomId) => set({ roomId }),
-  setRoomCode:      (roomCode) => set({ roomCode }),
-  setIsHostPlayer:  (isHostPlayer) => set({ isHostPlayer }),
-  setGameState:    (state) => set({ state }),
-  setCurrentRound: (currentRound) => set({ currentRound }),
-  setActiveRoundId:(activeRoundId) => set({ activeRoundId }),
-  setQuestion:     (question) => set({ question }),
-  setMyRole:       (myRole) => set({ myRole }),
-  addScore:        (score) => set((s) => ({ scores: [...s.scores, score] })),
-  setInsight:      (insight) => set({ insight }),
-  setFamiliarity:  (familiarity) => set({ familiarity }),
-  reset:           () => set(initialState),
+  setGameId:         (gameId) => set({ gameId }),
+  setRoomId:         (roomId) => set({ roomId }),
+  setRoomCode:       (roomCode) => set({ roomCode }),
+  setIsHostPlayer:   (isHostPlayer) => set({ isHostPlayer }),
+  setGameState:      (state) => set({ state }),
+  setCurrentRound:   (currentRound) => set({ currentRound }),
+  setTotalRounds:    (totalRounds) => set({ totalRounds }),
+  setActiveRoundId:  (activeRoundId) => set({ activeRoundId }),
+  setQuestion:       (question) => set({ question }),
+  setMyRole:         (myRole) => set({ myRole }),
+  setAnswererId:     (answererId) => set({ answererId }),
+  setPlayers:        (players) => set({ players }),
+  setPlayerScores:   (playerScores) => set({ playerScores }),
+  setLastRoundScore: (lastRoundScore) => set({ lastRoundScore }),
+  setGuessProgress:  (guessCount, totalGuessers) => set({ guessCount, totalGuessers }),
+  reset:             () => set(initialState),
 }));

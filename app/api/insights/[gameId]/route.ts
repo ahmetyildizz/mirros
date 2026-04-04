@@ -61,14 +61,20 @@ export async function POST(
   const existing = await db.insight.findFirst({ where: { gameId } });
   if (existing) return NextResponse.json({ text: existing.text, familiarity });
 
-  const room = await db.room.findUnique({ where: { id: game.roomId } });
+  const room = await db.room.findUnique({
+    where:   { id: game.roomId },
+    include: { participants: { orderBy: { joinedAt: "asc" } } },
+  });
   if (!room) return NextResponse.json({ error: "Oda bulunamadı" }, { status: 404 });
+
+  const userAId = room.participants[0]?.userId ?? room.hostId;
+  const userBId = room.participants[1]?.userId ?? room.hostId;
 
   const insight = await db.insight.create({
     data: {
       gameId,
-      userAId:    room.hostId,
-      userBId:    room.guestId!,
+      userAId,
+      userBId,
       text,
       patternKey: `f${familiarity}`,
     },

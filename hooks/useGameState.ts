@@ -4,42 +4,50 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useGameStore } from "@/store/game.store";
-import type { MatchLevel } from "@/store/game.store";
+import type { Player, GuessResult } from "@/store/game.store";
 
 interface RoundStartedPayload {
-  roundId:     string;
-  roundNumber: number;
-  questionId:  string;
-  answererId:  string;
-  guesserId:   string;
-  questionText?: string;
+  roundId:          string;
+  roundNumber:      number;
+  questionId:       string;
+  answererId:       string;
+  questionText?:    string;
   questionCategory?: string;
 }
 
+interface GuessSubmittedPayload {
+  roundId:       string;
+  userId:        string;
+  guessCount:    number;
+  totalGuessers: number;
+  allDone:       boolean;
+}
+
 interface RoundScoredPayload {
-  roundId:    string;
-  matchLevel: MatchLevel;
-  points:     number;
-  familiarity: number;
-  answer:     string;
-  guess:      string;
+  roundId:      string;
+  answererId:   string;
+  answer:       string;
+  guessResults: GuessResult[];
+  playerScores: Record<string, number>;
 }
 
 interface GameFinishedPayload {
-  gameId:      string;
-  familiarity: number;
+  gameId:       string;
+  playerScores: Record<string, number>;
+}
+
+interface PlayerJoinedPayload {
+  userId:   string;
+  username: string;
+  players:  Player[];
 }
 
 export function useGameState(gameId: string, myUserId: string) {
   const router = useRouter();
   const {
-    setGameState,
-    setQuestion,
-    setMyRole,
-    setCurrentRound,
-    setActiveRoundId,
-    addScore,
-    setFamiliarity,
+    setGameState, setQuestion, setMyRole, setCurrentRound,
+    setActiveRoundId, setAnswererId, setPlayerScores,
+    setLastRoundScore, setGuessProgress, setPlayers,
   } = useGameStore();
 
   useEffect(() => {
@@ -51,16 +59,11 @@ export function useGameState(gameId: string, myUserId: string) {
       setGameState("ANSWERING");
       setActiveRoundId(data.roundId);
       setCurrentRound(data.roundNumber);
-      // isHostPlayer + round parity → rol (server logic ile eşleşir)
-      const isHostTab = useGameStore.getState().isHostPlayer;
-      const isOddRound = data.roundNumber % 2 === 1;
-      setMyRole(isHostTab === isOddRound ? "answerer" : "guesser");
+      setAnswererId(data.answererId);
+      setMyRole(data.answererId === myUserId ? "answerer" : "guesser");
+      setGuessProgress(0, 0);
       if (data.questionText) {
-        setQuestion({
-          id:       data.questionId,
-          text:     data.questionText,
-          category: data.questionCategory ?? "",
-        });
+        setQuestion({ id: data.questionId, text: data.questionText, category: data.questionCategory ?? "" });
       }
     });
 
@@ -68,18 +71,23 @@ export function useGameState(gameId: string, myUserId: string) {
       setGameState("GUESSING");
     });
 
-    channel.bind("guess-submitted", () => {
-      // Scoring tetiklenene kadar bekle — UI loading gösterebilir
+    channel.bind("guess-submitted", (data: GuessSubmittedPayload) => {
+      setGuessProgress(data.guessCount, data.totalGuessers);
     });
 
     channel.bind("round-scored", (data: RoundScoredPayload) => {
-      addScore({ roundId: data.roundId, matchLevel: data.matchLevel, points: data.points });
-      setFamiliarity(data.familiarity);
+      setLastRoundScore({
+        roundId:      data.roundId,
+        answererId:   data.answererId,
+        answer:       data.answer,
+        guessResults: data.guessResults,
+      });
+      setPlayerScores(data.playerScores);
       setGameState("SCORING");
     });
 
     channel.bind("game-finished", (data: GameFinishedPayload) => {
-      setFamiliarity(data.familiarity);
+      setPlayerScores(data.playerScores);
       setGameState("END");
       router.push(`/results/${data.gameId}`);
     });
@@ -88,5 +96,26 @@ export function useGameState(gameId: string, myUserId: string) {
       channel.unbind_all();
       pusher.unsubscribe(`game-${gameId}`);
     };
-  }, [gameId, myUserId, router, setGameState, setQuestion, setMyRole, setCurrentRound, setActiveRoundId, addScore, setFamiliarity]);
+  }, [gameId, myUserId, router, setGameState, setQuestion, setMyRole, setCurrentRound,
+      setActiveRoundId, setAnswererId, setPlayerScores, setLastRoundScore, setGuessProgress, setPlayers]);
+}
+
+/** Bekleme odası için: oyuncular listesini dinle */
+export function useRoomState(roomId: string) {
+  const { setPlayers } = useGameStore();
+
+  useEffect(() => {
+    if (!roomId) return;
+    const pusher  = getPusherClient();
+    const channel = pusher.subscribe(`room-${roomId}`);
+
+    channel.bind("player-joined", (data: PlayerJoinedPayload) => {
+      setPlayers(data.players);
+    });
+
+    return () => {
+      channel.unbind_all();
+      pusher.unsubscribe(`room-${roomId}`);
+    };
+  }, [roomId, setPlayers]);
 }

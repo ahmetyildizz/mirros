@@ -11,21 +11,43 @@ export async function POST(req: NextRequest) {
   const body = bodySchema.safeParse(await req.json());
   if (!body.success) return NextResponse.json({ error: "Geçersiz kod" }, { status: 400 });
 
-  const room = await db.room.findUnique({ where: { code: body.data.code.toUpperCase() } });
+  const room = await db.room.findUnique({
+    where:   { code: body.data.code.toUpperCase() },
+    include: { participants: { include: { user: true }, orderBy: { joinedAt: "asc" } } },
+  });
   if (!room) return NextResponse.json({ error: "Oda bulunamadı" }, { status: 404 });
-  if (room.status !== "WAITING") return NextResponse.json({ error: "Oda dolu" }, { status: 409 });
-  if (room.hostId === user.id && process.env.NODE_ENV === "production")
-    return NextResponse.json({ error: "Kendi odana katılamazsın" }, { status: 400 });
+  if (room.status !== "WAITING") return NextResponse.json({ error: "Oyun başladı veya bitti" }, { status: 409 });
+  if (room.participants.length >= room.maxPlayers)
+    return NextResponse.json({ error: "Oda dolu" }, { status: 409 });
 
-  const updated = await db.room.update({
-    where: { id: room.id },
-    data:  { guestId: user.id, status: "ACTIVE" },
+  // Zaten katılmışsa tekrar ekleme
+  const alreadyIn = room.participants.some((p) => p.userId === user.id);
+  if (!alreadyIn) {
+    await db.roomParticipant.create({ data: { roomId: room.id, userId: user.id } });
+  }
+
+  // Güncel katılımcı listesini çek
+  const updated = await db.room.findUnique({
+    where:   { id: room.id },
+    include: { participants: { include: { user: true }, orderBy: { joinedAt: "asc" } } },
   });
 
+  const players = (updated?.participants ?? []).map((p) => ({
+    id:       p.userId,
+    username: p.user.username ?? p.user.email,
+  }));
+
+  // Odadaki herkese yeni oyuncuyu bildir
   await pusherServer.trigger(`room-${room.id}`, "player-joined", {
-    guestId: user.id,
-    roomId:  room.id,
+    userId:   user.id,
+    username: user.email,
+    players,
   });
 
-  return NextResponse.json({ id: updated.id, code: updated.code });
+  // Oda aktif hale getir (2+ oyuncu varsa)
+  if (!alreadyIn && updated && updated.participants.length >= 2) {
+    await db.room.update({ where: { id: room.id }, data: { status: "ACTIVE" } });
+  }
+
+  return NextResponse.json({ id: room.id, code: room.code, players });
 }

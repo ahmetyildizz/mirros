@@ -15,16 +15,32 @@ export async function POST(
   const body = bodySchema.safeParse(await req.json());
   if (!body.success) return NextResponse.json({ error: "Geçersiz içerik" }, { status: 400 });
 
-  const round = await db.round.findUnique({ where: { id: roundId } });
-  if (!round)                        return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
-  if (round.guesserId !== user.id)   return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
-  if (round.status !== "GUESSING")   return NextResponse.json({ error: "Bu round tahmin kabul etmiyor" }, { status: 409 });
+  const round = await db.round.findUnique({
+    where:   { id: roundId },
+    include: { game: { include: { room: { include: { participants: true } } } } },
+  });
+  if (!round) return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
+  if (round.status !== "GUESSING") return NextResponse.json({ error: "Bu round tahmin kabul etmiyor" }, { status: 409 });
+  if (round.answererId === user.id) return NextResponse.json({ error: "Cevaplayan tahmin edemez" }, { status: 403 });
 
-  const guess = await db.guess.create({
-    data: { roundId, userId: user.id, content: body.data.content },
+  // Upsert: aynı kullanıcı tekrar tahmin gönderirse güncelle
+  const guess = await db.guess.upsert({
+    where:  { roundId_userId: { roundId, userId: user.id } },
+    create: { roundId, userId: user.id, content: body.data.content },
+    update: { content: body.data.content },
   });
 
-  await pusherServer.trigger(`game-${round.gameId}`, "guess-submitted", { roundId });
+  // Kaç kişi tahmin etti?
+  const guessCount    = await db.guess.count({ where: { roundId } });
+  const totalGuessers = round.game.room.participants.length - 1; // answerer hariç
+
+  await pusherServer.trigger(`game-${round.gameId}`, "guess-submitted", {
+    roundId,
+    userId:      user.id,
+    guessCount,
+    totalGuessers,
+    allDone: guessCount >= totalGuessers,
+  });
 
   return NextResponse.json(guess, { status: 201 });
 }

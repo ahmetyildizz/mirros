@@ -29,6 +29,7 @@ export async function POST(
   const game = await db.game.findUnique({ where: { id: round.gameId } });
   await pusherServer.trigger(`game-${round.gameId}`, "answer-submitted", {
     roundId,
+    answererId: user.id,
     roomId: game?.roomId,
   });
 
