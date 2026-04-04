@@ -23,7 +23,8 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     setGameState, setMyRole, setAnswererId,
   } = useGameStore();
 
-  const [myUserId, setMyUserId] = useState<string | null>(null);
+  const [myUserId, setMyUserId]   = useState<string | null>(null);
+  const [countdown, setCountdown] = useState<number | null>(null);
 
   // userId yükle + myRole belirle
   useEffect(() => {
@@ -49,6 +50,30 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   useEffect(() => {
     if (!gameId) router.replace("/");
   }, [gameId, router]);
+
+  // Tüm tahminler gelince skoru otomatik hesapla (answerer)
+  useEffect(() => {
+    if (state !== "GUESSING" || !isAnswerer) return;
+    if (guessCount > 0 && guessCount >= totalGuessers) {
+      triggerScore();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guessCount, totalGuessers]);
+
+  // SCORING state'e girilince 5sn geri sayım + otomatik geçiş (answerer)
+  useEffect(() => {
+    if (state !== "SCORING" || !isAnswerer) return;
+    setCountdown(5);
+    const interval = setInterval(() => {
+      setCountdown((c) => {
+        if (c === null || c <= 1) { clearInterval(interval); return null; }
+        return c - 1;
+      });
+    }, 1000);
+    const timeout = setTimeout(() => { advanceToNext(); }, 5000);
+    return () => { clearInterval(interval); clearTimeout(timeout); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   if (!gameId || !question) {
     return (
@@ -151,9 +176,9 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                   </span>
                 </div>
                 {guessCount >= totalGuessers && (
-                  <Button onClick={triggerScore} style={styles.nextBtn}>
-                    Sonuçları Gör
-                  </Button>
+                  <p style={{ color: "var(--exact)", fontSize: "0.85rem", fontWeight: 600 }}>
+                    Sonuçlar hesaplanıyor...
+                  </p>
                 )}
               </div>
             )
@@ -204,10 +229,10 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
             {isAnswerer && (
               <Button
-                onClick={advanceToNext}
+                onClick={() => { setCountdown(null); advanceToNext(); }}
                 style={styles.nextBtn}
               >
-                Sonraki Round
+                {countdown !== null ? `Sonraki Round (${countdown})` : "Sonraki Round"}
               </Button>
             )}
             {!isAnswerer && (
