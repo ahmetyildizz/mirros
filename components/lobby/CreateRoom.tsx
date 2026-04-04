@@ -16,6 +16,8 @@ export function CreateRoom({ onCreated }: Props) {
     if (res.ok) {
       const data = await res.json();
       onCreated(data.id, data.code);
+    } else if (res.status === 401) {
+      window.location.href = "/login";
     }
     setLoading(false);
   };

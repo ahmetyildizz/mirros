@@ -28,9 +28,11 @@ export function JoinRoom({ onJoined }: Props) {
     if (res.ok) {
       const data = await res.json();
       onJoined(data.id);
+    } else if (res.status === 401) {
+      window.location.href = "/login";
     } else {
       const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Oda bulunamadı.");
+      setError(data.error ?? "Bir hata oluştu.");
     }
     setLoading(false);
   };
