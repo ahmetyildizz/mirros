@@ -85,6 +85,60 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
   const topPoints  = leaderboard[0]?.[1].points ?? 0;
   const familiarity = Math.round((topPoints / maxPoints) * 100);
 
+  // Uyumluluk skoru: her sosyal round'da answerer'ı kim kaç puan aldı
+  // answerer için: kaç tahminci onu bilebildi → uyumluluk puanı
+  const compatMap: Record<string, { knownBy: { userId: string; username: string; points: number }[]; total: number; max: number }> = {};
+  if (game.room.gameMode === "SOCIAL") {
+    for (const round of game.rounds) {
+      if (!round.answererId) continue;
+      const answerer = game.room.participants.find((p) => p.userId === round.answererId);
+      if (!answerer) continue;
+      const key = round.answererId;
+      if (!compatMap[key]) compatMap[key] = { knownBy: [], total: 0, max: 0 };
+      for (const sc of round.scores) {
+        compatMap[key].total += sc.points;
+        compatMap[key].max   += 10;
+        const guesser = game.room.participants.find((p) => p.userId === sc.guesserId);
+        const existing = compatMap[key].knownBy.find((x) => x.userId === sc.guesserId);
+        if (existing) {
+          existing.points += sc.points;
+        } else {
+          compatMap[key].knownBy.push({ userId: sc.guesserId, username: guesser?.user.username ?? guesser?.user.email ?? "?", points: sc.points });
+        }
+      }
+    }
+  }
+
+  // Hafıza mekaniği: bu oyundaki cevapların daha önceki versiyonlarını bul
+  const currentQuestionIds = game.rounds.map((r) => r.questionId);
+  const previousAnswers = await db.answer.findMany({
+    where: {
+      userId: myId,
+      round: {
+        questionId: { in: currentQuestionIds },
+        // Sadece bu oyundan önceki oyunlardaki cevapları al
+        game: { startedAt: { lt: game.startedAt }, room: { gameMode: "SOCIAL" } },
+      },
+    },
+    select: { round: { select: { questionId: true } }, content: true, submittedAt: true },
+    orderBy: { submittedAt: "desc" },
+  });
+  // questionId → en son eski cevap map'i
+  const pastAnswerMap = new Map<string, { content: string; at: Date }>();
+  for (const a of previousAnswers) {
+    const qId = a.round.questionId;
+    if (!pastAnswerMap.has(qId)) {
+      pastAnswerMap.set(qId, { content: a.content, at: a.submittedAt });
+    }
+  }
+
+  // En komik an: en çok yanlış tahmin yapılan round
+  const funniestRound = game.rounds.reduce<typeof game.rounds[0] | null>((best, r) => {
+    const wrongCount = r.scores.filter((sc) => sc.matchLevel === "WRONG").length;
+    const bestWrong  = best ? best.scores.filter((sc) => sc.matchLevel === "WRONG").length : -1;
+    return wrongCount > bestWrong ? r : best;
+  }, null);
+
   return (
     <main style={s.page}>
       <div style={s.inner}>
@@ -133,8 +187,14 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
           <p style={s.sectionTitle}>Round Özeti</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
             {game.rounds.map((round) => {
-              const answer = round.answers[0];
+              const answer       = round.answers[0];
               const answererName = answer?.user.username ?? answer?.user.email ?? "?";
+              const pastAnswer   = pastAnswerMap.get(round.questionId);
+              const monthsAgo    = pastAnswer
+                ? Math.max(1, Math.round((Date.now() - pastAnswer.at.getTime()) / (1000 * 60 * 60 * 24 * 30)))
+                : null;
+              const myAnswer     = round.answers.find((a) => a.user.id === myId);
+              const changed      = pastAnswer && myAnswer && pastAnswer.content !== myAnswer.content;
               return (
                 <div key={round.id} style={s.roundCard}>
                   <div style={s.roundHeader}>
@@ -146,6 +206,13 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
                     <div style={s.roundAnswer}>
                       <span style={s.answerTag}>Cevap</span>
                       <span style={s.answerVal}>{answer.content}</span>
+                    </div>
+                  )}
+                  {pastAnswer && myAnswer && (
+                    <div style={s.memoryBox}>
+                      <span style={s.memoryLabel}>🕰️ {monthsAgo} ay önce demiştin</span>
+                      <span style={s.memoryText}>"{pastAnswer.content}"</span>
+                      {changed && <span style={s.memoryChange}>Cevabın değişmiş!</span>}
                     </div>
                   )}
                   {round.scores.length > 0 && (
@@ -177,9 +244,45 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
           </div>
         </div>
 
+        {/* Uyumluluk Skoru (sadece social mod) */}
+        {Object.keys(compatMap).length > 0 && (
+          <div style={s.section}>
+            <p style={s.sectionTitle}>Seni en iyi kim tanıyor?</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+              {Object.entries(compatMap).map(([uid, data]) => {
+                const answerer  = game.room.participants.find((p) => p.userId === uid);
+                const answName  = answerer?.user.username ?? answerer?.user.email ?? "?";
+                const pct       = data.max > 0 ? Math.round((data.total / data.max) * 100) : 0;
+                const bestGuesser = [...data.knownBy].sort((a, b) => b.points - a.points)[0];
+                return (
+                  <div key={uid} style={s.compatCard}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.4rem" }}>
+                      <span style={{ color: "var(--accent)", fontWeight: 700, fontSize: "0.9rem" }}>{answName}</span>
+                      <span style={{ color: "var(--fg-secondary)", fontSize: "0.8rem" }}>{pct}% doğruluk</span>
+                    </div>
+                    <div style={{ height: 5, background: "var(--bg-base)", borderRadius: 3, overflow: "hidden", marginBottom: "0.4rem" }}>
+                      <div style={{ height: "100%", width: `${pct}%`, background: "var(--accent)", borderRadius: 3 }} />
+                    </div>
+                    {bestGuesser && (
+                      <span style={{ color: "var(--fg-secondary)", fontSize: "0.78rem" }}>
+                        En iyi tanıyan: <strong style={{ color: "var(--fg-primary)" }}>{bestGuesser.username}</strong> ({bestGuesser.points} pt)
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Actions */}
         <div style={s.actions}>
-          <ShareButton familiarity={familiarity} gameId={gameId} />
+          <ShareButton
+            familiarity={familiarity}
+            gameId={gameId}
+            funniestQuestion={funniestRound?.question.text}
+            funniestAnswer={funniestRound?.answers[0]?.content}
+          />
           <a href="/" style={s.newGame}>Yeni Oyun</a>
         </div>
 
@@ -221,6 +324,11 @@ const s = {
   guessGrid:    { display: "flex", flexDirection: "column" as const, gap: "0.35rem" },
   guessChip:    { display: "flex", flexDirection: "column" as const, gap: "0.1rem", padding: "0.45rem 0.65rem", borderRadius: 8, border: "1px solid" },
 
+  compatCard:   { background: "var(--bg-elevated)", borderRadius: 12, padding: "0.75rem 0.9rem" },
+  memoryBox:    { background: "#1a1a2e", border: "1px solid #3b3b6b", borderRadius: 8, padding: "0.5rem 0.75rem", marginTop: "0.35rem", display: "flex", flexDirection: "column" as const, gap: "0.15rem" },
+  memoryLabel:  { color: "#8888cc", fontSize: "0.7rem" },
+  memoryText:   { color: "#c8c8f0", fontSize: "0.85rem", fontStyle: "italic" as const },
+  memoryChange: { color: "#a78bfa", fontSize: "0.72rem", fontWeight: 600 },
   actions:      { display: "flex", flexDirection: "column" as const, gap: "0.6rem", paddingTop: "0.5rem" },
   newGame:      { display: "block", background: "var(--bg-elevated)", color: "var(--fg-primary)", border: "1px solid var(--fg-muted)", borderRadius: 12, fontWeight: 600, padding: "0.85rem", textAlign: "center" as const, textDecoration: "none", fontSize: "0.95rem" },
 };

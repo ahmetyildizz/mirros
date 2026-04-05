@@ -122,11 +122,11 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     });
   }
 
-  async function submitGuess(content: string) {
+  async function submitGuess(content: string, reason?: string) {
     if (!activeRoundId) return;
     await fetch(`/api/rounds/${activeRoundId}/guess`, {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ content, reason }),
     });
   }
 
@@ -229,6 +229,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     options={question.options}
                     onSubmit={submitGuess}
                     allowFreeText
+                    showReason
                   />
                 : <GuessInput
                     opponentName={spotlightPlayer?.username ?? "Spotlight oyuncu"}
@@ -255,6 +256,9 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     <div style={styles.guessInfo}>
                       <span style={styles.guessUsername}>{g.username}</span>
                       <span style={styles.guessText}>{g.guess}</span>
+                      {g.reason && (
+                        <span style={styles.guessReason}>💬 "{g.reason}"</span>
+                      )}
                     </div>
                     <div style={styles.guessPoints}>
                       <span style={{ color: g.matchLevel === "EXACT" ? "var(--exact)" : g.matchLevel === "CLOSE" ? "var(--close)" : "var(--fg-muted)", fontWeight: 700 }}>
@@ -353,6 +357,7 @@ const styles = {
   guessInfo:     { flex: 1, display: "flex", flexDirection: "column" as const, gap: "0.1rem" },
   guessUsername: { color: "var(--fg-secondary)", fontSize: "0.75rem" },
   guessText:     { color: "var(--fg-primary)", fontSize: "0.9rem", fontWeight: 500 },
+  guessReason:   { color: "var(--fg-secondary)", fontSize: "0.78rem", fontStyle: "italic" as const },
   guessPoints:   { fontSize: "1rem" },
   penaltyBox:    { background: "#2d1a00", border: "2px solid #f97316", borderRadius: 12, padding: "0.875rem 1rem", display: "flex", flexDirection: "column" as const, gap: "0.3rem" },
   penaltyTitle:  { color: "#f97316", fontWeight: 800, fontSize: "0.95rem" },

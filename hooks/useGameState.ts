@@ -50,7 +50,7 @@ interface RoundScoredPayload {
   roundId:      string;
   answererId:   string;
   answer:       string;
-  guessResults: GuessResult[];
+  guessResults: (GuessResult & { reason?: string | null })[];
   playerScores: Record<string, number>;
   penalty?:     string | null;
 }

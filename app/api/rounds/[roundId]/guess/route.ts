@@ -4,7 +4,10 @@ import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
 
-const bodySchema = z.object({ content: z.string().min(1).max(120) });
+const bodySchema = z.object({
+  content: z.string().min(1).max(120),
+  reason:  z.string().max(100).optional(),
+});
 
 export async function POST(
   req: NextRequest,
@@ -26,8 +29,8 @@ export async function POST(
   // Upsert: aynı kullanıcı tekrar tahmin gönderirse güncelle
   const guess = await db.guess.upsert({
     where:  { roundId_userId: { roundId, userId: user.id } },
-    create: { roundId, userId: user.id, content: body.data.content },
-    update: { content: body.data.content },
+    create: { roundId, userId: user.id, content: body.data.content, reason: body.data.reason },
+    update: { content: body.data.content, reason: body.data.reason },
   });
 
   // Kaç kişi tahmin etti?

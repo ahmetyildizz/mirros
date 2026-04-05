@@ -103,6 +103,7 @@ model Guess {
   roundId     String
   userId      String
   content     String
+  reason      String?  // "neden böyle düşündün?" — haksızlık mekaniği
   submittedAt DateTime @default(now())
 
   round Round @relation(fields: [roundId], references: [id])

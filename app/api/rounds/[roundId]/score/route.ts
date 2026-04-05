@@ -28,7 +28,7 @@ export async function POST(
 
   // Tüm tahminleri değerlendir (her guesser için ayrı skor)
   const scores: { id: string; gameId: string; roundId: string; guesserId: string; matchLevel: string; points: number; createdAt: Date }[] = [];
-  const guessResults: { userId: string; username: string; guess: string; matchLevel: string; points: number }[] = [];
+  const guessResults: { userId: string; username: string; guess: string; reason: string | null; matchLevel: string; points: number }[] = [];
 
   for (const guess of round.guesses) {
     const matchLevel = scoreRound(answer.content, guess.content);
@@ -44,6 +44,7 @@ export async function POST(
       userId:    guess.userId,
       username:  guess.user.username ?? guess.user.email,
       guess:     guess.content,
+      reason:    guess.reason ?? null,
       matchLevel,
       points,
     });

@@ -5,15 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Input }  from "@/components/ui/input";
 
 interface Props {
-  options:   string[];
-  onSubmit:  (value: string) => void | Promise<void>;
+  options:      string[];
+  onSubmit:     (value: string, reason?: string) => void | Promise<void>;
   allowFreeText?: boolean;   // sosyal modda son şık = "Diğer"
+  showReason?:  boolean;     // tahmin ekranında "neden böyle düşündün?" göster
 }
 
-export function MultipleChoiceInput({ options, onSubmit, allowFreeText = false }: Props) {
+export function MultipleChoiceInput({ options, onSubmit, allowFreeText = false, showReason = false }: Props) {
   const [selected,   setSelected]   = useState<string | null>(null);
   const [freeText,   setFreeText]   = useState("");
   const [showFree,   setShowFree]   = useState(false);
+  const [reason,     setReason]     = useState("");
   const [sending,    setSending]    = useState(false);
   const [submitted,  setSubmitted]  = useState(false);
 
@@ -22,7 +24,7 @@ export function MultipleChoiceInput({ options, onSubmit, allowFreeText = false }
     if (!value || sending || submitted) return;
     setSending(true);
     try {
-      await onSubmit(value);
+      await onSubmit(value, reason.trim() || undefined);
       setSubmitted(true);
     } finally {
       setSending(false);
@@ -36,6 +38,8 @@ export function MultipleChoiceInput({ options, onSubmit, allowFreeText = false }
       </div>
     );
   }
+
+  const hasSelection = showFree ? freeText.trim().length > 0 : !!selected;
 
   return (
     <div style={s.container}>
@@ -75,9 +79,19 @@ export function MultipleChoiceInput({ options, onSubmit, allowFreeText = false }
         />
       )}
 
+      {showReason && hasSelection && (
+        <Input
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          placeholder='Neden böyle düşündün? (isteğe bağlı)'
+          maxLength={100}
+          style={{ ...s.freeInput, fontSize: "0.85rem", borderStyle: "dashed" }}
+        />
+      )}
+
       <Button
         onClick={handleSubmit}
-        disabled={(!selected && !freeText.trim()) || sending}
+        disabled={!hasSelection || sending}
         style={s.submitBtn}
       >
         {sending ? "Gönderiliyor..." : "Gönder"}

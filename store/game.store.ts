@@ -18,6 +18,7 @@ export interface GuessResult {
   userId:    string;
   username:  string;
   guess:     string;
+  reason:    string | null;
   matchLevel: MatchLevel;
   points:    number;
 }
