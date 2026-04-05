@@ -7,9 +7,9 @@ import { JoinRoom } from "@/components/lobby/JoinRoom";
 import { useGameStore } from "@/store/game.store";
 
 function LobbyContent() {
-  const router      = useRouter();
-  const params      = useSearchParams();
-  const joinCode    = params.get("code") ?? "";
+  const router   = useRouter();
+  const params   = useSearchParams();
+  const joinCode = params.get("code") ?? "";
   const { setRoomId, setRoomCode, setIsHostPlayer } = useGameStore();
 
   const handleCreated = (roomId: string, roomCode: string) => {
@@ -25,52 +25,47 @@ function LobbyContent() {
   };
 
   return (
-    <main
-      style={{
-        minHeight: "100dvh",
-        background: "var(--bg-base)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "1.5rem",
-      }}
-    >
-      <div style={{ width: "100%", maxWidth: 400 }}>
-        <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-          <h1
-            style={{
-              fontSize: "2.5rem",
-              fontWeight: 800,
-              color: "var(--accent)",
-              letterSpacing: "-0.04em",
-            }}
-          >
-            mirros
-          </h1>
-          <p style={{ color: "var(--fg-secondary)", marginTop: "0.5rem", fontSize: "0.9rem" }}>
-            Beni ne kadar tanıyorsun?
-          </p>
+    <main style={s.page}>
+      {/* Aurora arkaplan */}
+      <div className="aurora-bg" aria-hidden>
+        <div className="aurora-blob-1" />
+        <div className="aurora-blob-2" />
+        <div className="aurora-blob-3" />
+      </div>
+
+      <div style={s.inner}>
+        {/* Hero */}
+        <div style={s.hero} className="fade-up">
+          <div style={s.logoWrap}>
+            <span style={s.logoDot} />
+            <h1 className="gradient-text" style={s.logo}>mirros</h1>
+            <span style={s.logoDot} />
+          </div>
+          <p style={s.tagline}>Beni ne kadar tanıyorsun?</p>
+          <div style={s.taglineLine} />
         </div>
 
-        <div style={{ marginBottom: "1.5rem" }}>
+        {/* Oda oluştur */}
+        <div style={s.section} className="fade-up fade-up-1">
           <CreateRoom onCreated={handleCreated} />
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <div style={{ flex: 1, height: 1, background: "var(--fg-muted)" }} />
-          <span style={{ color: "var(--fg-muted)", fontSize: "0.8rem" }}>veya</span>
-          <div style={{ flex: 1, height: 1, background: "var(--fg-muted)" }} />
+        {/* Ayırıcı */}
+        <div style={s.divider} className="fade-up fade-up-2">
+          <div style={s.divLine} />
+          <span style={s.divText}>veya</span>
+          <div style={s.divLine} />
         </div>
 
-        <JoinRoom onJoined={handleJoined} initialCode={joinCode} />
+        {/* Odaya katıl */}
+        <div style={s.section} className="fade-up fade-up-3">
+          <JoinRoom onJoined={handleJoined} initialCode={joinCode} />
+        </div>
+
+        {/* Footer */}
+        <p style={s.footer} className="fade-up fade-up-4">
+          arkadaşlarını tanı · kendini keşfet
+        </p>
       </div>
     </main>
   );
@@ -83,3 +78,89 @@ export default function LobbyPage() {
     </Suspense>
   );
 }
+
+const s = {
+  page: {
+    minHeight: "100dvh",
+    display: "flex",
+    flexDirection: "column" as const,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "1.5rem 1.25rem",
+    position: "relative" as const,
+    zIndex: 1,
+  },
+  inner: {
+    width: "100%",
+    maxWidth: 420,
+    display: "flex",
+    flexDirection: "column" as const,
+    gap: "1.25rem",
+  },
+  hero: {
+    textAlign: "center" as const,
+    marginBottom: "0.25rem",
+  },
+  logoWrap: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "0.6rem",
+    marginBottom: "0.5rem",
+  },
+  logo: {
+    fontSize: "3rem",
+    fontWeight: 800,
+    letterSpacing: "-0.05em",
+    lineHeight: 1,
+    margin: 0,
+  },
+  logoDot: {
+    display: "inline-block",
+    width: 6,
+    height: 6,
+    borderRadius: "50%",
+    background: "var(--grad)",
+    opacity: 0.6,
+  },
+  tagline: {
+    color: "var(--fg-secondary)",
+    fontSize: "0.95rem",
+    fontWeight: 500,
+    margin: "0 0 0.75rem",
+  },
+  taglineLine: {
+    width: 40,
+    height: 2,
+    borderRadius: 2,
+    background: "var(--grad)",
+    margin: "0 auto",
+    opacity: 0.6,
+  },
+  section: {
+    position: "relative" as const,
+  },
+  divider: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem",
+  },
+  divLine: {
+    flex: 1,
+    height: 1,
+    background: "var(--border)",
+  },
+  divText: {
+    color: "var(--fg-muted)",
+    fontSize: "0.78rem",
+    fontWeight: 500,
+    letterSpacing: "0.05em",
+  },
+  footer: {
+    textAlign: "center" as const,
+    color: "var(--fg-muted)",
+    fontSize: "0.72rem",
+    letterSpacing: "0.06em",
+    marginTop: "0.25rem",
+  },
+};
