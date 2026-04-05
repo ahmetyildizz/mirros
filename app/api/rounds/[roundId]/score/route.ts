@@ -8,7 +8,7 @@ export async function POST(
   _req: NextRequest,
   { params }: { params: Promise<{ roundId: string }> }
 ) {
-  await requireAuth();
+  const { id: userId } = await requireAuth();
   const { roundId } = await params;
 
   const round = await db.round.findUnique({
@@ -22,6 +22,11 @@ export async function POST(
   });
   if (!round)                    return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
   if (round.status === "SCORED") return NextResponse.json({ error: "Zaten skorlandı" }, { status: 409 });
+
+  // Sadece odanın host'u veya round'un answerer'ı skorlayabilir
+  const isHost     = round.game.room.hostId === userId;
+  const isAnswerer = round.answererId === userId;
+  if (!isHost && !isAnswerer) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
 
   const answer = round.answers.find((a) => a.userId === round.answererId);
   if (!answer) return NextResponse.json({ error: "Cevap henüz gönderilmedi" }, { status: 422 });

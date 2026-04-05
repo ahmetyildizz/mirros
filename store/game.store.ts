@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 export type GameState =
   | "WAITING"
@@ -110,26 +111,49 @@ const initialState = {
   gameMode:         null,
 };
 
-export const useGameStore = create<GameStore>((set) => ({
-  ...initialState,
-  setGameId:         (gameId) => set({ gameId }),
-  setRoomId:         (roomId) => set({ roomId }),
-  setRoomCode:       (roomCode) => set({ roomCode }),
-  setIsHostPlayer:   (isHostPlayer) => set({ isHostPlayer }),
-  setGameState:      (state) => set({ state }),
-  setCurrentRound:   (currentRound) => set({ currentRound }),
-  setTotalRounds:    (totalRounds) => set({ totalRounds }),
-  setActiveRoundId:  (activeRoundId) => set({ activeRoundId }),
-  setQuestion:       (question) => set({ question }),
-  setMyRole:         (myRole) => set({ myRole }),
-  setAnswererId:     (answererId) => set({ answererId }),
-  setPlayers:        (players) => set({ players }),
-  setPlayerScores:   (playerScores) => set({ playerScores }),
-  setLastRoundScore:  (lastRoundScore) => set({ lastRoundScore }),
-  setLastQuizResults: (lastQuizResults) => set({ lastQuizResults }),
-  setLastPenalty:     (lastPenalty) => set({ lastPenalty }),
-  setGuessProgress:   (guessCount, totalGuessers) => set({ guessCount, totalGuessers }),
-  setGameMode:        (gameMode) => set({ gameMode }),
-  setQuestionOptions: (options) => set((s) => s.question ? { question: { ...s.question, options } } : {}),
-  reset:             () => set(initialState),
-}));
+export const useGameStore = create<GameStore>()(
+  persist(
+    (set) => ({
+      ...initialState,
+      setGameId:         (gameId) => set({ gameId }),
+      setRoomId:         (roomId) => set({ roomId }),
+      setRoomCode:       (roomCode) => set({ roomCode }),
+      setIsHostPlayer:   (isHostPlayer) => set({ isHostPlayer }),
+      setGameState:      (state) => set({ state }),
+      setCurrentRound:   (currentRound) => set({ currentRound }),
+      setTotalRounds:    (totalRounds) => set({ totalRounds }),
+      setActiveRoundId:  (activeRoundId) => set({ activeRoundId }),
+      setQuestion:       (question) => set({ question }),
+      setMyRole:         (myRole) => set({ myRole }),
+      setAnswererId:     (answererId) => set({ answererId }),
+      setPlayers:        (players) => set({ players }),
+      setPlayerScores:   (playerScores) => set({ playerScores }),
+      setLastRoundScore:  (lastRoundScore) => set({ lastRoundScore }),
+      setLastQuizResults: (lastQuizResults) => set({ lastQuizResults }),
+      setLastPenalty:     (lastPenalty) => set({ lastPenalty }),
+      setGuessProgress:   (guessCount, totalGuessers) => set({ guessCount, totalGuessers }),
+      setGameMode:        (gameMode) => set({ gameMode }),
+      setQuestionOptions: (options) => set((s) => s.question ? { question: { ...s.question, options } } : {}),
+      reset:             () => set(initialState),
+    }),
+    {
+      name:    "mirros-game",
+      storage: createJSONStorage(() => localStorage),
+      // Geçici/türetilebilir alanları persist etme
+      partialize: (s) => ({
+        gameId:       s.gameId,
+        roomId:       s.roomId,
+        roomCode:     s.roomCode,
+        isHostPlayer: s.isHostPlayer,
+        gameMode:     s.gameMode,
+        players:      s.players,
+        currentRound: s.currentRound,
+        totalRounds:  s.totalRounds,
+        activeRoundId:s.activeRoundId,
+        answererId:   s.answererId,
+        state:        s.state,
+        playerScores: s.playerScores,
+      }),
+    }
+  )
+);

@@ -24,13 +24,17 @@ function resolveSpotlight(roundNumber: number, participantIds: string[]): string
 }
 
 export async function startGame(roomId: string) {
+  // Atomik kontrol: zaten aktif bir game varsa erken çık (race condition önlemi)
+  const existingGame = await db.game.findFirst({ where: { roomId, status: "ACTIVE" } });
+  if (existingGame) throw new Error("Oyun zaten başlatıldı");
+
   const room = await db.room.findUnique({
     where:   { id: roomId },
     include: { participants: { orderBy: { joinedAt: "asc" }, include: { user: true } } },
   });
   if (!room) throw new Error("Oda bulunamadı");
   if (room.participants.length < 2) throw new Error("En az 2 oyuncu gerekli");
-  if (room.status !== "ACTIVE") throw new Error("Oda aktif değil");
+  if (room.status === "FINISHED") throw new Error("Oda kapandı");
 
   const isQuiz         = room.gameMode === "QUIZ";
   const participantIds = room.participants.map((p) => p.userId);

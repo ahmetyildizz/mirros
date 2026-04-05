@@ -17,10 +17,14 @@ export async function POST(req: NextRequest) {
 
   const room = await db.room.findUnique({
     where:   { code: body.data.code.toUpperCase() },
-    include: { participants: { include: { user: true }, orderBy: { joinedAt: "asc" } } },
+    include: {
+      participants: { include: { user: true }, orderBy: { joinedAt: "asc" } },
+      games:        { where: { status: "ACTIVE" }, select: { id: true } },
+    },
   });
   if (!room)                          return NextResponse.json({ error: "Oda bulunamadı" }, { status: 404 });
-  if (room.status !== "WAITING")      return NextResponse.json({ error: "Oyun başladı veya bitti" }, { status: 409 });
+  if (room.status === "FINISHED")     return NextResponse.json({ error: "Oyun bitti" }, { status: 409 });
+  if (room.games.length > 0)          return NextResponse.json({ error: "Oyun başladı" }, { status: 409 });
   if (room.participants.length >= room.maxPlayers)
     return NextResponse.json({ error: "Oda dolu" }, { status: 409 });
 
@@ -28,7 +32,6 @@ export async function POST(req: NextRequest) {
   if (!alreadyIn) {
     await db.roomParticipant.create({ data: { roomId: room.id, userId: user.id, ageGroup: body.data.ageGroup } });
   } else if (body.data.ageGroup) {
-    // Zaten içindeyse ageGroup'u güncelle
     await db.roomParticipant.update({
       where: { roomId_userId: { roomId: room.id, userId: user.id } },
       data:  { ageGroup: body.data.ageGroup },
@@ -47,18 +50,17 @@ export async function POST(req: NextRequest) {
 
   await pusherServer.trigger(`room-${room.id}`, "player-joined", {
     userId:   user.id,
-    username: user.email,
+    username: user.username,
     players,
   });
 
-  // Oda aktif (2+ oyuncu)
   if (!alreadyIn && updated && updated.participants.length >= 2) {
     await db.room.update({ where: { id: room.id }, data: { status: "ACTIVE" } });
   }
 
-  // Oda doldu → otomatik başlat
+  // Oda doldu → otomatik başlat (race condition önlemi: try/catch)
   if (!alreadyIn && updated && updated.participants.length >= room.maxPlayers) {
-    try { await startGame(room.id); } catch {}
+    try { await startGame(room.id); } catch { /* zaten başlatılmış olabilir */ }
   }
 
   return NextResponse.json({ id: room.id, code: room.code, players });

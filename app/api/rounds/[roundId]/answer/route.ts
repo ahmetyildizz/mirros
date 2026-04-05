@@ -32,6 +32,9 @@ export async function POST(
   if (!round)                       return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
   if (round.status !== "ANSWERING") return NextResponse.json({ error: "Bu round cevap kabul etmiyor" }, { status: 409 });
 
+  const isParticipant = round.game.room.participants.some((p) => p.userId === user.id);
+  if (!isParticipant) return NextResponse.json({ error: "Bu oyunun katılımcısı değilsin" }, { status: 403 });
+
   const isQuiz = round.game.room.gameMode === "QUIZ";
 
   // SOCIAL: sadece answererId cevap verebilir
@@ -140,11 +143,13 @@ async function scoreQuizRound(roundId: string, gameId: string) {
     correctAnswer: correct,
     results,
     playerScores,
-    penalty: round.question.penalty ?? null,
+    penalty:            round.question.penalty ?? null,
+    autoAdvanceAfterMs: 4000, // Client bu süre sonra /next endpoint'ini çağırır
   });
 
-  // 4 saniye bekle, sonra ilerle (scoring ekranı görünsün)
+  // Sunucu-tarafı bekleme kaldırıldı (serverless timeout riski).
+  // Client, autoAdvanceAfterMs ms sonra POST /rounds/:id/next çağırmalı.
+  // Quiz modunda answererId null olduğundan next endpoint host'a açık bırakıldı.
   const { advanceGame } = await import("@/lib/services/game.service");
-  await new Promise((res) => setTimeout(res, 4000));
   await advanceGame(gameId, round.number);
 }

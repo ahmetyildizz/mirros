@@ -24,6 +24,9 @@ export async function POST(
   });
   if (!round) return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
   if (round.status !== "GUESSING") return NextResponse.json({ error: "Bu round tahmin kabul etmiyor" }, { status: 409 });
+
+  const isParticipant = round.game.room.participants.some((p) => p.userId === user.id);
+  if (!isParticipant) return NextResponse.json({ error: "Bu oyunun katılımcısı değilsin" }, { status: 403 });
   if (round.answererId === user.id) return NextResponse.json({ error: "Cevaplayan tahmin edemez" }, { status: 403 });
 
   // Upsert: aynı kullanıcı tekrar tahmin gönderirse güncelle

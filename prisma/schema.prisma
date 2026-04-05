@@ -68,6 +68,9 @@ model Game {
   rounds   Round[]
   scores   Score[]
   insights Insight[]
+
+  @@index([roomId])
+  @@index([status])
 }
 
 model Round {
@@ -83,6 +86,9 @@ model Round {
   answers  Answer[]
   guesses  Guess[]
   scores   Score[]
+
+  @@index([gameId])
+  @@index([gameId, status])
 }
 
 model Answer {
@@ -126,6 +132,8 @@ model Score {
   guesser User  @relation(fields: [guesserId], references: [id])
 
   @@unique([roundId, guesserId])
+  @@index([gameId])
+  @@index([guesserId])
 }
 
 model Question {
