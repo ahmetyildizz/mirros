@@ -19,7 +19,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   const {
     gameId, state, question, myRole, answererId, gameMode,
-    players, playerScores, lastRoundScore, lastQuizResults,
+    players, playerScores, lastRoundScore, lastQuizResults, lastPenalty,
     currentRound, totalRounds, activeRoundId,
     guessCount, totalGuessers,
     setGameState, setMyRole, setAnswererId,
@@ -265,6 +265,12 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 ))}
               </div>
             </div>
+            {lastPenalty && (
+              <div style={styles.penaltyBox}>
+                <span style={styles.penaltyTitle}>🎭 Ceza!</span>
+                <p style={styles.penaltyText}>{lastPenalty}</p>
+              </div>
+            )}
             {isAnswerer && (
               <Button onClick={() => { setCountdown(null); advanceToNext(); }} style={styles.nextBtn}>
                 {countdown !== null ? `Sonraki Round (${countdown})` : "Sonraki Round"}
@@ -304,6 +310,12 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 ))}
               </div>
             </div>
+            {lastPenalty && (
+              <div style={styles.penaltyBox}>
+                <span style={styles.penaltyTitle}>🎭 Ceza!</span>
+                <p style={styles.penaltyText}>{lastPenalty}</p>
+              </div>
+            )}
             <p style={{ color: "var(--fg-secondary)", textAlign: "center", fontSize: "0.85rem" }}>
               Sonraki soru geliyor...
             </p>
@@ -342,4 +354,7 @@ const styles = {
   guessUsername: { color: "var(--fg-secondary)", fontSize: "0.75rem" },
   guessText:     { color: "var(--fg-primary)", fontSize: "0.9rem", fontWeight: 500 },
   guessPoints:   { fontSize: "1rem" },
+  penaltyBox:    { background: "#2d1a00", border: "2px solid #f97316", borderRadius: 12, padding: "0.875rem 1rem", display: "flex", flexDirection: "column" as const, gap: "0.3rem" },
+  penaltyTitle:  { color: "#f97316", fontWeight: 800, fontSize: "0.95rem" },
+  penaltyText:   { color: "#fed7aa", fontSize: "0.9rem", lineHeight: 1.4 },
 };

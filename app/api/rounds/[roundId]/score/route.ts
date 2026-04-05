@@ -14,6 +14,7 @@ export async function POST(
   const round = await db.round.findUnique({
     where:   { id: roundId },
     include: {
+      question: { select: { penalty: true } },
       answers: true,
       guesses: { include: { user: { select: { id: true, username: true, email: true } } } },
       game:    { include: { room: { include: { participants: true } } } },
@@ -59,10 +60,11 @@ export async function POST(
 
   await pusherServer.trigger(`game-${round.gameId}`, "round-scored", {
     roundId,
-    answererId: round.answererId,
-    answer:     answer.content,
+    answererId:  round.answererId,
+    answer:      answer.content,
     guessResults,
     playerScores,
+    penalty:     round.question?.penalty ?? null,
   });
 
   return NextResponse.json({ scores, playerScores });

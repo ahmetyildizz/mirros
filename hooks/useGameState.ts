@@ -23,6 +23,7 @@ interface QuizRoundScoredPayload {
   correctAnswer: string;
   results:       QuizResult[];
   playerScores:  Record<string, number>;
+  penalty?:      string | null;
 }
 
 interface AnswerSubmittedPayload {
@@ -51,6 +52,7 @@ interface RoundScoredPayload {
   answer:       string;
   guessResults: GuessResult[];
   playerScores: Record<string, number>;
+  penalty?:     string | null;
 }
 
 interface GameFinishedPayload {
@@ -70,7 +72,7 @@ export function useGameState(gameId: string, myUserId: string) {
     setGameState, setQuestion, setMyRole, setCurrentRound,
     setActiveRoundId, setAnswererId, setPlayerScores,
     setLastRoundScore, setLastQuizResults, setGuessProgress, setPlayers,
-    setQuestionOptions,
+    setQuestionOptions, setLastPenalty,
   } = useGameStore();
 
   useEffect(() => {
@@ -104,6 +106,7 @@ export function useGameState(gameId: string, myUserId: string) {
     channel.bind("quiz-round-scored", (data: QuizRoundScoredPayload) => {
       setLastQuizResults({ correctAnswer: data.correctAnswer, results: data.results });
       setPlayerScores(data.playerScores);
+      setLastPenalty(data.penalty ?? null);
       setGameState("SCORING");
     });
 
@@ -119,6 +122,7 @@ export function useGameState(gameId: string, myUserId: string) {
         guessResults: data.guessResults,
       });
       setPlayerScores(data.playerScores);
+      setLastPenalty(data.penalty ?? null);
       setGameState("SCORING");
     });
 
@@ -134,7 +138,7 @@ export function useGameState(gameId: string, myUserId: string) {
     };
   }, [gameId, myUserId, router, setGameState, setQuestion, setMyRole, setCurrentRound,
       setActiveRoundId, setAnswererId, setPlayerScores, setLastRoundScore, setLastQuizResults,
-      setGuessProgress, setPlayers, setQuestionOptions]);
+      setGuessProgress, setPlayers, setQuestionOptions, setLastPenalty]);
 }
 
 /** Bekleme odası için: oyuncular listesini dinle */

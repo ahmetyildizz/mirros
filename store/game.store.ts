@@ -58,6 +58,7 @@ interface GameStore {
   // Round sonuçları
   lastRoundScore:    RoundScore | null;
   lastQuizResults:   { correctAnswer: string; results: QuizResult[] } | null;
+  lastPenalty:       string | null;
 
   // Tahmin durumu
   guessCount:    number;
@@ -79,6 +80,7 @@ interface GameStore {
   setPlayerScores:    (scores: Record<string, number>) => void;
   setLastRoundScore:  (score: RoundScore) => void;
   setLastQuizResults: (r: GameStore["lastQuizResults"]) => void;
+  setLastPenalty:     (p: string | null) => void;
   setGuessProgress:    (count: number, total: number) => void;
   setGameMode:         (mode: "SOCIAL" | "QUIZ") => void;
   setQuestionOptions:  (options: string[]) => void;
@@ -101,6 +103,7 @@ const initialState = {
   playerScores:     {},
   lastRoundScore:   null,
   lastQuizResults:  null,
+  lastPenalty:      null,
   guessCount:       0,
   totalGuessers:    0,
   gameMode:         null,
@@ -123,6 +126,7 @@ export const useGameStore = create<GameStore>((set) => ({
   setPlayerScores:   (playerScores) => set({ playerScores }),
   setLastRoundScore:  (lastRoundScore) => set({ lastRoundScore }),
   setLastQuizResults: (lastQuizResults) => set({ lastQuizResults }),
+  setLastPenalty:     (lastPenalty) => set({ lastPenalty }),
   setGuessProgress:   (guessCount, totalGuessers) => set({ guessCount, totalGuessers }),
   setGameMode:        (gameMode) => set({ gameMode }),
   setQuestionOptions: (options) => set((s) => s.question ? { question: { ...s.question, options } } : {}),

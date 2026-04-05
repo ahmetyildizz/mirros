@@ -137,6 +137,7 @@ model Question {
   ageGroup   AgeGroup?
   options    Json?      // string[] — multiple choice options
   correct    String?    // correct answer for quiz mode
+  penalty    String?    // yanlış tahmin edenlere verilen komik ceza
 
   rounds Round[]
 }

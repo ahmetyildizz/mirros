@@ -140,6 +140,7 @@ async function scoreQuizRound(roundId: string, gameId: string) {
     correctAnswer: correct,
     results,
     playerScores,
+    penalty: round.question.penalty ?? null,
   });
 
   // 4 saniye bekle, sonra ilerle (scoring ekranı görünsün)
