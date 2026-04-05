@@ -25,7 +25,7 @@ export function CreateRoom({ onCreated }: Props) {
     const res = await fetch("/api/rooms", {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ gameMode: mode, ageGroup: mode === "QUIZ" ? ageGroup : undefined, maxPlayers }),
+      body:    JSON.stringify({ gameMode: mode, ageGroup, maxPlayers }),
     });
     if (res.ok) {
       const data = await res.json();
@@ -53,9 +53,9 @@ export function CreateRoom({ onCreated }: Props) {
           </button>
         </div>
 
-        {mode === "QUIZ" && (
+        {mode && (
           <div style={s.ageRow}>
-            <p style={s.subLabel}>Yaş grubu</p>
+            <p style={s.subLabel}>Senin yaş grubun</p>
             <div style={s.chips}>
               {(["CHILD","ADULT","WISE"] as AgeGroup[]).map((g) => (
                 <button key={g} style={{ ...s.chip, ...(ageGroup === g ? s.chipActive : {}) }} onClick={() => setAgeGroup(g)}>

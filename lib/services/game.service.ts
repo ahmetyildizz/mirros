@@ -36,6 +36,18 @@ export async function startGame(roomId: string) {
   const participantIds = room.participants.map((p) => p.userId);
   const totalRounds    = isQuiz ? QUIZ_ROUNDS : Math.max(SOCIAL_ROUNDS, participantIds.length * 2);
 
+  // Katılımcıların yaş grubu oylaması: çoğunluk kazanır
+  const ageCounts: Record<string, number> = {};
+  for (const p of room.participants) {
+    if (p.ageGroup) ageCounts[p.ageGroup] = (ageCounts[p.ageGroup] ?? 0) + 1;
+  }
+  const majorityAgeGroup = (Object.entries(ageCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null) as "CHILD" | "ADULT" | "WISE" | null;
+
+  // Çoğunluk sonucunu room'a yaz (advanceGame da okusun diye)
+  if (majorityAgeGroup) {
+    await db.room.update({ where: { id: roomId }, data: { ageGroup: majorityAgeGroup } });
+  }
+
   // Bu odada daha önce kullanılan tüm soruları dışla (çapraz oyun tekrar önleme)
   const previousRounds = await db.round.findMany({
     where: { game: { roomId } },
@@ -45,7 +57,7 @@ export async function startGame(roomId: string) {
 
   const game = await db.game.create({ data: { roomId, totalRounds, status: "ACTIVE" } });
 
-  const { round, question } = await createRound(game.id, 1, participantIds, usedIds, isQuiz, room.ageGroup);
+  const { round, question } = await createRound(game.id, 1, participantIds, usedIds, isQuiz, majorityAgeGroup);
 
   const players = room.participants.map((p) => ({
     id:       p.userId,

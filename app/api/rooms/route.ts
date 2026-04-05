@@ -16,6 +16,8 @@ const bodySchema = z.object({
   maxPlayers: z.number().int().min(2).max(10).default(4),
 });
 
+// ageGroup artık room'a değil katılımcıya kaydedilir
+
 export async function POST(req: NextRequest) {
   const user = await requireAuth();
 
@@ -36,9 +38,8 @@ export async function POST(req: NextRequest) {
       hostId:     user.id,
       status:     "WAITING",
       gameMode:   body.gameMode,
-      ageGroup:   body.ageGroup,
       maxPlayers: body.maxPlayers,
-      participants: { create: { userId: user.id } },
+      participants: { create: { userId: user.id, ageGroup: body.ageGroup } },
     },
   });
 

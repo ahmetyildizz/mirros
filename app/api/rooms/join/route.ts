@@ -5,7 +5,10 @@ import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
 import { startGame } from "@/lib/services/game.service";
 
-const bodySchema = z.object({ code: z.string().min(4).max(8) });
+const bodySchema = z.object({
+  code:     z.string().min(4).max(8),
+  ageGroup: z.enum(["CHILD", "ADULT", "WISE"]).optional(),
+});
 
 export async function POST(req: NextRequest) {
   const user = await requireAuth();
@@ -23,7 +26,13 @@ export async function POST(req: NextRequest) {
 
   const alreadyIn = room.participants.some((p) => p.userId === user.id);
   if (!alreadyIn) {
-    await db.roomParticipant.create({ data: { roomId: room.id, userId: user.id } });
+    await db.roomParticipant.create({ data: { roomId: room.id, userId: user.id, ageGroup: body.data.ageGroup } });
+  } else if (body.data.ageGroup) {
+    // Zaten içindeyse ageGroup'u güncelle
+    await db.roomParticipant.update({
+      where: { roomId_userId: { roomId: room.id, userId: user.id } },
+      data:  { ageGroup: body.data.ageGroup },
+    });
   }
 
   const updated = await db.room.findUnique({
