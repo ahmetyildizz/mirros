@@ -5,18 +5,18 @@ const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
 async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", ageGroup?: string | null) {
-  const question = await db.question.findFirst({
+  const candidates = await db.question.findMany({
     where: {
       isActive: true,
       gameMode,
       ...(ageGroup ? { ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" } : {}),
       ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
     },
-    orderBy: { id: "asc" },
-    skip: Math.floor(Math.random() * 8),
+    select: { id: true },
   });
-  if (!question) throw new Error("Soru havuzu tükendi");
-  return question;
+  if (candidates.length === 0) throw new Error("Soru havuzu tükendi");
+  const pick = candidates[Math.floor(Math.random() * candidates.length)];
+  return db.question.findUniqueOrThrow({ where: { id: pick.id } });
 }
 
 function resolveSpotlight(roundNumber: number, participantIds: string[]): string {
@@ -36,9 +36,16 @@ export async function startGame(roomId: string) {
   const participantIds = room.participants.map((p) => p.userId);
   const totalRounds    = isQuiz ? QUIZ_ROUNDS : Math.max(SOCIAL_ROUNDS, participantIds.length * 2);
 
+  // Bu odada daha önce kullanılan tüm soruları dışla (çapraz oyun tekrar önleme)
+  const previousRounds = await db.round.findMany({
+    where: { game: { roomId } },
+    select: { questionId: true },
+  });
+  const usedIds = previousRounds.map((r) => r.questionId);
+
   const game = await db.game.create({ data: { roomId, totalRounds, status: "ACTIVE" } });
 
-  const { round, question } = await createRound(game.id, 1, participantIds, [], isQuiz, room.ageGroup);
+  const { round, question } = await createRound(game.id, 1, participantIds, usedIds, isQuiz, room.ageGroup);
 
   const players = room.participants.map((p) => ({
     id:       p.userId,
@@ -110,7 +117,12 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
   }
 
   const nextNumber = completedRoundNumber + 1;
-  const usedIds    = game.rounds.map((r) => r.questionId);
+  // Bu odadaki tüm oyunların kullandığı soruları dışla
+  const allRoomRounds = await db.round.findMany({
+    where: { game: { roomId: game.roomId } },
+    select: { questionId: true },
+  });
+  const usedIds = allRoomRounds.map((r) => r.questionId);
   const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, isQuiz, game.room.ageGroup);
 
   await pusherServer.trigger(`game-${gameId}`, "round-started", {

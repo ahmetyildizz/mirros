@@ -175,6 +175,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           text={question.text}
           category={question.category}
           roundNumber={currentRound}
+          answererName={!isQuiz && !isAnswerer && state === "GUESSING" ? (spotlightPlayer?.username ?? undefined) : undefined}
         />
 
         {/* ANSWERING */}

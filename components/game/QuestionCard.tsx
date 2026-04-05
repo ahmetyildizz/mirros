@@ -4,9 +4,10 @@ interface Props {
   text: string;
   category: string;
   roundNumber: number;
+  answererName?: string; // gösterilirse "X'e şu soru soruldu" başlığı eklenir
 }
 
-export function QuestionCard({ text, category, roundNumber }: Props) {
+export function QuestionCard({ text, category, roundNumber, answererName }: Props) {
   return (
     <div
       style={{
@@ -19,6 +20,11 @@ export function QuestionCard({ text, category, roundNumber }: Props) {
       <p style={{ color: "var(--fg-muted)", fontSize: "0.75rem", marginBottom: "0.5rem" }}>
         Round {roundNumber} · {category}
       </p>
+      {answererName && (
+        <p style={{ color: "var(--accent)", fontSize: "0.8rem", fontWeight: 600, marginBottom: "0.4rem" }}>
+          {answererName}&apos;a şu soru soruldu:
+        </p>
+      )}
       <p style={{ fontSize: "1.125rem", fontWeight: 500, color: "var(--fg-primary)" }}>
         {text}
       </p>

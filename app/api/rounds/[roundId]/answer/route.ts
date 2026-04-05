@@ -112,7 +112,8 @@ async function scoreQuizRound(roundId: string, gameId: string) {
     playerScores,
   });
 
-  // Otomatik ilerle (quiz'de manuel onay yok)
+  // 4 saniye bekle, sonra ilerle (scoring ekranı görünsün)
   const { advanceGame } = await import("@/lib/services/game.service");
+  await new Promise((res) => setTimeout(res, 4000));
   await advanceGame(gameId, round.number);
 }
