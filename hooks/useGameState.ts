@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getPusherClient } from "@/lib/pusher/client";
@@ -24,11 +26,15 @@ interface QuizRoundScoredPayload {
 }
 
 interface AnswerSubmittedPayload {
-  roundId:          string;
-  userId:           string;
-  answerCount:      number;
-  totalParticipants:number;
-  allAnswered:      boolean;
+  roundId:           string;
+  // quiz fields
+  userId?:           string;
+  answerCount?:      number;
+  totalParticipants?:number;
+  allAnswered?:      boolean;
+  // social fields
+  answererId?:       string;
+  updatedOptions?:   string[] | null;
 }
 
 interface GuessSubmittedPayload {
@@ -64,6 +70,7 @@ export function useGameState(gameId: string, myUserId: string) {
     setGameState, setQuestion, setMyRole, setCurrentRound,
     setActiveRoundId, setAnswererId, setPlayerScores,
     setLastRoundScore, setLastQuizResults, setGuessProgress, setPlayers,
+    setQuestionOptions,
   } = useGameStore();
 
   useEffect(() => {
@@ -84,8 +91,12 @@ export function useGameState(gameId: string, myUserId: string) {
     });
 
     channel.bind("answer-submitted", (data: AnswerSubmittedPayload) => {
-      // SOCIAL: herkese guessing state'i
-      if (!data.userId) { setGameState("GUESSING"); return; }
+      if (data.answererId !== undefined) {
+        // SOCIAL: guessing'e geç, varsa güncellenmiş şıkları uygula
+        if (data.updatedOptions) setQuestionOptions(data.updatedOptions);
+        setGameState("GUESSING");
+        return;
+      }
       // QUIZ: kaç kişi cevapladı bilgisi güncelle
       setGuessProgress(data.answerCount ?? 0, data.totalParticipants ?? 0);
     });
@@ -122,7 +133,8 @@ export function useGameState(gameId: string, myUserId: string) {
       pusher.unsubscribe(`game-${gameId}`);
     };
   }, [gameId, myUserId, router, setGameState, setQuestion, setMyRole, setCurrentRound,
-      setActiveRoundId, setAnswererId, setPlayerScores, setLastRoundScore, setLastQuizResults, setGuessProgress, setPlayers]);
+      setActiveRoundId, setAnswererId, setPlayerScores, setLastRoundScore, setLastQuizResults,
+      setGuessProgress, setPlayers, setQuestionOptions]);
 }
 
 /** Bekleme odası için: oyuncular listesini dinle */

@@ -4,6 +4,16 @@ import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
 
+/** Türkçeye duyarlı metin normalleştirme: ilk harf büyük, trim, çoklu boşluk temizle */
+function normalizeAnswer(text: string): string {
+  const trimmed = text.trim().replace(/\s+/g, " ");
+  if (!trimmed) return trimmed;
+  const trUpperMap: Record<string, string> = { i: "İ", ı: "I", ş: "Ş", ç: "Ç", ğ: "Ğ", ü: "Ü", ö: "Ö" };
+  const first = trimmed[0];
+  const upperFirst = trUpperMap[first] ?? first.toUpperCase();
+  return upperFirst + trimmed.slice(1);
+}
+
 const bodySchema = z.object({ content: z.string().min(1).max(200) });
 
 export async function POST(
@@ -29,11 +39,13 @@ export async function POST(
     return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
   }
 
+  const normalizedContent = normalizeAnswer(body.data.content);
+
   // Daha önce cevap verdiyse güncelle
   const answer = await db.answer.upsert({
     where:  { roundId_userId: { roundId, userId: user.id } },
-    create: { roundId, userId: user.id, content: body.data.content },
-    update: { content: body.data.content },
+    create: { roundId, userId: user.id, content: normalizedContent },
+    update: { content: normalizedContent },
   });
 
   if (isQuiz) {
@@ -55,9 +67,27 @@ export async function POST(
     }
   } else {
     // SOCIAL: cevap verildi → guessing başlasın
+    // Eğer serbest metin girdiyse, normalize edilmiş hali şıklara ekle
+    const question = await db.question.findUnique({ where: { id: round.questionId } });
+    const existingOptions = (question?.options ?? []) as string[];
+    let updatedOptions: string[] | null = null;
+    if (!existingOptions.includes(normalizedContent)) {
+      // Shuffle'dan önce normalize edilmiş cevabı listeye karıştır
+      const withCustom = [...existingOptions, normalizedContent];
+      // Karıştır (Fisher-Yates)
+      for (let i = withCustom.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [withCustom[i], withCustom[j]] = [withCustom[j], withCustom[i]];
+      }
+      updatedOptions = withCustom;
+    }
+
     await db.round.update({ where: { id: roundId }, data: { status: "GUESSING" } });
     await pusherServer.trigger(`game-${round.gameId}`, "answer-submitted", {
-      roundId, answererId: user.id, roomId: round.game.roomId,
+      roundId,
+      answererId: user.id,
+      roomId: round.game.roomId,
+      updatedOptions,
     });
   }
 

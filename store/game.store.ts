@@ -79,9 +79,10 @@ interface GameStore {
   setPlayerScores:    (scores: Record<string, number>) => void;
   setLastRoundScore:  (score: RoundScore) => void;
   setLastQuizResults: (r: GameStore["lastQuizResults"]) => void;
-  setGuessProgress:   (count: number, total: number) => void;
-  setGameMode:        (mode: "SOCIAL" | "QUIZ") => void;
-  reset:              () => void;
+  setGuessProgress:    (count: number, total: number) => void;
+  setGameMode:         (mode: "SOCIAL" | "QUIZ") => void;
+  setQuestionOptions:  (options: string[]) => void;
+  reset:               () => void;
 }
 
 const initialState = {
@@ -124,5 +125,6 @@ export const useGameStore = create<GameStore>((set) => ({
   setLastQuizResults: (lastQuizResults) => set({ lastQuizResults }),
   setGuessProgress:   (guessCount, totalGuessers) => set({ guessCount, totalGuessers }),
   setGameMode:        (gameMode) => set({ gameMode }),
+  setQuestionOptions: (options) => set((s) => s.question ? { question: { ...s.question, options } } : {}),
   reset:             () => set(initialState),
 }));
