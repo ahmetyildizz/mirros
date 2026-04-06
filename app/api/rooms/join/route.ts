@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Oda doldu → otomatik başlat (race condition önlemi: try/catch)
-  if (!alreadyIn && updated && updated.participants.length >= room.maxPlayers) {
+  if (updated && updated.participants.length >= room.maxPlayers) {
     try { await startGame(room.id); } catch { /* zaten başlatılmış olabilir */ }
   }
 

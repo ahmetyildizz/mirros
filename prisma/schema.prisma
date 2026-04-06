@@ -6,55 +6,46 @@ datasource db {
   provider = "postgresql"
 }
 
-// ─── Auth ─────────────────────────────────────────────────────
-
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  username  String?  @unique
-  avatarUrl String?
-  createdAt DateTime @default(now())
-
-  hostedRooms  Room[]            @relation("HostedRooms")
-  rooms        RoomParticipant[]
-  answers      Answer[]
-  guesses      Guess[]
-  scores       Score[]
-  insightsA    Insight[]         @relation("InsightUserA")
-  insightsB    Insight[]         @relation("InsightUserB")
+  id          String            @id @default(cuid())
+  email       String            @unique
+  username    String?           @unique
+  avatarUrl   String?
+  createdAt   DateTime          @default(now())
+  answers     Answer[]
+  guesses     Guess[]
+  insightsA   Insight[]         @relation("InsightUserA")
+  insightsB   Insight[]         @relation("InsightUserB")
+  hostedRooms Room[]            @relation("HostedRooms")
+  rooms       RoomParticipant[]
+  scores      Score[]
 }
 
-// ─── Room ─────────────────────────────────────────────────────
-
 model Room {
-  id         String     @id @default(cuid())
-  code       String     @unique
-  status     RoomStatus @default(WAITING)
-  hostId     String
-  maxPlayers Int        @default(8)
-  gameMode   GameMode   @default(SOCIAL)
-  ageGroup   AgeGroup?
-  createdAt  DateTime   @default(now())
-
+  id           String            @id @default(cuid())
+  code         String            @unique
+  status       RoomStatus        @default(WAITING)
+  hostId       String
+  createdAt    DateTime          @default(now())
+  maxPlayers   Int               @default(8)
+  ageGroup     AgeGroup?
+  gameMode     GameMode          @default(SOCIAL)
+  games        Game[]
   host         User              @relation("HostedRooms", fields: [hostId], references: [id])
   participants RoomParticipant[]
-  games        Game[]
 }
 
 model RoomParticipant {
   id       String    @id @default(cuid())
   roomId   String
   userId   String
-  ageGroup AgeGroup?
   joinedAt DateTime  @default(now())
-
-  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  user User @relation(fields: [userId], references: [id])
+  ageGroup AgeGroup?
+  room     Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user     User      @relation(fields: [userId], references: [id])
 
   @@unique([roomId, userId])
 }
-
-// ─── Game ─────────────────────────────────────────────────────
 
 model Game {
   id          String     @id @default(cuid())
@@ -63,11 +54,10 @@ model Game {
   status      GameStatus @default(ACTIVE)
   startedAt   DateTime   @default(now())
   finishedAt  DateTime?
-
-  room     Room      @relation(fields: [roomId], references: [id])
-  rounds   Round[]
-  scores   Score[]
-  insights Insight[]
+  room        Room       @relation(fields: [roomId], references: [id])
+  insights    Insight[]
+  rounds      Round[]
+  scores      Score[]
 
   @@index([roomId])
   @@index([status])
@@ -78,14 +68,13 @@ model Round {
   gameId     String
   number     Int
   questionId String
-  answererId String?     // null for quiz mode
+  answererId String?
   status     RoundStatus @default(ANSWERING)
-
-  game     Game     @relation(fields: [gameId], references: [id])
-  question Question @relation(fields: [questionId], references: [id])
-  answers  Answer[]
-  guesses  Guess[]
-  scores   Score[]
+  answers    Answer[]
+  guesses    Guess[]
+  game       Game        @relation(fields: [gameId], references: [id])
+  question   Question    @relation(fields: [questionId], references: [id])
+  scores     Score[]
 
   @@index([gameId])
   @@index([gameId, status])
@@ -97,9 +86,8 @@ model Answer {
   userId      String
   content     String
   submittedAt DateTime @default(now())
-
-  round Round @relation(fields: [roundId], references: [id])
-  user  User  @relation(fields: [userId], references: [id])
+  round       Round    @relation(fields: [roundId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
 
   @@unique([roundId, userId])
 }
@@ -109,11 +97,10 @@ model Guess {
   roundId     String
   userId      String
   content     String
-  reason      String?  // "neden böyle düşündün?" — haksızlık mekaniği
   submittedAt DateTime @default(now())
-
-  round Round @relation(fields: [roundId], references: [id])
-  user  User  @relation(fields: [userId], references: [id])
+  reason      String?
+  round       Round    @relation(fields: [roundId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
 
   @@unique([roundId, userId])
 }
@@ -126,10 +113,9 @@ model Score {
   matchLevel MatchLevel
   points     Int
   createdAt  DateTime   @default(now())
-
-  round   Round @relation(fields: [roundId], references: [id])
-  game    Game  @relation(fields: [gameId], references: [id])
-  guesser User  @relation(fields: [guesserId], references: [id])
+  game       Game       @relation(fields: [gameId], references: [id])
+  guesser    User       @relation(fields: [guesserId], references: [id])
+  round      Round      @relation(fields: [roundId], references: [id])
 
   @@unique([roundId, guesserId])
   @@index([gameId])
@@ -143,13 +129,12 @@ model Question {
   difficulty Difficulty @default(EASY)
   language   String     @default("tr")
   isActive   Boolean    @default(true)
-  gameMode   GameMode   @default(SOCIAL)
   ageGroup   AgeGroup?
-  options    Json?      // string[] — multiple choice options
-  correct    String?    // correct answer for quiz mode
-  penalty    String?    // yanlış tahmin edenlere verilen komik ceza
-
-  rounds Round[]
+  correct    String?
+  gameMode   GameMode   @default(SOCIAL)
+  options    Json?
+  penalty    String?
+  rounds     Round[]
 }
 
 model Insight {
@@ -160,13 +145,10 @@ model Insight {
   text       String
   patternKey String
   createdAt  DateTime @default(now())
-
-  game  Game @relation(fields: [gameId], references: [id])
-  userA User @relation("InsightUserA", fields: [userAId], references: [id])
-  userB User @relation("InsightUserB", fields: [userBId], references: [id])
+  game       Game     @relation(fields: [gameId], references: [id])
+  userA      User     @relation("InsightUserA", fields: [userAId], references: [id])
+  userB      User     @relation("InsightUserB", fields: [userBId], references: [id])
 }
-
-// ─── Enums ────────────────────────────────────────────────────
 
 enum RoomStatus {
   WAITING

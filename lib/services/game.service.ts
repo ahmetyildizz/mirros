@@ -5,16 +5,34 @@ const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
 async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", ageGroup?: string | null, tx = db) {
-  const candidates = await tx.question.findMany({
+  let candidates = await tx.question.findMany({
     where: {
       isActive: true,
       gameMode,
-      ...(ageGroup ? { ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" } : {}),
+      ...(ageGroup ? {
+        OR: [
+          { ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" },
+          { ageGroup: null },
+        ],
+      } : {}),
       ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
     },
     select: { id: true },
   });
-  if (candidates.length === 0) throw new Error("Soru havuzu tükendi");
+
+  // Eğer tüm sorular bittiyse, daha önce kullanılanları tekrar kullan (karıştırarak)
+  if (candidates.length === 0) {
+    candidates = await tx.question.findMany({
+      where: {
+        isActive: true,
+        gameMode,
+        ...(ageGroup ? { ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" } : {}),
+      },
+      select: { id: true },
+    });
+  }
+
+  if (candidates.length === 0) throw new Error("Soru havuzu gerçekten boş");
   const pick = candidates[Math.floor(Math.random() * candidates.length)];
   return tx.question.findUniqueOrThrow({ where: { id: pick.id } });
 }
