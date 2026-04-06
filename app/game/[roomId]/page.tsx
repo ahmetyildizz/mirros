@@ -59,20 +59,25 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   useGameState(gameId ?? "", myUserId ?? "");
 
   useEffect(() => {
-    // 1. gameId store'da yoksa roomId üzerinden aktif oyunu bul
-    if (!gameId) {
-      fetch(`/api/rooms/${roomId}`)
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.activeGameId) {
+    // Her durumda oda bilgisini çek ve kontrol et (stale gameId koruması)
+    fetch(`/api/rooms/${roomId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.activeGameId) {
+          // Eğer store'daki gameId farklıysa veya boşsa recovery yap
+          if (data.activeGameId !== gameId) {
             recoverGameState(data.activeGameId);
           } else {
-            router.replace("/");
+            // Aynıysa bile verileri tazele (sayfa yenileme durumu)
+            recoverGameState(gameId);
           }
-        })
-        .catch(() => router.replace("/"));
-    }
-  }, [gameId, roomId, router]);
+        } else {
+          // Aktif oyun yoksa ana sayfaya/lobiye at
+          router.replace("/");
+        }
+      })
+      .catch(() => router.replace("/"));
+  }, [roomId, router]); // gameId bağımlılığını kaldırdım ki sonsuz döngüye girmesin, mount'ta bir kez kontrol yeterli
 
   const recoverGameState = async (id: string) => {
     try {
