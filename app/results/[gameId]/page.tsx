@@ -132,11 +132,29 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
     }
   }
 
-  // En komik an: en çok yanlış tahmin yapılan round
+  // En komik an: Daha akıllı bir puanlama (Yanlış tahmin + Yorum varlığı + Sürpriz faktörü)
   const funniestRound = game.rounds.reduce<typeof game.rounds[0] | null>((best, r) => {
-    const wrongCount = r.scores.filter((sc) => sc.matchLevel === "WRONG").length;
-    const bestWrong  = best ? best.scores.filter((sc) => sc.matchLevel === "WRONG").length : -1;
-    return wrongCount > bestWrong ? r : best;
+    const wrongCount  = r.scores.filter((sc) => sc.matchLevel === "WRONG").length;
+    const exactCount  = r.scores.filter((sc) => sc.matchLevel === "EXACT").length;
+    const reasonCount = r.guesses.filter((g) => !!g.reason).length;
+
+    // Puanlama kriterleri:
+    let score = wrongCount * 10;
+    score += reasonCount * 25; // Yorum varsa çok daha değerlidir
+    if (wrongCount > 0 && exactCount > 0) score += 50; // "Fikir ayrılığı" en komik anları yaratır
+    if (wrongCount === r.scores.length && r.scores.length > 1) score += 30; // Herkesin şaşırması
+
+    const bestScore = best ? (() => {
+      const bWrong  = best.scores.filter((sc) => sc.matchLevel === "WRONG").length;
+      const bExact  = best.scores.filter((sc) => sc.matchLevel === "EXACT").length;
+      const bReason = best.guesses.filter((g) => !!g.reason).length;
+      let s = bWrong * 10 + bReason * 25;
+      if (bWrong > 0 && bExact > 0) s += 50;
+      if (bWrong === best.scores.length && best.scores.length > 1) s += 30;
+      return s;
+    })() : -1;
+
+    return score > bestScore ? r : best;
   }, null);
 
   return (
