@@ -60,7 +60,7 @@ export function CreateRoom({ onCreated }: Props) {
     if (tpl.label === "Özelleştir") {
       setStep("config");
     } else {
-      handleCreate(tpl.gameMode, tpl.ageGroup, tpl.maxPlayers);
+      handleCreate(tpl.gameMode, tpl.ageGroup, tpl.maxPlayers, tpl.label);
     }
   };
 
@@ -68,6 +68,7 @@ export function CreateRoom({ onCreated }: Props) {
     finalMode = mode,
     finalAge  = ageGroup,
     finalMax  = maxPlayers,
+    finalCategory?: string,
   ) => {
     setLoading(true);
     setError(null);
@@ -75,7 +76,12 @@ export function CreateRoom({ onCreated }: Props) {
       const res = await fetch("/api/rooms", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ gameMode: finalMode, ageGroup: finalAge, maxPlayers: finalMax }),
+        body:    JSON.stringify({ 
+          gameMode: finalMode, 
+          ageGroup: finalAge, 
+          maxPlayers: finalMax,
+          category: finalCategory 
+        }),
       });
       if (res.ok) {
         const data = await res.json();

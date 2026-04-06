@@ -15,6 +15,7 @@ const bodySchema = z.object({
   gameMode:   z.enum(["SOCIAL", "QUIZ"]).default("SOCIAL"),
   ageGroup:   z.enum(["CHILD", "ADULT", "WISE"]).optional(),
   maxPlayers: z.number().int().min(2).max(10).default(4),
+  category:   z.string().optional(),
 });
 
 // ageGroup artık room'a değil katılımcıya kaydedilir
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
       status:     "WAITING",
       gameMode:   body.gameMode,
       maxPlayers: body.maxPlayers,
+      category:   body.category,
       participants: { create: { userId: user.id, ageGroup: body.ageGroup } },
     },
   });
@@ -50,8 +52,14 @@ export async function POST(req: NextRequest) {
     entityId: room.id,
     resource: `Room ${room.code}`,
     userId: user.id,
-    details: { gameMode: body.gameMode, maxPlayers: body.maxPlayers },
+    details: { gameMode: body.gameMode, maxPlayers: body.maxPlayers, category: body.category },
   });
 
-  return NextResponse.json({ id: room.id, code: room.code, gameMode: room.gameMode, maxPlayers: room.maxPlayers }, { status: 201 });
+  return NextResponse.json({ 
+    id: room.id, 
+    code: room.code, 
+    gameMode: room.gameMode, 
+    maxPlayers: room.maxPlayers,
+    category: room.category 
+  }, { status: 201 });
 }

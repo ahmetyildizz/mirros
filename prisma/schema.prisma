@@ -31,6 +31,7 @@ model Room {
   maxPlayers   Int               @default(8)
   ageGroup     AgeGroup?
   gameMode     GameMode          @default(SOCIAL)
+  category     String?           // Örn: "Çift Gecesi", "Aile Toplantısı"
   games        Game[]
   host         User              @relation("HostedRooms", fields: [hostId], references: [id])
   participants RoomParticipant[]

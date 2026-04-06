@@ -23,6 +23,7 @@ import { QuestionCard }         from "@/components/game/QuestionCard";
 import { AnswerInput }          from "@/components/game/AnswerInput";
 import { GuessInput }           from "@/components/game/GuessInput";
 import { MultipleChoiceInput }  from "@/components/game/MultipleChoiceInput";
+import { FlashbackCard }        from "@/components/game/FlashbackCard";
 import { sounds }               from "@/lib/sounds";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +41,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   const isQuiz = gameMode === "QUIZ";
 
   const [myUserId, setMyUserId]   = useState<string | null>(null);
+  const [pastAnswers, setPastAnswers] = useState<any[]>([]);
 
   const scoringRoundRef  = useRef<string | null>(null);
   const advancingRoundRef = useRef<string | null>(null);
@@ -66,6 +68,20 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   }, [answererId, myUserId, setMyRole, isQuiz]);
 
   useGameState(gameId ?? "", myUserId ?? "");
+
+  // Flashback/Hafıza sorgulama
+  useEffect(() => {
+    if (!isQuiz && state === "GUESSING" && myRole === "guesser" && answererId && question?.id) {
+       fetch(`/api/rounds/flashback?userId=${answererId}&questionId=${question.id}&currentRoundId=${activeRoundId}`)
+         .then(r => r.json())
+         .then(data => {
+           if (data.pastAnswers) setPastAnswers(data.pastAnswers);
+         })
+         .catch(() => {});
+    } else if (state !== "GUESSING") {
+      setPastAnswers([]);
+    }
+  }, [state, myRole, answererId, question?.id, isQuiz, activeRoundId]);
 
   useEffect(() => {
     fetch(`/api/rooms/${roomId}`)
@@ -317,11 +333,23 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                       </p>
                     </div>
                   ) : (
-                    question.options ? (
-                      <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason />
-                    ) : (
-                      <GuessInput opponentName={spotlightPlayer?.username ?? "Arkadaşın"} onSubmit={submitGuess} />
-                    )
+                    <div className="flex flex-col gap-6">
+                      {question.options ? (
+                        <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason />
+                      ) : (
+                        <GuessInput opponentName={spotlightPlayer?.username ?? "Arkadaşın"} onSubmit={submitGuess} />
+                      )}
+
+                      {/* Flashback/Hafıza Kartı */}
+                      <AnimatePresence>
+                        {pastAnswers.length > 0 && (
+                          <FlashbackCard 
+                            username={spotlightPlayer?.username ?? "Arkadaşın"} 
+                            pastAnswers={pastAnswers} 
+                          />
+                        )}
+                      </AnimatePresence>
+                    </div>
                   )}
                 </motion.div>
               )}

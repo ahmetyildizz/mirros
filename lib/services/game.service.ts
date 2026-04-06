@@ -5,8 +5,18 @@ import { createAuditLog } from "@/lib/audit";
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
-async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", ageGroup?: string | null, tx = db) {
-  // 1. TAM EŞLEŞEN: Aynı gameMode VE aynı ageGroup (veya null)
+async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", ageGroup?: string | null, category?: string | null, tx = db) {
+  // Tema/Lobi Modu eşleştirmesi
+  const themeMap: Record<string, string[]> = {
+    "Çift Gecesi": ["İlişki", "Duygu", "Kişilik", "Yaşam"],
+    "Aile Toplantısı": ["Anılar", "Nostalji", "Yemek", "Yaşam", "Sosyal"],
+    "Doğum Günü": ["Anılar", "Eğlence", "Kişilik", "Sosyal", "Nostalji"],
+    "Takım Building": ["Yaşam", "Duygu", "Değerler", "Sosyal", "Kişilik", "Dijital"],
+  };
+
+  const targetCategories = category ? themeMap[category] : null;
+
+  // 1. TAM EŞLEŞEN: gameMode, ageGroup VE (varsa) Kategori
   let candidates = await tx.question.findMany({
     where: {
       isActive: true,
@@ -17,18 +27,36 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", a
           { ageGroup: null },
         ],
       } : {}),
+      ...(targetCategories ? { category: { in: targetCategories } } : {}),
       ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
     },
     select: { id: true },
   });
 
-  // 2. Havuz boşsa (hiç soru yoksa veya hepsi kullanıldıysa): Yaş kriterini esnet ve exclude'u kaldır
+  // 2. Havuz boşsa (hiç soru yoksa veya hepsi kullanıldıysa): Kategoriyi esnet
+  if (candidates.length === 0 && targetCategories) {
+    candidates = await tx.question.findMany({
+      where: {
+        isActive: true,
+        gameMode,
+        ...(ageGroup ? {
+          OR: [
+            { ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" },
+            { ageGroup: null },
+          ],
+        } : {}),
+        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
+      },
+      select: { id: true },
+    });
+  }
+
+  // 3. Hala boşsa: Yaş kriterini esnet ve exclude'u kaldır
   if (candidates.length === 0) {
     candidates = await tx.question.findMany({
       where: {
         isActive: true,
         gameMode,
-        // Yaş kriterini kaldırıyoruz veya sadece null olanları alıyoruz
       },
       select: { id: true },
     });
@@ -124,7 +152,7 @@ export async function startGame(roomId: string) {
     const answerer   = room.participants.find((p) => p.userId === answererId);
     const roundAgeGroup = isQuiz ? majorityAgeGroup : (answerer?.ageGroup ?? majorityAgeGroup);
 
-    const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, isQuiz, roundAgeGroup, tx as any);
+    const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, isQuiz, roundAgeGroup, room.category, tx as any);
     return { game: newGame, round, question };
   });
 
@@ -158,6 +186,7 @@ async function createRound(
   usedQuestionIds: string[],
   isQuiz:     boolean,
   ageGroup?:  string | null,
+  category?:  string | null,
   tx = db
 ) {
   const answererId = isQuiz ? null : resolveSpotlight(number, participantIds);
@@ -175,7 +204,7 @@ async function createRound(
     if (participant?.ageGroup) actualAgeGroup = participant.ageGroup;
   }
 
-  const question = await pickQuestion(usedQuestionIds, isQuiz ? "QUIZ" : "SOCIAL", actualAgeGroup, tx as any);
+  const question = await pickQuestion(usedQuestionIds, isQuiz ? "QUIZ" : "SOCIAL", actualAgeGroup, category, tx as any);
 
   const round = await (tx as any).round.create({
     data: { gameId, number, questionId: question.id, answererId, status: "ANSWERING" },
@@ -244,7 +273,7 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
     select: { questionId: true },
   });
   const usedIds = allRoomRounds.map((r) => r.questionId);
-  const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, isQuiz, game.room.ageGroup);
+  const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, isQuiz, game.room.ageGroup, game.room.category);
 
   await pusherServer.trigger(`game-${gameId}`, "round-started", {
     roundId:          round.id,
