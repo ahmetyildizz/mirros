@@ -58,9 +58,16 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
         // Oda kodu ve roomId store'da yoksa (katılan oyuncu için fallback)
         if (data.code)       setRoomCode(data.code);
         if (data.id)         setRoomId(data.id);
+
+        // Aktif oyun varsa otomatik yönlendir
+        if (data.activeGameId) {
+          setGameId(data.activeGameId);
+          storeGameMode(data.gameMode);
+          router.push(`/game/${roomId}`);
+        }
       })
       .catch(() => {});
-  }, [roomId, storePlayers, setRoomCode, setRoomId]);
+  }, [roomId, storePlayers, setRoomCode, setRoomId, setGameId, storeGameMode, router]);
 
   const handleCopy = useCallback(() => {
     if (!roomCode) return;

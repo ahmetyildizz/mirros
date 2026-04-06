@@ -59,8 +59,32 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   useGameState(gameId ?? "", myUserId ?? "");
 
   useEffect(() => {
-    if (!gameId) router.replace("/");
-  }, [gameId, router]);
+    // 1. gameId store'da yoksa roomId üzerinden aktif oyunu bul
+    if (!gameId) {
+      fetch(`/api/rooms/${roomId}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.activeGameId) {
+            recoverGameState(data.activeGameId);
+          } else {
+            router.replace("/");
+          }
+        })
+        .catch(() => router.replace("/"));
+    }
+  }, [gameId, roomId, router]);
+
+  const recoverGameState = async (id: string) => {
+    try {
+      const res  = await fetch(`/api/games/${id}`);
+      const data = await res.json();
+      if (data.gameId) {
+        useGameStore.getState().hydrate(data);
+      }
+    } catch (e) {
+      console.error("Game recovery failed", e);
+    }
+  };
 
   // State değişince ses çal
   useEffect(() => {

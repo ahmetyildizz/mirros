@@ -86,6 +86,7 @@ interface GameStore {
   setGuessProgress:    (count: number, total: number) => void;
   setGameMode:         (mode: "SOCIAL" | "QUIZ") => void;
   setQuestionOptions:  (options: string[]) => void;
+  hydrate:             (data: Partial<GameStore>) => void;
   reset:               () => void;
 }
 
@@ -134,6 +135,7 @@ export const useGameStore = create<GameStore>()(
       setGuessProgress:   (guessCount, totalGuessers) => set({ guessCount, totalGuessers }),
       setGameMode:        (gameMode) => set({ gameMode }),
       setQuestionOptions: (options) => set((s) => s.question ? { question: { ...s.question, options } } : {}),
+      hydrate:           (data) => set((s) => ({ ...s, ...data })),
       reset:             () => set(initialState),
     }),
     {

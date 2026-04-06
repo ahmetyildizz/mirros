@@ -28,15 +28,23 @@ export async function GET(
     isHost:   p.userId === room.hostId,
   }));
 
+  // Aktif oyun var mı bak (sayfa yenilenince otomatik geçmek için)
+  const activeGame = await db.game.findFirst({
+    where:   { roomId: room.id, status: "ACTIVE" },
+    orderBy: { startedAt: "desc" },
+    select:  { id: true },
+  });
+
   return NextResponse.json({
-    id:         room.id,
-    code:       room.code,
-    status:     room.status,
-    gameMode:   room.gameMode,
-    ageGroup:   room.ageGroup,
-    maxPlayers: room.maxPlayers,
-    hostId:     room.hostId,
-    hostName:   room.host.username ?? room.host.email,
+    id:           room.id,
+    code:         room.code,
+    status:       room.status,
+    gameMode:     room.gameMode,
+    ageGroup:     room.ageGroup,
+    maxPlayers:   room.maxPlayers,
+    hostId:       room.hostId,
+    hostName:     room.host.username ?? room.host.email,
+    activeGameId: activeGame?.id ?? null,
     players,
   });
 }
