@@ -52,6 +52,15 @@ interface RoundScoredPayload {
   guessResults: (GuessResult & { reason?: string | null })[];
   playerScores: Record<string, number>;
   penalty?:     string | null;
+  nextRound?: {
+    id:               string;
+    number:           number;
+    questionId:       string;
+    questionText:     string;
+    questionCategory: string;
+    questionOptions:  string[] | null;
+    answererId:       string | null;
+  } | null;
 }
 
 interface GameFinishedPayload {
@@ -124,7 +133,20 @@ export function useGameState(gameId: string, myUserId: string) {
       });
       setPlayerScores(data.playerScores);
       setLastPenalty(data.penalty ?? null);
-      setGameState("SCORING");
+
+      // Eğer bir sonraki round bilgisi de geldiyse (pipelined), direkt geç
+      if (data.nextRound) {
+        const next = data.nextRound;
+        setActiveRoundId(next.id);
+        setCurrentRound(next.number);
+        setAnswererId(next.answererId ?? null);
+        setMyRole(next.answererId ? (next.answererId === myUserId ? "answerer" : "guesser") : "guesser");
+        setGuessProgress(0, 0);
+        setQuestion({ id: next.questionId, text: next.questionText, category: next.questionCategory, options: next.questionOptions });
+        setGameState("ANSWERING");
+      } else {
+        setGameState("SCORING");
+      }
     });
 
     channel.bind("game-finished", (data: GameFinishedPayload) => {

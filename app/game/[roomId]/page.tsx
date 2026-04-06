@@ -130,21 +130,16 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  // SCORING state'e girilince 5sn geri sayım + otomatik geçiş (answerer, sadece social)
-  // advancingRoundRef guard: timeout'tan ve manuel butona aynı anda basılmasını engeller
+  // Son round sonuçlarını 10sn sonra temizle (ekrandan kaybolsun)
   useEffect(() => {
-    if (state !== "SCORING" || isQuiz || !isAnswerer) return;
-    setCountdown(5);
-    const interval = setInterval(() => {
-      setCountdown((c) => {
-        if (c === null || c <= 1) { clearInterval(interval); return null; }
-        return c - 1;
-      });
-    }, 1000);
-    const timeout = setTimeout(() => { advanceToNext(); }, 5000);
-    return () => { clearInterval(interval); clearTimeout(timeout); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+    if (state === "ANSWERING" && lastRoundScore) {
+      const timer = setTimeout(() => {
+        useGameStore.getState().setLastRoundScore(null);
+        useGameStore.getState().setLastPenalty(null);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [state, lastRoundScore]);
 
   if (!gameId || !question) {
     return (
@@ -217,78 +212,66 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
       </div>
 
       <div style={styles.content}>
+        {/* Her zaman aktif soruyu göster */}
         <QuestionCard
+          key={activeRoundId} // Yeni soru gelince animasyon tetiklensin
           text={question.text}
           category={question.category}
           roundNumber={currentRound}
           answererName={!isQuiz && !isAnswerer && state === "GUESSING" ? (spotlightPlayer?.username ?? undefined) : undefined}
         />
 
-        {/* ANSWERING */}
-        {state === "ANSWERING" && (
-          isQuiz ? (
-            // Quiz: herkes cevap verir
-            question.options
-              ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} />
-              : <AnswerInput onSubmit={submitAnswer} />
-          ) : (
-            // Social: sadece answererId cevap verir
-            isAnswerer
-              ? (question.options
-                  ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText />
-                  : <AnswerInput onSubmit={submitAnswer} />
-                )
-              : <div style={styles.waitBox}>
-                  <p style={styles.waitText}>
-                    <strong>{spotlightPlayer?.username ?? "Spotlight oyuncu"}</strong> cevaplıyor...
-                  </p>
-                </div>
-          )
-        )}
-
-        {/* GUESSING (sadece social) */}
-        {!isQuiz && state === "GUESSING" && (
-          isAnswerer
-            ? (
-              <div style={styles.waitBox}>
-                <p style={styles.waitText}>Diğerleri tahmin ediyor...</p>
-                <div style={styles.guessProgress}>
-                  {Array.from({ length: totalGuessers }).map((_, i) => (
-                    <div key={i} style={{
-                      ...styles.progressDot,
-                      background: i < guessCount ? "var(--exact)" : "var(--bg-elevated)",
-                    }} />
-                  ))}
-                  <span style={{ color: "var(--fg-secondary)", fontSize: "0.8rem" }}>
-                    {guessCount}/{totalGuessers}
-                  </span>
-                </div>
-                {guessCount >= totalGuessers && (
-                  <p style={{ color: "var(--exact)", fontSize: "0.85rem", fontWeight: 600 }}>
-                    Sonuçlar hesaplanıyor...
-                  </p>
-                )}
-              </div>
+        {/* Girdi alanları (ANSWERING/GUESSING) */}
+        <div style={styles.inputArea}>
+          {state === "ANSWERING" && (
+            isQuiz ? (
+              question.options
+                ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} />
+                : <AnswerInput onSubmit={submitAnswer} />
+            ) : (
+              isAnswerer
+                ? (question.options
+                    ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText />
+                    : <AnswerInput onSubmit={submitAnswer} />
+                  )
+                : <div style={styles.waitBox}>
+                    <p style={styles.waitText}>
+                      <strong>{spotlightPlayer?.username ?? "Spotlight oyuncu"}</strong> cevaplıyor...
+                    </p>
+                  </div>
             )
-            : (question.options
-                ? <MultipleChoiceInput
-                    options={question.options}
-                    onSubmit={submitGuess}
-                    allowFreeText
-                    showReason
-                  />
-                : <GuessInput
-                    opponentName={spotlightPlayer?.username ?? "Spotlight oyuncu"}
-                    onSubmit={submitGuess}
-                  />
-              )
-        )}
+          )}
 
-        {/* SCORING — Social */}
-        {!isQuiz && state === "SCORING" && lastRoundScore && (
-          <div style={styles.scoringBox}>
-            <div style={styles.scoringScroll}>
-              <div style={styles.answerReveal}>
+          {!isQuiz && state === "GUESSING" && (
+            isAnswerer
+              ? (
+                <div style={styles.waitBox}>
+                  <p style={styles.waitText}>Diğerleri tahmin ediyor...</p>
+                  <div style={styles.guessProgress}>
+                    {Array.from({ length: totalGuessers }).map((_, i) => (
+                      <div key={i} style={{
+                        ...styles.progressDot,
+                        background: i < guessCount ? "var(--exact)" : "var(--bg-elevated)",
+                      }} />
+                    ))}
+                    <span style={{ color: "var(--fg-secondary)", fontSize: "0.8rem" }}>
+                      {guessCount}/{totalGuessers}
+                    </span>
+                  </div>
+                </div>
+              )
+              : (question.options
+                  ? <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason />
+                  : <GuessInput opponentName={spotlightPlayer?.username ?? "Spotlight oyuncu"} onSubmit={submitGuess} />
+                )
+          )}
+        </div>
+
+        {/* Eski Round Sonuçları (Alt kısımda kalsın) */}
+        {!isQuiz && lastRoundScore && (
+          <div style={styles.inlineScoring}>
+             <p style={styles.inlineScoringTitle}>Önceki Round Sonuçları</p>
+             <div style={styles.answerReveal}>
                 <span style={styles.answerLabel}>Gerçek cevap</span>
                 <span style={styles.answerText}>{lastRoundScore.answer}</span>
               </div>
@@ -302,43 +285,20 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     <div style={styles.guessInfo}>
                       <span style={styles.guessUsername}>{g.username}</span>
                       <span style={styles.guessText}>{g.guess}</span>
-                      {g.reason && (
-                        <span style={styles.guessReason}>💬 "{g.reason}"</span>
-                      )}
                     </div>
-                    <div style={styles.guessPoints}>
-                      <span style={{ color: g.matchLevel === "EXACT" ? "var(--exact)" : g.matchLevel === "CLOSE" ? "var(--close)" : "var(--fg-muted)", fontWeight: 700 }}>
-                        {g.matchLevel === "EXACT" ? "+10" : g.matchLevel === "CLOSE" ? "+5" : "0"}
-                      </span>
-                    </div>
+                    <span style={{ color: g.matchLevel === "EXACT" ? "var(--exact)" : g.matchLevel === "CLOSE" ? "var(--close)" : "var(--fg-muted)", fontWeight: 700, fontSize: "0.85rem" }}>
+                      {g.matchLevel === "EXACT" ? "+10" : g.matchLevel === "CLOSE" ? "+5" : "0"}
+                    </span>
                   </div>
                 ))}
               </div>
-            </div>
-            {lastPenalty && (
-              <div style={styles.penaltyBox}>
-                <span style={styles.penaltyTitle}>🎭 Ceza!</span>
-                <p style={styles.penaltyText}>{lastPenalty}</p>
-              </div>
-            )}
-            {isAnswerer && (
-              <Button onClick={() => { setCountdown(null); advanceToNext(); }} style={styles.nextBtn}>
-                {countdown !== null ? `Sonraki Round (${countdown})` : "Sonraki Round"}
-              </Button>
-            )}
-            {!isAnswerer && (
-              <p style={{ color: "var(--fg-secondary)", textAlign: "center", fontSize: "0.85rem" }}>
-                Spotlight oyuncu sonraki soruya geçiyor...
-              </p>
-            )}
           </div>
         )}
 
-        {/* SCORING — Quiz */}
+        {/* Quiz sonuçları (Scoring state'indeysen göster) */}
         {isQuiz && state === "SCORING" && lastQuizResults && (
           <div style={styles.scoringBox}>
-            <div style={styles.scoringScroll}>
-              <div style={styles.answerReveal}>
+             <div style={styles.answerReveal}>
                 <span style={styles.answerLabel}>Doğru cevap</span>
                 <span style={styles.answerText}>{lastQuizResults.correctAnswer}</span>
               </div>
@@ -359,17 +319,22 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                   </div>
                 ))}
               </div>
-            </div>
-            {lastPenalty && (
-              <div style={styles.penaltyBox}>
-                <span style={styles.penaltyTitle}>🎭 Ceza!</span>
-                <p style={styles.penaltyText}>{lastPenalty}</p>
-              </div>
-            )}
-            <p style={{ color: "var(--fg-secondary)", textAlign: "center", fontSize: "0.85rem" }}>
-              Sonraki soru geliyor...
-            </p>
           </div>
+        )}
+
+        {/* Penaltı varsa her zaman gösterilebilir */}
+        {lastPenalty && (
+          <div style={styles.penaltyBox}>
+            <span style={styles.penaltyTitle}>🎭 Ceza!</span>
+            <p style={styles.penaltyText}>{lastPenalty}</p>
+          </div>
+        )}
+
+        {/* Manuel geçiş gerekirse (Sadece yedek olarak) */}
+        {state === "SCORING" && !isQuiz && isAnswerer && (
+          <Button onClick={() => advanceToNext()} style={styles.nextBtn}>
+            Soruyu Bekleme, Geç →
+          </Button>
         )}
       </div>
     </main>
@@ -387,13 +352,15 @@ const styles = {
   scoreItem:     { display: "flex", flexDirection: "column" as const, alignItems: "center", gap: "0.2rem", minWidth: 40 },
   scoreAvatar:   { width: 36, height: 36, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "0.85rem" },
   scoreNum:      { color: "var(--fg-primary)", fontSize: "0.75rem", fontWeight: 600 },
+  inputArea:     { display: "flex", flexDirection: "column" as const, gap: "1rem", minHeight: "100px" },
   waitBox:       { background: "var(--bg-elevated)", borderRadius: 12, padding: "1.5rem", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: "1rem" },
   waitText:      { color: "var(--fg-secondary)", textAlign: "center" as const, fontSize: "0.9rem" },
   guessProgress: { display: "flex", alignItems: "center", gap: "0.4rem" },
   progressDot:   { width: 10, height: 10, borderRadius: "50%", transition: "background 0.3s" },
   nextBtn:       { background: "var(--accent)", color: "#fff", borderRadius: 12, fontWeight: 600, padding: "0.875rem", width: "100%" },
-  scoringBox:    { display: "flex", flexDirection: "column" as const, gap: "0.75rem", flex: 1 },
-  scoringScroll: { flex: 1, overflowY: "auto" as const, display: "flex", flexDirection: "column" as const, gap: "0.75rem" },
+  scoringBox:    { display: "flex", flexDirection: "column" as const, gap: "0.75rem" },
+  inlineScoring: { marginTop: "1rem", paddingTop: "1rem", borderTop: "1px dashed var(--border)", display: "flex", flexDirection: "column" as const, gap: "0.75rem" },
+  inlineScoringTitle: { color: "var(--fg-secondary)", fontSize: "0.8rem", fontWeight: 600, textAlign: "center" as const },
   answerReveal:  { background: "var(--bg-elevated)", borderRadius: 12, padding: "1rem", display: "flex", flexDirection: "column" as const, gap: "0.25rem" },
   answerLabel:   { color: "var(--fg-secondary)", fontSize: "0.75rem" },
   answerText:    { color: "var(--exact)", fontWeight: 700, fontSize: "1.2rem" },
@@ -403,8 +370,6 @@ const styles = {
   guessInfo:     { flex: 1, display: "flex", flexDirection: "column" as const, gap: "0.1rem" },
   guessUsername: { color: "var(--fg-secondary)", fontSize: "0.75rem" },
   guessText:     { color: "var(--fg-primary)", fontSize: "0.9rem", fontWeight: 500 },
-  guessReason:   { color: "var(--fg-secondary)", fontSize: "0.78rem", fontStyle: "italic" as const },
-  guessPoints:   { fontSize: "1rem" },
   penaltyBox:    { background: "#2d1a00", border: "2px solid #f97316", borderRadius: 12, padding: "0.875rem 1rem", display: "flex", flexDirection: "column" as const, gap: "0.3rem" },
   penaltyTitle:  { color: "#f97316", fontWeight: 800, fontSize: "0.95rem" },
   penaltyText:   { color: "#fed7aa", fontSize: "0.9rem", lineHeight: 1.4 },

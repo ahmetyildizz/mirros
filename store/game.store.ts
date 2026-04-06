@@ -80,7 +80,7 @@ interface GameStore {
   setAnswererId:      (id: string | null) => void;
   setPlayers:         (players: Player[]) => void;
   setPlayerScores:    (scores: Record<string, number>) => void;
-  setLastRoundScore:  (score: RoundScore) => void;
+  setLastRoundScore:  (score: RoundScore | null) => void;
   setLastQuizResults: (r: GameStore["lastQuizResults"]) => void;
   setLastPenalty:     (p: string | null) => void;
   setGuessProgress:    (count: number, total: number) => void;

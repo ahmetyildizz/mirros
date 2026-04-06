@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
 import { scoreRound, getPoints } from "@/lib/services/scoring.service";
+import { advanceGame } from "@/lib/services/game.service";
 
 export async function POST(
   _req: NextRequest,
@@ -58,21 +59,49 @@ export async function POST(
 
   await db.round.update({ where: { id: roundId }, data: { status: "SCORED" } });
 
-  // Her oyuncunun toplam puanı
+  // 1. Her oyuncunun toplam puanı
   const allScores = await db.score.findMany({ where: { gameId: round.gameId } });
   const playerScores: Record<string, number> = {};
   for (const s of allScores) {
     playerScores[s.guesserId] = (playerScores[s.guesserId] ?? 0) + s.points;
   }
 
+  // 2. Bir sonraki turu SESSİZCE arkada başlat (pipelined advancement)
+  const isLastRound = round.number >= round.game.totalRounds;
+  let nextRoundData: any = null;
+
+  if (!isLastRound) {
+    const nextResult = await advanceGame(round.gameId, round.number);
+    if (!nextResult.finished && nextResult.round) {
+      // Round detaylarını al (Pusher'dan client'a göndereceğiz)
+      const nextR = await db.round.findUnique({
+        where: { id: nextResult.round.id },
+        include: { question: true }
+      });
+      if (nextR) {
+        nextRoundData = {
+          id:               nextR.id,
+          number:           nextR.number,
+          questionId:       nextR.questionId,
+          questionText:     nextR.question.text,
+          questionCategory: nextR.question.category,
+          questionOptions:  nextR.question.options as string[] | null,
+          answererId:       nextR.answererId,
+        };
+      }
+    }
+  }
+
+  // 3. Tek bir event ile hem sonuçları hem de yeni soruyu gönder
   await pusherServer.trigger(`game-${round.gameId}`, "round-scored", {
-    roundId,
-    answererId:  round.answererId,
-    answer:      answer.content,
+    roundId:      roundId,
+    answererId:   round.answererId,
+    answer:       answer.content,
     guessResults,
     playerScores,
-    penalty:     round.question?.penalty ?? null,
+    penalty:      round.question?.penalty ?? null,
+    nextRound:    nextRoundData, // Opsiyonel: varsa client hemen geçer
   });
 
-  return NextResponse.json({ scores, playerScores });
+  return NextResponse.json({ scores, playerScores, nextRound: nextRoundData });
 }
