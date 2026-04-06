@@ -12,7 +12,7 @@ export async function GET(
   const game = await db.game.findUnique({
     where:   { id: gameId },
     include: {
-      room:   { include: { participants: true } },
+      room:   { include: { participants: { include: { user: true } } } },
       rounds: {
         orderBy: { number: "desc" },
         take:    1,
@@ -61,7 +61,11 @@ export async function GET(
     },
     playerScores,
     guessCount,
-    totalGuessers: game.room.participants.length - 1, // social için varsayılan
-    totalParticipants: game.room.participants.length, // quiz için varsayılan
+    totalGuessers: (game.room.participants.length - 1) || 0,
+    totalParticipants: game.room.participants.length,
+    players: game.room.participants.map((p) => ({
+      id:       p.userId,
+      username: (p as any).user?.username ?? (p as any).user?.email ?? "?",
+    })),
   });
 }

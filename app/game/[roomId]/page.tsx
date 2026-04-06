@@ -80,6 +80,11 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
       const data = await res.json();
       if (data.gameId) {
         useGameStore.getState().hydrate(data);
+        // Role'ü hemen güncelle
+        if (myUserId) {
+          const role = data.gameMode === "QUIZ" ? "guesser" : (data.answererId === myUserId ? "answerer" : "guesser");
+          useGameStore.getState().setMyRole(role);
+        }
       }
     } catch (e) {
       console.error("Game recovery failed", e);
