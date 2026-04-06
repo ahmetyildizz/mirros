@@ -16,10 +16,23 @@ interface Props {
   loading?: boolean;
 }
 
-export function AnswerInput({ placeholder = "Cevabını buraya yaz...", onSubmit, loading }: Props) {
+export function AnswerInput({ placeholder = "Cevabını buraya yaz...", onSubmit, loading, gameId, username }: Props & { gameId?: string | null; username?: string | null }) {
   const [value, setValue]       = useState("");
   const [sending, setSending]   = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const EMOJIS = ["🔥", "😂", "🤔", "❤️", "👏"];
+
+  const sendReaction = async (emoji: string) => {
+    if (!gameId) return;
+    try {
+      await fetch(`/api/games/${gameId}/reaction`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emoji, username }),
+      });
+    } catch {}
+  };
 
   const handleSubmit = async () => {
     if (!value.trim() || sending || submitted) return;
@@ -37,19 +50,34 @@ export function AnswerInput({ placeholder = "Cevabını buraya yaz...", onSubmit
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card p-6 flex flex-col items-center gap-3 border-green-500/20 text-center"
+        className="glass-card p-6 flex flex-col items-center gap-4 border-green-500/20 text-center"
       >
         <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center text-green-500">
           <CheckCircle2 size={24} />
         </div>
         <p className="text-[13px] font-black text-green-400 uppercase tracking-widest">Cevabın Gönderildi</p>
-        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-tighter">Sıradaki round bekleniyor...</p>
+        
+        <div className="flex flex-col gap-2 w-full pt-2 border-t border-white/5">
+          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">Reaksiyon Gönder</p>
+          <div className="flex justify-center gap-2">
+            {EMOJIS.map((emoji) => (
+              <motion.button
+                key={emoji}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => sendReaction(emoji)}
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-lg hover:bg-white/10 transition-colors"
+              >
+                {emoji}
+              </motion.button>
+            ))}
+          </div>
+        </div>
       </motion.div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <div className="relative group">
         <MessageSquare className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-accent transition-colors" size={20} />
         <input
@@ -61,6 +89,23 @@ export function AnswerInput({ placeholder = "Cevabını buraya yaz...", onSubmit
           disabled={sending || loading}
           className="input-glass w-full pl-12 pr-4 py-4 text-[15px] font-bold text-white placeholder:text-slate-600 focus:border-accent/40 transition-all outline-none"
         />
+      </div>
+
+      <div className="flex justify-between items-center px-1">
+        <div className="flex gap-2">
+          {EMOJIS.map((emoji) => (
+            <motion.button
+              key={emoji}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => sendReaction(emoji)}
+              className="text-xl hover:filter hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] transition-all"
+            >
+              {emoji}
+            </motion.button>
+          ))}
+        </div>
+        <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">{value.length}/120</span>
       </div>
 
       <motion.button

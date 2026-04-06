@@ -104,13 +104,40 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
   }
 
   // Finalize compatMap for component
-  const finalCompatMap: Record<string, { username: string; pct: number; bestGuesser?: { name: string; points: number } }> = {};
+  const finalCompatMap: Record<string, { username: string; pct: number; bestGuesser?: { name: string; points: number }; title?: string }> = {};
+  
+  // Calculate Titles (Mind Reader, Joker, Ghost, Harmonizer)
+  const playerStats: Record<string, { exactCount: number; closeCount: number; reasonCount: number; totalRounds: number }> = {};
+  for (const p of game.room.participants) playerStats[p.userId] = { exactCount: 0, closeCount: 0, reasonCount: 0, totalRounds: game.rounds.length };
+  
+  for (const round of game.rounds) {
+    for (const sc of round.scores) {
+      if (playerStats[sc.guesserId]) {
+        if (sc.matchLevel === "EXACT") playerStats[sc.guesserId].exactCount++;
+        if (sc.matchLevel === "CLOSE") playerStats[sc.guesserId].closeCount++;
+      }
+    }
+    for (const g of round.guesses) {
+      if (g.reason && playerStats[g.userId]) playerStats[g.userId].reasonCount++;
+    }
+  }
+
   for (const [uid, data] of Object.entries(compatMap)) {
     const sortedGuessers = Object.values(data.guessers).sort((a, b) => b.points - a.points);
+    const stats = playerStats[uid];
+    
+    // Title logic
+    let title = "Oda Sakini";
+    if (stats.exactCount >= 2) title = "Zihin Okuyucu";
+    else if (stats.reasonCount >= 2) title = "Şakacı";
+    else if (stats.closeCount >= 3) title = "Uyumlu";
+    else if (stats.exactCount === 0 && data.maxPossible > 0) title = "Gizemli";
+
     finalCompatMap[uid] = {
       username: data.username,
       pct: data.maxPossible > 0 ? Math.round((data.totalPoints / data.maxPossible) * 100) : 0,
-      bestGuesser: sortedGuessers[0]
+      bestGuesser: sortedGuessers[0],
+      title
     };
   }
 
@@ -173,7 +200,12 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
           familiarityText={familiarityText(familiarity)}
           familiarityEmoji={familiarityEmoji(familiarity)}
           rounds={roundsData}
-          funniestRound={funniestRound ? { question: funniestRound.question.text, answer: funniestRound.answers[0]?.content ?? "" } : null}
+          funniestRound={funniestRound ? { 
+            question: funniestRound.question.text, 
+            answer: funniestRound.answers[0]?.content ?? "",
+            reason: funniestRound.guesses.find(g => !!g.reason)?.reason ?? null,
+            username: funniestRound.guesses.find(g => !!g.reason)?.user.username ?? null
+          } : null}
           compatMap={finalCompatMap}
         />
       </div>

@@ -32,6 +32,15 @@ const socialQuestions = [
   { text: "Bir şey öğrenmek istersen ne yaparsın?", category: "Kişilik", options: ["YouTube/Video izlerim", "Kitap/makale okurum", "Birine sorarım", "Yaparak öğrenirim"] },
   { text: "İdeal ev nasıl olur?", category: "Yaşam", options: ["Şehir merkezi daire", "Sakin semt ev", "Doğa içinde köy evi", "Deniz kenarı villa"] },
   { text: "Seyahat ederken ne yaparsın?", category: "Tatil", options: ["Her şeyi önceden planlarım", "Spontane giderim", "Rehber tutarım", "Yerel birini bulurum"] },
+  { text: "İlk bakışta aşka inanır mısın?", category: "İlişki", options: ["Kesinlikle", "Hayır, zamanla olur", "Eskiden inanırdım", "Kısmen mümkün"] },
+  { text: "Partnerinde aradığın en önemli özellik nedir?", category: "İlişki", options: ["Güven", "Mizah anlayışı", "Zeka", "Dürüstlük"] },
+  { text: "Çocukluğundan en çok neyi özlüyorsun?", category: "Nostalji", options: ["Sokak oyunlarını", "Bayram sabahlarını", "Okula gitmeyi", "Sorumsuzluğu"] },
+  { text: "Geçmişe gidebilseydin hangi yılı seçerdin?", category: "Hayal", options: ["90'lar", "80'ler", "2000'lerin başı", "Geleceğe giderdim"] },
+  { text: "İlk okul öğretmeninin adını hatırlıyor musun?", category: "Anılar", options: ["Evet, asla unutmam", "Hayır, silinmiş", "Sadece soyadını", "Yüzünü hatırlarım"] },
+  { text: "Bir ilişkide 'kırmızı çizgin' nedir?", category: "İlişki", options: ["Yalan", "İgisizlik", "Kıskançlık", "Saygısızlık"] },
+  { text: "Hangi eski oyuncak senin favorindi?", category: "Nostalji", options: ["Lego", "Barbie/Aksiyon figürü", "Atari/Gameboy", "Top/Misket"] },
+  { text: "En sevdiğin aile yemeği hangisidir?", category: "Anılar", options: ["Annemin köftesi", "Pazar kahvaltısı", "Bayram yemeği", "Dışarıda yenilen yemek"] },
+  { text: "Kiminle bir günlüğüne yer değiştirmek isterdin?", category: "Hayal", options: ["Bir dünya lideri", "Bir sanatçı", "Partnerim/Eşim", "Evcil hayvanım"] },
 ] as const;
 
 // ── ÇOCUK (7-12 yaş) ─────────────────────────────────────────────────────
@@ -122,9 +131,16 @@ async function main() {
     create: { id: "dev-user-001", email: "dev@mirros.app", username: "devuser" },
   });
 
+  // Tüm bağımlı verileri temizle (Foreign Key hatalarını önlemek için)
+  await db.score.deleteMany({});
+  await db.guess.deleteMany({});
+  await db.answer.deleteMany({});
+  await db.round.deleteMany({});
+  await db.game.deleteMany({});
+  
   // Tüm soruları temizle
   await db.question.deleteMany({});
-  console.log("Sorular temizlendi.");
+  console.log("Eski oyun verileri ve sorular temizlendi.");
 
   // Sosyal seçmeli sorular
   for (const q of socialQuestions) {

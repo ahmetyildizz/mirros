@@ -22,6 +22,7 @@ interface PlayerResult {
   username: string;
   points: number;
   isMe: boolean;
+  title?: string;
 }
 
 interface RoundData {
@@ -48,8 +49,8 @@ interface Props {
   familiarityText: string;
   familiarityEmoji: string;
   rounds: RoundData[];
-  funniestRound?: { question: string; answer: string } | null;
-  compatMap: Record<string, { username: string; pct: number; bestGuesser?: { name: string; points: number } }>;
+  funniestRound?: { question: string; answer: string; reason?: string | null; username?: string | null } | null;
+  compatMap: Record<string, { username: string; pct: number; bestGuesser?: { name: string; points: number }; title?: string }>;
 }
 
 export function ResultsClient({ 
@@ -90,8 +91,14 @@ export function ResultsClient({
     return () => clearInterval(interval);
   }, []);
 
-  const top3 = leaderboard.slice(0, 3);
-  const rest = leaderboard.slice(3);
+  const top3 = leaderboard.slice(0, 3).map(p => ({
+    ...p,
+    title: compatMap[p.userId]?.title || p.title
+  }));
+  const rest = leaderboard.slice(3).map(p => ({
+    ...p,
+    title: compatMap[p.userId]?.title || p.title
+  }));
 
   // Podium order: [Silver, Gold, Bronze]
   const podiumOrder = [
@@ -163,6 +170,11 @@ export function ResultsClient({
                     {player.username}
                    </span>
                    <span className="text-xl font-black text-black drop-shadow-sm">{player.points}</span>
+                   {player.title && (
+                     <div className="bg-black/10 px-2 py-0.5 rounded-full mt-1">
+                        <span className="text-[8px] font-black text-black/60 uppercase tracking-tighter">{player.title}</span>
+                     </div>
+                   )}
                    <span className="text-[9px] font-bold text-black/40 uppercase tracking-widest mt-auto mb-2">
                     {isGold ? "1ST" : isSilver ? "2ND" : "3RD"}
                    </span>
@@ -213,6 +225,56 @@ export function ResultsClient({
           </div>
         </div>
       </motion.div>
+      
+      {/* Funniest Moment Section */}
+      {funniestRound && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="glass-card-elevated p-8 relative border-yellow-500/20 shadow-[0_0_50px_rgba(234,179,8,0.1)] overflow-hidden"
+        >
+          <div className="absolute top-0 left-0 p-4 opacity-5">
+            <MessageCircle size={80} className="text-yellow-400 rotate-12" />
+          </div>
+          
+          <div className="flex flex-col gap-6 relative z-10">
+            <div className="flex items-center gap-3">
+              <div className="bg-yellow-400/20 text-yellow-400 p-2 rounded-xl">
+                <Star size={20} fill="currentColor" />
+              </div>
+              <span className="text-[11px] font-black text-yellow-400 uppercase tracking-[0.3em]">Oyunun En Komik Anı</span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <p className="text-[15px] font-black text-white leading-tight italic">
+                &quot;{funniestRound.question}&quot;
+              </p>
+              <div className="flex items-center gap-3 mt-2">
+                <div className="h-px flex-1 bg-white/10" />
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Cevap: {funniestRound.answer}</span>
+                <div className="h-px flex-1 bg-white/10" />
+              </div>
+            </div>
+
+            {funniestRound.reason && (
+              <div className="bg-white/5 p-4 rounded-2xl border border-white/5 relative group">
+                <p className="text-[13px] font-medium text-slate-200 mb-1 leading-relaxed">
+                  &quot;{funniestRound.reason}&quot;
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full bg-accent/20 flex items-center justify-center text-[8px] font-black text-accent">
+                    {funniestRound.username?.[0].toUpperCase()}
+                  </div>
+                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                    — {funniestRound.username}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      )}
 
       {/* Rankings List (if more than 3) */}
       {rest.length > 0 && (

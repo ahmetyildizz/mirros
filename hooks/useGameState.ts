@@ -149,6 +149,11 @@ export function useGameState(gameId: string, myUserId: string) {
       }
     });
 
+    channel.bind("reaction-received", (data: { userId: string; username: string; emoji: string }) => {
+      // Dispatch a custom event to show reaction in GamePage
+      window.dispatchEvent(new CustomEvent("mirros-reaction", { detail: data }));
+    });
+
     channel.bind("game-finished", (data: GameFinishedPayload) => {
       setPlayerScores(data.playerScores);
       setGameState("END");

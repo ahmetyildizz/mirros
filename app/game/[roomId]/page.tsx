@@ -45,6 +45,21 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   const scoringRoundRef  = useRef<string | null>(null);
   const advancingRoundRef = useRef<string | null>(null);
+  const [reactions, setReactions] = useState<{ id: string; emoji: string; username: string }[]>([]);
+
+  useEffect(() => {
+    const handleReaction = (e: any) => {
+      const { emoji, username } = e.detail;
+      const id = Math.random().toString(36).substr(2, 9);
+      setReactions(prev => [...prev, { id, emoji, username }]);
+      setTimeout(() => {
+        setReactions(prev => prev.filter(r => r.id !== id));
+      }, 3000);
+    };
+
+    window.addEventListener("mirros-reaction", handleReaction);
+    return () => window.removeEventListener("mirros-reaction", handleReaction);
+  }, []);
 
   useEffect(() => {
     fetch("/api/me")
@@ -212,6 +227,27 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
         <div className="aurora-blob-2" />
       </div>
 
+      {/* Floating Reactions Layer */}
+      <div className="fixed inset-0 pointer-events-none z-[100] overflow-hidden">
+        <AnimatePresence>
+          {reactions.map((r) => (
+            <motion.div
+              key={r.id}
+              initial={{ y: "100vh", x: `${Math.random() * 80 + 10}vw`, opacity: 0, scale: 0.5 }}
+              animate={{ y: "-10vh", opacity: [0, 1, 1, 0], scale: [0.5, 1.5, 1.5, 1], rotate: [0, 10, -10, 0] }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 3, ease: "easeOut" }}
+              className="absolute flex flex-col items-center gap-1"
+            >
+              <span className="text-4xl filter drop-shadow-lg">{r.emoji}</span>
+              <span className="text-[9px] font-black text-white/40 bg-black/20 px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                {r.username}
+              </span>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
       <div className="relative z-10 flex flex-col w-full max-w-[480px] mx-auto px-4 py-6 gap-6 h-full min-h-dvh">
         <GameHeader roundNumber={currentRound} totalRounds={totalRounds} />
 
@@ -281,13 +317,13 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 >
                   {isQuiz ? (
                     question.options
-                      ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} />
-                      : <AnswerInput onSubmit={submitAnswer} />
+                      ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
+                      : <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                   ) : (
                     isAnswerer
                       ? (question.options
-                          ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText />
-                          : <AnswerInput onSubmit={submitAnswer} />
+                          ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
+                          : <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                         )
                       : (
                         <div className="glass-card-elevated p-8 flex flex-col items-center gap-4 text-center">
@@ -335,9 +371,9 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                   ) : (
                     <div className="flex flex-col gap-6">
                       {question.options ? (
-                        <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason />
+                        <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                       ) : (
-                        <GuessInput opponentName={spotlightPlayer?.username ?? "Arkadaşın"} onSubmit={submitGuess} />
+                        <GuessInput opponentName={spotlightPlayer?.username ?? "Arkadaşın"} onSubmit={submitGuess} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                       )}
 
                       {/* Flashback/Hafıza Kartı */}
