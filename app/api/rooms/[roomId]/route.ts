@@ -30,7 +30,11 @@ export async function GET(
 
   // Aktif oyun var mı bak (sayfa yenilenince otomatik geçmek için)
   const activeGame = await db.game.findFirst({
-    where:   { roomId: room.id, status: "ACTIVE" },
+    where:   {
+      roomId: room.id,
+      status: "ACTIVE",
+      rounds: { some: {} }, // En az bir round'u olan oyunları getir
+    },
     orderBy: { startedAt: "desc" },
     select:  { id: true },
   });

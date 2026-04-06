@@ -4,8 +4,8 @@ import { pusherServer } from "@/lib/pusher/server";
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
-async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", ageGroup?: string | null) {
-  const candidates = await db.question.findMany({
+async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", ageGroup?: string | null, tx = db) {
+  const candidates = await tx.question.findMany({
     where: {
       isActive: true,
       gameMode,
@@ -16,7 +16,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", a
   });
   if (candidates.length === 0) throw new Error("Soru havuzu tükendi");
   const pick = candidates[Math.floor(Math.random() * candidates.length)];
-  return db.question.findUniqueOrThrow({ where: { id: pick.id } });
+  return tx.question.findUniqueOrThrow({ where: { id: pick.id } });
 }
 
 function resolveSpotlight(roundNumber: number, participantIds: string[]): string {
@@ -25,8 +25,15 @@ function resolveSpotlight(roundNumber: number, participantIds: string[]): string
 
 export async function startGame(roomId: string) {
   // Atomik kontrol: zaten aktif bir game varsa erken çık (race condition önlemi)
-  const existingGame = await db.game.findFirst({ where: { roomId, status: "ACTIVE" } });
-  if (existingGame) throw new Error("Oyun zaten başlatıldı");
+  const existingGame = await db.game.findFirst({
+    where: { roomId, status: "ACTIVE" },
+    include: { rounds: { take: 1 } },
+  });
+
+  // Eğer oyun varsa ve round'u da varsa hata ver. Ama round'u yoksa (ghost game), onu bitmiş sayıp yeni başlatabiliriz.
+  if (existingGame && existingGame.rounds.length > 0) {
+    throw new Error("Oyun zaten başlatıldı");
+  }
 
   const room = await db.room.findUnique({
     where:   { id: roomId },
@@ -38,32 +45,37 @@ export async function startGame(roomId: string) {
 
   const isQuiz         = room.gameMode === "QUIZ";
   const participantIds = room.participants.map((p) => p.userId);
-  // Sabit tur sayısı: SOCIAL modda her oyuncu en az 1 spotlight alır (modulo rotasyon).
-  // participantIds.length * 2 yerine sabit SOCIAL_ROUNDS kullanılıyor — çok uzun oyun önlenir.
   const totalRounds    = isQuiz ? QUIZ_ROUNDS : SOCIAL_ROUNDS;
 
-  // Katılımcıların yaş grubu oylaması: çoğunluk kazanır
   const ageCounts: Record<string, number> = {};
   for (const p of room.participants) {
     if (p.ageGroup) ageCounts[p.ageGroup] = (ageCounts[p.ageGroup] ?? 0) + 1;
   }
   const majorityAgeGroup = (Object.entries(ageCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null) as "CHILD" | "ADULT" | "WISE" | null;
 
-  // Çoğunluk sonucunu room'a yaz (advanceGame da okusun diye)
   if (majorityAgeGroup) {
     await db.room.update({ where: { id: roomId }, data: { ageGroup: majorityAgeGroup } });
   }
 
-  // Bu odada daha önce kullanılan tüm soruları dışla (çapraz oyun tekrar önleme)
   const previousRounds = await db.round.findMany({
     where: { game: { roomId } },
     select: { questionId: true },
   });
   const usedIds = previousRounds.map((r) => r.questionId);
 
-  const game = await db.game.create({ data: { roomId, totalRounds, status: "ACTIVE" } });
+  // Ghost game'i temizle (varsa)
+  if (existingGame) {
+    await db.game.update({ where: { id: existingGame.id }, data: { status: "FINISHED" } });
+  }
 
-  const { round, question } = await createRound(game.id, 1, participantIds, usedIds, isQuiz, majorityAgeGroup);
+  const { game, round, question } = await db.$transaction(async (tx) => {
+    const newGame = await tx.game.create({
+      data: { roomId, totalRounds, status: "ACTIVE" },
+    });
+
+    const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, isQuiz, majorityAgeGroup, tx as any);
+    return { game: newGame, round, question };
+  });
 
   const players = room.participants.map((p) => ({
     id:       p.userId,
@@ -94,12 +106,13 @@ async function createRound(
   participantIds: string[],
   usedQuestionIds: string[],
   isQuiz:     boolean,
-  ageGroup?:  string | null
+  ageGroup?:  string | null,
+  tx = db
 ) {
-  const question   = await pickQuestion(usedQuestionIds, isQuiz ? "QUIZ" : "SOCIAL", ageGroup);
+  const question   = await pickQuestion(usedQuestionIds, isQuiz ? "QUIZ" : "SOCIAL", ageGroup, tx as any);
   const answererId = isQuiz ? null : resolveSpotlight(number, participantIds);
 
-  const round = await db.round.create({
+  const round = await (tx as any).round.create({
     data: { gameId, number, questionId: question.id, answererId, status: "ANSWERING" },
   });
 
