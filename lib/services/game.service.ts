@@ -5,6 +5,7 @@ const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
 async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", ageGroup?: string | null, tx = db) {
+  // 1. TAM EŞLEŞEN: Aynı gameMode VE aynı ageGroup (veya null)
   let candidates = await tx.question.findMany({
     where: {
       isActive: true,
@@ -20,13 +21,13 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", a
     select: { id: true },
   });
 
-  // Eğer tüm sorular bittiyse, daha önce kullanılanları tekrar kullan (karıştırarak)
+  // 2. Havuz boşsa (hiç soru yoksa veya hepsi kullanıldıysa): Yaş kriterini esnet ve exclude'u kaldır
   if (candidates.length === 0) {
     candidates = await tx.question.findMany({
       where: {
         isActive: true,
         gameMode,
-        ...(ageGroup ? { ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" } : {}),
+        // Yaş kriterini kaldırıyoruz veya sadece null olanları alıyoruz
       },
       select: { id: true },
     });
@@ -91,7 +92,12 @@ export async function startGame(roomId: string) {
       data: { roomId, totalRounds, status: "ACTIVE" },
     });
 
-    const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, isQuiz, majorityAgeGroup, tx as any);
+    // İlk round için de kişiselleştirilmiş yaş grubunu bulalım
+    const answererId = isQuiz ? null : resolveSpotlight(1, participantIds);
+    const answerer   = room.participants.find((p) => p.userId === answererId);
+    const roundAgeGroup = isQuiz ? majorityAgeGroup : (answerer?.ageGroup ?? majorityAgeGroup);
+
+    const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, isQuiz, roundAgeGroup, tx as any);
     return { game: newGame, round, question };
   });
 
@@ -127,8 +133,22 @@ async function createRound(
   ageGroup?:  string | null,
   tx = db
 ) {
-  const question   = await pickQuestion(usedQuestionIds, isQuiz ? "QUIZ" : "SOCIAL", ageGroup, tx as any);
   const answererId = isQuiz ? null : resolveSpotlight(number, participantIds);
+  
+  // Eğer SOCIAL modundaysak, answerer'ın kendi yaş grubunu kullanalım (kişiselleştirme)
+  let actualAgeGroup = ageGroup;
+  if (!isQuiz && answererId) {
+    const participant = await tx.roomParticipant.findFirst({
+       where: {
+         userId: answererId,
+         room: { games: { some: { id: gameId } } }
+       },
+       select: { ageGroup: true }
+    });
+    if (participant?.ageGroup) actualAgeGroup = participant.ageGroup;
+  }
+
+  const question = await pickQuestion(usedQuestionIds, isQuiz ? "QUIZ" : "SOCIAL", actualAgeGroup, tx as any);
 
   const round = await (tx as any).round.create({
     data: { gameId, number, questionId: question.id, answererId, status: "ANSWERING" },

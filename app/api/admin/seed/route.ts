@@ -14,18 +14,49 @@ export async function POST(req: NextRequest) {
 
   // ─── SOSYAL SORULAR ──────────────────────────────────────────────────────────
   // Kişiyi tanımaya yönelik, komik, grup ortamı için
-  const social: Array<{ text: string; category: string; options?: string[]; penalty?: string }> = [
+  const social: Array<{ text: string; category: string; options?: string[]; penalty?: string; ageGroup?: string }> = [
     {
       text: "Gecenin 3'ünde uyandırsan bile yiyebileceğin şey nedir?",
       category: "Yemek",
+// ... (omitted for brevity, will replace the whole block)
+      ageGroup: "ADULT",
       options: ["Lahmacun", "Çikolata", "Çorba", "Pizza"],
       penalty: "Yanlış tahmin edenler masadan kalkıp komik dans etmeli 🕺",
     },
     {
+      text: "En büyük kahramanın kim?",
+      category: "Hayal",
+      ageGroup: "CHILD",
+      options: ["Örümcek Adam", "Annem/Babam", "Öğretmenim", "Elsa"],
+      penalty: "Yanlış bilenler 10 saniye boyunca bir süper kahraman gibi uçmaya çalışmalı 🦸",
+    },
+    {
+      text: "Emeklilikte en çok ne yapmayı hayal ediyorsun?",
+      category: "Gelecek",
+      ageGroup: "WISE",
+      options: ["Bahçeyle uğraşmak", "Dünyayı gezmek", "Torun bakmak", "Sadece uyumak"],
+      penalty: "Yanlış bilenler emeklilikte yapacakları hobiyi 15 saniye sessiz sinema gibi anlatmalı 👵",
+    },
+    {
       text: "En son ne zaman yalan söyledin ve neden?",
       category: "İtiraf",
+      ageGroup: "ADULT",
       options: ["Bugün — küçük bir şeydi", "Bu hafta — zorunluydum", "Geçen ay", "Ben hiç yalan söylemem 😇"],
       penalty: "Yanlış bilenler gruba gerçek bir itiraf yapmalı 🤫",
+    },
+    {
+      text: "En sevdiğin çizgi film hangisi?",
+      category: "Eğlence",
+      ageGroup: "CHILD",
+      options: ["Pepee", "Kral Şakir", "Tom ve Jerry", "Niloya"],
+      penalty: "Yanlış bilenler o çizgi filmdeki bir karakterin sesini çıkarmalı 🐱",
+    },
+    {
+      text: "Gençliğinde en çok hangi sanatçıya hayrandın?",
+      category: "Geçmiş",
+      ageGroup: "WISE",
+      options: ["Zeki Müren", "Barış Manço", "Ajda Pekkan", "Müslüm Gürses"],
+      penalty: "Yanlış tahmin edenler o sanatçının bir şarkısını 10 saniye mırıldanmalı 🎤",
     },
     {
       text: "Sinirlenince ne yaparsın?",
@@ -277,6 +308,7 @@ export async function POST(req: NextRequest) {
         gameMode: "SOCIAL",
         options: q.options ?? undefined,
         penalty: q.penalty ?? undefined,
+        ageGroup: q.ageGroup as any ?? undefined,
         isActive: true,
       },
     });
