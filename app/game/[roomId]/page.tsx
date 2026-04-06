@@ -67,7 +67,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           // Eğer store'daki gameId farklıysa veya boşsa recovery yap
           if (data.activeGameId !== gameId) {
             recoverGameState(data.activeGameId);
-          } else {
+          } else if (gameId) {
             // Aynıysa bile verileri tazele (sayfa yenileme durumu)
             recoverGameState(gameId);
           }
