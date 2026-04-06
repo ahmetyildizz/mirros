@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
+import { createAuditLog } from "@/lib/audit";
 
 function generateCode(): string {
   const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -41,6 +42,15 @@ export async function POST(req: NextRequest) {
       maxPlayers: body.maxPlayers,
       participants: { create: { userId: user.id, ageGroup: body.ageGroup } },
     },
+  });
+
+  await createAuditLog({
+    action: "CREATE",
+    entityType: "ROOM",
+    entityId: room.id,
+    resource: `Room ${room.code}`,
+    userId: user.id,
+    details: { gameMode: body.gameMode, maxPlayers: body.maxPlayers },
   });
 
   return NextResponse.json({ id: room.id, code: room.code, gameMode: room.gameMode, maxPlayers: room.maxPlayers }, { status: 201 });

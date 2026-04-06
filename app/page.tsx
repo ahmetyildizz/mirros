@@ -2,9 +2,11 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { motion } from "framer-motion";
 import { CreateRoom } from "@/components/lobby/CreateRoom";
 import { JoinRoom } from "@/components/lobby/JoinRoom";
 import { useGameStore } from "@/store/game.store";
+import { Sparkles } from "lucide-react";
 
 function LobbyContent() {
   const router   = useRouter();
@@ -27,47 +29,105 @@ function LobbyContent() {
   };
 
   return (
-    <main style={s.page}>
-      {/* Aurora arkaplan */}
+    <main className="relative min-h-dvh flex flex-col items-center justify-center p-6 overflow-hidden bg-black/20">
+      {/* Aurora Background 2.0 */}
       <div className="aurora-bg" aria-hidden>
-        <div className="aurora-blob-1" />
-        <div className="aurora-blob-2" />
-        <div className="aurora-blob-3" />
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 5, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          className="aurora-blob-1" 
+        />
+        <motion.div 
+          animate={{ scale: [1, 1.3, 1], rotate: [0, -8, 0] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+          className="aurora-blob-2" 
+        />
+        <motion.div 
+          animate={{ opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="aurora-blob-3" 
+        />
       </div>
 
-      <div style={s.inner}>
-        {/* Hero */}
-        <div style={s.hero} className="fade-up">
-          <div style={s.logoWrap}>
-            <span style={s.logoDot} />
-            <h1 className="gradient-text" style={s.logo}>mirros</h1>
-            <span style={s.logoDot} />
+      <div className="relative z-10 w-full max-w-[420px] flex flex-col gap-6">
+        {/* Hero Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center"
+        >
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="w-2 h-2 rounded-full bg-accent opacity-60 shadow-[0_0_12px_var(--accent)]"
+            />
+            <h1 className="text-6xl font-extrabold tracking-tighter gradient-text leading-tight drop-shadow-2xl">
+              mirros
+            </h1>
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="w-2 h-2 rounded-full bg-accent-2 opacity-60 shadow-[0_0_12px_var(--accent-2)]"
+            />
           </div>
-          <p style={s.tagline}>Beni ne kadar tanıyorsun?</p>
-          <div style={s.taglineLine} />
-        </div>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="flex flex-col items-center gap-3"
+          >
+            <p className="text-slate-400 font-medium tracking-tight flex items-center gap-2">
+              <Sparkles size={14} className="text-accent" />
+              Beni ne kadar tanıyorsun?
+            </p>
+            <div className="w-12 h-1 rounded-full bg-gradient-to-r from-accent to-accent-2 opacity-30" />
+          </motion.div>
+        </motion.div>
 
-        {/* Oda oluştur */}
-        <div style={s.section} className="fade-up fade-up-1">
-          <CreateRoom onCreated={handleCreated} />
-        </div>
+        {/* Action Sections with Staggered Animation */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+          className="glass-card-elevated"
+        >
+          <div className="p-5">
+            <CreateRoom onCreated={handleCreated} />
+          </div>
+        </motion.div>
 
-        {/* Ayırıcı */}
-        <div style={s.divider} className="fade-up fade-up-2">
-          <div style={s.divLine} />
-          <span style={s.divText}>veya</span>
-          <div style={s.divLine} />
-        </div>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="flex items-center gap-4 px-2"
+        >
+          <div className="flex-1 h-px bg-white/5" />
+          <span className="text-[11px] font-black text-slate-500 uppercase tracking-[0.25em]">veya</span>
+          <div className="flex-1 h-px bg-white/5" />
+        </motion.div>
 
-        {/* Odaya katıl */}
-        <div style={s.section} className="fade-up fade-up-3">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+          className="glass-card p-6"
+        >
           <JoinRoom onJoined={handleJoined} initialCode={joinCode} />
-        </div>
+        </motion.div>
 
         {/* Footer */}
-        <p style={s.footer} className="fade-up fade-up-4">
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.4 }}
+          transition={{ delay: 1 }}
+          className="text-center text-[10px] font-bold text-slate-500 tracking-[0.2em] mt-2 uppercase"
+        >
           arkadaşlarını tanı · kendini keşfet
-        </p>
+        </motion.p>
       </div>
     </main>
   );
@@ -80,89 +140,3 @@ export default function LobbyPage() {
     </Suspense>
   );
 }
-
-const s = {
-  page: {
-    minHeight: "100dvh",
-    display: "flex",
-    flexDirection: "column" as const,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "1.5rem 1.25rem",
-    position: "relative" as const,
-    zIndex: 1,
-  },
-  inner: {
-    width: "100%",
-    maxWidth: 420,
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "1.25rem",
-  },
-  hero: {
-    textAlign: "center" as const,
-    marginBottom: "0.25rem",
-  },
-  logoWrap: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "0.6rem",
-    marginBottom: "0.5rem",
-  },
-  logo: {
-    fontSize: "3rem",
-    fontWeight: 800,
-    letterSpacing: "-0.05em",
-    lineHeight: 1,
-    margin: 0,
-  },
-  logoDot: {
-    display: "inline-block",
-    width: 6,
-    height: 6,
-    borderRadius: "50%",
-    background: "var(--grad)",
-    opacity: 0.6,
-  },
-  tagline: {
-    color: "var(--fg-secondary)",
-    fontSize: "0.95rem",
-    fontWeight: 500,
-    margin: "0 0 0.75rem",
-  },
-  taglineLine: {
-    width: 40,
-    height: 2,
-    borderRadius: 2,
-    background: "var(--grad)",
-    margin: "0 auto",
-    opacity: 0.6,
-  },
-  section: {
-    position: "relative" as const,
-  },
-  divider: {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.75rem",
-  },
-  divLine: {
-    flex: 1,
-    height: 1,
-    background: "var(--border)",
-  },
-  divText: {
-    color: "var(--fg-muted)",
-    fontSize: "0.78rem",
-    fontWeight: 500,
-    letterSpacing: "0.05em",
-  },
-  footer: {
-    textAlign: "center" as const,
-    color: "var(--fg-muted)",
-    fontSize: "0.72rem",
-    letterSpacing: "0.06em",
-    marginTop: "0.25rem",
-  },
-};

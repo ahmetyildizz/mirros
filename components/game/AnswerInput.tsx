@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import { 
+  Send, 
+  CheckCircle2, 
+  Loader2, 
+  MessageSquare
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   placeholder?: string;
@@ -10,7 +16,7 @@ interface Props {
   loading?: boolean;
 }
 
-export function AnswerInput({ placeholder = "Cevabını yaz...", onSubmit, loading }: Props) {
+export function AnswerInput({ placeholder = "Cevabını buraya yaz...", onSubmit, loading }: Props) {
   const [value, setValue]       = useState("");
   const [sending, setSending]   = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -28,50 +34,50 @@ export function AnswerInput({ placeholder = "Cevabını yaz...", onSubmit, loadi
 
   if (submitted) {
     return (
-      <div style={{
-        background: "var(--bg-elevated)",
-        borderRadius: 12,
-        padding: "1rem",
-        textAlign: "center",
-        color: "var(--exact)",
-        fontWeight: 600,
-        fontSize: "0.95rem",
-      }}>
-        ✓ Gönderildi — bekliyoruz...
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card p-6 flex flex-col items-center gap-3 border-green-500/20 text-center"
+      >
+        <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center text-green-500">
+          <CheckCircle2 size={24} />
+        </div>
+        <p className="text-[13px] font-black text-green-400 uppercase tracking-widest">Cevabın Gönderildi</p>
+        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-tighter">Sıradaki round bekleniyor...</p>
+      </motion.div>
     );
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-      <Input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-        placeholder={placeholder}
-        maxLength={120}
-        disabled={sending}
-        style={{
-          background: "var(--bg-elevated)",
-          border: "1px solid var(--fg-muted)",
-          color: "var(--fg-primary)",
-          borderRadius: 12,
-          padding: "0.75rem 1rem",
-          opacity: sending ? 0.6 : 1,
-        }}
-      />
-      <Button
+    <div className="flex flex-col gap-3">
+      <div className="relative group">
+        <MessageSquare className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-accent transition-colors" size={20} />
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+          placeholder={placeholder}
+          maxLength={120}
+          disabled={sending || loading}
+          className="input-glass w-full pl-12 pr-4 py-4 text-[15px] font-bold text-white placeholder:text-slate-600 focus:border-accent/40 transition-all outline-none"
+        />
+      </div>
+
+      <motion.button
+        whileTap={{ scale: 0.98 }}
         onClick={handleSubmit}
         disabled={!value.trim() || loading || sending}
-        style={{
-          background: "var(--accent)",
-          color: "#fff",
-          borderRadius: 12,
-          fontWeight: 600,
-        }}
+        className={cn(
+          "btn-gradient w-full py-4 rounded-2xl flex items-center justify-center gap-3 text-[13px] font-black tracking-[0.2em] uppercase transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
+          (!value.trim() || loading || sending) ? "opacity-30 grayscale pointer-events-none" : "hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)]"
+        )}
       >
-        {sending ? "Gönderiliyor..." : "Gönder"}
-      </Button>
+        {sending ? (
+          <Loader2 className="animate-spin" size={18} />
+        ) : (
+          <>CEVABI GÖNDER <Send size={16} className="rotate-45" /></>
+        )}
+      </motion.button>
     </div>
   );
 }

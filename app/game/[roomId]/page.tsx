@@ -2,16 +2,29 @@
 
 import { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import confetti from "canvas-confetti";
+import { 
+  Trophy, 
+  User as UserIcon, 
+  Clock, 
+  Brain, 
+  Sparkles, 
+  AlertCircle,
+  CheckCircle2,
+  ChevronRight,
+  Zap,
+  Loader2
+} from "lucide-react";
 import { useGameStore } from "@/store/game.store";
 import { useGameState } from "@/hooks/useGameState";
-
 import { GameHeader }           from "@/components/game/GameHeader";
 import { QuestionCard }         from "@/components/game/QuestionCard";
 import { AnswerInput }          from "@/components/game/AnswerInput";
 import { GuessInput }           from "@/components/game/GuessInput";
 import { MultipleChoiceInput }  from "@/components/game/MultipleChoiceInput";
-import { Button }               from "@/components/ui/button";
 import { sounds }               from "@/lib/sounds";
+import { cn } from "@/lib/utils";
 
 export default function GamePage({ params }: { params: Promise<{ roomId: string }> }) {
   const { roomId } = use(params);
@@ -27,13 +40,10 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   const isQuiz = gameMode === "QUIZ";
 
   const [myUserId, setMyUserId]   = useState<string | null>(null);
-  const [countdown, setCountdown] = useState<number | null>(null);
 
-  // Race condition önleme: aynı round için birden fazla tetiklemeyi engelle
   const scoringRoundRef  = useRef<string | null>(null);
   const advancingRoundRef = useRef<string | null>(null);
 
-  // userId yükle + myRole belirle
   useEffect(() => {
     fetch("/api/me")
       .then((r) => r.json())
@@ -41,7 +51,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
         setMyUserId(data.id);
         const store = useGameStore.getState();
         if (store.gameMode === "QUIZ") {
-          setMyRole("guesser"); // quiz'de herkese "guesser" = cevapçı
+          setMyRole("guesser");
         } else {
           setMyRole(store.answererId === data.id ? "answerer" : "guesser");
         }
@@ -49,7 +59,6 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
       .catch(() => {});
   }, [setMyRole]);
 
-  // answererId değişince myRole güncelle (sadece social mod)
   useEffect(() => {
     if (isQuiz) return;
     if (!myUserId || !answererId) return;
@@ -59,25 +68,21 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   useGameState(gameId ?? "", myUserId ?? "");
 
   useEffect(() => {
-    // Her durumda oda bilgisini çek ve kontrol et (stale gameId koruması)
     fetch(`/api/rooms/${roomId}`)
       .then((r) => r.json())
       .then((data) => {
         if (data.activeGameId) {
-          // Eğer store'daki gameId farklıysa veya boşsa recovery yap
           if (data.activeGameId !== gameId) {
             recoverGameState(data.activeGameId);
           } else if (gameId) {
-            // Aynıysa bile verileri tazele (sayfa yenileme durumu)
             recoverGameState(gameId);
           }
         } else {
-          // Aktif oyun yoksa ana sayfaya/lobiye at
           router.replace("/");
         }
       })
       .catch(() => router.replace("/"));
-  }, [roomId, router]); // gameId bağımlılığını kaldırdım ki sonsuz döngüye girmesin, mount'ta bir kez kontrol yeterli
+  }, [roomId, router]);
 
   const recoverGameState = async (id: string) => {
     try {
@@ -85,7 +90,6 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
       const data = await res.json();
       if (data.gameId) {
         useGameStore.getState().hydrate(data);
-        // Role'ü hemen güncelle
         if (myUserId) {
           const role = data.gameMode === "QUIZ" ? "guesser" : (data.answererId === myUserId ? "answerer" : "guesser");
           useGameStore.getState().setMyRole(role);
@@ -96,14 +100,11 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     }
   };
 
-  // State değişince ses çal
   useEffect(() => {
     if (state === "ANSWERING") sounds.newRound();
     if (state === "GUESSING")  sounds.tick();
   }, [state]);
 
-  // Tüm tahminler gelince skoru otomatik hesapla (answerer)
-  // scoringRoundRef guard: aynı round için birden fazla POST /score engellenir
   useEffect(() => {
     if (state !== "GUESSING" || !isAnswerer) return;
     if (guessCount > 0 && guessCount >= totalGuessers) {
@@ -112,25 +113,31 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
         triggerScore();
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guessCount, totalGuessers]);
 
-  // Scoring sonuçlarına göre ses
   useEffect(() => {
     if (state !== "SCORING") return;
+    
+    let isSuccess = false;
     if (isQuiz && lastQuizResults) {
-      const anyCorrect = lastQuizResults.results.some((r) => r.correct);
-      anyCorrect ? sounds.exact() : sounds.wrong();
+      isSuccess = lastQuizResults.results.some((r) => r.correct);
     } else if (!isQuiz && lastRoundScore) {
-      const best = lastRoundScore.guessResults.reduce((b, g) => g.points > b ? g.points : b, 0);
-      if (best >= 10) sounds.exact();
-      else if (best >= 5) sounds.close();
-      else sounds.wrong();
+      isSuccess = lastRoundScore.guessResults.some((g) => g.points >= 5);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
 
-  // Son round sonuçlarını 10sn sonra temizle (ekrandan kaybolsun)
+    if (isSuccess) {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#A855F7', '#F43F5E', '#06B6D4']
+      });
+      sounds.exact();
+    } else {
+      sounds.wrong();
+    }
+  }, [state, lastQuizResults, lastRoundScore, isQuiz]);
+
   useEffect(() => {
     if (state === "ANSWERING" && lastRoundScore) {
       const timer = setTimeout(() => {
@@ -143,8 +150,9 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   if (!gameId || !question) {
     return (
-      <main style={styles.center}>
-        <p style={{ color: "var(--fg-secondary)" }}>Oyun yükleniyor...</p>
+      <main className="min-h-dvh flex flex-col items-center justify-center p-6 bg-black">
+        <Loader2 className="animate-spin text-accent mb-4" size={32} />
+        <p className="text-slate-400 font-bold tracking-widest text-xs uppercase">Mirros Yükleniyor...</p>
       </main>
     );
   }
@@ -175,202 +183,257 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   async function advanceToNext() {
     if (!activeRoundId) return;
-    // Guard: aynı round için yalnızca bir kez çağrılır (manuel buton + timeout çakışması önlemi)
     if (advancingRoundRef.current === activeRoundId) return;
     advancingRoundRef.current = activeRoundId;
     await fetch(`/api/rounds/${activeRoundId}/next`, { method: "POST" });
   }
 
   return (
-    <main style={styles.page}>
-      <GameHeader roundNumber={currentRound} totalRounds={totalRounds} />
-
-      {/* Spotlight göstergesi (sadece social) */}
-      {!isQuiz && (
-        <div style={styles.spotlight}>
-          <span style={styles.spotlightLabel}>Soru:</span>
-          <span style={styles.spotlightName}>
-            {isAnswerer ? "Sen" : (spotlightPlayer?.username ?? "?")}
-          </span>
-        </div>
-      )}
-
-      {/* Oyuncu skorları */}
-      <div style={styles.scoreBar}>
-        {players.map((p) => (
-          <div key={p.id} style={styles.scoreItem}>
-            <div style={{
-              ...styles.scoreAvatar,
-              background: p.id === answererId ? "var(--accent)" : "var(--bg-elevated)",
-              color: p.id === answererId ? "#fff" : "var(--fg-secondary)",
-            }}>
-              {(p.username ?? "?")[0].toUpperCase()}
-            </div>
-            <span style={styles.scoreNum}>{playerScores[p.id] ?? 0}</span>
-          </div>
-        ))}
+    <main className="relative min-h-dvh flex flex-col bg-black overflow-x-hidden">
+      {/* Aurora Background 2.0 (Subtle for game) */}
+      <div className="aurora-bg fixed inset-0 pointer-events-none opacity-30" aria-hidden>
+        <div className="aurora-blob-1" />
+        <div className="aurora-blob-2" />
       </div>
 
-      <div style={styles.content}>
-        {/* Her zaman aktif soruyu göster */}
-        <QuestionCard
-          key={activeRoundId} // Yeni soru gelince animasyon tetiklensin
-          text={question.text}
-          category={question.category}
-          roundNumber={currentRound}
-          answererName={!isQuiz && !isAnswerer && state === "GUESSING" ? (spotlightPlayer?.username ?? undefined) : undefined}
-        />
+      <div className="relative z-10 flex flex-col w-full max-w-[480px] mx-auto px-4 py-6 gap-6 h-full min-h-dvh">
+        <GameHeader roundNumber={currentRound} totalRounds={totalRounds} />
 
-        {/* Girdi alanları (ANSWERING/GUESSING) */}
-        <div style={styles.inputArea}>
-          {state === "ANSWERING" && (
-            isQuiz ? (
-              question.options
-                ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} />
-                : <AnswerInput onSubmit={submitAnswer} />
-            ) : (
-              isAnswerer
-                ? (question.options
-                    ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText />
-                    : <AnswerInput onSubmit={submitAnswer} />
-                  )
-                : <div style={styles.waitBox}>
-                    <p style={styles.waitText}>
-                      <strong>{spotlightPlayer?.username ?? "Spotlight oyuncu"}</strong> cevaplıyor...
-                    </p>
+        {/* Scoring Bar */}
+        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none px-1">
+          {players.map((p, i) => (
+            <motion.div 
+              key={p.id} 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: i * 0.05 }}
+              className="flex flex-col items-center gap-2 min-w-[50px] group"
+            >
+              <div className={cn(
+                "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 border-2",
+                p.id === answererId 
+                  ? "bg-accent/20 border-accent shadow-[0_0_15px_var(--accent-glow)] scale-110" 
+                  : "bg-white/[0.03] border-white/5"
+              )}>
+                <span className="text-sm font-black text-white">{(p.username ?? "?")[0].toUpperCase()}</span>
+                {p.id === answererId && !isQuiz && (
+                  <div className="absolute -top-1 -right-1">
+                    <motion.div animate={{ rotate: [0, 15, -15, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
+                      <Zap size={14} className="text-yellow-400 fill-yellow-400" />
+                    </motion.div>
                   </div>
-            )
+                )}
+              </div>
+              <span className="text-[14px] font-black text-white drop-shadow-md">{playerScores[p.id] ?? 0}</span>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-6 flex-1">
+          {/* Spotlight indicator */}
+          {!isQuiz && (
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-2xl w-fit"
+            >
+              <Sparkles className="text-accent" size={14} />
+              <p className="text-[11px] font-bold text-slate-300 uppercase tracking-widest">
+                ODAK: <span className="text-white font-black">{isAnswerer ? "SENSİN" : (spotlightPlayer?.username ?? "?").toUpperCase()}</span>
+              </p>
+            </motion.div>
           )}
 
-          {!isQuiz && state === "GUESSING" && (
-            isAnswerer
-              ? (
-                <div style={styles.waitBox}>
-                  <p style={styles.waitText}>Diğerleri tahmin ediyor...</p>
-                  <div style={styles.guessProgress}>
-                    {Array.from({ length: totalGuessers }).map((_, i) => (
-                      <div key={i} style={{
-                        ...styles.progressDot,
-                        background: i < guessCount ? "var(--exact)" : "var(--bg-elevated)",
-                      }} />
+          {/* Question Section */}
+          <QuestionCard
+            key={activeRoundId}
+            text={question.text}
+            category={question.category}
+            roundNumber={currentRound}
+            answererName={!isQuiz && !isAnswerer && state === "GUESSING" ? (spotlightPlayer?.username ?? undefined) : undefined}
+          />
+
+          {/* Interaction Area */}
+          <div className="flex flex-col gap-4">
+            <AnimatePresence mode="wait">
+              {state === "ANSWERING" && (
+                <motion.div 
+                  key="answering-area"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                >
+                  {isQuiz ? (
+                    question.options
+                      ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} />
+                      : <AnswerInput onSubmit={submitAnswer} />
+                  ) : (
+                    isAnswerer
+                      ? (question.options
+                          ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText />
+                          : <AnswerInput onSubmit={submitAnswer} />
+                        )
+                      : (
+                        <div className="glass-card-elevated p-8 flex flex-col items-center gap-4 text-center">
+                          <div className="relative">
+                            <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-12 h-12 rounded-full border-2 border-dashed border-accent/30" />
+                            <UserIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-accent" size={20} />
+                          </div>
+                          <p className="text-[13px] font-medium text-slate-300 leading-relaxed">
+                            <span className="text-white font-black">{spotlightPlayer?.username ?? "Arkadaşın"}</span> şu an cevap veriyor...
+                          </p>
+                        </div>
+                      )
+                  )}
+                </motion.div>
+              )}
+
+              {!isQuiz && state === "GUESSING" && (
+                <motion.div 
+                  key="guessing-area"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                >
+                  {isAnswerer ? (
+                    <div className="glass-card-elevated p-8 flex flex-col items-center gap-6">
+                      <div className="flex flex-col items-center gap-2">
+                        <p className="text-[11px] font-black text-slate-500 tracking-[0.2em] uppercase">Tahminler Bekleniyor</p>
+                        <div className="flex gap-2">
+                          {Array.from({ length: totalGuessers }).map((_, i) => (
+                            <motion.div 
+                              key={i}
+                              animate={i < guessCount ? { scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] } : {}}
+                              className={cn(
+                                "w-3 h-3 rounded-full transition-colors duration-500",
+                                i < guessCount ? "bg-accent shadow-[0_0_10px_var(--accent)]" : "bg-white/10"
+                              )} 
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-[15px] font-bold text-white tracking-tight">
+                        {guessCount} / {totalGuessers} arkadaşın tahmin etti
+                      </p>
+                    </div>
+                  ) : (
+                    question.options ? (
+                      <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason />
+                    ) : (
+                      <GuessInput opponentName={spotlightPlayer?.username ?? "Arkadaşın"} onSubmit={submitGuess} />
+                    )
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Results Overlay (Social) */}
+          <AnimatePresence>
+            {!isQuiz && lastRoundScore && state === "ANSWERING" && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="mt-4 flex flex-col gap-4"
+              >
+                <div className="flex items-center gap-2 px-1">
+                  <div className="h-px flex-1 bg-white/10" />
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Önceki Round</span>
+                  <div className="h-px flex-1 bg-white/10" />
+                </div>
+
+                <div className="glass-card p-5 border-blue-500/10">
+                  <div className="flex flex-col gap-1 mb-4">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gerçek Cevap</span>
+                    <p className="text-xl font-black text-cyan-400 drop-shadow-sm">{lastRoundScore.answer}</p>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    {lastRoundScore.guessResults.map((g) => (
+                      <div key={g.userId} className={cn(
+                        "flex items-center gap-3 p-3 rounded-xl border transition-all",
+                        g.matchLevel === "EXACT" ? "bg-green-500/10 border-green-500/30" : g.matchLevel === "CLOSE" ? "bg-yellow-500/10 border-yellow-500/30" : "bg-white/[0.02] border-white/5"
+                      )}>
+                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center font-bold text-xs uppercase">{g.username?.[0]}</div>
+                        <div className="flex-1 flex flex-col">
+                          <span className="text-[11px] font-bold text-slate-400">{g.username}</span>
+                          <span className="text-[13px] font-bold text-white">{g.guess}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Zap size={10} className={cn(g.points > 0 ? "text-yellow-400 fill-yellow-400" : "text-slate-600")} />
+                          <span className="text-[15px] font-black text-white">+{g.points}</span>
+                        </div>
+                      </div>
                     ))}
-                    <span style={{ color: "var(--fg-secondary)", fontSize: "0.8rem" }}>
-                      {guessCount}/{totalGuessers}
-                    </span>
                   </div>
                 </div>
-              )
-              : (question.options
-                  ? <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason />
-                  : <GuessInput opponentName={spotlightPlayer?.username ?? "Spotlight oyuncu"} onSubmit={submitGuess} />
-                )
+              </motion.div>
+            )}
+
+            {/* Quiz Scoring Box */}
+            {isQuiz && state === "SCORING" && lastQuizResults && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="glass-card-elevated p-6 border-accent/20"
+              >
+                <div className="flex flex-col items-center gap-4 text-center mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-[0_0_20px_var(--accent-glow)]">
+                    <Trophy className="text-white" size={24} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black text-accent uppercase tracking-widest">Doğru Cevap</span>
+                    <h4 className="text-2xl font-black text-white">{lastQuizResults.correctAnswer}</h4>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  {lastQuizResults.results.map((r) => (
+                    <div key={r.userId} className={cn(
+                      "flex items-center gap-3 p-3 rounded-xl border",
+                      r.correct ? "bg-green-500/10 border-green-500/30" : "bg-white/[0.02] border-white/5 opacity-60"
+                    )}>
+                      <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center font-bold text-xs">{r.username?.[0]}</div>
+                      <div className="flex-1">
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">{r.username}</p>
+                        <p className="text-[14px] font-black text-white tracking-tight">{r.answer}</p>
+                      </div>
+                      {r.correct && <CheckCircle2 size={16} className="text-green-500" />}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Penalties */}
+          {lastPenalty && (
+             <motion.div 
+               initial={{ x: 300, opacity: 0 }}
+               animate={{ x: 0, opacity: 1 }}
+               className="bg-orange-500/10 border-l-4 border-orange-500 p-4 rounded-r-2xl"
+             >
+                <div className="flex items-center gap-2 mb-1">
+                  <AlertCircle className="text-orange-500" size={16} />
+                  <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest">🎭 Ceza Vakti!</span>
+                </div>
+                <p className="text-[14px] font-bold text-orange-200 leading-relaxed italic">&quot;{lastPenalty}&quot;</p>
+             </motion.div>
           )}
         </div>
 
-        {/* Eski Round Sonuçları (Alt kısımda kalsın) */}
-        {!isQuiz && lastRoundScore && (
-          <div style={styles.inlineScoring}>
-             <p style={styles.inlineScoringTitle}>Önceki Round Sonuçları</p>
-             <div style={styles.answerReveal}>
-                <span style={styles.answerLabel}>Gerçek cevap</span>
-                <span style={styles.answerText}>{lastRoundScore.answer}</span>
-              </div>
-              <div style={styles.guessList}>
-                {lastRoundScore.guessResults.map((g) => (
-                  <div key={g.userId} style={{
-                    ...styles.guessRow,
-                    borderColor: g.matchLevel === "EXACT" ? "var(--exact)" : g.matchLevel === "CLOSE" ? "var(--close)" : "var(--bg-elevated)",
-                  }}>
-                    <div style={styles.guessAvatar}>{(g.username ?? "?")[0].toUpperCase()}</div>
-                    <div style={styles.guessInfo}>
-                      <span style={styles.guessUsername}>{g.username}</span>
-                      <span style={styles.guessText}>{g.guess}</span>
-                    </div>
-                    <span style={{ color: g.matchLevel === "EXACT" ? "var(--exact)" : g.matchLevel === "CLOSE" ? "var(--close)" : "var(--fg-muted)", fontWeight: 700, fontSize: "0.85rem" }}>
-                      {g.matchLevel === "EXACT" ? "+10" : g.matchLevel === "CLOSE" ? "+5" : "0"}
-                    </span>
-                  </div>
-                ))}
-              </div>
+        {/* Footer/Progress */}
+        <div className="mt-auto pt-6 border-t border-white/5">
+          <div className="flex items-center justify-between opacity-30 text-[10px] font-black text-slate-500 uppercase tracking-widest">
+            <div className="flex items-center gap-2">
+              <Clock size={12} />
+              <span>Oyun Sürüyor</span>
+            </div>
+            <span>Mirros · {gameMode}</span>
           </div>
-        )}
-
-        {/* Quiz sonuçları (Scoring state'indeysen göster) */}
-        {isQuiz && state === "SCORING" && lastQuizResults && (
-          <div style={styles.scoringBox}>
-             <div style={styles.answerReveal}>
-                <span style={styles.answerLabel}>Doğru cevap</span>
-                <span style={styles.answerText}>{lastQuizResults.correctAnswer}</span>
-              </div>
-              <div style={styles.guessList}>
-                {lastQuizResults.results.map((r) => (
-                  <div key={r.userId} style={{
-                    ...styles.guessRow,
-                    borderColor: r.correct ? "var(--exact)" : "var(--bg-elevated)",
-                  }}>
-                    <div style={styles.guessAvatar}>{(r.username ?? "?")[0].toUpperCase()}</div>
-                    <div style={styles.guessInfo}>
-                      <span style={styles.guessUsername}>{r.username}</span>
-                      <span style={styles.guessText}>{r.answer}</span>
-                    </div>
-                    <span style={{ color: r.correct ? "var(--exact)" : "var(--fg-muted)", fontWeight: 700 }}>
-                      {r.correct ? "+10" : "0"}
-                    </span>
-                  </div>
-                ))}
-              </div>
-          </div>
-        )}
-
-        {/* Penaltı varsa her zaman gösterilebilir */}
-        {lastPenalty && (
-          <div style={styles.penaltyBox}>
-            <span style={styles.penaltyTitle}>🎭 Ceza!</span>
-            <p style={styles.penaltyText}>{lastPenalty}</p>
-          </div>
-        )}
-
-        {/* Manuel geçiş gerekirse (Sadece yedek olarak) */}
-        {state === "SCORING" && !isQuiz && isAnswerer && (
-          <Button onClick={() => advanceToNext()} style={styles.nextBtn}>
-            Soruyu Bekleme, Geç →
-          </Button>
-        )}
+        </div>
       </div>
     </main>
   );
 }
-
-const styles = {
-  page:          { minHeight: "100dvh", background: "var(--bg-base)", padding: "1rem", display: "flex", flexDirection: "column" as const },
-  center:        { minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg-base)" },
-  content:       { flex: 1, display: "flex", flexDirection: "column" as const, gap: "1rem", paddingTop: "0.75rem" },
-  spotlight:     { display: "flex", alignItems: "center", gap: "0.4rem", padding: "0.4rem 0.75rem", background: "var(--bg-elevated)", borderRadius: 8, marginBottom: "0.25rem" },
-  spotlightLabel:{ color: "var(--fg-secondary)", fontSize: "0.8rem" },
-  spotlightName: { color: "var(--accent)", fontWeight: 700, fontSize: "0.9rem" },
-  scoreBar:      { display: "flex", gap: "0.75rem", overflowX: "auto" as const, paddingBottom: "0.25rem" },
-  scoreItem:     { display: "flex", flexDirection: "column" as const, alignItems: "center", gap: "0.2rem", minWidth: 40 },
-  scoreAvatar:   { width: 36, height: 36, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "0.85rem" },
-  scoreNum:      { color: "var(--fg-primary)", fontSize: "0.75rem", fontWeight: 600 },
-  inputArea:     { display: "flex", flexDirection: "column" as const, gap: "1rem", minHeight: "100px" },
-  waitBox:       { background: "var(--bg-elevated)", borderRadius: 12, padding: "1.5rem", display: "flex", flexDirection: "column" as const, alignItems: "center", gap: "1rem" },
-  waitText:      { color: "var(--fg-secondary)", textAlign: "center" as const, fontSize: "0.9rem" },
-  guessProgress: { display: "flex", alignItems: "center", gap: "0.4rem" },
-  progressDot:   { width: 10, height: 10, borderRadius: "50%", transition: "background 0.3s" },
-  nextBtn:       { background: "var(--accent)", color: "#fff", borderRadius: 12, fontWeight: 600, padding: "0.875rem", width: "100%" },
-  scoringBox:    { display: "flex", flexDirection: "column" as const, gap: "0.75rem" },
-  inlineScoring: { marginTop: "1rem", paddingTop: "1rem", borderTop: "1px dashed var(--border)", display: "flex", flexDirection: "column" as const, gap: "0.75rem" },
-  inlineScoringTitle: { color: "var(--fg-secondary)", fontSize: "0.8rem", fontWeight: 600, textAlign: "center" as const },
-  answerReveal:  { background: "var(--bg-elevated)", borderRadius: 12, padding: "1rem", display: "flex", flexDirection: "column" as const, gap: "0.25rem" },
-  answerLabel:   { color: "var(--fg-secondary)", fontSize: "0.75rem" },
-  answerText:    { color: "var(--exact)", fontWeight: 700, fontSize: "1.2rem" },
-  guessList:     { display: "flex", flexDirection: "column" as const, gap: "0.5rem" },
-  guessRow:      { display: "flex", alignItems: "center", gap: "0.6rem", background: "var(--bg-elevated)", borderRadius: 10, padding: "0.6rem 0.75rem", border: "1px solid" },
-  guessAvatar:   { width: 30, height: 30, borderRadius: "50%", background: "var(--accent)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "0.8rem", flexShrink: 0 },
-  guessInfo:     { flex: 1, display: "flex", flexDirection: "column" as const, gap: "0.1rem" },
-  guessUsername: { color: "var(--fg-secondary)", fontSize: "0.75rem" },
-  guessText:     { color: "var(--fg-primary)", fontSize: "0.9rem", fontWeight: 500 },
-  penaltyBox:    { background: "#2d1a00", border: "2px solid #f97316", borderRadius: 12, padding: "0.875rem 1rem", display: "flex", flexDirection: "column" as const, gap: "0.3rem" },
-  penaltyTitle:  { color: "#f97316", fontWeight: 800, fontSize: "0.95rem" },
-  penaltyText:   { color: "#fed7aa", fontSize: "0.9rem", lineHeight: 1.4 },
-};

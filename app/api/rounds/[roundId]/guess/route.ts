@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
+import { createAuditLog } from "@/lib/audit";
 
 const bodySchema = z.object({
   content: z.string().min(1).max(120),
@@ -34,6 +35,15 @@ export async function POST(
     where:  { roundId_userId: { roundId, userId: user.id } },
     create: { roundId, userId: user.id, content: body.data.content, reason: body.data.reason },
     update: { content: body.data.content, reason: body.data.reason },
+  });
+
+  await createAuditLog({
+    action: "SUBMIT_GUESS",
+    entityType: "GUESS",
+    entityId: guess.id,
+    resource: `User submitted guess for Round ${roundId}`,
+    userId: user.id,
+    details: { content: body.data.content, reason: body.data.reason },
   });
 
   // Kaç kişi tahmin etti?

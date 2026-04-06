@@ -1,14 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input }  from "@/components/ui/input";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  CheckCircle2, 
+  ChevronRight, 
+  PenLine, 
+  MessageSquareText, 
+  Send,
+  Loader2
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   options:      string[];
   onSubmit:     (value: string, reason?: string) => void | Promise<void>;
-  allowFreeText?: boolean;   // sosyal modda son şık = "Diğer"
-  showReason?:  boolean;     // tahmin ekranında "neden böyle düşündün?" göster
+  allowFreeText?: boolean;
+  showReason?:  boolean;
 }
 
 export function MultipleChoiceInput({ options, onSubmit, allowFreeText = false, showReason = false }: Props) {
@@ -33,78 +41,127 @@ export function MultipleChoiceInput({ options, onSubmit, allowFreeText = false, 
 
   if (submitted) {
     return (
-      <div style={s.doneBox}>
-        ✓ Cevabın gönderildi — bekleniyor...
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="glass-card p-6 flex flex-col items-center gap-3 border-green-500/20 text-center"
+      >
+        <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center text-green-500">
+          <CheckCircle2 size={24} />
+        </div>
+        <p className="text-[13px] font-black text-green-400 uppercase tracking-widest">Başarıyla Gönderildi</p>
+        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-tighter">Sıradaki round bekleniyor...</p>
+      </motion.div>
     );
   }
 
   const hasSelection = showFree ? freeText.trim().length > 0 : !!selected;
 
   return (
-    <div style={s.container}>
-      {options.map((opt) => (
-        <button
-          key={opt}
-          disabled={sending}
-          style={{
-            ...s.option,
-            ...(selected === opt && !showFree ? s.optionSelected : {}),
-          }}
-          onClick={() => { setSelected(opt); setShowFree(false); }}
-        >
-          {opt}
-        </button>
-      ))}
+    <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 gap-2">
+        {options.map((opt) => (
+          <motion.button
+            key={opt}
+            disabled={sending}
+            whileHover={{ x: 4 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => { setSelected(opt); setShowFree(false); }}
+            className={cn(
+              "group w-full flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-300",
+              selected === opt && !showFree 
+                ? "bg-accent/15 border-accent text-white shadow-[0_0_20px_rgba(168,85,247,0.15)]" 
+                : "bg-white/[0.03] border-white/5 text-slate-400 hover:bg-white/[0.06] hover:border-white/10"
+            )}
+          >
+            <span className={cn(
+              "text-[14px] font-bold tracking-tight",
+              selected === opt && !showFree ? "text-white" : "group-hover:text-slate-200"
+            )}>
+              {opt}
+            </span>
+            {selected === opt && !showFree ? (
+              <CheckCircle2 size={18} className="text-accent" />
+            ) : (
+              <ChevronRight size={18} className="opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+            )}
+          </motion.button>
+        ))}
 
-      {allowFreeText && (
-        <button
-          style={{ ...s.option, ...(showFree ? s.optionSelected : {}), fontStyle: "italic" }}
-          onClick={() => { setShowFree(true); setSelected(null); }}
-          disabled={sending}
-        >
-          ✏️ Diğer (kendin yaz)
-        </button>
-      )}
+        {allowFreeText && (
+          <motion.button
+            whileHover={{ x: 4 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => { setShowFree(true); setSelected(null); }}
+            className={cn(
+              "group w-full flex items-center justify-between p-4 rounded-2xl border-2 border-dashed transition-all duration-300",
+              showFree 
+                ? "bg-accent/15 border-accent text-white shadow-[0_0_20px_rgba(168,85,247,0.15)]" 
+                : "bg-white/[0.01] border-white/10 text-slate-500 hover:bg-white/[0.03] hover:border-white/20"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <PenLine size={16} className={showFree ? "text-accent" : "opacity-40"} />
+              <span className={cn("text-[13px] font-bold italic", showFree && "text-white")}>Diğer (Kendin Yaz)</span>
+            </div>
+            {showFree && <CheckCircle2 size={18} className="text-accent" />}
+          </motion.button>
+        )}
+      </div>
 
-      {showFree && (
-        <Input
-          value={freeText}
-          onChange={(e) => setFreeText(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-          placeholder="Cevabını yaz..."
-          maxLength={120}
-          autoFocus
-          style={s.freeInput}
-        />
-      )}
+      <AnimatePresence>
+        {showFree && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <input
+              value={freeText}
+              onChange={(e) => setFreeText(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+              placeholder="Cevabını buraya karala..."
+              maxLength={120}
+              autoFocus
+              className="input-glass w-full py-4 px-5 text-[15px] font-bold text-white focus:border-accent/40 mb-2"
+            />
+          </motion.div>
+        )}
 
-      {showReason && hasSelection && (
-        <Input
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          placeholder='Neden böyle düşündün? (isteğe bağlı)'
-          maxLength={100}
-          style={{ ...s.freeInput, fontSize: "0.85rem", borderStyle: "dashed" }}
-        />
-      )}
+        {showReason && hasSelection && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="relative overflow-hidden group"
+          >
+            <MessageSquareText className="absolute left-4 top-4 text-slate-600 group-hover:text-slate-400 transition-colors" size={16} />
+            <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="Neden böyle düşündün? Arkadaşlarını ikna et... (isteğe bağlı)"
+              className="input-glass w-full pl-12 pr-5 py-4 min-h-[80px] text-[13px] font-medium text-slate-300 resize-none outline-none focus:border-slate-500 transition-all border-dashed"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <Button
+      <motion.button
+        whileTap={{ scale: 0.98 }}
         onClick={handleSubmit}
         disabled={!hasSelection || sending}
-        style={s.submitBtn}
+        className={cn(
+          "btn-gradient w-full py-4 rounded-2xl flex items-center justify-center gap-3 text-[13px] font-black tracking-[0.2em] uppercase transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
+          (!hasSelection || sending) ? "opacity-30 grayscale pointer-events-none" : "hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)]"
+        )}
       >
-        {sending ? "Gönderiliyor..." : "Gönder"}
-      </Button>
+        {sending ? (
+          <Loader2 className="animate-spin" size={18} />
+        ) : (
+          <>GÖNDER <Send size={16} className="rotate-45" /></>
+        )}
+      </motion.button>
     </div>
   );
 }
-
-const s = {
-  container:      { display: "flex", flexDirection: "column" as const, gap: "0.5rem" },
-  option:         { width: "100%", padding: "0.75rem 1rem", background: "var(--bg-elevated)", color: "var(--fg-primary)", border: "2px solid transparent", borderRadius: 12, fontWeight: 500, fontSize: "0.9rem", cursor: "pointer", textAlign: "left" as const, transition: "all 0.15s" },
-  optionSelected: { borderColor: "var(--accent)", background: "var(--bg-elevated)", color: "var(--accent)", fontWeight: 700 },
-  freeInput:      { background: "var(--bg-elevated)", border: "1px solid var(--fg-muted)", color: "var(--fg-primary)", borderRadius: 12, padding: "0.75rem 1rem" },
-  submitBtn:      { marginTop: "0.25rem", background: "var(--accent)", color: "#fff", borderRadius: 12, fontWeight: 600, padding: "0.875rem", width: "100%" },
-  doneBox:        { background: "var(--bg-elevated)", borderRadius: 12, padding: "1rem", textAlign: "center" as const, color: "var(--exact)", fontWeight: 600 },
-};

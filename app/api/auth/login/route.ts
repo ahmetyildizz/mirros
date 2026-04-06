@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { createSession } from "@/lib/auth/session";
 import { rateLimit } from "@/lib/rateLimit";
+import { createAuditLog } from "@/lib/audit";
 
 const bodySchema = z.object({
   username: z.string().min(2).max(20).regex(/^[a-zA-Z0-9_]+$/, "Sadece harf, rakam ve _ kullanabilirsin"),
@@ -26,6 +27,14 @@ export async function POST(req: NextRequest) {
     where:  { username },
     update: {},
     create: { username, email: `${username}@mirros.app` },
+  });
+
+  await createAuditLog({
+    action: "LOGIN",
+    entityType: "USER",
+    entityId: user.id,
+    resource: `User ${username} logged in`,
+    userId: user.id,
   });
 
   await createSession(user.id, username);

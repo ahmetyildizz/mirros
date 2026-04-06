@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
 import { startGame } from "@/lib/services/game.service";
+import { createAuditLog } from "@/lib/audit";
 
 const bodySchema = z.object({
   code:     z.string().min(4).max(8),
@@ -31,10 +32,26 @@ export async function POST(req: NextRequest) {
   const alreadyIn = room.participants.some((p) => p.userId === user.id);
   if (!alreadyIn) {
     await db.roomParticipant.create({ data: { roomId: room.id, userId: user.id, ageGroup: body.data.ageGroup } });
+    await createAuditLog({
+      action: "JOIN_ROOM",
+      entityType: "ROOM",
+      entityId: room.id,
+      resource: `User joined Room ${room.code}`,
+      userId: user.id,
+      details: { ageGroup: body.data.ageGroup },
+    });
   } else if (body.data.ageGroup) {
     await db.roomParticipant.update({
       where: { roomId_userId: { roomId: room.id, userId: user.id } },
       data:  { ageGroup: body.data.ageGroup },
+    });
+    await createAuditLog({
+      action: "UPDATE",
+      entityType: "USER",
+      entityId: user.id,
+      resource: `User updated ageGroup in Room ${room.code}`,
+      userId: user.id,
+      details: { ageGroup: body.data.ageGroup },
     });
   }
 

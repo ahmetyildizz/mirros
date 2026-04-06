@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
+import { createAuditLog } from "@/lib/audit";
 
 /** Türkçeye duyarlı metin normalleştirme: ilk harf büyük, trim, çoklu boşluk temizle */
 function normalizeAnswer(text: string): string {
@@ -49,6 +50,15 @@ export async function POST(
     where:  { roundId_userId: { roundId, userId: user.id } },
     create: { roundId, userId: user.id, content: normalizedContent },
     update: { content: normalizedContent },
+  });
+
+  await createAuditLog({
+    action: "SUBMIT_ANSWER",
+    entityType: "ANSWER",
+    entityId: answer.id,
+    resource: `User submitted answer for Round ${roundId}`,
+    userId: user.id,
+    details: { content: normalizedContent, isQuiz },
   });
 
   if (isQuiz) {
@@ -117,10 +127,18 @@ async function scoreQuizRound(roundId: string, gameId: string) {
     const isCorrect = ans.content.trim().toLowerCase() === correct.trim().toLowerCase();
     const points    = isCorrect ? 10 : 0;
 
-    await db.score.upsert({
+    const score = await db.score.upsert({
       where:  { roundId_guesserId: { roundId, guesserId: ans.userId } },
       create: { roundId, gameId, guesserId: ans.userId, matchLevel: isCorrect ? "EXACT" : "WRONG", points },
       update: { matchLevel: isCorrect ? "EXACT" : "WRONG", points },
+    });
+
+    await createAuditLog({
+      action: "SUBMIT_SCORE",
+      entityType: "SCORE",
+      entityId: score.id,
+      resource: `Quiz Round Scored for User ${ans.userId}`,
+      details: { points, isCorrect, matchLevel: score.matchLevel },
     });
 
     results.push({

@@ -2,9 +2,23 @@
 
 import { use, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Copy, 
+  Share2, 
+  Users, 
+  Brain, 
+  Sparkles, 
+  CheckCircle2, 
+  Loader2, 
+  ArrowRight,
+  ShieldCheck,
+  MessageCircle
+} from "lucide-react";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useGameStore } from "@/store/game.store";
 import type { Player } from "@/store/game.store";
+import { cn } from "@/lib/utils";
 
 interface GameStartedPayload {
   gameId:           string;
@@ -55,11 +69,9 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
         if (data.hostName)   setHostName(data.hostName);
         if (data.maxPlayers) setMaxPlayers(data.maxPlayers);
         if (data.gameMode)   setGameMode(data.gameMode);
-        // Oda kodu ve roomId store'da yoksa (katılan oyuncu için fallback)
         if (data.code)       setRoomCode(data.code);
         if (data.id)         setRoomId(data.id);
 
-        // Aktif oyun varsa otomatik yönlendir
         if (data.activeGameId) {
           setGameId(data.activeGameId);
           storeGameMode(data.gameMode);
@@ -106,7 +118,7 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
       storePlayers(data.players);
       setMyRole(null);
       setGameState("ANSWERING");
-      setStarting(false); // spinner'ı kapat
+      setStarting(false);
       router.push(`/game/${roomId}`);
     });
 
@@ -139,297 +151,204 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
 
   const canStart   = players.length >= 2;
   const isFull     = players.length >= maxPlayers;
-  const modeEmoji  = gameMode === "QUIZ" ? "🧠" : "💜";
-  const modeLabel  = gameMode === "QUIZ" ? "Bilgi Yarışması" : "Birbirini Tanı";
-  const fillPct    = Math.round((players.length / maxPlayers) * 100);
+  const fillPct    = Math.min(100, Math.round((players.length / maxPlayers) * 100));
 
   return (
-    <main style={s.page}>
-      {/* Aurora */}
+    <main className="relative min-h-dvh flex flex-col items-center justify-center p-6 overflow-hidden">
+      {/* Aurora Background 2.0 */}
       <div className="aurora-bg" aria-hidden>
-        <div className="aurora-blob-1" />
-        <div className="aurora-blob-2" />
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 5, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          className="aurora-blob-1" 
+        />
+        <motion.div 
+          animate={{ scale: [1, 1.3, 1], rotate: [0, -8, 0] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+          className="aurora-blob-2" 
+        />
       </div>
 
-      <div style={s.outer}>
-        {/* Üst başlık */}
-        <div style={s.header} className="fade-up">
-          <span className="gradient-text" style={s.logo}>mirros</span>
-          <span style={s.modeBadge}>
-            {modeEmoji} {modeLabel}
-          </span>
-        </div>
+      <div className="relative z-10 w-full max-w-[440px] flex flex-col gap-5">
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-between items-end px-1"
+        >
+          <div className="flex flex-col">
+            <h1 className="text-3xl font-black tracking-tighter gradient-text leading-tight drop-shadow">
+              mirros
+            </h1>
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Oyun Lobisi</p>
+          </div>
+          <div className="glass-card px-3 py-1.5 flex items-center gap-2 border-white/10">
+            {gameMode === "QUIZ" ? (
+              <>
+                <Brain className="text-cyan-400" size={14} />
+                <span className="text-[11px] font-bold text-slate-200">Bilgi Yarışması</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="text-accent" size={14} />
+                <span className="text-[11px] font-bold text-slate-200">Birbirini Tanı</span>
+              </>
+            )}
+          </div>
+        </motion.div>
 
-        {/* Oda kodu kartı */}
-        <div style={s.codeCard} className="glass-card fade-up fade-up-1">
-          <p style={s.codeLabel}>Oda Kodu</p>
-          <p style={s.code}>{roomCode ?? "—"}</p>
-          <div style={s.shareRow}>
+        {/* Room Code Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="glass-card-elevated p-6 flex flex-col items-center gap-6"
+        >
+          <div className="flex flex-col items-center gap-1">
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Davet Kodu</p>
+            <h2 className="text-6xl font-black tracking-[0.2em] text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.15)] select-all leading-tight">
+              {roomCode ?? "——"}
+            </h2>
+          </div>
+
+          <div className="flex w-full gap-3">
             <button
               onClick={handleCopy}
-              className="btn-ghost"
-              style={s.shareBtn}
+              className={cn(
+                "flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-xs transition-all border",
+                copied 
+                  ? "bg-green-500/10 border-green-500/40 text-green-400" 
+                  : "bg-white/[0.03] border-white/[0.08] text-slate-100 hover:bg-white/[0.08]"
+              )}
             >
-              {copied ? "✓ Kopyalandı!" : "📋 Linki Kopyala"}
+              {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
+              {copied ? "KOPYALANDI" : "LİNKİ KOPYALA"}
             </button>
             <button
               onClick={handleWhatsApp}
-              style={{ ...s.shareBtn, background: "#25D366", color: "#fff", border: "none", borderRadius: 14, fontWeight: 600, cursor: "pointer" }}
+              className="w-14 flex items-center justify-center py-3 rounded-xl bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366]/20 transition-all"
             >
-              WhatsApp
+              <MessageCircle size={20} fill="currentColor" stroke="none" />
             </button>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Oyuncu listesi */}
-        <div style={s.playerCard} className="glass-card fade-up fade-up-2">
-          {/* Doluluk çubuğu */}
-          <div style={s.progressWrap}>
-            <div style={s.progressHeader}>
-              <span style={s.progressLabel}>
-                {isFull ? "🎉 Oda doldu!" : `${players.length} / ${maxPlayers} oyuncu`}
+        {/* Player List Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="glass-card p-6 flex flex-col gap-6"
+        >
+          {/* Progress Indicator */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[12px] font-black text-slate-100 flex items-center gap-2">
+                <Users size={14} className="text-slate-400" />
+                {isFull ? "🎉 ODA DOLDU!" : `${players.length} / ${maxPlayers} OYUNCU`}
               </span>
-              {players.length < 2 && (
-                <span style={s.progressHint}>en az 2 kişi gerekli</span>
+              {!canStart && (
+                <span className="text-[10px] font-bold text-slate-500 italic opacity-60">en az 2 kişi gerekli</span>
               )}
             </div>
-            <div style={s.progressTrack}>
-              <div style={{ ...s.progressFill, width: `${fillPct}%` }} />
+            <div className="h-1.5 w-full bg-white/[0.05] rounded-full overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${fillPct}%` }}
+                className="h-full bg-gradient-to-r from-accent to-accent-2" 
+              />
             </div>
           </div>
 
-          {/* Oyuncular */}
-          <div style={s.playerList}>
-            {players.map((p, i) => (
-              <div key={p.id} style={s.playerRow} className="fade-up" >
-                <div style={{ ...s.avatar, animationDelay: `${i * 60}ms` }}>
-                  {(p.username ?? "?")[0].toUpperCase()}
-                </div>
-                <span style={s.playerName}>{p.username}</span>
-                {p.username === hostName && (
-                  <span style={s.hostBadge}>Host</span>
-                )}
-                <span style={s.checkmark}>✓</span>
-              </div>
-            ))}
+          {/* Players List */}
+          <div className="flex flex-col gap-3">
+            <AnimatePresence>
+              {players.map((p, i) => (
+                <motion.div
+                  key={p.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.02] border border-white/[0.05]"
+                >
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center border border-white/10 shadow-[0_0_10px_rgba(168,85,247,0.1)]">
+                    <span className="text-sm font-black text-white">{(p.username ?? "?")[0].toUpperCase()}</span>
+                  </div>
+                  <div className="flex flex-col flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[13px] font-bold text-slate-100">{p.username}</span>
+                      {p.username === hostName && (
+                        <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/20 text-[9px] font-black text-accent uppercase tracking-tighter">
+                          <ShieldCheck size={10} /> Host
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[10px] text-slate-500 font-medium">Hazır ✓</span>
+                  </div>
+                  <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                </motion.div>
+              ))}
+            </AnimatePresence>
 
-            {/* Beklenen slotlar */}
-            {Array.from({ length: Math.max(0, Math.min(3, maxPlayers - players.length)) }).map((_, i) => (
-              <div key={`wait-${i}`} style={s.waitRow}>
-                <div style={s.avatarEmpty}>?</div>
-                <span style={s.waitText}>Bekleniyor</span>
-                <div style={s.dots}>
-                  {[0, 180, 360].map((d) => (
-                    <span key={d} style={{ ...s.dot, animationDelay: `${d}ms` }} />
-                  ))}
+            {/* Waiting Slot */}
+            {!isFull && Array.from({ length: Math.max(0, Math.min(1, maxPlayers - players.length)) }).map((_, i) => (
+              <div key={`wait-${i}`} className="flex items-center gap-3 p-3 rounded-2xl border border-dashed border-white/10 opacity-30">
+                <div className="w-10 h-10 rounded-full border border-dashed border-white/20 flex items-center justify-center italic text-xs">?</div>
+                <div className="flex-1">
+                  <span className="text-[12px] font-bold text-slate-500">Oyuncu bekleniyor...</span>
+                </div>
+                <div className="flex gap-1">
+                  <motion.div animate={{ opacity: [0.2, 1, 0.2] }} transition={{ repeat: Infinity, duration: 1.5 }} className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+                  <motion.div animate={{ opacity: [0.2, 1, 0.2] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.2 }} className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+                  <motion.div animate={{ opacity: [0.2, 1, 0.2] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.4 }} className="w-1.5 h-1.5 rounded-full bg-slate-500" />
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Başlat / Bekle */}
-        <div style={s.actionWrap} className="fade-up fade-up-3">
+        {/* Action Button Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="flex flex-col gap-3"
+        >
           {isHost ? (
             <>
               <button
                 onClick={handleStartGame}
                 disabled={starting || !canStart}
-                className="btn-gradient"
-                style={{ ...s.startBtn, opacity: canStart ? 1 : 0.45 }}
+                className={cn(
+                  "btn-gradient w-full py-4 rounded-2xl text-[13px] tracking-widest font-black flex items-center justify-center gap-3 shadow-[0_4px_24px_rgba(168,85,247,0.4)]",
+                  !canStart && "opacity-40 grayscale pointer-events-none"
+                )}
               >
                 {starting ? (
-                  <span style={s.startInner}>
-                    <span style={s.spinner} />
-                    Başlatılıyor...
-                  </span>
+                  <>
+                    <Loader2 className="animate-spin" size={20} /> BAŞLATILIYOR...
+                  </>
                 ) : (
-                  `Oyunu Başlat →`
+                  <>OYUNU BAŞLAT <ArrowRight size={18} /></>
                 )}
               </button>
-              {startError && <p style={s.errText}>{startError}</p>}
+              {startError && <p className="text-red-400 text-[11px] text-center font-bold">{startError}</p>}
             </>
           ) : (
-            <div style={s.waitingHost}>
-              <div style={s.waitingOrb} />
-              <p style={s.waitingText}>
-                <strong style={{ color: "var(--fg-primary)" }}>{hostName ?? "Host"}</strong>
-                {" "}oyunu başlatıyor...
+            <div className="relative glass-card p-4 flex items-center justify-center gap-3 overflow-hidden border-white/5">
+              <motion.div 
+                animate={{ opacity: [0.05, 0.15, 0.05] }} 
+                transition={{ duration: 3, repeat: Infinity }}
+                className="absolute inset-0 bg-accent" 
+              />
+              <Loader2 className="animate-spin text-accent" size={16} />
+              <p className="text-[12px] font-bold text-slate-400 relative z-10">
+                <span className="text-white font-black">{hostName ?? "Host"}</span> oyunu başlatıyor...
               </p>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </main>
   );
 }
-
-const s = {
-  page: {
-    minHeight: "100dvh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "1.5rem 1.25rem",
-    position: "relative" as const,
-    zIndex: 1,
-  },
-  outer: {
-    width: "100%",
-    maxWidth: 400,
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "1rem",
-  },
-
-  /* Başlık */
-  header: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: "0.25rem",
-  },
-  logo:      { fontSize: "1.6rem", fontWeight: 800, letterSpacing: "-0.04em" },
-  modeBadge: {
-    background: "var(--bg-glass)",
-    border: "1px solid var(--border)",
-    borderRadius: 10,
-    padding: "0.25rem 0.75rem",
-    fontSize: "0.78rem",
-    fontWeight: 600,
-    color: "var(--fg-secondary)",
-    backdropFilter: "blur(8px)",
-  },
-
-  /* Kod kartı */
-  codeCard: {
-    padding: "1.25rem 1.25rem 1rem",
-    textAlign: "center" as const,
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "0.75rem",
-  },
-  codeLabel: { color: "var(--fg-muted)", fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.1em" },
-  code:      {
-    fontSize: "2.8rem",
-    fontWeight: 800,
-    letterSpacing: "0.22em",
-    background: "var(--grad-text)",
-    backgroundSize: "200% auto",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    backgroundClip: "text",
-    animation: "shimmer 4s linear infinite",
-    lineHeight: 1.1,
-  },
-  shareRow: { display: "flex", gap: "0.5rem" },
-  shareBtn: { flex: 1, padding: "0.6rem 0.5rem", fontSize: "0.8rem", fontFamily: "inherit" },
-
-  /* Oyuncu kartı */
-  playerCard: { padding: "1rem 1.25rem", display: "flex", flexDirection: "column" as const, gap: "0.875rem" },
-
-  progressWrap:   { display: "flex", flexDirection: "column" as const, gap: "0.4rem" },
-  progressHeader: { display: "flex", alignItems: "center", justifyContent: "space-between" },
-  progressLabel:  { color: "var(--fg-primary)", fontSize: "0.82rem", fontWeight: 700 },
-  progressHint:   { color: "var(--fg-muted)", fontSize: "0.72rem" },
-  progressTrack:  { height: 4, borderRadius: 4, background: "var(--fg-muted)", overflow: "hidden" as const },
-  progressFill:   {
-    height: "100%",
-    borderRadius: 4,
-    background: "var(--grad)",
-    transition: "width 0.4s ease",
-  },
-
-  playerList: { display: "flex", flexDirection: "column" as const, gap: "0.45rem" },
-  playerRow:  { display: "flex", alignItems: "center", gap: "0.65rem", padding: "0.35rem 0" },
-  waitRow:    { display: "flex", alignItems: "center", gap: "0.65rem", padding: "0.35rem 0", opacity: 0.5 },
-  avatar: {
-    width: 34,
-    height: 34,
-    borderRadius: "50%",
-    background: "var(--grad)",
-    color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: 700,
-    fontSize: "0.85rem",
-    flexShrink: 0,
-    boxShadow: "0 2px 8px var(--accent-glow)",
-  },
-  avatarEmpty: {
-    width: 34,
-    height: 34,
-    borderRadius: "50%",
-    background: "var(--bg-elevated)",
-    border: "1px dashed var(--fg-muted)",
-    color: "var(--fg-muted)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "0.85rem",
-    flexShrink: 0,
-  },
-  playerName: { color: "var(--fg-primary)", fontSize: "0.95rem", fontWeight: 600, flex: 1 },
-  waitText:   { color: "var(--fg-muted)", fontSize: "0.88rem", flex: 1 },
-  hostBadge: {
-    background: "var(--accent-dim)",
-    color: "var(--accent)",
-    border: "1px solid rgba(168,85,247,0.3)",
-    borderRadius: 6,
-    padding: "0.1rem 0.45rem",
-    fontSize: "0.68rem",
-    fontWeight: 700,
-    letterSpacing: "0.04em",
-  },
-  checkmark: { color: "var(--exact)", fontSize: "0.9rem" },
-  dots: { display: "flex", gap: "0.25rem" },
-  dot:  {
-    width: 5,
-    height: 5,
-    borderRadius: "50%",
-    background: "var(--fg-muted)",
-    display: "inline-block",
-    animation: "pulse-dot 1.2s ease-in-out infinite",
-  },
-
-  /* Aksiyon */
-  actionWrap: { display: "flex", flexDirection: "column" as const, gap: "0.5rem" },
-  startBtn:   { width: "100%", padding: "0.95rem", fontSize: "1rem", fontFamily: "inherit" },
-  startInner: { display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" },
-  spinner: {
-    width: 16,
-    height: 16,
-    borderRadius: "50%",
-    border: "2px solid rgba(255,255,255,0.3)",
-    borderTopColor: "#fff",
-    display: "inline-block",
-    animation: "spin-slow 0.8s linear infinite",
-  },
-  errText: { color: "var(--wrong)", fontSize: "0.8rem", textAlign: "center" as const },
-
-  waitingHost: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "0.6rem",
-    padding: "0.875rem",
-    background: "var(--bg-glass)",
-    border: "1px solid var(--border)",
-    borderRadius: 14,
-    position: "relative" as const,
-    overflow: "hidden" as const,
-  },
-  waitingOrb: {
-    position: "absolute" as const,
-    inset: 0,
-    background: "radial-gradient(ellipse at center, rgba(168,85,247,0.06) 0%, transparent 70%)",
-  },
-  waitingText: {
-    color: "var(--fg-secondary)",
-    fontSize: "0.88rem",
-    textAlign: "center" as const,
-    position: "relative" as const,
-    zIndex: 1,
-  },
-};

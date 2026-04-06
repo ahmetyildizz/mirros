@@ -1,6 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Users, 
+  Cake, 
+  Briefcase, 
+  Brain, 
+  Settings2, 
+  ChevronLeft, 
+  ArrowRight,
+  Baby,
+  User,
+  Crown
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   onCreated: (roomId: string, code: string) => void;
@@ -10,29 +24,28 @@ type GameMode = "SOCIAL" | "QUIZ";
 type AgeGroup = "CHILD" | "ADULT" | "WISE";
 
 interface Template {
-  emoji:      string;
+  icon:       any;
   label:      string;
   desc:       string;
   gameMode:   GameMode;
   ageGroup:   AgeGroup;
   maxPlayers: number;
-  color:      string;   /* accent rengi */
+  color:      string;
 }
 
 const TEMPLATES: Template[] = [
-  { emoji: "💑", label: "Çift Gecesi",      desc: "İkiniz birbirinizi ne kadar tanıyorsunuz?", gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 2,  color: "#EC4899" },
-  { emoji: "👨‍👩‍👧‍👦", label: "Aile Toplantısı", desc: "Aile bağını güçlendirin, birlikte gülün",    gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 6,  color: "#A855F7" },
-  { emoji: "🎉", label: "Doğum Günü",        desc: "Misafirler konuğu ne kadar tanıyor?",       gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 8,  color: "#FB923C" },
-  { emoji: "💼", label: "Takım Building",    desc: "Ekip arkadaşlarınızı keşfedin",             gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 10, color: "#06B6D4" },
-  { emoji: "🧠", label: "Bilgi Yarışması",   desc: "Eğlenceli sorular, komik cezalar",          gameMode: "QUIZ",   ageGroup: "ADULT", maxPlayers: 6,  color: "#4ADE80" },
-  { emoji: "✏️", label: "Özelleştir",        desc: "Mod, yaş grubu ve oyuncu sayısını seç",    gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 4,  color: "#8888B0" },
+  { icon: Users,      label: "Çift Gecesi",      desc: "Birbirinizi ne kadar tanıyorsunuz?", gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 2,  color: "from-rose-500 to-pink-600" },
+  { icon: Users,      label: "Aile Toplantısı", desc: "Aile bağını güçlendirin, birlikte gülün",    gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 6,  color: "from-purple-500 to-indigo-600" },
+  { icon: Cake,       label: "Doğum Günü",        desc: "Misafirler konuğu ne kadar tanıyor?",       gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 8,  color: "from-orange-400 to-red-500" },
+  { icon: Briefcase,  label: "Takım Building",    desc: "Ekip arkadaşlarınızı keşfedin",             gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 10, color: "from-cyan-500 to-blue-600" },
+  { icon: Brain,      label: "Bilgi Yarışması",   desc: "Eğlenceli sorular, komik cezalar",          gameMode: "QUIZ",   ageGroup: "ADULT", maxPlayers: 6,  color: "from-emerald-400 to-teal-500" },
+  { icon: Settings2,  label: "Özelleştir",        desc: "İstediğin gibi bir oda kur",                gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 4,  color: "from-slate-400 to-slate-600" },
 ];
 
 const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 8, 10];
 
 export function CreateRoom({ onCreated }: Props) {
   const [step,     setStep]    = useState<"template" | "config">("template");
-  const [selectedTpl, setTpl] = useState<Template | null>(null);
   const [mode,     setMode]   = useState<GameMode>("SOCIAL");
   const [ageGroup, setAge]    = useState<AgeGroup>("ADULT");
   const [maxPlayers, setMax]  = useState(4);
@@ -41,7 +54,6 @@ export function CreateRoom({ onCreated }: Props) {
 
   const handleSelectTemplate = (tpl: Template) => {
     setError(null);
-    setTpl(tpl);
     setMode(tpl.gameMode);
     setAge(tpl.ageGroup);
     setMax(tpl.maxPlayers);
@@ -80,247 +92,160 @@ export function CreateRoom({ onCreated }: Props) {
     setLoading(false);
   };
 
-  /* ── CONFIG ADIMI ─────────────────────────────────────── */
-  if (step === "config") {
-    return (
-      <div style={s.wrap}>
-        <button onClick={() => setStep("template")} style={s.backBtn}>
-          ← Geri
-        </button>
-
-        <p style={s.sectionLabel}>Oyun modu</p>
-        <div style={s.modeRow}>
-          {(["SOCIAL", "QUIZ"] as GameMode[]).map((m) => (
-            <button
-              key={m}
-              onClick={() => setMode(m)}
-              style={{
-                ...s.modeCard,
-                ...(mode === m ? s.modeCardActive : {}),
-              }}
-            >
-              <span style={s.modeEmoji}>{m === "SOCIAL" ? "💜" : "🧠"}</span>
-              <span style={s.modeTitle}>{m === "SOCIAL" ? "Birbirini Tanı" : "Bilgi Yarışması"}</span>
-            </button>
-          ))}
-        </div>
-
-        <p style={s.sectionLabel}>Senin yaş grubun</p>
-        <div style={s.chips}>
-          {(["CHILD", "ADULT", "WISE"] as AgeGroup[]).map((g) => (
-            <button
-              key={g}
-              onClick={() => setAge(g)}
-              style={{ ...s.chip, ...(ageGroup === g ? s.chipActive : {}) }}
-            >
-              {g === "CHILD" ? "👶 Çocuk" : g === "ADULT" ? "🧑 Genç/Yetişkin" : "🦉 Bilge"}
-            </button>
-          ))}
-        </div>
-
-        <p style={s.sectionLabel}>Kaç kişi?</p>
-        <div style={s.playerGrid}>
-          {PLAYER_OPTIONS.map((n) => (
-            <button
-              key={n}
-              onClick={() => setMax(n)}
-              style={{ ...s.playerChip, ...(maxPlayers === n ? s.chipActive : {}) }}
-            >
-              {n}
-            </button>
-          ))}
-        </div>
-        <p style={s.hint}>{maxPlayers} kişi dolunca oyun otomatik başlar. Odayı kuran daha erken de başlatabilir.</p>
-
-        {error && (
-          <div style={s.errorBox}>
-            <span>⚠️</span><span>{error}</span>
-          </div>
-        )}
-
-        <button
-          onClick={() => handleCreate()}
-          disabled={loading}
-          className="btn-gradient"
-          style={s.createBtn}
-        >
-          {loading ? "Oluşturuluyor..." : "Odayı Kur →"}
-        </button>
-      </div>
-    );
-  }
-
-  /* ── ŞABLON ADIMI ─────────────────────────────────────── */
   return (
-    <div style={s.wrap}>
-      <p style={s.sectionLabel}>Nasıl bir gece?</p>
-      <div style={s.grid}>
-        {TEMPLATES.map((tpl) => (
-          <button
-            key={tpl.label}
-            onClick={() => handleSelectTemplate(tpl)}
-            disabled={loading}
-            style={s.tplCard}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget;
-              el.style.borderColor = tpl.color + "66";
-              el.style.background  = tpl.color + "0D";
-              el.style.transform   = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget;
-              el.style.borderColor = "var(--border)";
-              el.style.background  = "var(--bg-glass)";
-              el.style.transform   = "translateY(0)";
-            }}
+    <div className="w-full">
+      <AnimatePresence mode="wait">
+        {step === "template" ? (
+          <motion.div
+            key="template-step"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            className="flex flex-col gap-4"
           >
-            <span style={{ ...s.tplOrb, background: tpl.color + "22" }}>
-              <span style={s.tplEmoji}>{tpl.emoji}</span>
-            </span>
-            <span style={s.tplLabel}>{tpl.label}</span>
-            <span style={s.tplDesc}>{tpl.desc}</span>
-          </button>
-        ))}
-      </div>
-      {loading && <p style={s.loadingText}>Oda oluşturuluyor...</p>}
-      {error   && (
-        <div style={s.errorBox}>
-          <span>⚠️</span><span>{error}</span>
-        </div>
-      )}
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Nasıl bir gece?</p>
+            <div className="grid grid-cols-2 gap-3">
+              {TEMPLATES.map((tpl, i) => (
+                <motion.button
+                  key={tpl.label}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.04 }}
+                  onClick={() => handleSelectTemplate(tpl)}
+                  disabled={loading}
+                  className={cn(
+                    "group relative flex flex-col items-center gap-3 p-4 rounded-3xl transition-all duration-300",
+                    "bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.08] hover:border-white/[0.12] hover:-translate-y-1 active:scale-[0.98]",
+                    "backdrop-blur-md overflow-hidden"
+                  )}
+                >
+                  <div className={cn(
+                    "w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 duration-500 bg-gradient-to-br opacity-90",
+                    tpl.color
+                  )}>
+                    <tpl.icon className="text-white w-6 h-6" />
+                  </div>
+                  
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-[13px] font-bold text-slate-100 tracking-tight">{tpl.label}</span>
+                    <span className="text-[10px] text-slate-400 font-medium leading-tight max-w-[120px]">{tpl.desc}</span>
+                  </div>
+
+                  <div className={cn(
+                    "absolute -bottom-8 -right-8 w-24 h-24 rounded-full blur-[40px] opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-gradient-to-br",
+                    tpl.color
+                  )} />
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="config-step"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            className="flex flex-col gap-6"
+          >
+            <button 
+              onClick={() => setStep("template")} 
+              className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-bold w-fit"
+            >
+              <ChevronLeft size={16} /> Geri Dön
+            </button>
+
+            <div className="flex flex-col gap-3">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Oyun Modu</p>
+              <div className="grid grid-cols-2 gap-3">
+                {(["SOCIAL", "QUIZ"] as GameMode[]).map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setMode(m)}
+                    className={cn(
+                      "flex flex-col items-center gap-3 p-4 rounded-2xl transition-all border",
+                      mode === m 
+                        ? "bg-accent/15 border-accent/40 shadow-[0_0_20px_rgba(168,85,247,0.15)]" 
+                        : "bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.06] hover:border-white/10"
+                    )}
+                  >
+                    {m === "SOCIAL" ? <Users className="text-accent" /> : <Brain className="text-cyan-400" />}
+                    <span className={cn(
+                      "text-[12px] font-bold tracking-tight",
+                      mode === m ? "text-white" : "text-slate-400"
+                    )}>
+                      {m === "SOCIAL" ? "Birbirini Tanı" : "Bilgi Yarışması"}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Yaş Grubu</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: "CHILD", icon: Baby, label: "Çocuk" },
+                  { id: "ADULT", icon: User, label: "Yetişkin" },
+                  { id: "WISE", icon: Crown, label: "Bilge" }
+                ].map((g) => (
+                  <button
+                    key={g.id}
+                    onClick={() => setAge(g.id as AgeGroup)}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-xl font-bold text-[11px] transition-all border",
+                      ageGroup === g.id 
+                        ? "bg-accent/15 border-accent/40 text-white" 
+                        : "bg-white/[0.03] border-white/[0.06] text-slate-400 hover:bg-white/5"
+                    )}
+                  >
+                    <g.icon size={14} />
+                    {g.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Oyuncu Sayısı</p>
+              <div className="flex flex-wrap justify-between gap-2">
+                {PLAYER_OPTIONS.map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setMax(n)}
+                    className={cn(
+                      "w-10 h-10 flex items-center justify-center rounded-xl font-bold transition-all border",
+                      maxPlayers === n 
+                        ? "bg-accent/15 border-accent/40 text-white" 
+                        : "bg-white/[0.03] border-white/[0.06] text-slate-400 hover:bg-white/5"
+                    )}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-slate-500 text-center font-medium opacity-40 italic">
+                Oda dolduğunda oyun otomatik başlar.
+              </p>
+            </div>
+
+            {error && (
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold">
+                <span>⚠️</span> {error}
+              </div>
+            )}
+
+            <button
+              onClick={() => handleCreate()}
+              disabled={loading}
+              className="btn-gradient w-full py-4 rounded-2xl text-[13px] tracking-widest flex items-center justify-center gap-2 shadow-[0_4px_24px_rgba(168,85,247,0.4)]"
+            >
+              {loading ? "HAZIRLANIYOR..." : (
+                <>ODAYI KUR <ArrowRight size={16} /></>
+              )}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
-
-const s = {
-  wrap: { display: "flex", flexDirection: "column" as const, gap: "0.75rem" },
-
-  sectionLabel: {
-    color: "var(--fg-muted)",
-    fontSize: "0.72rem",
-    fontWeight: 700,
-    textTransform: "uppercase" as const,
-    letterSpacing: "0.08em",
-  },
-  hint: { color: "var(--fg-muted)", fontSize: "0.75rem", textAlign: "center" as const },
-  loadingText: { color: "var(--fg-secondary)", fontSize: "0.85rem", textAlign: "center" as const },
-
-  backBtn: {
-    background: "none",
-    border: "none",
-    color: "var(--fg-secondary)",
-    cursor: "pointer",
-    fontSize: "0.85rem",
-    textAlign: "left" as const,
-    padding: 0,
-    fontFamily: "inherit",
-    fontWeight: 600,
-  },
-  createBtn: {
-    width: "100%",
-    padding: "0.95rem",
-    fontSize: "1rem",
-    fontFamily: "inherit",
-    marginTop: "0.25rem",
-  },
-
-  /* Template grid */
-  grid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" },
-  tplCard: {
-    display: "flex",
-    flexDirection: "column" as const,
-    alignItems: "center",
-    gap: "0.4rem",
-    padding: "1rem 0.6rem 0.875rem",
-    background: "var(--bg-glass)",
-    border: "1px solid var(--border)",
-    borderRadius: 16,
-    cursor: "pointer",
-    textAlign: "center" as const,
-    backdropFilter: "blur(8px)",
-    transition: "border-color 0.2s, background 0.2s, transform 0.15s",
-    fontFamily: "inherit",
-  },
-  tplOrb: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: "0.1rem",
-  },
-  tplEmoji: { fontSize: "1.6rem", lineHeight: 1 },
-  tplLabel: { color: "var(--fg-primary)", fontWeight: 700, fontSize: "0.85rem" },
-  tplDesc:  { color: "var(--fg-secondary)", fontSize: "0.68rem", lineHeight: 1.35 },
-
-  /* Mod seçimi */
-  modeRow:       { display: "flex", gap: "0.6rem" },
-  modeCard: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column" as const,
-    alignItems: "center",
-    gap: "0.3rem",
-    padding: "0.875rem 0.5rem",
-    background: "var(--bg-glass)",
-    border: "1.5px solid var(--border)",
-    borderRadius: 14,
-    cursor: "pointer",
-    transition: "border-color 0.15s, background 0.15s",
-    fontFamily: "inherit",
-  },
-  modeCardActive: { borderColor: "var(--accent)", background: "var(--accent-dim)" },
-  modeEmoji:      { fontSize: "1.5rem" },
-  modeTitle:      { color: "var(--fg-primary)", fontWeight: 700, fontSize: "0.82rem" },
-
-  /* Chip'ler */
-  chips: { display: "flex", gap: "0.4rem", flexWrap: "wrap" as const },
-  chip: {
-    flex: 1,
-    padding: "0.5rem 0.4rem",
-    background: "var(--bg-glass)",
-    color: "var(--fg-secondary)",
-    border: "1.5px solid var(--border)",
-    borderRadius: 10,
-    fontWeight: 600,
-    fontSize: "0.78rem",
-    cursor: "pointer",
-    textAlign: "center" as const,
-    minWidth: 90,
-    fontFamily: "inherit",
-    transition: "background 0.15s, border-color 0.15s, color 0.15s",
-  },
-  chipActive: { background: "var(--accent-dim)", color: "var(--accent)", borderColor: "rgba(168,85,247,0.4)" },
-
-  /* Oyuncu sayısı */
-  playerGrid: { display: "flex", gap: "0.4rem", flexWrap: "wrap" as const },
-  playerChip: {
-    width: 44,
-    height: 44,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "var(--bg-glass)",
-    color: "var(--fg-secondary)",
-    border: "1.5px solid var(--border)",
-    borderRadius: 10,
-    fontWeight: 700,
-    fontSize: "1rem",
-    cursor: "pointer",
-    fontFamily: "inherit",
-    transition: "background 0.15s, border-color 0.15s, color 0.15s",
-  },
-  errorBox: {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.4rem",
-    background: "rgba(248,113,113,0.1)",
-    border: "1px solid rgba(248,113,113,0.3)",
-    borderRadius: 10,
-    padding: "0.55rem 0.875rem",
-    color: "#FC8181",
-    fontSize: "0.82rem",
-    fontWeight: 500,
-  },
-};

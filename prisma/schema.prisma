@@ -19,6 +19,7 @@ model User {
   hostedRooms Room[]            @relation("HostedRooms")
   rooms       RoomParticipant[]
   scores      Score[]
+  auditLogs   AuditLog[]
 }
 
 model Room {
@@ -188,4 +189,47 @@ enum AgeGroup {
   CHILD
   ADULT
   WISE
+}
+
+model AuditLog {
+  id          String      @id @default(cuid())
+  action      AuditAction
+  entityType  TargetType?
+  entityId    String?
+  resource    String?     // e.g. "Room ABCD"
+  details     Json?
+  oldValue    String?     @db.Text
+  newValue    String?     @db.Text
+  ipAddress   String?
+  userAgent   String?
+  userId      String?
+  user        User?       @relation(fields: [userId], references: [id])
+  createdAt   DateTime    @default(now())
+
+  @@index([userId])
+  @@index([entityId])
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  START_GAME
+  JOIN_ROOM
+  SUBMIT_ANSWER
+  SUBMIT_GUESS
+  SUBMIT_SCORE
+}
+
+enum TargetType {
+  ROOM
+  GAME
+  ROUND
+  ANSWER
+  GUESS
+  SCORE
+  QUESTION
+  USER
 }

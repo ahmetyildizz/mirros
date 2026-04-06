@@ -1,6 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Share2, 
+  Download, 
+  MessageCircle, 
+  Copy, 
+  Check, 
+  X, 
+  Smartphone,
+  Sparkles 
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   familiarity:       number;
@@ -14,17 +26,25 @@ export function ShareButton({ familiarity, gameId, funniestQuestion, funniestAns
   const [showCard,    setShowCard]    = useState(false);
 
   const emoji = familiarity >= 90 ? "🔥" : familiarity >= 70 ? "💜" : familiarity >= 50 ? "✨" : familiarity >= 30 ? "🌱" : "🌙";
-  const shareText = `mirros'ta ${familiarity}% tanışıklık puanı aldık! ${emoji}\nSen de oyna: ${typeof window !== "undefined" ? window.location.origin : "https://mirros.vercel.app"}/results/${gameId}`;
+  const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/results/${gameId}` : "";
+  const shareText = `mirros'ta ${familiarity}% tanışıklık puanı aldık! ${emoji}\nSen de oyna: ${shareUrl}`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(shareText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   const handleNative = () => {
-    if (typeof navigator === "undefined") return;
-    if (navigator.share) {
-      navigator.share({ title: "mirros sonuçlarım", text: shareText, url: `${window.location.origin}/results/${gameId}` }).catch(() => {});
+    if (typeof navigator !== "undefined" && navigator.share) {
+      navigator.share({ 
+        title: "mirros sonuçlarım", 
+        text: shareText, 
+        url: shareUrl 
+      }).catch(() => {});
     } else {
-      navigator.clipboard.writeText(shareText).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      });
+      handleCopy();
     }
   };
 
@@ -34,101 +54,107 @@ export function ShareButton({ familiarity, gameId, funniestQuestion, funniestAns
 
   return (
     <>
-      <div style={{ display: "flex", gap: "0.5rem" }}>
-        <button onClick={() => setShowCard(true)} style={btnStyle("var(--accent)")}>
-          🖼️ Kart Oluştur
-        </button>
-        <button onClick={handleNative} style={btnStyle("var(--bg-elevated)", "var(--fg-primary)", "1px solid var(--fg-muted)")}>
-          {copied ? "✓ Kopyalandı" : "Paylaş"}
-        </button>
-        <button onClick={handleWhatsApp} style={btnStyle("#25D366")}>
-          WhatsApp
-        </button>
+      <div className="grid grid-cols-2 gap-3 w-full">
+        <motion.button 
+          whileTap={{ scale: 0.98 }}
+          onClick={() => setShowCard(true)} 
+          className="btn-gradient py-4 rounded-2xl flex items-center justify-center gap-2 text-[13px] font-black tracking-widest uppercase shadow-lg"
+        >
+          <Sparkles size={16} /> KART OLUŞTUR
+        </motion.button>
+        
+        <div className="flex gap-2">
+          <motion.button 
+            whileTap={{ scale: 0.98 }}
+            onClick={handleNative} 
+            className="flex-1 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-center text-white"
+          >
+            {copied ? <Check size={20} className="text-green-500" /> : <Smartphone size={20} />}
+          </motion.button>
+          
+          <motion.button 
+            whileTap={{ scale: 0.98 }}
+            onClick={handleWhatsApp} 
+            className="flex-1 bg-[#25D366]/10 border border-[#25D366]/20 rounded-2xl flex items-center justify-center text-[#25D366]"
+          >
+            <MessageCircle size={20} fill="currentColor" className="opacity-20" />
+          </motion.button>
+        </div>
       </div>
 
-      {/* Paylaşılabilir kart modal */}
-      {showCard && (
-        <div
-          style={modal.overlay}
-          onClick={(e) => { if (e.target === e.currentTarget) setShowCard(false); }}
-        >
-          <div style={modal.sheet}>
-            <p style={modal.hint}>📸 Bu ekranı kaydet ve paylaş!</p>
-
-            {/* KART — screenshot alınacak alan */}
-            <div style={modal.card}>
-              <div style={modal.cardBg} />
-              <div style={modal.cardInner}>
-                <span style={modal.logo}>mirros</span>
-                <span style={modal.tagline}>beni ne kadar tanıyorsun?</span>
-
-                <div style={modal.scoreCircle}>
-                  <span style={modal.scoreEmoji}>{emoji}</span>
-                  <span style={modal.scoreNum}>{familiarity}%</span>
-                  <span style={modal.scoreLabel}>tanışıklık</span>
-                </div>
-
-                {funniestQuestion && funniestAnswer && (
-                  <div style={modal.funniest}>
-                    <span style={modal.funnyTag}>En komik an</span>
-                    <p style={modal.funnyQ}>{funniestQuestion}</p>
-                    <p style={modal.funnyA}>"{funniestAnswer}"</p>
-                  </div>
-                )}
-
-                <span style={modal.cta}>mirros.vercel.app</span>
+      <AnimatePresence>
+        {showCard && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-12">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowCard(false)}
+              className="absolute inset-0 bg-black/90 backdrop-blur-xl" 
+            />
+            
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="relative w-full max-w-[380px] flex flex-col items-center gap-6"
+            >
+              <div className="text-center">
+                <p className="text-[13px] font-black text-white/50 uppercase tracking-[0.2em] mb-1">Paylaşılabilir Kart</p>
+                <p className="text-[11px] font-medium text-slate-500 leading-tight">Bu ekranın görüntüsünü alarak arkadaşlarınla paylaş!</p>
               </div>
-            </div>
 
-            <button onClick={() => setShowCard(false)} style={modal.closeBtn}>Kapat</button>
+              {/* SHAREABLE CARD */}
+              <div className="relative w-full aspect-[9/16] rounded-[32px] overflow-hidden border border-white/10 shadow-2xl group">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#1a0a2e] to-[#0d0d0d]" />
+                
+                {/* Aurora Blobs for card */}
+                <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-accent/20 blur-[80px] rounded-full animate-pulse" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-fuchsia-500/10 blur-[80px] rounded-full" />
+
+                <div className="relative z-10 h-full flex flex-col items-center justify-center p-12 text-center gap-8">
+                  <div className="flex flex-col">
+                    <span className="text-4xl font-black text-accent tracking-tighter antialiased">mirros</span>
+                    <span className="text-[11px] font-black text-white/20 uppercase tracking-[0.3em] mt-1 italic">Beni Ne Kadar Tanıyorsun?</span>
+                  </div>
+
+                  <div className="relative flex flex-col items-center">
+                    <div className="w-40 h-40 rounded-full border-4 border-accent shadow-[0_0_40px_rgba(124,58,237,0.3)] flex flex-col items-center justify-center bg-accent/5">
+                      <span className="text-4xl mb-1">{emoji}</span>
+                      <span className="text-5xl font-black text-accent tracking-tighter">{familiarity}%</span>
+                      <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mt-1">Uyum</span>
+                    </div>
+                    
+                    <div className="absolute -top-4 -right-4 bg-white text-black font-black text-[10px] py-1 px-3 rounded-full transform rotate-12 shadow-xl">
+                      NEW RECORD!
+                    </div>
+                  </div>
+
+                  {funniestQuestion && funniestAnswer && (
+                    <div className="w-full bg-white/[0.03] border border-white/10 rounded-[24px] p-6 flex flex-col gap-2">
+                       <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">En Komik An</span>
+                       <p className="text-[13px] font-medium text-white/60 leading-tight italic">"{funniestQuestion}"</p>
+                       <p className="text-[16px] font-black text-white tracking-tight mt-1">{funniestAnswer}</p>
+                    </div>
+                  )}
+
+                  <div className="mt-auto">
+                    <span className="text-[11px] font-black text-white/20 uppercase tracking-[0.4em]">mirros.vercel.app</span>
+                  </div>
+                </div>
+              </div>
+
+              <motion.button 
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setShowCard(false)}
+                className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white"
+              >
+                <X size={24} />
+              </motion.button>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </>
   );
 }
-
-function btnStyle(bg: string, color = "#fff", border?: string) {
-  return {
-    flex: 1,
-    padding: "0.85rem 0.5rem",
-    background: bg,
-    color,
-    border: border ?? "none",
-    borderRadius: 12,
-    fontWeight: 700,
-    fontSize: "0.85rem",
-    cursor: "pointer",
-  } as const;
-}
-
-const ACCENT  = "#7C3AED";
-const DARK_BG = "#0d0d0d";
-
-const modal = {
-  overlay:     { position: "fixed" as const, inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "1rem" },
-  sheet:       { display: "flex", flexDirection: "column" as const, alignItems: "center", gap: "0.75rem", width: "100%", maxWidth: 360 },
-  hint:        { color: "#fff", fontSize: "0.85rem", fontWeight: 600, textAlign: "center" as const },
-
-  // Kart tasarımı
-  card:        { width: "100%", borderRadius: 20, overflow: "hidden" as const, position: "relative" as const, aspectRatio: "9/16" as unknown as number, maxHeight: 500 },
-  cardBg:      { position: "absolute" as const, inset: 0, background: `linear-gradient(160deg, ${DARK_BG} 0%, #1a0a2e 50%, ${DARK_BG} 100%)` },
-  cardInner:   { position: "relative" as const, zIndex: 1, height: "100%", display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", gap: "1rem", padding: "2rem 1.5rem" },
-
-  logo:        { color: ACCENT, fontWeight: 900, fontSize: "1.8rem", letterSpacing: "-0.04em" },
-  tagline:     { color: "rgba(255,255,255,0.45)", fontSize: "0.78rem", marginTop: "-0.75rem" },
-
-  scoreCircle: { width: 140, height: 140, borderRadius: "50%", border: `3px solid ${ACCENT}`, display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", background: "rgba(124,58,237,0.12)" },
-  scoreEmoji:  { fontSize: "1.8rem", lineHeight: 1 },
-  scoreNum:    { color: ACCENT, fontWeight: 900, fontSize: "2.4rem", lineHeight: 1 },
-  scoreLabel:  { color: "rgba(255,255,255,0.5)", fontSize: "0.72rem", letterSpacing: "0.08em" },
-
-  funniest:    { background: "rgba(255,255,255,0.06)", borderRadius: 12, padding: "0.75rem 1rem", width: "100%", display: "flex", flexDirection: "column" as const, gap: "0.3rem", textAlign: "center" as const },
-  funnyTag:    { color: ACCENT, fontWeight: 700, fontSize: "0.7rem", textTransform: "uppercase" as const, letterSpacing: "0.08em" },
-  funnyQ:      { color: "rgba(255,255,255,0.65)", fontSize: "0.8rem" },
-  funnyA:      { color: "#fff", fontWeight: 700, fontSize: "0.95rem" },
-
-  cta:         { color: "rgba(255,255,255,0.3)", fontSize: "0.72rem", marginTop: "0.5rem" },
-
-  closeBtn:    { background: "var(--bg-elevated)", color: "var(--fg-primary)", border: "1px solid var(--fg-muted)", borderRadius: 12, padding: "0.75rem 2rem", fontWeight: 600, fontSize: "0.9rem", cursor: "pointer" },
-};

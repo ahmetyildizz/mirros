@@ -4,6 +4,7 @@ import { requireAuth } from "@/lib/auth/session";
 import { pusherServer } from "@/lib/pusher/server";
 import { scoreRound, getPoints } from "@/lib/services/scoring.service";
 import { advanceGame } from "@/lib/services/game.service";
+import { createAuditLog } from "@/lib/audit";
 
 export async function POST(
   _req: NextRequest,
@@ -45,6 +46,15 @@ export async function POST(
       where:  { roundId_guesserId: { roundId, guesserId: guess.userId } },
       create: { roundId, gameId: round.gameId, guesserId: guess.userId, matchLevel, points },
       update: { matchLevel, points },
+    });
+
+    await createAuditLog({
+      action: "SUBMIT_SCORE",
+      entityType: "SCORE",
+      entityId: score.id,
+      resource: `Social Round Scored for User ${guess.userId}`,
+      userId: userId, // Scored by host/answerer
+      details: { points, matchLevel, guessContent: guess.content },
     });
     scores.push(score);
     guessResults.push({

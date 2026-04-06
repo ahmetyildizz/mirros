@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { pusherServer } from "@/lib/pusher/server";
+import { createAuditLog } from "@/lib/audit";
 
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
@@ -74,6 +75,14 @@ export async function startGame(roomId: string) {
 
   if (majorityAgeGroup) {
     await db.room.update({ where: { id: roomId }, data: { ageGroup: majorityAgeGroup } });
+    await createAuditLog({
+      action: "UPDATE",
+      entityType: "ROOM",
+      entityId: roomId,
+      resource: `Room ${room.code}`,
+      details: { majorityAgeGroup },
+      newValue: JSON.stringify({ ageGroup: majorityAgeGroup }),
+    });
   }
 
   const previousRounds = await db.round.findMany({
@@ -85,11 +94,29 @@ export async function startGame(roomId: string) {
   // Ghost game'i temizle (varsa)
   if (existingGame) {
     await db.game.update({ where: { id: existingGame.id }, data: { status: "FINISHED" } });
+    await createAuditLog({
+      action: "UPDATE",
+      entityType: "GAME",
+      entityId: existingGame.id,
+      resource: "Ghost Game Cleaned",
+      details: { status: "FINISHED" },
+      oldValue: JSON.stringify({ status: "ACTIVE" }),
+      newValue: JSON.stringify({ status: "FINISHED" }),
+    });
   }
 
   const { game, round, question } = await db.$transaction(async (tx) => {
     const newGame = await tx.game.create({
       data: { roomId, totalRounds, status: "ACTIVE" },
+    });
+
+    await createAuditLog({
+      action: "START_GAME",
+      entityType: "GAME",
+      entityId: newGame.id,
+      resource: `Game in Room ${room.code}`,
+      details: { totalRounds, gameMode: room.gameMode },
+      tx,
     });
 
     // İlk round için de kişiselleştirilmiş yaş grubunu bulalım
@@ -154,6 +181,15 @@ async function createRound(
     data: { gameId, number, questionId: question.id, answererId, status: "ANSWERING" },
   });
 
+  await createAuditLog({
+    action: "CREATE",
+    entityType: "ROUND",
+    entityId: round.id,
+    resource: `Round ${number} for Game ${gameId}`,
+    details: { questionId: question.id, answererId },
+    tx,
+  });
+
   return { round, question };
 }
 
@@ -174,6 +210,22 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
   if (isLastRound) {
     await db.game.update({ where: { id: gameId }, data: { status: "FINISHED", finishedAt: new Date() } });
     await db.room.update({ where: { id: game.roomId }, data: { status: "FINISHED" } });
+
+    await createAuditLog({
+      action: "UPDATE",
+      entityType: "GAME",
+      entityId: gameId,
+      resource: "Game Finished",
+      details: { status: "FINISHED" },
+    });
+
+    await createAuditLog({
+      action: "UPDATE",
+      entityType: "ROOM",
+      entityId: game.roomId,
+      resource: "Room Closed",
+      details: { status: "FINISHED" },
+    });
 
     const allScores = await db.score.findMany({ where: { gameId } });
     const playerScores: Record<string, number> = {};
