@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 interface Props {
-  onJoined:     (roomId: string) => void;
+  onJoined:     (roomId: string, roomCode: string) => void;
   initialCode?: string;
 }
 
@@ -38,7 +38,7 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
     });
     if (res.ok) {
       const data = await res.json();
-      onJoined(data.id);
+      onJoined(data.id, data.code);
     } else if (res.status === 401) {
       window.location.href = "/login";
     } else {

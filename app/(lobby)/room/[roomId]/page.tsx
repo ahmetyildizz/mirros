@@ -44,7 +44,7 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
   const {
     setGameId, setGameState, setQuestion, setCurrentRound, setTotalRounds,
     setActiveRoundId, setMyRole, setAnswererId, setPlayers: storePlayers,
-    setGameMode: storeGameMode,
+    setGameMode: storeGameMode, setRoomCode, setRoomId,
   } = useGameStore();
 
   useEffect(() => {
@@ -55,9 +55,12 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
         if (data.hostName)   setHostName(data.hostName);
         if (data.maxPlayers) setMaxPlayers(data.maxPlayers);
         if (data.gameMode)   setGameMode(data.gameMode);
+        // Oda kodu ve roomId store'da yoksa (katılan oyuncu için fallback)
+        if (data.code)       setRoomCode(data.code);
+        if (data.id)         setRoomId(data.id);
       })
       .catch(() => {});
-  }, [roomId, storePlayers]);
+  }, [roomId, storePlayers, setRoomCode, setRoomId]);
 
   const handleCopy = useCallback(() => {
     if (!roomCode) return;
@@ -96,6 +99,7 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
       storePlayers(data.players);
       setMyRole(null);
       setGameState("ANSWERING");
+      setStarting(false); // spinner'ı kapat
       router.push(`/game/${roomId}`);
     });
 

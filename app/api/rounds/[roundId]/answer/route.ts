@@ -86,11 +86,13 @@ export async function POST(
     }
 
     await db.round.update({ where: { id: roundId }, data: { status: "GUESSING" } });
+    const totalGuessers = round.game.room.participants.length - 1; // answerer hariç
     await pusherServer.trigger(`game-${round.gameId}`, "answer-submitted", {
       roundId,
-      answererId: user.id,
-      roomId: round.game.roomId,
+      answererId:   user.id,
+      roomId:       round.game.roomId,
       updatedOptions,
+      totalGuessers, // client'ın 0/0 göstermemesi için
     });
   }
 

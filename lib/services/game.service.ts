@@ -38,7 +38,9 @@ export async function startGame(roomId: string) {
 
   const isQuiz         = room.gameMode === "QUIZ";
   const participantIds = room.participants.map((p) => p.userId);
-  const totalRounds    = isQuiz ? QUIZ_ROUNDS : Math.max(SOCIAL_ROUNDS, participantIds.length * 2);
+  // Sabit tur sayısı: SOCIAL modda her oyuncu en az 1 spotlight alır (modulo rotasyon).
+  // participantIds.length * 2 yerine sabit SOCIAL_ROUNDS kullanılıyor — çok uzun oyun önlenir.
+  const totalRounds    = isQuiz ? QUIZ_ROUNDS : SOCIAL_ROUNDS;
 
   // Katılımcıların yaş grubu oylaması: çoğunluk kazanır
   const ageCounts: Record<string, number> = {};

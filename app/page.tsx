@@ -19,7 +19,9 @@ function LobbyContent() {
     router.push(`/room/${roomId}`);
   };
 
-  const handleJoined = (roomId: string) => {
+  const handleJoined = (roomId: string, roomCode: string) => {
+    setRoomId(roomId);
+    setRoomCode(roomCode);
     setIsHostPlayer(false);
     router.push(`/room/${roomId}`);
   };

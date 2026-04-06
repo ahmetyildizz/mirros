@@ -14,6 +14,11 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // Dev bypass: getSession() ile tutarlı olması için aynı koşul
+  if (process.env.NODE_ENV !== "production" && process.env.DEV_USER_ID) {
+    return NextResponse.next();
+  }
+
   const token = req.cookies.get("mirros_session")?.value;
 
   if (token) {

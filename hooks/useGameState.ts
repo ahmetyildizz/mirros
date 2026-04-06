@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getPusherClient } from "@/lib/pusher/client";
@@ -36,6 +34,7 @@ interface AnswerSubmittedPayload {
   // social fields
   answererId?:       string;
   updatedOptions?:   string[] | null;
+  totalGuessers?:    number;
 }
 
 interface GuessSubmittedPayload {
@@ -96,6 +95,8 @@ export function useGameState(gameId: string, myUserId: string) {
       if (data.answererId !== undefined) {
         // SOCIAL: guessing'e geç, varsa güncellenmiş şıkları uygula
         if (data.updatedOptions) setQuestionOptions(data.updatedOptions);
+        // totalGuessers'ı sıfırla ki UI 0/0 göstermesin
+        setGuessProgress(0, data.totalGuessers ?? 0);
         setGameState("GUESSING");
         return;
       }

@@ -37,8 +37,10 @@ export function CreateRoom({ onCreated }: Props) {
   const [ageGroup, setAge]    = useState<AgeGroup>("ADULT");
   const [maxPlayers, setMax]  = useState(4);
   const [loading,  setLoading] = useState(false);
+  const [error,    setError]   = useState<string | null>(null);
 
   const handleSelectTemplate = (tpl: Template) => {
+    setError(null);
     setTpl(tpl);
     setMode(tpl.gameMode);
     setAge(tpl.ageGroup);
@@ -56,16 +58,24 @@ export function CreateRoom({ onCreated }: Props) {
     finalMax  = maxPlayers,
   ) => {
     setLoading(true);
-    const res = await fetch("/api/rooms", {
-      method:  "POST",
-      headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ gameMode: finalMode, ageGroup: finalAge, maxPlayers: finalMax }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      onCreated(data.id, data.code);
-    } else if (res.status === 401) {
-      window.location.href = "/login";
+    setError(null);
+    try {
+      const res = await fetch("/api/rooms", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ gameMode: finalMode, ageGroup: finalAge, maxPlayers: finalMax }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        onCreated(data.id, data.code);
+      } else if (res.status === 401) {
+        window.location.href = "/login";
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Oda oluşturulamadı. Tekrar dene.");
+      }
+    } catch {
+      setError("Bağlantı hatası. İnternet bağlantını kontrol et.");
     }
     setLoading(false);
   };
@@ -120,7 +130,13 @@ export function CreateRoom({ onCreated }: Props) {
             </button>
           ))}
         </div>
-        <p style={s.hint}>{maxPlayers} kişi dolunca oyun otomatik başlar.</p>
+        <p style={s.hint}>{maxPlayers} kişi dolunca oyun otomatik başlar. Odayı kuran daha erken de başlatabilir.</p>
+
+        {error && (
+          <div style={s.errorBox}>
+            <span>⚠️</span><span>{error}</span>
+          </div>
+        )}
 
         <button
           onClick={() => handleCreate()}
@@ -167,6 +183,11 @@ export function CreateRoom({ onCreated }: Props) {
         ))}
       </div>
       {loading && <p style={s.loadingText}>Oda oluşturuluyor...</p>}
+      {error   && (
+        <div style={s.errorBox}>
+          <span>⚠️</span><span>{error}</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -289,5 +310,17 @@ const s = {
     cursor: "pointer",
     fontFamily: "inherit",
     transition: "background 0.15s, border-color 0.15s, color 0.15s",
+  },
+  errorBox: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.4rem",
+    background: "rgba(248,113,113,0.1)",
+    border: "1px solid rgba(248,113,113,0.3)",
+    borderRadius: 10,
+    padding: "0.55rem 0.875rem",
+    color: "#FC8181",
+    fontSize: "0.82rem",
+    fontWeight: 500,
   },
 };

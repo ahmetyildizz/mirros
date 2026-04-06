@@ -20,8 +20,9 @@ export async function POST(
       game:    { include: { room: { include: { participants: true } } } },
     },
   });
-  if (!round)                    return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
-  if (round.status === "SCORED") return NextResponse.json({ error: "Zaten skorlandı" }, { status: 409 });
+  if (!round)                       return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
+  if (round.status === "SCORED")    return NextResponse.json({ error: "Zaten skorlandı" }, { status: 409 });
+  if (round.status !== "GUESSING")  return NextResponse.json({ error: "Round henüz tahmin aşamasında değil" }, { status: 409 });
 
   // Sadece odanın host'u veya round'un answerer'ı skorlayabilir
   const isHost     = round.game.room.hostId === userId;

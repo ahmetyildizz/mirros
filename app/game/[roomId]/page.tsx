@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useGameStore } from "@/store/game.store";
 import { useGameState } from "@/hooks/useGameState";
@@ -28,6 +28,10 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   const [myUserId, setMyUserId]   = useState<string | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
+
+  // Race condition önleme: aynı round için birden fazla tetiklemeyi engelle
+  const scoringRoundRef  = useRef<string | null>(null);
+  const advancingRoundRef = useRef<string | null>(null);
 
   // userId yükle + myRole belirle
   useEffect(() => {
@@ -65,10 +69,14 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   }, [state]);
 
   // Tüm tahminler gelince skoru otomatik hesapla (answerer)
+  // scoringRoundRef guard: aynı round için birden fazla POST /score engellenir
   useEffect(() => {
     if (state !== "GUESSING" || !isAnswerer) return;
     if (guessCount > 0 && guessCount >= totalGuessers) {
-      triggerScore();
+      if (activeRoundId && scoringRoundRef.current !== activeRoundId) {
+        scoringRoundRef.current = activeRoundId;
+        triggerScore();
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guessCount, totalGuessers]);
@@ -89,6 +97,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   }, [state]);
 
   // SCORING state'e girilince 5sn geri sayım + otomatik geçiş (answerer, sadece social)
+  // advancingRoundRef guard: timeout'tan ve manuel butona aynı anda basılmasını engeller
   useEffect(() => {
     if (state !== "SCORING" || isQuiz || !isAnswerer) return;
     setCountdown(5);
@@ -137,6 +146,9 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   async function advanceToNext() {
     if (!activeRoundId) return;
+    // Guard: aynı round için yalnızca bir kez çağrılır (manuel buton + timeout çakışması önlemi)
+    if (advancingRoundRef.current === activeRoundId) return;
+    advancingRoundRef.current = activeRoundId;
     await fetch(`/api/rounds/${activeRoundId}/next`, { method: "POST" });
   }
 
