@@ -126,10 +126,10 @@ export function CreateRoom({ onCreated }: Props) {
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Nasıl bir gece?</p>
               <button 
                 onClick={() => router.push("/")}
-                className="flex items-center gap-2 text-slate-100/60 hover:text-white transition-all duration-300 w-fit group"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-slate-100/60 hover:text-white hover:bg-white/10 transition-all duration-300 w-fit group"
               >
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-red-500/20 group-hover:text-red-400 transition-all duration-500">
-                  <ChevronLeft size={16} />
+                <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-red-500/20 group-hover:text-red-400 transition-all duration-500">
+                  <ChevronLeft size={14} />
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-widest">Vazgeç</span>
               </button>
