@@ -59,11 +59,14 @@ function LobbyContent() {
           className="text-center"
         >
           <div className="flex items-center justify-center gap-3 mb-2">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="w-2 h-2 rounded-full bg-accent opacity-60 shadow-[0_0_12px_var(--accent)]"
-            />
+            <div className="relative group">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="w-2 h-2 rounded-full bg-accent opacity-60 shadow-[0_0_12px_var(--accent)]"
+              />
+              <div className="absolute -top-1 -right-1 w-1 h-1 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
             <h1 className="text-6xl font-extrabold tracking-tighter gradient-text leading-tight drop-shadow-2xl">
               mirros
             </h1>
