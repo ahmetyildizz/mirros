@@ -14,7 +14,7 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Build-Version',
-            value: '0.1.2-FINAL',
+            value: '0.1.3-Elite',
           },
         ],
       },
