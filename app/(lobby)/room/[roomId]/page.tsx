@@ -164,7 +164,7 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
   const fillPct       = Math.min(100, Math.round((activePlayers.length / maxPlayers) * 100));
 
   return (
-    <main className="relative min-h-dvh flex flex-col items-center justify-center pt-safe pb-safe px-6 overflow-hidden">
+    <main className="relative min-h-dvh flex flex-col items-center justify-start pt-safe pb-safe px-6 overflow-y-auto overflow-x-hidden">
       {/* Aurora Background 2.0 */}
       <div className="aurora-bg" aria-hidden>
         <motion.div 
@@ -179,13 +179,16 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
         />
       </div>
 
-      <div className="relative z-10 w-full max-w-[440px] flex flex-col gap-5">
+      <div className="relative z-10 w-full max-w-[440px] flex flex-col gap-5 pt-8 pb-12">
         {/* Back Button */}
         <motion.button 
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={() => router.push("/")}
-          className="flex items-center gap-3 text-slate-100/60 hover:text-white transition-all duration-300 w-fit mb-4 group px-3 py-2 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/10 hover:border-white/20 shadow-lg"
+          onClick={() => {
+            if (window.history.length > 1) router.back();
+            else window.location.href = "/";
+          }}
+          className="flex items-center gap-3 text-slate-100/60 hover:text-white transition-all duration-300 w-fit mb-2 group px-3 py-2 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/10 hover:border-white/20 shadow-lg active:scale-95"
         >
           <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-accent/20 group-hover:text-accent transition-all duration-500 shadow-inner">
             <ChevronLeft size={20} />
