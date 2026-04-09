@@ -68,6 +68,25 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
     setError("");
     setLoading(true);
     try {
+      // ADMIN SHORTCUT: If code is the admin passcode
+      if (code.trim() === "546906") {
+        const res = await fetch("/api/profile", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: "Noyan", passcode: "546906" }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          // Update local state and trigger a refresh or show success
+          window.location.reload(); // Hard refresh to update everything (header etc)
+          return;
+        } else {
+          setError("Admin girişi başarısız.");
+          return;
+        }
+      }
+
       const res = await fetch(`/api/rooms/check?code=${code.trim()}`);
       if (res.ok) {
         const data = await res.json();

