@@ -8,6 +8,7 @@ import { JoinRoom } from "@/components/lobby/JoinRoom";
 import { useGameStore } from "@/store/game.store";
 import { Sparkles } from "lucide-react";
 import { DailyWidget } from "@/components/lobby/DailyWidget";
+import { ProfileSettings } from "@/components/lobby/ProfileSettings";
 
 function LobbyContent() {
   const router   = useRouter();
@@ -52,6 +53,15 @@ function LobbyContent() {
       </div>
 
       <div className="relative z-10 w-full max-w-[420px] flex flex-col gap-6">
+        {/* Profile/User Settings */}
+        <motion.div
+           initial={{ opacity: 0, y: -20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.2 }}
+        >
+          <ProfileSettings />
+        </motion.div>
+
         {/* Hero Section */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
