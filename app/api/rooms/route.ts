@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { createAuditLog } from "@/lib/audit";
 
+import { generateQuestionsWithAI } from "@/lib/services/ai.service";
+
 function generateCode(): string {
   const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
   let code = "";
@@ -45,6 +47,24 @@ export async function POST(req: NextRequest) {
       participants: { create: { userId: user.id, ageGroup: body.ageGroup } },
     },
   });
+
+  // AI Soru Üretimi (Arka planda başlat ama odayı hemen dön)
+  if (body.category) {
+    generateQuestionsWithAI(body.category, 10).then(async (aiQuestions) => {
+      if (aiQuestions && aiQuestions.length > 0) {
+        await db.question.createMany({
+          data: aiQuestions.map((q: any) => ({
+            roomId:   room.id,
+            text:     q.text,
+            options:  q.options || null,
+            difficulty: q.difficulty || "EASY",
+            category: body.category!,
+            gameMode: body.gameMode,
+          }))
+        });
+      }
+    }).catch(err => console.error("AI Generation Failed in background:", err));
+  }
 
   await createAuditLog({
     action: "CREATE",

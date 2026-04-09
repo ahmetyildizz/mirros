@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { QUESTION_GENERATION_PROMPT } from "../prompts/question-gen";
 
 const API_KEY = process.env.GOOGLE_GEMINI_API_KEY || "";
 const genAI = new GoogleGenerativeAI(API_KEY);
@@ -63,5 +64,26 @@ export async function analyzeGameWithGemini(data: GameDataForAI) {
       tag: "Analiz Hatası",
       story: "Yapay zeka şu an biraz yorgun, ama eğlenceniz baki!"
     };
+  }
+}
+
+export async function generateQuestionsWithAI(category: string, count: number = 10) {
+  if (!API_KEY) return [];
+
+  const prompt = QUESTION_GENERATION_PROMPT(category, count);
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    return [];
+  } catch (error) {
+    console.error("Gemini Generation Error:", error);
+    return [];
   }
 }
