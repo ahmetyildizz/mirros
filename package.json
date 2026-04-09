@@ -9,7 +9,10 @@
     "postinstall": "prisma generate",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mobile:sync": "next build && npx cap sync",
+    "mobile:open": "npx cap open android",
+    "mobile:build": "next build && npx cap copy"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

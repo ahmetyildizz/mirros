@@ -5,9 +5,8 @@ const config: CapacitorConfig = {
   appName: 'mirros',
   webDir: 'out',
   server: {
-    // Android emülatör için: 10.0.2.2 = host makinenin localhost
-    // Fiziksel cihaz için: kendi IP adresin (ör. 192.168.1.X:3000)
-    url: 'http://10.0.2.2:3000',
+    // Live Vercel URL for initial native testing
+    url: 'https://mirros.vercel.app',
     cleartext: true,
   },
 };

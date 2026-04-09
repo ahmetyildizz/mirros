@@ -112,7 +112,7 @@ export function CreateRoom({ onCreated }: Props) {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full pb-safe">
       <AnimatePresence mode="wait">
         {step === "template" ? (
           <motion.div

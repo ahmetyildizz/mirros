@@ -149,6 +149,14 @@ body {
   /* Uygulama Hissi (Metin seçimini kapat, inputlar hariç) */
   user-select: none;
   -webkit-user-select: none;
+
+  /* Hide Scrollbars but keep scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE/Edge */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 input, textarea, [contenteditable="true"] {

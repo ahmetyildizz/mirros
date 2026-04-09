@@ -33,7 +33,7 @@ function LobbyContent() {
   };
 
   return (
-    <main className="relative min-h-dvh flex flex-col items-center justify-center pt-safe pb-safe px-6 overflow-hidden bg-red-900">
+    <main className="relative min-h-dvh flex flex-col items-center justify-center pt-safe pb-safe px-6 overflow-hidden bg-black/20">
       {/* Aurora Background 2.0 */}
       <div className="aurora-bg" aria-hidden>
         <motion.div 
