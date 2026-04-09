@@ -14,7 +14,8 @@ import {
   ArrowRight,
   ShieldCheck,
   MessageCircle,
-  PlusCircle
+  PlusCircle,
+  ChevronLeft
 } from "lucide-react";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useGameStore } from "@/store/game.store";
@@ -163,7 +164,7 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
   const fillPct       = Math.min(100, Math.round((activePlayers.length / maxPlayers) * 100));
 
   return (
-    <main className="relative min-h-dvh flex flex-col items-center justify-center p-6 overflow-hidden">
+    <main className="relative min-h-dvh flex flex-col items-center justify-center pt-safe pb-safe px-6 overflow-hidden">
       {/* Aurora Background 2.0 */}
       <div className="aurora-bg" aria-hidden>
         <motion.div 
@@ -179,6 +180,19 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
       </div>
 
       <div className="relative z-10 w-full max-w-[440px] flex flex-col gap-5">
+        {/* Back Button */}
+        <motion.button 
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          onClick={() => router.push("/")}
+          className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-bold w-fit mb-2 group"
+        >
+          <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+            <ChevronLeft size={16} />
+          </div>
+          Odadan Ayrıl
+        </motion.button>
+
         {/* Header Section */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
@@ -308,22 +322,22 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
 
             {/* Spectators List */}
             {spectators.length > 0 && (
-              <div className="flex flex-col gap-2 mt-4">
+              <div className="flex flex-col gap-3 mt-4">
                 <div className="flex items-center gap-2 px-1">
                   <div className="h-px flex-1 bg-white/5" />
-                  <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest whitespace-nowrap">İzleyiciler ({spectators.length})</span>
+                  <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest whitespace-nowrap px-2">İzleyiciler ({spectators.length})</span>
                   <div className="h-px flex-1 bg-white/5" />
                 </div>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                   {spectators.map((s) => (
                     <motion.div 
                       key={s.id}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center gap-1 p-2 rounded-xl bg-white/[0.01] border border-white/5"
+                      className="flex flex-col items-center gap-1.5 p-2 rounded-2xl bg-white/[0.02] border border-white/5"
                     >
-                      <span className="text-lg">{s.avatarUrl || "👤"}</span>
-                      <span className="text-[8px] font-bold text-slate-500 truncate w-full text-center">{s.username}</span>
+                      <span className="text-xl">{s.avatarUrl || "👤"}</span>
+                      <span className="text-[8px] font-bold text-slate-500 truncate w-full text-center tracking-tighter">{s.username}</span>
                     </motion.div>
                   ))}
                 </div>

@@ -34,6 +34,12 @@
   --aurora-3:     rgba(6,182,212,0.10);
   --grad:         linear-gradient(135deg, #A855F7 0%, #F43F5E 100%);
   --grad-text:    linear-gradient(135deg, #D8B4FE 0%, #FB7185 50%, #FDBA74 100%);
+
+  /* Safe Area (Notch) Support */
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
 }
 
 [data-theme="love"] {
@@ -122,7 +128,14 @@
 }
 
 /* ── BASE ───────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after { 
+  box-sizing: border-box; 
+  -webkit-tap-highlight-color: transparent; /* Mobil dokunma vurgusunu kaldır */
+}
+
+html {
+  overscroll-behavior-y: none; /* Sayfa "bounce" efektini kapat */
+}
 
 body {
   background: var(--bg-base);
@@ -132,6 +145,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background var(--theme-transition), color var(--theme-transition);
+  
+  /* Uygulama Hissi (Metin seçimini kapat, inputlar hariç) */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input, textarea, [contenteditable="true"] {
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 /* ── AURORA ARKA PLAN ────────────────────────────────────── */
@@ -273,7 +295,12 @@ body {
   color: var(--fg-muted);
 }
 
-/* ── FADE-UP ANİMASYON YARDIMCISI ───────────────────────── */
+/* ── SAFE AREA UTILITIES ─────────────────────────────────── */
+.pt-safe { padding-top: calc(1.5rem + var(--safe-area-top)); }
+.pb-safe { padding-bottom: calc(1.5rem + var(--safe-area-bottom)); }
+.pl-safe { padding-left: calc(1.5rem + var(--safe-area-left)); }
+.pr-safe { padding-right: calc(1.5rem + var(--safe-area-right)); }
+
 .fade-up {
   animation: fadeUp 0.5s ease both;
 }

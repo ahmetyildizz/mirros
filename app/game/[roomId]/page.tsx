@@ -221,7 +221,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   }
 
   return (
-    <main className="min-h-dvh bg-black flex flex-col relative overflow-hidden p-4 sm:p-8">
+    <main className="min-h-dvh bg-black flex flex-col relative overflow-hidden pt-safe pb-safe px-4 sm:px-8">
       {/* Background Elements */}
       <div className="aurora-bg fixed inset-0 pointer-events-none opacity-40" />
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.1)_0%,transparent_50%)] pointer-events-none" />
@@ -617,7 +617,7 @@ function ReactionToolbar({ roomId }: { roomId: string }) {
   };
 
   return (
-    <div className="flex justify-center gap-2 px-1">
+    <div className="flex justify-center gap-3 px-1">
       {emojis.map((emoji) => (
         <motion.button
           key={emoji}
@@ -625,7 +625,7 @@ function ReactionToolbar({ roomId }: { roomId: string }) {
           whileTap={{ scale: 0.8 }}
           onClick={() => sendReaction(emoji)}
           className={cn(
-            "w-11 h-11 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-xl transition-all shadow-sm",
+            "w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-xl transition-all shadow-sm",
             sending === emoji ? "bg-accent/40 border-accent/60 scale-110" : ""
           )}
         >

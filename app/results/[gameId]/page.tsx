@@ -175,19 +175,33 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
     }
   }
 
-  // AI Telemetry
+  // AI Telemetry & Real Analysis
   const unpredictableUserId = Object.entries(compatMap).sort((a, b) => a[1].pct - b[1].pct)[0]?.[0];
   const mostIntuitiveUserId = Object.entries(playerStats).sort((a, b) => b[1].exactCount - a[1].exactCount)[0]?.[0];
   const wrongRate = game.rounds.reduce((acc, r) => acc + r.scores.filter(s => s.matchLevel === "WRONG").length, 0) / (game.rounds.length * game.room.participants.length || 1);
 
-  const aiReport = generateAIInsight({
+  // Prepare detailed round data for AI
+  const roundsDataForAI = game.rounds.map(r => ({
+    question: r.question.text,
+    answerer: game.room.participants.find(p => p.userId === r.answererId)?.user.username ?? "Anonim",
+    answer: r.answers[0]?.content ?? "Cevapsız",
+    guesses: r.scores.map(sc => ({
+      guesser: sc.guesser.username ?? "Anonim",
+      content: r.guesses.find(g => g.userId === sc.guesserId)?.content ?? "Tahmin yok",
+      points: sc.points
+    }))
+  }));
+
+  const aiReport = await generateAIInsight({
     familiarity,
     totalRounds: game.totalRounds,
+    gameMode: game.room.gameMode || "SOCIAL",
+    category: game.room.category || "Genel",
     topPlayerName: leaderboard[0]?.username || "Anonim",
     unpredictableName: game.room.participants.find(p => p.userId === unpredictableUserId)?.user.username || "Gizemli",
     mostIntuitiveName: game.room.participants.find(p => p.userId === mostIntuitiveUserId)?.user.username || "Zihin Okuyucu",
     chaoticLevel: wrongRate > 0.5 ? "HIGH" : wrongRate > 0.2 ? "MEDIUM" : "LOW",
-    gameMode: game.room.gameMode || "SOCIAL"
+    rounds: roundsDataForAI
   });
 
   // Funniest Moment
@@ -217,7 +231,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
   }));
 
   return (
-    <main className="min-h-dvh bg-black flex flex-col relative overflow-x-hidden p-6 sm:p-12">
+    <main className="min-h-dvh bg-black flex flex-col relative overflow-x-hidden pt-safe pb-safe px-6 sm:px-12">
       {/* Background */}
       <div className="aurora-bg fixed inset-0 pointer-events-none opacity-40" />
 

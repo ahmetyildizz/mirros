@@ -44,7 +44,7 @@ const TEMPLATES: Template[] = [
   { icon: Settings2,  label: "Özelleştir",        desc: "İstediğin gibi bir oda kur",                gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 4,  color: "from-slate-400 to-slate-600" },
 ];
 
-const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 8, 10];
+const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 export function CreateRoom({ onCreated }: Props) {
   const { setTheme } = useGameStore();
@@ -68,10 +68,10 @@ export function CreateRoom({ onCreated }: Props) {
     else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü") theme = "warm";
     setTheme(theme);
 
-    if (tpl.label === "Özelleştir") {
-      setStep("config");
-    } else {
+    if (tpl.label === "Çift Gecesi") {
       handleCreate(tpl.gameMode, tpl.ageGroup, tpl.maxPlayers, tpl.label);
+    } else {
+      setStep("config");
     }
   };
 
@@ -120,7 +120,15 @@ export function CreateRoom({ onCreated }: Props) {
             exit={{ opacity: 0, x: 10 }}
             className="flex flex-col gap-4"
           >
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Nasıl bir gece?</p>
+            <div className="flex items-center justify-between px-1">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Nasıl bir gece?</p>
+              <button 
+                onClick={() => router.push("/")}
+                className="flex items-center gap-1.5 text-slate-500 hover:text-slate-300 transition-colors text-[10px] font-bold uppercase tracking-widest"
+              >
+                <ChevronLeft size={12} /> Vazgeç
+              </button>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               {TEMPLATES.map((tpl, i) => (
                 <motion.button
@@ -224,15 +232,15 @@ export function CreateRoom({ onCreated }: Props) {
 
             <div className="flex flex-col gap-3">
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Oyuncu Sayısı</p>
-              <div className="flex flex-wrap justify-between gap-2">
+              <div className="grid grid-cols-4 sm:flex sm:flex-wrap gap-2">
                 {PLAYER_OPTIONS.map((n) => (
                   <button
                     key={n}
                     onClick={() => setMax(n)}
                     className={cn(
-                      "w-10 h-10 flex items-center justify-center rounded-xl font-bold transition-all border",
+                      "h-12 flex items-center justify-center rounded-xl font-bold transition-all border",
                       maxPlayers === n 
-                        ? "bg-accent/15 border-accent/40 text-white" 
+                        ? "bg-accent/15 border-accent/40 text-white shadow-[0_0_15px_rgba(168,85,247,0.2)]" 
                         : "bg-white/[0.03] border-white/[0.06] text-slate-400 hover:bg-white/5"
                     )}
                   >
@@ -240,7 +248,7 @@ export function CreateRoom({ onCreated }: Props) {
                   </button>
                 ))}
               </div>
-              <p className="text-[10px] text-slate-500 text-center font-medium opacity-40 italic">
+              <p className="text-[10px] text-slate-500 text-center font-medium opacity-40 italic mt-1">
                 Oda dolduğunda oyun otomatik başlar.
               </p>
             </div>
