@@ -23,7 +23,15 @@ export async function middleware(req: NextRequest) {
 
   if (token) {
     try {
-      await jwtVerify(token, SECRET);
+      const { payload } = await jwtVerify(token, SECRET);
+      
+      // /admin Koruması
+      if (pathname.startsWith("/admin") && !payload.isAdmin) {
+        const homeUrl = req.nextUrl.clone();
+        homeUrl.pathname = "/";
+        return NextResponse.redirect(homeUrl);
+      }
+
       return NextResponse.next();
     } catch {
       // token geçersiz

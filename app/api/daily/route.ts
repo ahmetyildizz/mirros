@@ -99,7 +99,8 @@ export async function GET(req: NextRequest) {
       userAnswer: userAnswer?.content,
       totalParticipants: total,
       percentages,
-      participants: daily.answers.slice(0, 10).map(a => a.userId), // Leaderboard list için id'ler (User modeline join gerekebilir ama şimdilik limitli tutalım)
+      counts: stats,
+      participants: daily.answers.slice(0, 10).map(a => a.userId),
     });
   } catch (error) {
     console.error("Daily question error:", error);

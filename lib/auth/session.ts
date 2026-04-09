@@ -7,8 +7,8 @@ if (!process.env.NEXTAUTH_SECRET) {
 }
 const SECRET = new TextEncoder().encode(process.env.NEXTAUTH_SECRET);
 
-export async function createSession(userId: string, username: string) {
-  const token = await new SignJWT({ userId, username })
+export async function createSession(userId: string, username: string, isAdmin: boolean = false) {
+  const token = await new SignJWT({ userId, username, isAdmin })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime("30d")
     .sign(SECRET);
@@ -23,10 +23,10 @@ export async function createSession(userId: string, username: string) {
   });
 }
 
-export async function getSession(): Promise<{ id: string; username: string } | null> {
+export async function getSession(): Promise<{ id: string; username: string; isAdmin?: boolean } | null> {
   // Dev bypass
   if (process.env.NODE_ENV !== "production" && process.env.DEV_USER_ID) {
-    return { id: process.env.DEV_USER_ID, username: "dev" };
+    return { id: process.env.DEV_USER_ID, username: "dev", isAdmin: true };
   }
 
   try {
@@ -34,7 +34,11 @@ export async function getSession(): Promise<{ id: string; username: string } | n
     const token = jar.get("mirros_session")?.value;
     if (!token) return null;
     const { payload } = await jwtVerify(token, SECRET);
-    return { id: payload.userId as string, username: payload.username as string };
+    return { 
+      id: payload.userId as string, 
+      username: payload.username as string,
+      isAdmin: payload.isAdmin as boolean 
+    };
   } catch {
     return null;
   }

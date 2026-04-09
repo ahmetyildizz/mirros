@@ -15,9 +15,9 @@ export async function PATCH(req: NextRequest) {
       });
 
       if (noyanUser) {
-        // If found, we "Log in" as that user by refreshing the session with their ID
-        await createSession(noyanUser.id, noyanUser.username!);
-        return NextResponse.json({ success: true, username: noyanUser.username, reclaimed: true });
+        // If found, we "Log in" as that user by refreshing the session with their ID and isAdmin flag
+        await createSession(noyanUser.id, noyanUser.username!, true);
+        return NextResponse.json({ success: true, username: noyanUser.username, reclaimed: true, isAdmin: true });
       }
       // If NOT found, we'll just fall through and let the current user take the name
     }

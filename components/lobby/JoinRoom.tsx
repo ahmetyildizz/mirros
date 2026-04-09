@@ -78,8 +78,8 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
 
         if (res.ok) {
           const data = await res.json();
-          // Update local state and trigger a refresh or show success
-          window.location.reload(); // Hard refresh to update everything (header etc)
+          // Redirect to admin panel
+          window.location.href = "/admin";
           return;
         } else {
           setError("Admin girişi başarısız.");

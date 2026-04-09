@@ -27,6 +27,7 @@ interface DailyData {
   userAnswer?: string;
   totalParticipants: number;
   percentages: Record<string, number>;
+  counts?: Record<string, number>;
 }
 
 interface DailyWidgetProps {
@@ -198,7 +199,9 @@ export function DailyWidget({ onAnsweredStatus }: DailyWidgetProps) {
                         <span className={cn(
                           "text-[12px] font-black",
                           isUserAnswer ? "text-accent" : "text-slate-600"
-                        )}>{pct}%</span>
+                        )}>
+                          %{pct} <span className="text-[10px] font-bold opacity-60 ml-1">({data.counts?.[opt] || 0} Kişi)</span>
+                        </span>
                       </div>
                       
                       <div className="h-2 w-full bg-white/[0.03] rounded-full overflow-hidden border border-white/5">

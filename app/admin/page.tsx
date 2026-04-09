@@ -34,17 +34,9 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authForm, setAuthForm] = useState({ username: "", passcode: "" });
-  const [error, setError] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Middleware handles this now
 
   useEffect(() => {
-    const saved = localStorage.getItem("mirros_admin_auth");
-    if (saved === "valid") setIsAuthenticated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
     setLoading(true);
     fetch("/api/admin/history")
       .then(r => r.json())
@@ -53,84 +45,7 @@ export default function AdminPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [isAuthenticated]);
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (authForm.username === "Noyan" && authForm.passcode === "546906") {
-      setIsAuthenticated(true);
-      localStorage.setItem("mirros_admin_auth", "valid");
-      setError("");
-    } else {
-      setError("Geçersiz kimlik bilgileri.");
-    }
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-dvh bg-[#030303] flex items-center justify-center p-6 selection:bg-accent selection:text-white">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-[400px] glass-card-elevated p-8 space-y-8 relative overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 p-4 opacity-5">
-            <ShieldCheck size={120} className="text-accent" />
-          </div>
-
-          <div className="text-center relative z-10">
-            <div className="w-16 h-16 rounded-[24px] bg-accent/10 border border-accent/20 flex items-center justify-center text-accent mx-auto mb-4">
-              <ShieldCheck size={32} />
-            </div>
-            <h1 className="text-2xl font-black text-white uppercase tracking-widest mb-2">Muhafız Kimliği</h1>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Devam etmek için yetki seviyenizi doğrulayın</p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-4 relative z-10">
-            <div className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">Kullanıcı Adı</label>
-                <input 
-                  type="text"
-                  value={authForm.username}
-                  onChange={e => setAuthForm(prev => ({ ...prev, username: e.target.value }))}
-                  className="w-full bg-white/[0.03] border border-white/5 rounded-2xl px-5 py-4 text-sm font-bold focus:border-accent/40 outline-none transition-all"
-                  placeholder="Kullanıcı adınızı girin"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">Oda Kodu</label>
-                <input 
-                  type="password"
-                  value={authForm.passcode}
-                  onChange={e => setAuthForm(prev => ({ ...prev, passcode: e.target.value }))}
-                  className="w-full bg-white/[0.03] border border-white/5 rounded-2xl px-5 py-4 text-sm font-bold focus:border-accent/40 outline-none transition-all tracking-[0.5em]"
-                  placeholder="••••••"
-                />
-              </div>
-            </div>
-
-            {error && (
-              <motion.p 
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-red-500 text-[10px] font-black uppercase text-center"
-              >
-                {error}
-              </motion.p>
-            )}
-
-            <button 
-              type="submit"
-              className="w-full py-5 rounded-[24px] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-widest hover:shadow-[0_0_30px_rgba(168,85,247,0.3)] transition-all active:scale-95"
-            >
-              YETKİLENDİR
-            </button>
-          </form>
-        </motion.div>
-      </div>
-    );
-  }
+  }, []);
 
   const filteredGames = data?.games.filter(g => 
     g.room.code.toLowerCase().includes(search.toLowerCase()) ||
