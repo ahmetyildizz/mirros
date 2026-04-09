@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { motion } from "framer-motion";
 import { CreateRoom } from "@/components/lobby/CreateRoom";
 import { JoinRoom } from "@/components/lobby/JoinRoom";
@@ -14,6 +14,7 @@ function LobbyContent() {
   const params   = useSearchParams();
   const joinCode = params.get("code") ?? "";
   const { setRoomId, setRoomCode, setIsHostPlayer } = useGameStore();
+  const [isDailyAnswered, setIsDailyAnswered] = useState(false);
 
   const handleCreated = (roomId: string, roomCode: string) => {
     setRoomId(roomId);
@@ -92,13 +93,18 @@ function LobbyContent() {
           </motion.div>
         </motion.div>
 
-        {/* Daily Question Section */}
-        <DailyWidget />
+        {/* Daily Question Section - Top (only if NOT answered) */}
+        {!isDailyAnswered && (
+          <motion.div layout>
+            <DailyWidget onAnsweredStatus={setIsDailyAnswered} />
+          </motion.div>
+        )}
 
         {/* Action Sections with Staggered Animation */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
+          layout
           transition={{ delay: 0.3, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           className="glass-card-elevated"
         >
@@ -121,11 +127,23 @@ function LobbyContent() {
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
+          layout
           transition={{ delay: 0.5, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           className="glass-card p-6"
         >
           <JoinRoom onJoined={handleJoined} initialCode={joinCode} />
         </motion.div>
+
+        {/* Daily Question Section - Bottom (only if answered) */}
+        {isDailyAnswered && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            layout
+          >
+            <DailyWidget onAnsweredStatus={setIsDailyAnswered} />
+          </motion.div>
+        )}
 
         {/* Footer */}
         <motion.p 

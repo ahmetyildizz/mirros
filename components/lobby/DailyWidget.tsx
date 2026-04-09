@@ -29,7 +29,11 @@ interface DailyData {
   percentages: Record<string, number>;
 }
 
-export function DailyWidget() {
+interface DailyWidgetProps {
+  onAnsweredStatus?: (answered: boolean) => void;
+}
+
+export function DailyWidget({ onAnsweredStatus }: DailyWidgetProps) {
   const [data, setData] = useState<DailyData | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -40,10 +44,11 @@ export function DailyWidget() {
       .then(r => r.json())
       .then(d => {
         setData(d);
+        if (onAnsweredStatus) onAnsweredStatus(d.answered);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [onAnsweredStatus]);
 
   const handleAnswer = async (option: string) => {
     if (!data || data.answered || submitting) return;
@@ -61,6 +66,7 @@ export function DailyWidget() {
         const updated = await fetch("/api/daily").then(r => r.json());
         setData(updated);
         setShowStats(true); // Auto show stats on first answer
+        if (onAnsweredStatus) onAnsweredStatus(true);
         confetti({
           particleCount: 100,
           spread: 70,
