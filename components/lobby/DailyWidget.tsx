@@ -229,8 +229,3 @@ export function DailyWidget() {
     </motion.div>
   );
 }
-        </div>
-      </div>
-    </motion.div>
-  );
-}
