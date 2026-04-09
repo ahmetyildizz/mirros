@@ -21,7 +21,7 @@ import { useGameStore } from "@/store/game.store";
 import type { Player } from "@/store/game.store";
 import { cn } from "@/lib/utils";
 import { ManageQuestions } from "@/components/lobby/ManageQuestions";
-import { getThemeFromRoom } from "@/lib/utils/theme-mapper";
+import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 
 interface GameStartedPayload {
   gameId:           string;

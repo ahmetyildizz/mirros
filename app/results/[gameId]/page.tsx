@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { ResultsClient } from "@/components/results/ResultsClient";
-import { generateAIInsight } from "@/lib/utils/ai-analysis";
+import { generateAIInsight } from "@/lib/logic/ai-analysis";
+import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 
 function familiarityEmoji(f: number) {
   if (f >= 90) return "🔥";

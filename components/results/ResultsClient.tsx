@@ -17,7 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ShareButton } from "./ShareButton";
 import { AIInsightCard } from "./AIInsightCard";
-import { getThemeFromRoom } from "@/lib/utils/theme-mapper";
+import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 import { useGameStore } from "@/store/game.store";
 
 interface PlayerResult {

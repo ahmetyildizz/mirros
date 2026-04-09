@@ -27,7 +27,7 @@ import { GuessInput }           from "@/components/game/GuessInput";
 import { MultipleChoiceInput }  from "@/components/game/MultipleChoiceInput";
 import { FlashbackCard }        from "@/components/game/FlashbackCard";
 import { sounds }               from "@/lib/sounds";
-import { getThemeFromRoom }     from "@/lib/utils/theme-mapper";
+import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 import { cn } from "@/lib/utils";
 
 export default function GamePage({ params }: { params: Promise<{ roomId: string }> }) {
