@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Users, 
@@ -47,6 +48,7 @@ const TEMPLATES: Template[] = [
 const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 export function CreateRoom({ onCreated }: Props) {
+  const router = useRouter();
   const { setTheme } = useGameStore();
   const [step,     setStep]    = useState<"template" | "config">("template");
   const [mode,     setMode]   = useState<GameMode>("SOCIAL");
@@ -124,9 +126,12 @@ export function CreateRoom({ onCreated }: Props) {
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Nasıl bir gece?</p>
               <button 
                 onClick={() => router.push("/")}
-                className="flex items-center gap-1.5 text-slate-500 hover:text-slate-300 transition-colors text-[10px] font-bold uppercase tracking-widest"
+                className="flex items-center gap-2 text-slate-100/60 hover:text-white transition-all duration-300 w-fit group"
               >
-                <ChevronLeft size={12} /> Vazgeç
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-red-500/20 group-hover:text-red-400 transition-all duration-500">
+                  <ChevronLeft size={16} />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest">Vazgeç</span>
               </button>
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -155,7 +160,7 @@ export function CreateRoom({ onCreated }: Props) {
                     <span className="text-[14px] font-black text-slate-100 tracking-tight uppercase">{tpl.label}</span>
                     <span className="text-[10px] text-slate-500 font-bold leading-tight max-w-[120px] opacity-80 group-hover:opacity-100 transition-opacity">{tpl.desc}</span>
                   </div>
-
+ 
                   <div className={cn(
                     "absolute -bottom-10 -right-10 w-24 h-24 rounded-full blur-[40px] opacity-0 group-hover:opacity-10 transition-opacity duration-700 bg-gradient-to-br",
                     tpl.color
@@ -184,7 +189,7 @@ export function CreateRoom({ onCreated }: Props) {
                 <span className="text-[13px] font-black uppercase tracking-widest">Geri Dön</span>
               </div>
             </button>
-
+ 
             <div className="flex flex-col gap-4 fade-up">
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyun Modu</p>
               <div className="grid grid-cols-2 gap-3">
@@ -218,7 +223,7 @@ export function CreateRoom({ onCreated }: Props) {
                 ))}
               </div>
             </div>
-
+ 
             <div className="flex flex-col gap-4 fade-up [animation-delay:0.1s]">
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Yaş Grubu</p>
               <div className="flex flex-wrap gap-2">
@@ -233,7 +238,7 @@ export function CreateRoom({ onCreated }: Props) {
                     className={cn(
                       "flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-2xl font-bold text-[11px] transition-all duration-300 border",
                       ageGroup === g.id 
-                        ? "bg-accent/15 border-accent/40 text-white shadow-[0_5px_15px_rgba(168,85,247,0.1)]" 
+                        ? "bg-accent/15 border-accent/40 text-white shadow-[0_5px_15px_rgba(168,85,247,0.15)]" 
                         : "bg-white/[0.02] border-white/[0.05] text-slate-400 hover:bg-white/5"
                     )}
                   >
@@ -243,7 +248,7 @@ export function CreateRoom({ onCreated }: Props) {
                 ))}
               </div>
             </div>
-
+ 
             <div className="flex flex-col gap-4 fade-up [animation-delay:0.2s]">
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyuncu Sayısı</p>
               <div className="grid grid-cols-4 sm:flex sm:flex-wrap gap-2">
@@ -266,7 +271,7 @@ export function CreateRoom({ onCreated }: Props) {
                 Oda dolduğunda oyun otomatik başlar.
               </p>
             </div>
-
+ 
             {error && (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -276,7 +281,7 @@ export function CreateRoom({ onCreated }: Props) {
                 <span>⚠️</span> {error}
               </motion.div>
             )}
-
+ 
             <button
               onClick={() => handleCreate()}
               disabled={loading}
