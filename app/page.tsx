@@ -65,7 +65,8 @@ function LobbyContent() {
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 className="w-2 h-2 rounded-full bg-accent opacity-60 shadow-[0_0_12px_var(--accent)]"
               />
-              <div className="absolute -top-1 -right-1 w-1 h-1 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute -top-1 -right-1 w-1 h-1 bg-green-500 rounded-full opacity-60" />
+              <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-slate-800 uppercase tracking-tighter opacity-10">v0.1.2-FINAL</span>
             </div>
             <h1 className="text-6xl font-extrabold tracking-tighter gradient-text leading-tight drop-shadow-2xl">
               mirros
