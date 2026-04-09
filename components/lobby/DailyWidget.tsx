@@ -33,6 +33,7 @@ export function DailyWidget() {
   const [data, setData] = useState<DailyData | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [showStats, setShowStats] = useState(false);
 
   useEffect(() => {
     fetch("/api/daily")
@@ -59,6 +60,7 @@ export function DailyWidget() {
         // Refetch to get updated stats
         const updated = await fetch("/api/daily").then(r => r.json());
         setData(updated);
+        setShowStats(true); // Auto show stats on first answer
         confetti({
           particleCount: 100,
           spread: 70,
@@ -85,13 +87,9 @@ export function DailyWidget() {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      layout
       className="glass-card-elevated overflow-hidden relative group"
     >
-      {/* Background Decor */}
-      <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
-        <Globe size={120} className="text-accent rotate-12" />
-      </div>
-
       <div className="p-6 relative z-10">
         <header className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -105,22 +103,26 @@ export function DailyWidget() {
               </p>
             </div>
           </div>
-          <div className="px-3 py-1 rounded-full bg-white/[0.03] border border-white/5 flex items-center gap-2">
-            <Users size={12} className="text-slate-500" />
-            <span className="text-[10px] font-black text-slate-300">{data.totalParticipants} KİŞİ</span>
-          </div>
+          {(!data.answered || showStats) && (
+            <div className="px-3 py-1 rounded-full bg-white/[0.03] border border-white/5 flex items-center gap-2">
+              <Users size={12} className="text-slate-500" />
+              <span className="text-[10px] font-black text-slate-300 tracking-tighter">{data.totalParticipants} KİŞİ</span>
+            </div>
+          )}
         </header>
 
         <div className="space-y-6">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <Sparkles size={10} className="text-accent" />
-              <span className="text-[9px] font-black text-accent uppercase tracking-widest">{data.question.category}</span>
+          {(!data.answered || showStats) && (
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Sparkles size={10} className="text-accent" />
+                <span className="text-[9px] font-black text-accent uppercase tracking-widest">{data.question.category}</span>
+              </div>
+              <h4 className="text-[17px] font-bold text-white leading-tight pr-8">
+                {data.question.text}
+              </h4>
             </div>
-            <h4 className="text-[17px] font-bold text-white leading-tight pr-8">
-              {data.question.text}
-            </h4>
-          </div>
+          )}
 
           <AnimatePresence mode="wait">
             {!data.answered ? (
@@ -144,11 +146,33 @@ export function DailyWidget() {
                   </motion.button>
                 ))}
               </motion.div>
+            ) : !showStats ? (
+              <motion.div
+                key="collapsed"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center justify-between p-4 rounded-2xl bg-accent/5 border border-accent/10"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-500">
+                    <CheckCircle2 size={16} />
+                  </div>
+                  <span className="text-[11px] font-black uppercase tracking-widest text-slate-300">Bu soruyu yanıtladın</span>
+                </div>
+                <button 
+                  onClick={() => setShowStats(true)}
+                  className="px-4 py-2 rounded-xl bg-accent/20 hover:bg-accent/30 text-accent text-[10px] font-black uppercase tracking-widest transition-all"
+                >
+                  Sonuçları Gör
+                </button>
+              </motion.div>
             ) : (
               <motion.div 
                 key="results"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
                 className="space-y-3"
               >
                 {data.question.options.map((opt) => {
@@ -187,9 +211,12 @@ export function DailyWidget() {
                 })}
                 
                 <div className="pt-4 mt-4 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">
-                    Yarın yeni soru gelecek!
-                  </span>
+                  <button 
+                    onClick={() => setShowStats(false)}
+                    className="text-[9px] font-black text-slate-500 hover:text-white uppercase tracking-widest transition-colors"
+                  >
+                    Paneli Gizle
+                  </button>
                   <div className="flex items-center gap-1.5 text-accent font-black text-[10px] tracking-widest animate-pulse">
                     <TrendingUp size={12} /> GLOBAL TREND
                   </div>
@@ -197,6 +224,11 @@ export function DailyWidget() {
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
         </div>
       </div>
     </motion.div>
