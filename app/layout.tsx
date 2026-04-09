@@ -11,7 +11,7 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: "Mirros — Beni Tanır mısın?",
-  description: "Arkadaşlarını ne kadar tanıdığını keşfet",
+  description: "Arkadaşlarını ne kadar tanıdığını keşfet (build: 0.1.1-rescue)",
 };
 
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
