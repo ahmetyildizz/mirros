@@ -48,14 +48,12 @@ export async function POST(
       update: { matchLevel, points },
     });
 
-    await createAuditLog({
-      action: "SUBMIT_SCORE",
-      entityType: "SCORE",
-      entityId: score.id,
-      resource: `Social Round Scored for User ${guess.userId}`,
-      userId: userId, // Scored by host/answerer
-      details: { points, matchLevel, guessContent: guess.content },
-    });
+    const isSuccess = matchLevel === "EXACT" || matchLevel === "CLOSE";
+    const updatedParticipant = await db.roomParticipant.update({
+      where: { roomId_userId: { roomId: round.game.roomId, userId: guess.userId } },
+      data:  { streak: isSuccess ? { increment: 1 } : 0 } as any
+    }) as any;
+
     scores.push(score);
     guessResults.push({
       userId:    guess.userId,
@@ -64,7 +62,8 @@ export async function POST(
       reason:    guess.reason ?? null,
       matchLevel,
       points,
-    });
+      streak:    updatedParticipant.streak
+    } as any);
   }
 
   await db.round.update({ where: { id: roundId }, data: { status: "SCORED" } });
@@ -76,29 +75,27 @@ export async function POST(
     playerScores[s.guesserId] = (playerScores[s.guesserId] ?? 0) + s.points;
   }
 
-  // 2. Bir sonraki turu SESSİZCE arkada başlat (pipelined advancement)
-  const isLastRound = round.number >= round.game.totalRounds;
+  // 2. Bir sonraki turu arkada başlat veya oyunu bitir
+  const advanceResult = await advanceGame(round.gameId, round.number);
+  const isFinished    = advanceResult.finished;
   let nextRoundData: any = null;
 
-  if (!isLastRound) {
-    const nextResult = await advanceGame(round.gameId, round.number);
-    if (!nextResult.finished && nextResult.round) {
-      // Round detaylarını al (Pusher'dan client'a göndereceğiz)
-      const nextR = await db.round.findUnique({
-        where: { id: nextResult.round.id },
-        include: { question: true }
-      });
-      if (nextR) {
-        nextRoundData = {
-          id:               nextR.id,
-          number:           nextR.number,
-          questionId:       nextR.questionId,
-          questionText:     nextR.question.text,
-          questionCategory: nextR.question.category,
-          questionOptions:  nextR.question.options as string[] | null,
-          answererId:       nextR.answererId,
-        };
-      }
+  if (!isFinished && advanceResult.round) {
+    // Round detaylarını al (Pusher'dan client'a göndereceğiz)
+    const nextR = await db.round.findUnique({
+      where: { id: advanceResult.round.id },
+      include: { question: true }
+    });
+    if (nextR) {
+      nextRoundData = {
+        id:               nextR.id,
+        number:           nextR.number,
+        questionId:       nextR.questionId,
+        questionText:     nextR.question.text,
+        questionCategory: nextR.question.category,
+        questionOptions:  nextR.question.options as string[] | null,
+        answererId:       nextR.answererId,
+      };
     }
   }
 

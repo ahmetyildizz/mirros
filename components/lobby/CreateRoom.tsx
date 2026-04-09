@@ -15,6 +15,8 @@ import {
   Crown
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useGameStore } from "@/store/game.store";
+import type { GameTheme } from "@/store/game.store";
 
 interface Props {
   onCreated: (roomId: string, code: string) => void;
@@ -45,6 +47,7 @@ const TEMPLATES: Template[] = [
 const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 8, 10];
 
 export function CreateRoom({ onCreated }: Props) {
+  const { setTheme } = useGameStore();
   const [step,     setStep]    = useState<"template" | "config">("template");
   const [mode,     setMode]   = useState<GameMode>("SOCIAL");
   const [ageGroup, setAge]    = useState<AgeGroup>("ADULT");
@@ -57,6 +60,14 @@ export function CreateRoom({ onCreated }: Props) {
     setMode(tpl.gameMode);
     setAge(tpl.ageGroup);
     setMax(tpl.maxPlayers);
+
+    // Apply theme
+    let theme: GameTheme = "purple";
+    if (tpl.gameMode === "QUIZ") theme = "intel";
+    else if (tpl.label === "Çift Gecesi") theme = "love";
+    else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü") theme = "warm";
+    setTheme(theme);
+
     if (tpl.label === "Özelleştir") {
       setStep("config");
     } else {

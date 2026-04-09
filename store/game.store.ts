@@ -8,11 +8,16 @@ export type GameState =
   | "SCORING"
   | "END";
 
+export type GameTheme = "purple" | "love" | "warm" | "intel";
+
 export type MatchLevel = "EXACT" | "CLOSE" | "WRONG";
 
 export interface Player {
-  id:       string;
-  username: string;
+  id:        string;
+  username:  string;
+  avatarUrl?: string | null;
+  role:      "PLAYER" | "SPECTATOR";
+  streak:    number;
 }
 
 export interface GuessResult {
@@ -48,10 +53,11 @@ interface GameStore {
   totalRounds:   number;
   state:         GameState;
   question:      { id: string; text: string; category: string; options: string[] | null } | null;
-  myRole:        "answerer" | "guesser" | null;
+  myRole:        "answerer" | "guesser" | "spectator" | null;
   activeRoundId: string | null;
   answererId:    string | null;
   gameMode:      "SOCIAL" | "QUIZ" | null;
+  theme:         GameTheme;
 
   // Oyuncular
   players:       Player[];
@@ -86,6 +92,7 @@ interface GameStore {
   setGuessProgress:    (count: number, total: number) => void;
   setGameMode:         (mode: "SOCIAL" | "QUIZ") => void;
   setQuestionOptions:  (options: string[]) => void;
+  setTheme:            (theme: GameTheme) => void;
   hydrate:             (data: Partial<GameStore>) => void;
   reset:               () => void;
 }
@@ -110,6 +117,7 @@ const initialState = {
   guessCount:       0,
   totalGuessers:    0,
   gameMode:         null,
+  theme:            "purple" as GameTheme,
 };
 
 export const useGameStore = create<GameStore>()(
@@ -135,6 +143,7 @@ export const useGameStore = create<GameStore>()(
       setGuessProgress:   (guessCount, totalGuessers) => set({ guessCount, totalGuessers }),
       setGameMode:        (gameMode) => set({ gameMode }),
       setQuestionOptions: (options) => set((s) => s.question ? { question: { ...s.question, options } } : {}),
+      setTheme:           (theme) => set({ theme }),
       hydrate:           (data) => set((s) => ({ ...s, ...data })),
       reset:             () => set(initialState),
     }),
@@ -155,6 +164,7 @@ export const useGameStore = create<GameStore>()(
         answererId:   s.answererId,
         state:        s.state,
         playerScores: s.playerScores,
+        theme:        s.theme,
       }),
     }
   )

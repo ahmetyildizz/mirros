@@ -34,4 +34,7 @@ export const sounds = {
   wrong:   () => { if (!isMuted()) { tone(330, 0.1, "sine", 0.18); setTimeout(() => tone(277, 0.18, "triangle", 0.12), 90); } },
   newRound:() => { if (!isMuted()) { tone(880, 0.05, "sine", 0.1); setTimeout(() => tone(1100, 0.1, "sine", 0.1), 60); } },
   fanfare: () => { if (!isMuted()) { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => tone(f, 0.28, "sine", 0.22), i * 130)); } },
+  ping:    () => { if (!isMuted()) { tone(1200, 0.05, "sine", 0.08); setTimeout(() => tone(1500, 0.08, "sine", 0.06), 40); } },
+  pop:     () => { if (!isMuted()) { tone(400, 0.03, "sine", 0.15); tone(800, 0.05, "triangle", 0.1); } },
+  reaction:() => { if (!isMuted()) { tone(900, 0.04, "sine", 0.1); setTimeout(() => tone(700, 0.04, "sine", 0.1), 30); setTimeout(() => tone(1100, 0.06, "sine", 0.1), 60); } },
 };

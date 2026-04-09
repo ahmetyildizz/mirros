@@ -16,6 +16,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ShareButton } from "./ShareButton";
+import { AIInsightCard } from "./AIInsightCard";
+import { getThemeFromRoom } from "@/lib/utils/theme-mapper";
+import { useGameStore } from "@/store/game.store";
 
 interface PlayerResult {
   userId: string;
@@ -51,6 +54,9 @@ interface Props {
   rounds: RoundData[];
   funniestRound?: { question: string; answer: string; reason?: string | null; username?: string | null } | null;
   compatMap: Record<string, { username: string; pct: number; bestGuesser?: { name: string; points: number }; title?: string }>;
+  aiReport: { intro: string; tag: string; story: string };
+  roomCategory: string | null;
+  gameMode: "SOCIAL" | "QUIZ";
 }
 
 export function ResultsClient({ 
@@ -61,12 +67,19 @@ export function ResultsClient({
   familiarityEmoji,
   rounds,
   funniestRound,
-  compatMap
+  compatMap,
+  aiReport,
+  roomCategory,
+  gameMode
 }: Props) {
+  const { setTheme } = useGameStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // Sync theme
+    setTheme(getThemeFromRoom(roomCategory, gameMode));
+    
     // Big celebration
     const duration = 5 * 1000;
     const animationEnd = Date.now() + duration;
@@ -225,6 +238,13 @@ export function ResultsClient({
           </div>
         </div>
       </motion.div>
+      
+      {/* AI Insight Section */}
+      <AIInsightCard 
+        intro={aiReport.intro}
+        tag={aiReport.tag}
+        story={aiReport.story}
+      />
       
       {/* Funniest Moment Section */}
       {funniestRound && (

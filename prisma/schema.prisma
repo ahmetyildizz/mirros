@@ -20,6 +20,7 @@ model User {
   rooms       RoomParticipant[]
   scores      Score[]
   auditLogs   AuditLog[]
+  dailyAnswers DailyAnswer[]
 }
 
 model Room {
@@ -31,22 +32,29 @@ model Room {
   maxPlayers   Int               @default(8)
   ageGroup     AgeGroup?
   gameMode     GameMode          @default(SOCIAL)
-  category     String?           // Örn: "Çift Gecesi", "Aile Toplantısı"
-  games        Game[]
-  host         User              @relation("HostedRooms", fields: [hostId], references: [id])
-  participants RoomParticipant[]
+  category      String?           // Örn: "Çift Gecesi", "Aile Toplantısı"
+  games         Game[]
+  host          User              @relation("HostedRooms", fields: [hostId], references: [id])
+  participants  RoomParticipant[]
 }
 
 model RoomParticipant {
-  id       String    @id @default(cuid())
+  id       String          @id @default(cuid())
   roomId   String
   userId   String
-  joinedAt DateTime  @default(now())
+  joinedAt DateTime        @default(now())
   ageGroup AgeGroup?
-  room     Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  user     User      @relation(fields: [userId], references: [id])
+  role     ParticipantRole @default(PLAYER)
+  streak   Int             @default(0)
+  room     Room            @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user     User            @relation(fields: [userId], references: [id])
 
   @@unique([roomId, userId])
+}
+
+enum ParticipantRole {
+  PLAYER
+  SPECTATOR
 }
 
 model Game {
@@ -136,7 +144,29 @@ model Question {
   gameMode   GameMode   @default(SOCIAL)
   options    Json?
   penalty    String?
+  roomId     String?    // Eğer null ise genel havuz, doluysa o odaya özel
   rounds     Round[]
+  dailyEntries DailyQuestion[]
+}
+
+model DailyQuestion {
+  id         String   @id @default(cuid())
+  date       DateTime @unique @default(now())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+  answers    DailyAnswer[]
+}
+
+model DailyAnswer {
+  id              String        @id @default(cuid())
+  dailyQuestionId String
+  userId          String
+  content         String
+  createdAt       DateTime      @default(now())
+  dailyQuestion   DailyQuestion @relation(fields: [dailyQuestionId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
+  
+  @@unique([dailyQuestionId, userId])
 }
 
 model Insight {

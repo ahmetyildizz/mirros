@@ -49,7 +49,7 @@ interface RoundScoredPayload {
   roundId:      string;
   answererId:   string;
   answer:       string;
-  guessResults: (GuessResult & { reason?: string | null })[];
+  guessResults: (GuessResult & { reason?: string | null; streak?: number })[];
   playerScores: Record<string, number>;
   penalty?:     string | null;
   nextRound?: {
@@ -69,9 +69,10 @@ interface GameFinishedPayload {
 }
 
 interface PlayerJoinedPayload {
-  userId:   string;
-  username: string;
-  players:  Player[];
+  userId:    string;
+  username:  string;
+  avatarUrl?: string | null;
+  players:   Player[];
 }
 
 export function useGameState(gameId: string, myUserId: string) {
@@ -131,6 +132,18 @@ export function useGameState(gameId: string, myUserId: string) {
         answer:       data.answer,
         guessResults: data.guessResults,
       });
+
+      // Update streaks in players list
+      const store = useGameStore.getState();
+      const updatedPlayers = store.players.map(p => {
+        const res = data.guessResults.find(gr => gr.userId === p.id);
+        if (res && res.streak !== undefined) {
+          return { ...p, streak: res.streak };
+        }
+        return p;
+      });
+      setPlayers(updatedPlayers);
+
       setPlayerScores(data.playerScores);
       setLastPenalty(data.penalty ?? null);
 
@@ -147,11 +160,6 @@ export function useGameState(gameId: string, myUserId: string) {
       } else {
         setGameState("SCORING");
       }
-    });
-
-    channel.bind("reaction-received", (data: { userId: string; username: string; emoji: string }) => {
-      // Dispatch a custom event to show reaction in GamePage
-      window.dispatchEvent(new CustomEvent("mirros-reaction", { detail: data }));
     });
 
     channel.bind("game-finished", (data: GameFinishedPayload) => {
@@ -180,6 +188,33 @@ export function useRoomState(roomId: string) {
 
     channel.bind("player-joined", (data: PlayerJoinedPayload) => {
       setPlayers(data.players);
+    });
+
+    channel.bind("game-started", (data: any) => {
+      // Verileri store'a yaz ve UI'ın GamePage üzerinden render olmasını sağla
+      useGameStore.getState().hydrate({
+        gameId:        data.gameId,
+        gameMode:      data.gameMode,
+        state:         "ANSWERING",
+        currentRound:  1,
+        totalRounds:   data.totalRounds,
+        activeRoundId: data.roundId,
+        answererId:    data.answererId,
+        question: {
+          id:       data.questionId,
+          text:     data.questionText,
+          category: data.questionCategory,
+          options:  data.questionOptions
+        },
+        players:       data.players
+      });
+      // Not: URL zaten /game/[roomId] ise GamePage içindeki veri kurtarma (hydrate) çalışacaktır.
+      // Bu event sadece lobi ekranında bekleyenlerin anlık geçişini hızlandırır.
+    });
+
+    channel.bind("reaction-received", (data: { userId: string; username: string; emoji: string }) => {
+      // Dispatch a custom event to show reaction in GamePage
+      window.dispatchEvent(new CustomEvent("mirros-reaction", { detail: data }));
     });
 
     return () => {

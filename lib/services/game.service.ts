@@ -5,7 +5,7 @@ import { createAuditLog } from "@/lib/audit";
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
-async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", ageGroup?: string | null, category?: string | null, tx = db) {
+async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
   // Tema/Lobi Modu eşleştirmesi
   const themeMap: Record<string, string[]> = {
     "Çift Gecesi": ["İlişki", "Duygu", "Kişilik", "Yaşam"],
@@ -16,34 +16,29 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", a
 
   const targetCategories = category ? themeMap[category] : null;
 
-  // 1. TAM EŞLEŞEN: gameMode, ageGroup VE (varsa) Kategori
-  let candidates = await tx.question.findMany({
-    where: {
-      isActive: true,
-      gameMode,
-      ...(ageGroup ? {
-        OR: [
-          { ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" },
-          { ageGroup: null },
-        ],
-      } : {}),
-      ...(targetCategories ? { category: { in: targetCategories } } : {}),
-      ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
-    },
-    select: { id: true },
-  });
+  // 0. ÖNCELİKLİ: Varsa Odaya Özel Soru
+  if (roomId) {
+    const roomCandidates = await tx.question.findMany({
+      where: { roomId, isActive: true, gameMode, ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}) },
+      select: { id: true },
+    });
+    if (roomCandidates.length > 0) {
+      const pick = roomCandidates[Math.floor(Math.random() * roomCandidates.length)];
+      return tx.question.findUniqueOrThrow({ where: { id: pick.id } });
+    }
+  }
 
-  // 2. Havuz boşsa (hiç soru yoksa veya hepsi kullanıldıysa): Kategoriyi esnet
-  if (candidates.length === 0 && targetCategories) {
+  // 1. ADIM: Tema Eşleşen VE ŞIKLI (Multiple Choice) Sorular
+  let candidates: { id: string }[] = [];
+  if (targetCategories) {
     candidates = await tx.question.findMany({
       where: {
         isActive: true,
         gameMode,
+        category: { in: targetCategories },
+        NOT: { options: { equals: [] } }, // Boş dizi olmayanları (şıklıları) bul
         ...(ageGroup ? {
-          OR: [
-            { ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" },
-            { ageGroup: null },
-          ],
+          OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
         } : {}),
         ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
       },
@@ -51,13 +46,41 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", a
     });
   }
 
-  // 3. Hala boşsa: Yaş kriterini esnet ve exclude'u kaldır
+  // 2. ADIM: Havuz boşsa (hiç şıklı soru yoksa veya bitmişse): Tüm Tema Soruları (Şıklı veya Şıksız)
+  if (candidates.length === 0 && targetCategories) {
+    candidates = await tx.question.findMany({
+      where: {
+        isActive: true,
+        gameMode,
+        category: { in: targetCategories },
+        ...(ageGroup ? {
+          OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
+        } : {}),
+        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
+      },
+      select: { id: true },
+    });
+  }
+
+  // 3. ADIM: Hala boşsa: Tema kısıtlamasını kaldır, genel havuzdan seç
   if (candidates.length === 0) {
     candidates = await tx.question.findMany({
       where: {
         isActive: true,
         gameMode,
+        ...(ageGroup ? {
+          OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
+        } : {}),
+        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
       },
+      select: { id: true },
+    });
+  }
+
+  // 4. ADIM: Son Çare: Her şeyi esnet (exclude ve ageGroup dahil)
+  if (candidates.length === 0) {
+    candidates = await tx.question.findMany({
+      where: { isActive: true, gameMode },
       select: { id: true },
     });
   }
@@ -88,11 +111,14 @@ export async function startGame(roomId: string) {
     include: { participants: { orderBy: { joinedAt: "asc" }, include: { user: true } } },
   });
   if (!room) throw new Error("Oda bulunamadı");
-  if (room.participants.length < 2) throw new Error("En az 2 oyuncu gerekli");
+  
+  // Sadece PLAYER olanları asıl katılımcı sayıyoruz
+  const participants = room.participants.filter(p => (p as any).role !== "SPECTATOR");
+  if (participants.length < 2) throw new Error("En az 2 ana oyuncu gerekli");
   if (room.status === "FINISHED") throw new Error("Oda kapandı");
 
   const isQuiz         = room.gameMode === "QUIZ";
-  const participantIds = room.participants.map((p) => p.userId);
+  const participantIds = participants.map((p) => p.userId);
   const totalRounds    = isQuiz ? QUIZ_ROUNDS : SOCIAL_ROUNDS;
 
   const ageCounts: Record<string, number> = {};
@@ -152,7 +178,7 @@ export async function startGame(roomId: string) {
     const answerer   = room.participants.find((p) => p.userId === answererId);
     const roundAgeGroup = isQuiz ? majorityAgeGroup : (answerer?.ageGroup ?? majorityAgeGroup);
 
-    const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, isQuiz, roundAgeGroup, room.category, tx as any);
+    const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, isQuiz, roundAgeGroup, room.category, room.id, tx as any);
     return { game: newGame, round, question };
   });
 
@@ -187,6 +213,7 @@ async function createRound(
   isQuiz:     boolean,
   ageGroup?:  string | null,
   category?:  string | null,
+  roomId?:    string | null,
   tx = db
 ) {
   const answererId = isQuiz ? null : resolveSpotlight(number, participantIds);
@@ -204,7 +231,7 @@ async function createRound(
     if (participant?.ageGroup) actualAgeGroup = participant.ageGroup;
   }
 
-  const question = await pickQuestion(usedQuestionIds, isQuiz ? "QUIZ" : "SOCIAL", actualAgeGroup, category, tx as any);
+  const question = await pickQuestion(usedQuestionIds, isQuiz ? "QUIZ" : "SOCIAL", actualAgeGroup, category, roomId, tx as any);
 
   const round = await (tx as any).round.create({
     data: { gameId, number, questionId: question.id, answererId, status: "ANSWERING" },
@@ -233,7 +260,8 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
   if (!game) throw new Error("Oyun bulunamadı");
 
   const isQuiz         = game.room.gameMode === "QUIZ";
-  const participantIds = game.room.participants.map((p) => p.userId);
+  const participants   = game.room.participants.filter(p => (p as any).role !== "SPECTATOR");
+  const participantIds = participants.map((p) => p.userId);
   const isLastRound    = completedRoundNumber >= game.totalRounds;
 
   if (isLastRound) {
@@ -273,7 +301,7 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
     select: { questionId: true },
   });
   const usedIds = allRoomRounds.map((r) => r.questionId);
-  const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, isQuiz, game.room.ageGroup, game.room.category);
+  const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, isQuiz, game.room.ageGroup, game.room.category, game.roomId);
 
   await pusherServer.trigger(`game-${gameId}`, "round-started", {
     roundId:          round.id,

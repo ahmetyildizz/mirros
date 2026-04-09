@@ -13,12 +13,15 @@ import {
   Loader2, 
   ArrowRight,
   ShieldCheck,
-  MessageCircle
+  MessageCircle,
+  PlusCircle
 } from "lucide-react";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useGameStore } from "@/store/game.store";
 import type { Player } from "@/store/game.store";
 import { cn } from "@/lib/utils";
+import { ManageQuestions } from "@/components/lobby/ManageQuestions";
+import { getThemeFromRoom } from "@/lib/utils/theme-mapper";
 
 interface GameStartedPayload {
   gameId:           string;
@@ -54,11 +57,12 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
   const [starting,    setStarting]    = useState(false);
   const [startError,  setStartError]  = useState<string | null>(null);
   const [copied,      setCopied]      = useState(false);
+  const [managerOpen, setManagerOpen] = useState(false);
 
   const {
     setGameId, setGameState, setQuestion, setCurrentRound, setTotalRounds,
     setActiveRoundId, setMyRole, setAnswererId, setPlayers: storePlayers,
-    setGameMode: storeGameMode, setRoomCode, setRoomId,
+    setGameMode: storeGameMode, setRoomCode, setRoomId, setTheme,
   } = useGameStore();
 
   useEffect(() => {
@@ -71,6 +75,9 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
         if (data.gameMode)   setGameMode(data.gameMode);
         if (data.code)       setRoomCode(data.code);
         if (data.id)         setRoomId(data.id);
+        
+        // Sync Theme
+        setTheme(getThemeFromRoom(data.category, data.gameMode || "SOCIAL"));
 
         if (data.activeGameId) {
           setGameId(data.activeGameId);
@@ -149,9 +156,11 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
     }
   };
 
-  const canStart   = players.length >= 2;
-  const isFull     = players.length >= maxPlayers;
-  const fillPct    = Math.min(100, Math.round((players.length / maxPlayers) * 100));
+  const activePlayers = players.filter(p => p.role !== "SPECTATOR");
+  const spectators    = players.filter(p => p.role === "SPECTATOR");
+  const canStart      = activePlayers.length >= 2;
+  const isFull        = activePlayers.length >= maxPlayers;
+  const fillPct       = Math.min(100, Math.round((activePlayers.length / maxPlayers) * 100));
 
   return (
     <main className="relative min-h-dvh flex flex-col items-center justify-center p-6 overflow-hidden">
@@ -245,10 +254,10 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
             <div className="flex items-center justify-between px-1">
               <span className="text-[12px] font-black text-slate-100 flex items-center gap-2">
                 <Users size={14} className="text-slate-400" />
-                {isFull ? "🎉 ODA DOLDU!" : `${players.length} / ${maxPlayers} OYUNCU`}
+                {isFull ? "🎉 OYUNCU KADROSU TAMAM!" : `${activePlayers.length} / ${maxPlayers} OYUNCU`}
               </span>
               {!canStart && (
-                <span className="text-[10px] font-bold text-slate-500 italic opacity-60">en az 2 kişi gerekli</span>
+                <span className="text-[10px] font-bold text-slate-500 italic opacity-60">en az 2 oyuncu gerekli</span>
               )}
             </div>
             <div className="h-1.5 w-full bg-white/[0.05] rounded-full overflow-hidden">
@@ -263,35 +272,66 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
           {/* Players List */}
           <div className="flex flex-col gap-3">
             <AnimatePresence>
-              {players.map((p, i) => (
+              {activePlayers.map((p, i) => (
                 <motion.div
                   key={p.id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.02] border border-white/[0.05]"
+                  className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.04] border border-white/10 shadow-sm"
                 >
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center border border-white/10 shadow-[0_0_10px_rgba(168,85,247,0.1)]">
-                    <span className="text-sm font-black text-white">{(p.username ?? "?")[0].toUpperCase()}</span>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center border border-white/10 shadow-[0_0_10px_rgba(168,85,247,0.1)] relative overflow-hidden">
+                    <span className="text-xl relative z-10 translate-y-[1px]">
+                      {p.avatarUrl || (p.username ?? "?")[0].toUpperCase()}
+                    </span>
+                    <motion.div 
+                      animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.2, 1] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                      className="absolute inset-0 bg-accent/5" 
+                    />
                   </div>
                   <div className="flex flex-col flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-[13px] font-bold text-slate-100">{p.username}</span>
+                      <span className="text-[13px] font-bold text-white transition-colors">{p.username}</span>
                       {p.username === hostName && (
                         <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/20 text-[9px] font-black text-accent uppercase tracking-tighter">
                           <ShieldCheck size={10} /> Host
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] text-slate-500 font-medium">Hazır ✓</span>
+                    <span className="text-[10px] text-slate-500 font-medium">Oyuncu</span>
                   </div>
                   <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
                 </motion.div>
               ))}
             </AnimatePresence>
 
+            {/* Spectators List */}
+            {spectators.length > 0 && (
+              <div className="flex flex-col gap-2 mt-4">
+                <div className="flex items-center gap-2 px-1">
+                  <div className="h-px flex-1 bg-white/5" />
+                  <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest whitespace-nowrap">İzleyiciler ({spectators.length})</span>
+                  <div className="h-px flex-1 bg-white/5" />
+                </div>
+                <div className="grid grid-cols-4 gap-2">
+                  {spectators.map((s) => (
+                    <motion.div 
+                      key={s.id}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="flex flex-col items-center gap-1 p-2 rounded-xl bg-white/[0.01] border border-white/5"
+                    >
+                      <span className="text-lg">{s.avatarUrl || "👤"}</span>
+                      <span className="text-[8px] font-bold text-slate-500 truncate w-full text-center">{s.username}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Waiting Slot */}
-            {!isFull && Array.from({ length: Math.max(0, Math.min(1, maxPlayers - players.length)) }).map((_, i) => (
+            {!isFull && Array.from({ length: Math.max(0, Math.min(1, maxPlayers - activePlayers.length)) }).map((_, i) => (
               <div key={`wait-${i}`} className="flex items-center gap-3 p-3 rounded-2xl border border-dashed border-white/10 opacity-30">
                 <div className="w-10 h-10 rounded-full border border-dashed border-white/20 flex items-center justify-center italic text-xs">?</div>
                 <div className="flex-1">
@@ -307,14 +347,24 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
           </div>
         </motion.div>
 
-        {/* Action Button Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col gap-3"
-        >
-          {isHost ? (
+          {/* Action Button Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col gap-3"
+          >
+            {isHost && (
+              <button
+                onClick={() => setManagerOpen(true)}
+                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/10 text-slate-300 text-[11px] font-black uppercase tracking-widest transition-all mb-1"
+              >
+                <PlusCircle size={14} className="text-accent" />
+                Özel Soru Ekle
+              </button>
+            )}
+
+            {isHost ? (
             <>
               <button
                 onClick={handleStartGame}
@@ -349,6 +399,15 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
           )}
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {managerOpen && (
+          <ManageQuestions 
+            roomId={roomId} 
+            onClose={() => setManagerOpen(false)} 
+          />
+        )}
+      </AnimatePresence>
     </main>
   );
 }

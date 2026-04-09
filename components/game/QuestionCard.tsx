@@ -9,9 +9,10 @@ interface Props {
   category: string;
   roundNumber: number;
   answererName?: string;
+  answererAvatar?: string | null;
 }
 
-export function QuestionCard({ text, category, roundNumber, answererName }: Props) {
+export function QuestionCard({ text, category, roundNumber, answererName, answererAvatar }: Props) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -44,6 +45,7 @@ export function QuestionCard({ text, category, roundNumber, answererName }: Prop
             className="text-[13px] font-bold text-accent tracking-tight flex items-center gap-2"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_8px_var(--accent)]" />
+            {answererAvatar && <span className="text-lg">{answererAvatar}</span>}
             {answererName}&apos;a şu soru soruldu:
           </motion.p>
         )}

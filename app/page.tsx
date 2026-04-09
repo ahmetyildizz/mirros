@@ -7,6 +7,7 @@ import { CreateRoom } from "@/components/lobby/CreateRoom";
 import { JoinRoom } from "@/components/lobby/JoinRoom";
 import { useGameStore } from "@/store/game.store";
 import { Sparkles } from "lucide-react";
+import { DailyWidget } from "@/components/lobby/DailyWidget";
 
 function LobbyContent() {
   const router   = useRouter();
@@ -86,6 +87,9 @@ function LobbyContent() {
             <div className="w-12 h-1 rounded-full bg-gradient-to-r from-accent to-accent-2 opacity-30" />
           </motion.div>
         </motion.div>
+
+        {/* Daily Question Section */}
+        <DailyWidget />
 
         {/* Action Sections with Staggered Animation */}
         <motion.div 

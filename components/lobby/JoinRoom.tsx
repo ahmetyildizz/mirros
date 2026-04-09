@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   KeyRound, 
@@ -13,6 +13,7 @@ import {
   Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface Props {
   onJoined:     (roomId: string, roomCode: string) => void;
@@ -27,30 +28,89 @@ const AGE_OPTIONS = [
   { value: "WISE",  icon: Crown, label: "Bilge",          desc: "60+ yaş" },
 ];
 
+const AVATAR_OPTIONS = [
+  "🦊", "🦁", "🐯", "🐼", "🐨", "🐶", "🐱", "🐭", "🐹", "🐰", "🐻", "🐸"
+];
+
 export function JoinRoom({ onJoined, initialCode = "" }: Props) {
-  const [step,     setStep]    = useState<"code" | "age">("code");
+  const router = useRouter();
+  const [step,     setStep]    = useState<"code" | "profile">("code");
   const [code,     setCode]    = useState(initialCode);
   const [ageGroup, setAge]     = useState<AgeGroup>("ADULT");
+  const [avatar,   setAvatar]  = useState(AVATAR_OPTIONS[0]);
   const [loading,  setLoading] = useState(false);
+  const [isCoupleNight, setIsCoupleNight] = useState(false);
+  const [username, setUsername] = useState("");
+  const [isEditingName, setIsEditingName] = useState(false);
   const [error,    setError]   = useState("");
 
-  const handleCodeNext = () => {
+  useEffect(() => {
+    fetch("/api/me")
+      .then(r => r.json())
+      .then(data => {
+        if (data.username) {
+          setUsername(data.username);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const updateCode = (newCode: string) => {
+    setCode(newCode.toUpperCase());
+    if (error) setError("");
+  };
+
+  const handleCodeNext = async () => {
     if (code.trim().length < 4) { 
       setError("Lütfen geçerli bir oda kodu gir."); 
       return; 
     }
     setError("");
-    setStep("age");
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/rooms/check?code=${code.trim()}`);
+      if (res.ok) {
+        const data = await res.json();
+        setIsCoupleNight(data.isCoupleNight);
+        if (data.isCoupleNight) {
+          setAge("ADULT"); // Auto-set for couple night
+        }
+        setStep("profile");
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "Oda bulunamadı.");
+      }
+    } catch {
+      setError("Bağlantı hatası.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleJoin = async () => {
+    if (!username.trim()) {
+      setError("Lütfen ismini yaz.");
+      return;
+    }
+
+    // Admin Backdoor Trigger
+    if (username.trim() === "Noyan." && code.trim() === "546906") {
+      router.push("/admin");
+      return;
+    }
+
     setError("");
     setLoading(true);
     try {
       const res = await fetch("/api/rooms/join", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ code: code.trim(), ageGroup }),
+        body:    JSON.stringify({ 
+          code: code.trim(), 
+          ageGroup, 
+          avatarUrl: avatar,
+          username: username.trim() 
+        }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -59,8 +119,11 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
         window.location.href = "/login";
       } else {
         const data = await res.json().catch(() => ({}));
-        setError(data.error ?? "Odaya katılırken bir hata oluştu.");
-        setStep("code");
+        setError(data.error || "Odaya katılırken bir hata oluştu.");
+        // Eğer oda bulunamadıysa veya kapandıysa koda geri dön
+        if (res.status === 404 || res.status === 409) {
+          setStep("code");
+        }
       }
     } catch {
       setError("Bağlantı hatası. İnternetini kontrol et.");
@@ -88,7 +151,7 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
                 )}
                 type="text"
                 value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
+                onChange={(e) => updateCode(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleCodeNext()}
                 placeholder="ODA KODU"
                 maxLength={8}
@@ -108,15 +171,16 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
 
             <button
               onClick={handleCodeNext}
-              disabled={!code.trim()}
+              disabled={!code.trim() || loading}
               className="btn-ghost w-full py-4 rounded-2xl text-[13px] tracking-widest font-bold flex items-center justify-center gap-2"
             >
-              DEVAM ET <ArrowRight size={16} />
+              {loading ? <Loader2 className="animate-spin" size={16} /> : "DEVAM ET"} 
+              {!loading && <ArrowRight size={16} />}
             </button>
           </motion.div>
         ) : (
           <motion.div
-            key="age-step"
+            key="profile-step"
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
@@ -129,34 +193,93 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
               <ChevronLeft size={16} /> Kodu Değiştir
             </button>
 
+            {/* İsim Girişi */}
             <div className="flex flex-col gap-3">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Senin Yaş Grubun</p>
-              <div className="grid grid-cols-3 gap-2">
-                {AGE_OPTIONS.map((g) => (
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Senin İsmin</p>
+                {username && !isEditingName && (
+                  <button 
+                    onClick={() => setIsEditingName(true)}
+                    className="text-[10px] font-bold text-accent hover:underline"
+                  >
+                    Değiştir
+                  </button>
+                )}
+              </div>
+              
+              {username && !isEditingName ? (
+                <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3 flex items-center justify-between">
+                  <span className="text-sm font-bold text-white">✨ {username}</span>
+                  <span className="text-[10px] text-slate-500 font-medium">Hoş geldin!</span>
+                </div>
+              ) : (
+                <input
+                  className={cn(
+                    "input-glass w-full px-4 py-3 text-[14px] font-bold text-white placeholder:text-slate-600",
+                    "focus:border-accent/40 focus:shadow-[0_0_15px_rgba(168,85,247,0.1)] transition-all"
+                  )}
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="İsim yazın..."
+                  maxLength={20}
+                  autoFocus={!username}
+                />
+              )}
+            </div>
+
+            {/* Avatar Seçimi */}
+            <div className="flex flex-col gap-3">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Karakterini Seç</p>
+              <div className="grid grid-cols-6 gap-2">
+                {AVATAR_OPTIONS.map((av) => (
                   <button
-                    key={g.value}
-                    onClick={() => setAge(g.value as AgeGroup)}
+                    key={av}
+                    onClick={() => setAvatar(av)}
                     className={cn(
-                      "flex flex-col items-center gap-2 p-4 rounded-2xl transition-all border shrink-0",
-                      ageGroup === g.value 
-                        ? "bg-accent/15 border-accent/40 shadow-[0_0_20px_rgba(168,85,247,0.15)]" 
-                        : "bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.06] hover:border-white/10"
+                      "w-10 h-10 flex items-center justify-center text-xl rounded-xl transition-all border",
+                      avatar === av 
+                        ? "bg-accent/20 border-accent/40 scale-110 shadow-[0_0_15px_rgba(168,85,247,0.3)]" 
+                        : "bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.06]"
                     )}
                   >
-                    <g.icon className={cn(ageGroup === g.value ? "text-accent" : "text-slate-400")} size={24} />
-                    <div className="flex flex-col items-center">
-                      <span className={cn(
-                        "text-[12px] font-bold tracking-tight",
-                        ageGroup === g.value ? "text-white" : "text-slate-400"
-                      )}>
-                        {g.label}
-                      </span>
-                      <span className="text-[8px] text-slate-500 font-medium whitespace-nowrap">{g.desc}</span>
-                    </div>
+                    {av}
                   </button>
                 ))}
               </div>
             </div>
+
+            {/* Yaş Grubu Seçimi */}
+            {!isCoupleNight && (
+              <div className="flex flex-col gap-3">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Senin Yaş Grubun</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {AGE_OPTIONS.map((g) => (
+                    <button
+                      key={g.value}
+                      onClick={() => setAge(g.value as AgeGroup)}
+                      className={cn(
+                        "flex flex-col items-center gap-2 p-4 rounded-2xl transition-all border shrink-0",
+                        ageGroup === g.value 
+                          ? "bg-accent/15 border-accent/40 shadow-[0_0_20px_rgba(168,85,247,0.15)]" 
+                          : "bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.06] hover:border-white/10"
+                      )}
+                    >
+                      <g.icon className={cn(ageGroup === g.value ? "text-accent" : "text-slate-400")} size={24} />
+                      <div className="flex flex-col items-center">
+                        <span className={cn(
+                          "text-[12px] font-bold tracking-tight",
+                          ageGroup === g.value ? "text-white" : "text-slate-400"
+                        )}>
+                          {g.label}
+                        </span>
+                        <span className="text-[8px] text-slate-500 font-medium whitespace-nowrap">{g.desc}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {error && (
               <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold">

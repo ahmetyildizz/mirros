@@ -13,7 +13,6 @@
   /* Kenarlık & Glow */
   --border:       rgba(255, 255, 255, 0.06);
   --border-bright: rgba(255, 255, 255, 0.12);
-  --border-glow:  rgba(168, 85, 247, 0.4);
   --inner-glow:   inset 0 1px 1px rgba(255, 255, 255, 0.05);
 
   /* Metin */
@@ -21,28 +20,56 @@
   --fg-secondary: #94A3B8;
   --fg-muted:     #475569;
 
-  /* Accent Renkleri (Süper Canlı) */
+  /* Tema Geçiş Süresi */
+  --theme-transition: 2.5s ease-in-out;
+
+  /* --- VARSITABLE THEME COLORS --- */
+  /* Purple (Default) */
   --accent:       #A855F7;
   --accent-2:     #F43F5E;
   --accent-3:     #06B6D4;
-  --accent-dim:   rgba(168, 85, 247, 0.12);
   --accent-glow:  rgba(168, 85, 247, 0.25);
-
-  /* Gradient'ler */
+  --aurora-1:     rgba(168,85,247,0.22);
+  --aurora-2:     rgba(236,72,153,0.18);
+  --aurora-3:     rgba(6,182,212,0.10);
   --grad:         linear-gradient(135deg, #A855F7 0%, #F43F5E 100%);
-  --grad-subtle:  linear-gradient(135deg, rgba(168,85,247,0.12) 0%, rgba(244,63,94,0.12) 100%);
   --grad-text:    linear-gradient(135deg, #D8B4FE 0%, #FB7185 50%, #FDBA74 100%);
+}
 
-  /* Oyun Renkleri */
-  --exact:   #22C55E;
-  --close:   #EAB308;
-  --wrong:   #EF4444;
-  --neutral: #64748B;
+[data-theme="love"] {
+  --accent:       #E11D48;
+  --accent-2:     #F59E0B;
+  --accent-3:     #9F1239;
+  --accent-glow:  rgba(225, 29, 72, 0.25);
+  --aurora-1:     rgba(225,29,72,0.25);
+  --aurora-2:     rgba(245,158,11,0.15);
+  --aurora-3:     rgba(159,18,57,0.12);
+  --grad:         linear-gradient(135deg, #E11D48 0%, #F59E0B 100%);
+  --grad-text:    linear-gradient(135deg, #FDA4AF 0%, #FCD34D 100%);
+}
 
-  /* Legacy uyumluluk */
-  --background: var(--bg-base);
-  --foreground: var(--fg-primary);
-  --bg-card: var(--bg-elevated);
+[data-theme="warm"] {
+  --accent:       #F59E0B;
+  --accent-2:     #D97706;
+  --accent-3:     #B45309;
+  --accent-glow:  rgba(245, 158, 11, 0.25);
+  --aurora-1:     rgba(245,158,11,0.20);
+  --aurora-2:     rgba(217,119,6,0.15);
+  --aurora-3:     rgba(180,83,9,0.10);
+  --grad:         linear-gradient(135deg, #F59E0B 0%, #D946EF 100%);
+  --grad-text:    linear-gradient(135deg, #FDE68A 0%, #F5D0FE 100%);
+}
+
+[data-theme="intel"] {
+  --accent:       #06B6D4;
+  --accent-2:     #6366F1;
+  --accent-3:     #0891B2;
+  --accent-glow:  rgba(6, 182, 212, 0.25);
+  --aurora-1:     rgba(6,182,212,0.20);
+  --aurora-2:     rgba(99,102,241,0.15);
+  --aurora-3:     rgba(8,145,178,0.10);
+  --grad:         linear-gradient(135deg, #06B6D4 0%, #6366F1 100%);
+  --grad-text:    linear-gradient(135deg, #A5F3FC 0%, #C7D2FE 100%);
 }
 
 @theme inline {
@@ -104,6 +131,7 @@ body {
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background var(--theme-transition), color var(--theme-transition);
 }
 
 /* ── AURORA ARKA PLAN ────────────────────────────────────── */
@@ -124,6 +152,7 @@ body {
   background: radial-gradient(circle, rgba(168,85,247,0.22) 0%, transparent 70%);
   animation: aurora-1 18s ease-in-out infinite;
   filter: blur(40px);
+  transition: background var(--theme-transition);
 }
 .aurora-blob-2 {
   position: absolute;
@@ -132,9 +161,10 @@ body {
   width: 70vw;
   height: 70vw;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(236,72,153,0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--aurora-2) 0%, transparent 70%);
   animation: aurora-2 22s ease-in-out infinite;
   filter: blur(50px);
+  transition: background var(--theme-transition);
 }
 .aurora-blob-3 {
   position: absolute;
@@ -143,9 +173,10 @@ body {
   width: 40vw;
   height: 40vw;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(6,182,212,0.10) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--aurora-3) 0%, transparent 70%);
   animation: aurora-1 28s ease-in-out infinite reverse;
   filter: blur(60px);
+  transition: background var(--theme-transition);
 }
 
 /* ── GLASS KART ──────────────────────────────────────────── */

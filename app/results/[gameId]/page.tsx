@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { ResultsClient } from "@/components/results/ResultsClient";
+import { generateAIInsight } from "@/lib/utils/ai-analysis";
 
 function familiarityEmoji(f: number) {
   if (f >= 90) return "🔥";
@@ -126,12 +127,24 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
     const sortedGuessers = Object.values(data.guessers).sort((a, b) => b.points - a.points);
     const stats = playerStats[uid];
     
-    // Title logic
+    // Advanced Title Logic
     let title = "Oda Sakini";
-    if (stats.exactCount >= 2) title = "Zihin Okuyucu";
-    else if (stats.reasonCount >= 2) title = "Şakacı";
-    else if (stats.closeCount >= 3) title = "Uyumlu";
-    else if (stats.exactCount === 0 && data.maxPossible > 0) title = "Gizemli";
+    const isMe = uid === myId;
+    
+    // Yürüyen Hafıza: Kendi geçmiş cevabıyla %100 aynı cevap veren (En az 1 kere)
+    const hasPerfectMemory = game.rounds.some(r => {
+      const past = pastAnswerMap.get(r.questionId);
+      const current = r.answers.find(a => a.userId === uid)?.content;
+      return past && current && past.content.trim().toLowerCase() === current.trim().toLowerCase();
+    });
+
+    if (stats.exactCount >= 3) title = "Zihin Okuyucu";
+    else if (hasPerfectMemory && isMe) title = "Yürüyen Hafıza";
+    else if (stats.exactCount === 0 && data.pct > 70) title = "Uyumlu";
+    else if (stats.reasonCount >= 3) title = "Kaos Mimarı";
+    else if (stats.closeCount >= 3) title = "Empati Şampiyonu";
+    else if (stats.exactCount === 0 && data.totalPoints < 10 && data.maxPossible > 20) title = "Kapalı Kutu";
+    else if (data.pct > 85) title = "Açık Kitap";
 
     finalCompatMap[uid] = {
       username: data.username,
@@ -160,6 +173,21 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
       pastAnswerMap.set(a.round.questionId, { content: a.content, at: a.submittedAt });
     }
   }
+
+  // AI Telemetry
+  const unpredictableUserId = Object.entries(compatMap).sort((a, b) => a[1].pct - b[1].pct)[0]?.[0];
+  const mostIntuitiveUserId = Object.entries(playerStats).sort((a, b) => b[1].exactCount - a[1].exactCount)[0]?.[0];
+  const wrongRate = game.rounds.reduce((acc, r) => acc + r.scores.filter(s => s.matchLevel === "WRONG").length, 0) / (game.rounds.length * game.room.participants.length || 1);
+
+  const aiReport = generateAIInsight({
+    familiarity,
+    totalRounds: game.totalRounds,
+    topPlayerName: leaderboard[0]?.username || "Anonim",
+    unpredictableName: game.room.participants.find(p => p.userId === unpredictableUserId)?.user.username || "Gizemli",
+    mostIntuitiveName: game.room.participants.find(p => p.userId === mostIntuitiveUserId)?.user.username || "Zihin Okuyucu",
+    chaoticLevel: wrongRate > 0.5 ? "HIGH" : wrongRate > 0.2 ? "MEDIUM" : "LOW",
+    gameMode: game.room.gameMode || "SOCIAL"
+  });
 
   // Funniest Moment
   const funniestRound = game.rounds.reduce<typeof game.rounds[0] | null>((best, r) => {
@@ -207,6 +235,9 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
             username: funniestRound.guesses.find(g => !!g.reason)?.user.username ?? null
           } : null}
           compatMap={finalCompatMap}
+          aiReport={aiReport}
+          roomCategory={game.room.category}
+          gameMode={game.room.gameMode}
         />
       </div>
     </main>
