@@ -133,31 +133,31 @@ export function CreateRoom({ onCreated }: Props) {
               {TEMPLATES.map((tpl, i) => (
                 <motion.button
                   key={tpl.label}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.04 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
                   onClick={() => handleSelectTemplate(tpl)}
                   disabled={loading}
                   className={cn(
-                    "group relative flex flex-col items-center gap-3 p-4 rounded-3xl transition-all duration-300",
-                    "bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.08] hover:border-white/[0.12] hover:-translate-y-1 active:scale-[0.98]",
-                    "backdrop-blur-md overflow-hidden"
+                    "group relative flex flex-col items-center gap-4 p-5 rounded-[2rem] transition-all duration-500",
+                    "bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10 hover:-translate-y-1.5 active:scale-[0.98]",
+                    "backdrop-blur-xl overflow-hidden shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)]"
                   )}
                 >
                   <div className={cn(
-                    "w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 duration-500 bg-gradient-to-br opacity-90",
+                    "w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 duration-500 bg-gradient-to-br shadow-lg",
                     tpl.color
                   )}>
-                    <tpl.icon className="text-white w-6 h-6" />
+                    <tpl.icon className="text-white w-7 h-7 drop-shadow-md" />
                   </div>
                   
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-[13px] font-bold text-slate-100 tracking-tight">{tpl.label}</span>
-                    <span className="text-[10px] text-slate-400 font-medium leading-tight max-w-[120px]">{tpl.desc}</span>
+                  <div className="flex flex-col items-center gap-1.5 text-center">
+                    <span className="text-[14px] font-black text-slate-100 tracking-tight uppercase">{tpl.label}</span>
+                    <span className="text-[10px] text-slate-500 font-bold leading-tight max-w-[120px] opacity-80 group-hover:opacity-100 transition-opacity">{tpl.desc}</span>
                   </div>
 
                   <div className={cn(
-                    "absolute -bottom-8 -right-8 w-24 h-24 rounded-full blur-[40px] opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-gradient-to-br",
+                    "absolute -bottom-10 -right-10 w-24 h-24 rounded-full blur-[40px] opacity-0 group-hover:opacity-10 transition-opacity duration-700 bg-gradient-to-br",
                     tpl.color
                   )} />
                 </motion.button>
@@ -174,28 +174,39 @@ export function CreateRoom({ onCreated }: Props) {
           >
             <button 
               onClick={() => setStep("template")} 
-              className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-bold w-fit"
+              className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-bold w-fit mb-2 group"
             >
-              <ChevronLeft size={16} /> Geri Dön
+              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                <ChevronLeft size={16} />
+              </div>
+              Geri Dön
             </button>
 
-            <div className="flex flex-col gap-3">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Oyun Modu</p>
+            <div className="flex flex-col gap-4 fade-up">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyun Modu</p>
               <div className="grid grid-cols-2 gap-3">
                 {(["SOCIAL", "QUIZ"] as GameMode[]).map((m) => (
                   <button
                     key={m}
                     onClick={() => setMode(m)}
                     className={cn(
-                      "flex flex-col items-center gap-3 p-4 rounded-2xl transition-all border",
+                      "flex flex-col items-center gap-3 p-4 rounded-3xl transition-all duration-300 border",
                       mode === m 
-                        ? "bg-accent/15 border-accent/40 shadow-[0_0_20px_rgba(168,85,247,0.15)]" 
-                        : "bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.06] hover:border-white/10"
+                        ? "bg-accent/10 border-accent/40 shadow-[0_0_25px_rgba(168,85,247,0.15)] ring-1 ring-accent/20" 
+                        : "bg-white/[0.02] border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10"
                     )}
                   >
-                    {m === "SOCIAL" ? <Users className="text-accent" /> : <Brain className="text-cyan-400" />}
+                    {m === "SOCIAL" ? (
+                      <div className="w-10 h-10 rounded-2xl bg-accent/20 flex items-center justify-center">
+                        <Users className="text-accent" size={20} />
+                      </div>
+                    ) : (
+                      <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 flex items-center justify-center">
+                        <Brain className="text-cyan-400" size={20} />
+                      </div>
+                    )}
                     <span className={cn(
-                      "text-[12px] font-bold tracking-tight",
+                      "text-[12px] font-bold tracking-tight uppercase",
                       mode === m ? "text-white" : "text-slate-400"
                     )}>
                       {m === "SOCIAL" ? "Birbirini Tanı" : "Bilgi Yarışması"}
@@ -205,8 +216,8 @@ export function CreateRoom({ onCreated }: Props) {
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Yaş Grubu</p>
+            <div className="flex flex-col gap-4 fade-up [animation-delay:0.1s]">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Yaş Grubu</p>
               <div className="flex flex-wrap gap-2">
                 {[
                   { id: "CHILD", icon: Baby, label: "Çocuk" },
@@ -217,31 +228,31 @@ export function CreateRoom({ onCreated }: Props) {
                     key={g.id}
                     onClick={() => setAge(g.id as AgeGroup)}
                     className={cn(
-                      "flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-xl font-bold text-[11px] transition-all border",
+                      "flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-2xl font-bold text-[11px] transition-all duration-300 border",
                       ageGroup === g.id 
-                        ? "bg-accent/15 border-accent/40 text-white" 
-                        : "bg-white/[0.03] border-white/[0.06] text-slate-400 hover:bg-white/5"
+                        ? "bg-accent/15 border-accent/40 text-white shadow-[0_5px_15px_rgba(168,85,247,0.1)]" 
+                        : "bg-white/[0.02] border-white/[0.05] text-slate-400 hover:bg-white/5"
                     )}
                   >
-                    <g.icon size={14} />
+                    <g.icon size={14} className={cn(ageGroup === g.id ? "text-accent" : "text-slate-500")} />
                     {g.label}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Oyuncu Sayısı</p>
+            <div className="flex flex-col gap-4 fade-up [animation-delay:0.2s]">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyuncu Sayısı</p>
               <div className="grid grid-cols-4 sm:flex sm:flex-wrap gap-2">
                 {PLAYER_OPTIONS.map((n) => (
                   <button
                     key={n}
                     onClick={() => setMax(n)}
                     className={cn(
-                      "h-12 flex items-center justify-center rounded-xl font-bold transition-all border",
+                      "h-12 flex items-center justify-center rounded-2xl font-black transition-all duration-300 border",
                       maxPlayers === n 
-                        ? "bg-accent/15 border-accent/40 text-white shadow-[0_0_15px_rgba(168,85,247,0.2)]" 
-                        : "bg-white/[0.03] border-white/[0.06] text-slate-400 hover:bg-white/5"
+                        ? "bg-accent/20 border-accent/60 text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-105 z-10" 
+                        : "bg-white/[0.02] border-white/[0.05] text-slate-500 hover:bg-white/5"
                     )}
                   >
                     {n}
@@ -254,18 +265,36 @@ export function CreateRoom({ onCreated }: Props) {
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-2 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-[11px] font-bold"
+              >
                 <span>⚠️</span> {error}
-              </div>
+              </motion.div>
             )}
 
             <button
               onClick={() => handleCreate()}
               disabled={loading}
-              className="btn-gradient w-full py-4 rounded-2xl text-[13px] tracking-widest flex items-center justify-center gap-2 shadow-[0_4px_24px_rgba(168,85,247,0.4)]"
+              className={cn(
+                "group relative w-full py-5 rounded-[2rem] text-[13px] tracking-[0.2em] font-black flex items-center justify-center gap-3 transition-all duration-500 overflow-hidden",
+                loading 
+                  ? "bg-white/5 text-slate-500 cursor-not-allowed" 
+                  : "bg-gradient-to-r from-accent to-fuchsia-600 text-white shadow-[0_10px_40px_-10px_rgba(168,85,247,0.5)] hover:shadow-[0_15px_50px_-5px_rgba(168,85,247,0.6)] hover:scale-[1.02] active:scale-95"
+              )}
             >
-              {loading ? "HAZIRLANIYOR..." : (
-                <>ODAYI KUR <ArrowRight size={16} /></>
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-slate-500 border-t-white rounded-full animate-spin" />
+                  HAZIRLANIYOR...
+                </div>
+              ) : (
+                <>
+                  <span>ODAYI KUR</span>
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-10 transition-opacity" />
+                </>
               )}
             </button>
           </motion.div>

@@ -66,40 +66,44 @@ function LobbyContent() {
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="text-center"
         >
           <div className="flex items-center justify-center gap-3 mb-2">
             <div className="relative group">
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="w-2 h-2 rounded-full bg-accent opacity-60 shadow-[0_0_12px_var(--accent)]"
+                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                className="w-2.5 h-2.5 rounded-full bg-accent opacity-60 shadow-[0_0_15px_var(--accent)]"
               />
-              <div className="absolute -top-1 -right-1 w-1 h-1 bg-green-500 rounded-full opacity-60" />
-              <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-slate-800 uppercase tracking-tighter opacity-10">v0.1.2-FINAL</span>
+              <motion.div 
+                animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-green-500 rounded-full" 
+              />
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-[9px] font-black text-slate-500 uppercase tracking-widest opacity-20 pointer-events-none">Stable</span>
             </div>
-            <h1 className="text-6xl font-extrabold tracking-tighter gradient-text leading-tight drop-shadow-2xl">
+            <h1 className="text-7xl font-black tracking-[-0.05em] gradient-text leading-tight drop-shadow-2xl">
               mirros
             </h1>
             <motion.div
               animate={{ rotate: -360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="w-2 h-2 rounded-full bg-accent-2 opacity-60 shadow-[0_0_12px_var(--accent-2)]"
+              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+              className="w-2.5 h-2.5 rounded-full bg-accent-2 opacity-60 shadow-[0_0_15px_var(--accent-2)]"
             />
           </div>
           
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-col items-center gap-3"
+            transition={{ delay: 0.5 }}
+            className="flex flex-col items-center gap-4"
           >
-            <p className="text-slate-400 font-medium tracking-tight flex items-center gap-2">
-              <Sparkles size={14} className="text-accent" />
+            <p className="text-slate-400 font-bold tracking-tight flex items-center gap-2.5 text-[15px]">
+              <Sparkles size={16} className="text-accent animate-pulse" />
               Beni ne kadar tanıyorsun?
             </p>
-            <div className="w-12 h-1 rounded-full bg-gradient-to-r from-accent to-accent-2 opacity-30" />
+            <div className="w-16 h-1 rounded-full bg-gradient-to-r from-accent to-accent-2 opacity-20" />
           </motion.div>
         </motion.div>
 
@@ -112,13 +116,13 @@ function LobbyContent() {
 
         {/* Action Sections with Staggered Animation */}
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
           layout
-          transition={{ delay: 0.3, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-          className="glass-card-elevated"
+          transition={{ delay: 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="glass-card-elevated rounded-[2.5rem] shadow-[0_20px_50px_-20px_rgba(168,85,247,0.3)]"
         >
-          <div className="p-5">
+          <div className="p-2">
             <CreateRoom onCreated={handleCreated} />
           </div>
         </motion.div>
@@ -126,20 +130,20 @@ function LobbyContent() {
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="flex items-center gap-4 px-2"
+          transition={{ delay: 0.7 }}
+          className="flex items-center gap-5 px-4"
         >
-          <div className="flex-1 h-px bg-white/5" />
-          <span className="text-[11px] font-black text-slate-500 uppercase tracking-[0.25em]">veya</span>
-          <div className="flex-1 h-px bg-white/5" />
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
+          <span className="text-[12px] font-black text-slate-600 uppercase tracking-[0.4em]">veya</span>
+          <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
         </motion.div>
 
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
           layout
-          transition={{ delay: 0.5, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-          className="glass-card p-6"
+          transition={{ delay: 0.6, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="glass-card rounded-[2rem] p-4 shadow-xl"
         >
           <JoinRoom onJoined={handleJoined} initialCode={joinCode} />
         </motion.div>

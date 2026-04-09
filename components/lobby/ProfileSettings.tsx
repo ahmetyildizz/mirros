@@ -57,20 +57,22 @@ export function ProfileSettings() {
         {!isEditing ? (
           <motion.div 
             key="display"
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 group cursor-pointer hover:bg-white/10 transition-all hover:border-accent/30"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="flex items-center gap-4 px-5 py-3 rounded-3xl bg-white/[0.03] border border-white/[0.08] group cursor-pointer hover:bg-white/[0.08] transition-all duration-300 hover:border-accent/40 shadow-sm hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.4)]"
             onClick={() => setIsEditing(true)}
           >
-            <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent">
-              <User size={16} />
+            <div className="w-10 h-10 rounded-2xl bg-accent/20 flex items-center justify-center text-accent shadow-inner group-hover:scale-110 transition-transform duration-500">
+              <User size={20} />
             </div>
             <div className="flex flex-col items-start">
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Hoş Geldin</span>
-              <span className="text-sm font-black text-white tracking-tight">{username || "Oyuncu"}</span>
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] opacity-60">Seni Tanıyoruz</span>
+              <span className="text-sm font-black text-white tracking-tight flex items-center gap-2">
+                {username || "Misafir"}
+                <Edit2 size={12} className="text-slate-500 group-hover:text-accent transition-colors translate-y-[1px]" />
+              </span>
             </div>
-            <Edit2 size={12} className="text-slate-500 group-hover:text-accent transition-colors" />
           </motion.div>
         ) : (
           <motion.div 

@@ -95,38 +95,37 @@ export function DailyWidget({ onAnsweredStatus }: DailyWidgetProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       layout
-      className="glass-card-elevated overflow-hidden relative group"
+      className="glass-card-elevated overflow-hidden relative group rounded-[2rem]"
     >
-      <div className="p-6 relative z-10">
-        <header className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
-              <Clock size={20} />
+      <div className="p-7 relative z-10">
+        <header className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-[1.25rem] bg-accent/10 flex items-center justify-center text-accent shadow-inner">
+              <Clock size={22} />
             </div>
             <div>
-              <h3 className="text-[14px] font-black text-white uppercase tracking-widest">Günün Sorusu</h3>
-              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter flex items-center gap-1">
+              <h3 className="text-[14px] font-black text-white uppercase tracking-[0.2em]">Günün Sorusu</h3>
+              <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 opacity-60">
                 <Globe size={10} /> Global İstatistikler
               </p>
             </div>
           </div>
           {(!data.answered || showStats) && (
-            <div className="px-3 py-1 rounded-full bg-white/[0.03] border border-white/5 flex items-center gap-2">
+            <div className="px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/5 flex items-center gap-2 shadow-sm">
               <Users size={12} className="text-slate-500" />
               <span className="text-[10px] font-black text-slate-300 tracking-tighter">{data.totalParticipants} KİŞİ</span>
             </div>
           )}
         </header>
 
-        <div className="space-y-6">
+        <div className="space-y-7">
           {(!data.answered || showStats) && (
-            <div className="space-y-1">
+            <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Sparkles size={10} className="text-accent" />
-                <span className="text-[9px] font-black text-accent uppercase tracking-widest">{data.question.category}</span>
+                <span className="text-[9px] font-black text-accent uppercase tracking-widest bg-accent/10 px-2 py-0.5 rounded-md">{data.question.category}</span>
               </div>
-              <h4 className="text-[17px] font-bold text-white leading-tight pr-8">
-                {data.question.text}
+              <h4 className="text-[18px] font-black text-white leading-tight pr-4 tracking-tight">
+                &quot;{data.question.text}&quot;
               </h4>
             </div>
           )}
@@ -135,21 +134,23 @@ export function DailyWidget({ onAnsweredStatus }: DailyWidgetProps) {
             {!data.answered ? (
               <motion.div 
                 key="options"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="grid grid-cols-1 gap-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="grid grid-cols-1 gap-3"
               >
                 {data.question.options.map((opt, i) => (
                   <motion.button
                     key={opt}
-                    whileHover={{ x: 4 }}
+                    whileHover={{ x: 6, backgroundColor: "rgba(255,255,255,0.06)" }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleAnswer(opt)}
-                    className="w-full text-left p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:border-accent/30 transition-all text-[13px] font-bold text-slate-300 flex items-center justify-between group/opt"
+                    className="w-full text-left p-5 rounded-[1.5rem] bg-white/[0.03] border border-white/[0.06] hover:border-accent/40 transition-all duration-300 text-[14px] font-bold text-slate-200 flex items-center justify-between group/opt shadow-sm"
                   >
                     {opt}
-                    <ArrowRight size={14} className="opacity-0 group-hover/opt:opacity-100 group-hover/opt:translate-x-1 transition-all text-accent" />
+                    <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center opacity-0 group-hover/opt:opacity-100 transition-all">
+                      <ArrowRight size={14} className="group-hover/opt:translate-x-0.5 transition-transform text-accent" />
+                    </div>
                   </motion.button>
                 ))}
               </motion.div>
@@ -159,19 +160,19 @@ export function DailyWidget({ onAnsweredStatus }: DailyWidgetProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="flex items-center justify-between p-4 rounded-2xl bg-accent/5 border border-accent/10"
+                className="flex items-center justify-between p-5 rounded-[1.5rem] bg-accent/5 border border-accent/10 shadow-inner"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-500">
-                    <CheckCircle2 size={16} />
+                  <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500">
+                    <CheckCircle2 size={18} />
                   </div>
-                  <span className="text-[11px] font-black uppercase tracking-widest text-slate-300">Bu soruyu yanıtladın</span>
+                  <span className="text-[11px] font-black uppercase tracking-widest text-slate-300">Yanıtın Kaydedildi</span>
                 </div>
                 <button 
                   onClick={() => setShowStats(true)}
-                  className="px-4 py-2 rounded-xl bg-accent/20 hover:bg-accent/30 text-accent text-[10px] font-black uppercase tracking-widest transition-all"
+                  className="px-5 py-2.5 rounded-2xl bg-accent text-white text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_5px_15px_rgba(168,85,247,0.3)]"
                 >
-                  Sonuçları Gör
+                  Sonuçlara Bak
                 </button>
               </motion.div>
             ) : (
@@ -180,7 +181,7 @@ export function DailyWidget({ onAnsweredStatus }: DailyWidgetProps) {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="space-y-3"
+                className="space-y-4"
               >
                 {data.question.options.map((opt) => {
                   const pct = data.percentages[opt] || 0;
@@ -188,7 +189,7 @@ export function DailyWidget({ onAnsweredStatus }: DailyWidgetProps) {
                   
                   return (
                     <div key={opt} className="relative group/res">
-                      <div className="flex items-center justify-between mb-1.5 px-1">
+                      <div className="flex items-center justify-between mb-2 px-1">
                         <span className={cn(
                           "text-[12px] font-bold flex items-center gap-2",
                           isUserAnswer ? "text-white" : "text-slate-500"
@@ -196,24 +197,32 @@ export function DailyWidget({ onAnsweredStatus }: DailyWidgetProps) {
                           {opt}
                           {isUserAnswer && <CheckCircle2 size={12} className="text-green-500" />}
                         </span>
-                        <span className={cn(
-                          "text-[12px] font-black",
-                          isUserAnswer ? "text-accent" : "text-slate-600"
-                        )}>
-                          %{pct} <span className="text-[10px] font-bold opacity-60 ml-1">({data.counts?.[opt] || 0} Kişi)</span>
-                        </span>
+                        <div className="flex items-end gap-1.5">
+                          <span className={cn(
+                            "text-[12px] font-black",
+                            isUserAnswer ? "text-accent" : "text-slate-200"
+                          )}>%{pct}</span>
+                          <span className="text-[9px] font-bold text-slate-600 uppercase tracking-tighter mb-[1px]">({data.counts?.[opt] || 0} Kişi)</span>
+                        </div>
                       </div>
                       
-                      <div className="h-2 w-full bg-white/[0.03] rounded-full overflow-hidden border border-white/5">
+                      <div className="h-2.5 w-full bg-white/[0.03] rounded-full overflow-hidden border border-white/5 relative shadow-inner">
                         <motion.div 
                           initial={{ width: 0 }}
                           animate={{ width: `${pct}%` }}
-                          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                           className={cn(
-                            "h-full rounded-full",
+                            "h-full rounded-full relative z-10",
                             isUserAnswer ? "bg-gradient-to-r from-accent to-fuchsia-500" : "bg-white/10"
                           )}
                         />
+                        {isUserAnswer && (
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${pct}%` }}
+                            className="absolute inset-0 bg-accent/20 blur-md"
+                          />
+                        )}
                       </div>
                     </div>
                   );

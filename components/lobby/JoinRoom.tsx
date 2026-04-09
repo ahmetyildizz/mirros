@@ -207,19 +207,22 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
           >
             <button 
               onClick={() => setStep("code")} 
-              className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-bold w-fit"
+              className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-bold w-fit mb-2 group"
             >
-              <ChevronLeft size={16} /> Kodu Değiştir
+              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                <ChevronLeft size={16} />
+              </div>
+              Kodu Değiştir
             </button>
 
             {/* İsim Girişi */}
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 fade-up">
+              <div className="flex items-center justify-between px-1">
                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Senin İsmin</p>
                 {username && !isEditingName && (
                   <button 
                     onClick={() => setIsEditingName(true)}
-                    className="text-[10px] font-bold text-accent hover:underline"
+                    className="text-[10px] font-bold text-accent hover:underline decoration-accent/30 underline-offset-4"
                   >
                     Değiştir
                   </button>
@@ -227,39 +230,45 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
               </div>
               
               {username && !isEditingName ? (
-                <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3 flex items-center justify-between">
-                  <span className="text-sm font-bold text-white">✨ {username}</span>
-                  <span className="text-[10px] text-slate-500 font-medium">Hoş geldin!</span>
+                <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl px-5 py-4 flex items-center justify-between shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">✨</span>
+                    <span className="text-sm font-black text-white">{username}</span>
+                  </div>
+                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter bg-white/5 px-2 py-0.5 rounded-md">Hoş geldin!</span>
                 </div>
               ) : (
-                <input
-                  className={cn(
-                    "input-glass w-full px-4 py-3 text-[14px] font-bold text-white placeholder:text-slate-600",
-                    "focus:border-accent/40 focus:shadow-[0_0_15px_rgba(168,85,247,0.1)] transition-all"
-                  )}
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="İsim yazın..."
-                  maxLength={20}
-                  autoFocus={!username}
-                />
+                <div className="relative group">
+                  <input
+                    className={cn(
+                      "input-glass w-full px-5 py-4 text-[14px] font-bold text-white placeholder:text-slate-600 rounded-[1.5rem]",
+                      "focus:border-accent/40 focus:shadow-[0_0_20px_rgba(168,85,247,0.1)] transition-all"
+                    )}
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="İsim yazın..."
+                    maxLength={20}
+                    autoFocus={!username}
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-20 text-[10px] font-black pointer-events-none uppercase">{username.length}/20</div>
+                </div>
               )}
             </div>
 
             {/* Avatar Seçimi */}
-            <div className="flex flex-col gap-3">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Karakterini Seç</p>
+            <div className="flex flex-col gap-4 fade-up [animation-delay:0.1s]">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Karakterini Seç</p>
               <div className="grid grid-cols-6 gap-2">
                 {AVATAR_OPTIONS.map((av) => (
                   <button
                     key={av}
                     onClick={() => setAvatar(av)}
                     className={cn(
-                      "w-10 h-10 flex items-center justify-center text-xl rounded-xl transition-all border",
+                      "w-11 h-11 flex items-center justify-center text-2xl rounded-2xl transition-all duration-300 border",
                       avatar === av 
-                        ? "bg-accent/20 border-accent/40 scale-110 shadow-[0_0_15px_rgba(168,85,247,0.3)]" 
-                        : "bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.06]"
+                        ? "bg-accent/20 border-accent/60 scale-110 shadow-[0_0_15px_rgba(168,85,247,0.3)] z-10" 
+                        : "bg-white/[0.02] border-white/[0.05] hover:bg-white/[0.08]"
                     )}
                   >
                     {av}
@@ -270,29 +279,34 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
 
             {/* Yaş Grubu Seçimi */}
             {!isCoupleNight && (
-              <div className="flex flex-col gap-3">
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Senin Yaş Grubun</p>
+              <div className="flex flex-col gap-4 fade-up [animation-delay:0.2s]">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Senin Yaş Grubun</p>
                 <div className="grid grid-cols-3 gap-2">
                   {AGE_OPTIONS.map((g) => (
                     <button
                       key={g.value}
                       onClick={() => setAge(g.value as AgeGroup)}
                       className={cn(
-                        "flex flex-col items-center gap-2 p-4 rounded-2xl transition-all border shrink-0",
+                        "flex flex-col items-center gap-2 p-4 rounded-3xl transition-all duration-300 border shrink-0",
                         ageGroup === g.value 
-                          ? "bg-accent/15 border-accent/40 shadow-[0_0_20px_rgba(168,85,247,0.15)]" 
-                          : "bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.06] hover:border-white/10"
+                          ? "bg-accent/15 border-accent/40 shadow-[0_0_20px_rgba(168,85,247,0.15)] ring-1 ring-accent/10" 
+                          : "bg-white/[0.02] border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10"
                       )}
                     >
-                      <g.icon className={cn(ageGroup === g.value ? "text-accent" : "text-slate-400")} size={24} />
+                      <div className={cn(
+                        "w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-500",
+                        ageGroup === g.value ? "bg-accent/20" : "bg-white/5"
+                      )}>
+                        <g.icon className={cn(ageGroup === g.value ? "text-accent" : "text-slate-500")} size={22} />
+                      </div>
                       <div className="flex flex-col items-center">
                         <span className={cn(
-                          "text-[12px] font-bold tracking-tight",
-                          ageGroup === g.value ? "text-white" : "text-slate-400"
+                          "text-[12px] font-black tracking-tight uppercase",
+                          ageGroup === g.value ? "text-white" : "text-slate-500"
                         )}>
                           {g.label}
                         </span>
-                        <span className="text-[8px] text-slate-500 font-medium whitespace-nowrap">{g.desc}</span>
+                        <span className="text-[8px] text-slate-500 font-bold whitespace-nowrap opacity-60 uppercase">{g.desc}</span>
                       </div>
                     </button>
                   ))}
@@ -301,20 +315,36 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
             )}
 
             {error && (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-2 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-[11px] font-bold"
+              >
                 <AlertCircle size={14} /> {error}
-              </div>
+              </motion.div>
             )}
 
             <button
               onClick={handleJoin}
               disabled={loading}
-              className="btn-gradient w-full py-4 rounded-2xl text-[13px] tracking-widest flex items-center justify-center gap-2 shadow-[0_4px_24px_rgba(168,85,247,0.4)]"
+              className={cn(
+                "group relative w-full py-5 rounded-[2rem] text-[13px] tracking-[0.2em] font-black flex items-center justify-center gap-3 transition-all duration-500 overflow-hidden",
+                loading 
+                  ? "bg-white/5 text-slate-500 cursor-not-allowed" 
+                  : "bg-gradient-to-r from-accent to-fuchsia-600 text-white shadow-[0_10px_40px_-10px_rgba(168,85,247,0.5)] hover:shadow-[0_15px_50px_-5px_rgba(168,85,247,0.6)] hover:scale-[1.02] active:scale-95"
+              )}
             >
               {loading ? (
-                <Loader2 className="animate-spin" size={20} />
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-slate-500 border-t-white rounded-full animate-spin" />
+                  KATILINIYOR...
+                </div>
               ) : (
-                <>ODAYA KATIL <ArrowRight size={16} /></>
+                <>
+                  <span>ODAYA KATIL</span>
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-10 transition-opacity" />
+                </>
               )}
             </button>
           </motion.div>
