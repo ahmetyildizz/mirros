@@ -442,46 +442,90 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
       {/* Results Overlay (Social) */}
       <AnimatePresence>
-        {!isQuiz && lastRoundScore && state === "ANSWERING" && (
+        {!isQuiz && lastRoundScore && state === "SCORING" && (
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-4 bottom-24 z-50 flex flex-col gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-xl bg-black/80"
           >
-            <div className="flex items-center gap-2 px-1">
-              <div className="h-px flex-1 bg-white/10" />
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Önceki Round</span>
-              <div className="h-px flex-1 bg-white/10" />
-            </div>
-
-            <div className="glass-card-elevated p-5 border-blue-500/10">
-              <div className="flex flex-col gap-1 mb-4">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Gerçek Cevap</span>
-                <p className="text-xl font-black text-cyan-400 drop-shadow-sm">{lastRoundScore.answer}</p>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              className="w-full max-w-[440px] glass-card-elevated p-6 md:p-8 space-y-8 border-accent/20 shadow-[0_0_50px_rgba(168,85,247,0.2)]"
+            >
+              <div className="text-center space-y-2">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                   <div className="h-px w-8 bg-accent/30" />
+                   <span className="text-[10px] font-black text-accent uppercase tracking-[0.3em]">Tur Özeti</span>
+                   <div className="h-px w-8 bg-accent/30" />
+                </div>
+                <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">Doğru Cevap Şuydu:</h3>
+                <p className="text-3xl font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] italic">
+                  &quot;{lastRoundScore.answer}&quot;
+                </p>
               </div>
 
-              <div className="flex flex-col gap-2">
-                {lastRoundScore.guessResults.map((g) => (
-                  <div key={g.userId} className={cn(
-                    "flex items-center gap-3 p-3 rounded-xl border transition-all",
-                    g.matchLevel === "EXACT" ? "bg-green-500/10 border-green-500/30" : g.matchLevel === "CLOSE" ? "bg-yellow-500/10 border-yellow-500/30" : "bg-white/[0.02] border-white/5"
-                  )}>
-                    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-lg shadow-inner">
+              <div className="space-y-3 max-h-[40dvh] overflow-y-auto pr-2 custom-scrollbar">
+                {lastRoundScore.guessResults.map((g, i) => (
+                  <motion.div 
+                    key={g.userId} 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    className={cn(
+                      "flex items-center gap-4 p-4 rounded-2xl border transition-all",
+                      g.matchLevel === "EXACT" ? "bg-green-500/10 border-green-500/30" : g.matchLevel === "CLOSE" ? "bg-yellow-500/10 border-yellow-500/30" : "bg-white/[0.02] border-white/5"
+                    )}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl shadow-inner border border-white/10">
                       {players.find(p => p.id === g.userId)?.avatarUrl || g.username?.[0].toUpperCase()}
                     </div>
                     <div className="flex-1 flex flex-col">
-                      <span className="text-[11px] font-bold text-slate-400">{g.username}</span>
-                      <span className="text-[13px] font-bold text-white">{g.guess}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-black text-slate-500 uppercase">{g.username}</span>
+                        {g.matchLevel === "EXACT" && <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />}
+                      </div>
+                      <span className="text-[15px] font-bold text-white tracking-tight">{g.guess}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Zap size={10} className={cn(g.points > 0 ? "text-yellow-400 fill-yellow-400" : "text-slate-600")} />
-                      <span className="text-[15px] font-black text-white">+{g.points}</span>
+                    <div className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded-lg">
+                      <Zap size={12} className={cn(g.points > 0 ? "text-yellow-400 fill-yellow-400" : "text-slate-600")} />
+                      <span className="text-[18px] font-black text-white tabular-nums">+{g.points}</span>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+
+              <div className="pt-6 border-t border-white/10 flex flex-col gap-4">
+                {useGameStore.getState().isHostPlayer ? (
+                  <button 
+                    onClick={async () => {
+                      if (!nextRoundData) return;
+                      const res = await fetch(`/api/rounds/${nextRoundData.id}/start`, { method: "POST" });
+                      if (!res.ok) {
+                        const err = await res.json();
+                        alert(err.error || "Tura geçilemedi");
+                      }
+                    }}
+                    className="w-full py-5 rounded-[24px] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                  >
+                    SIRADAKİ TURA GEÇ
+                    <ChevronRight size={18} />
+                  </button>
+                ) : (
+                  <div className="text-center space-y-2">
+                    <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest animate-pulse">
+                      Oda sahibinin turu başlatması bekleniyor...
+                    </p>
+                    <div className="flex justify-center gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-accent/30 animate-bounce [animation-delay:-0.3s]" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-accent/30 animate-bounce [animation-delay:-0.15s]" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-accent/30 animate-bounce" />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
           </motion.div>
         )}
 

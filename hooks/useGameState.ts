@@ -81,7 +81,7 @@ export function useGameState(gameId: string, myUserId: string) {
     setGameState, setQuestion, setMyRole, setCurrentRound,
     setActiveRoundId, setAnswererId, setPlayerScores,
     setLastRoundScore, setLastQuizResults, setGuessProgress, setPlayers,
-    setQuestionOptions, setLastPenalty,
+    setQuestionOptions, setLastPenalty, setNextRoundData,
   } = useGameStore();
 
   useEffect(() => {
@@ -96,6 +96,7 @@ export function useGameState(gameId: string, myUserId: string) {
       setAnswererId(data.answererId ?? null);
       setMyRole(data.answererId ? (data.answererId === myUserId ? "answerer" : "guesser") : "guesser");
       setGuessProgress(0, 0);
+      setNextRoundData(null); // Clear pre-loaded next round
       if (data.questionText) {
         setQuestion({ id: data.questionId, text: data.questionText, category: data.questionCategory ?? "", options: data.questionOptions ?? null });
       }
@@ -147,19 +148,19 @@ export function useGameState(gameId: string, myUserId: string) {
       setPlayerScores(data.playerScores);
       setLastPenalty(data.penalty ?? null);
 
-      // Eğer bir sonraki round bilgisi de geldiyse (pipelined), direkt geç
       if (data.nextRound) {
-        const next = data.nextRound;
-        setActiveRoundId(next.id);
-        setCurrentRound(next.number);
-        setAnswererId(next.answererId ?? null);
-        setMyRole(next.answererId ? (next.answererId === myUserId ? "answerer" : "guesser") : "guesser");
-        setGuessProgress(0, 0);
-        setQuestion({ id: next.questionId, text: next.questionText, category: next.questionCategory, options: next.questionOptions });
-        setGameState("ANSWERING");
-      } else {
-        setGameState("SCORING");
+        setNextRoundData({
+          id:       data.nextRound.id,
+          text:     data.nextRound.questionText,
+          category: data.nextRound.questionCategory,
+          options:  data.nextRound.questionOptions,
+          number:   data.nextRound.number,
+          answererId: data.nextRound.answererId,
+        });
       }
+
+      // Sadece skor aşamasına geç, yeni round verisi olsa bile (host başlatacak)
+      setGameState("SCORING");
     });
 
     channel.bind("game-finished", (data: GameFinishedPayload) => {
@@ -174,7 +175,7 @@ export function useGameState(gameId: string, myUserId: string) {
     };
   }, [gameId, myUserId, router, setGameState, setQuestion, setMyRole, setCurrentRound,
       setActiveRoundId, setAnswererId, setPlayerScores, setLastRoundScore, setLastQuizResults,
-      setGuessProgress, setPlayers, setQuestionOptions, setLastPenalty]);
+      setGuessProgress, setPlayers, setQuestionOptions, setLastPenalty, setNextRoundData]);
 }
 
 /** Bekleme odası için: oyuncular listesini dinle */
@@ -191,7 +192,6 @@ export function useRoomState(roomId: string) {
     });
 
     channel.bind("game-started", (data: any) => {
-      // Verileri store'a yaz ve UI'ın GamePage üzerinden render olmasını sağla
       useGameStore.getState().hydrate({
         gameId:        data.gameId,
         gameMode:      data.gameMode,
@@ -208,12 +208,9 @@ export function useRoomState(roomId: string) {
         },
         players:       data.players
       });
-      // Not: URL zaten /game/[roomId] ise GamePage içindeki veri kurtarma (hydrate) çalışacaktır.
-      // Bu event sadece lobi ekranında bekleyenlerin anlık geçişini hızlandırır.
     });
 
     channel.bind("reaction-received", (data: { userId: string; username: string; emoji: string }) => {
-      // Dispatch a custom event to show reaction in GamePage
       window.dispatchEvent(new CustomEvent("mirros-reaction", { detail: data }));
     });
 

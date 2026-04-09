@@ -303,15 +303,5 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
   const usedIds = allRoomRounds.map((r) => r.questionId);
   const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, isQuiz, game.room.ageGroup, game.room.category, game.roomId);
 
-  await pusherServer.trigger(`game-${gameId}`, "round-started", {
-    roundId:          round.id,
-    roundNumber:      nextNumber,
-    questionId:       question.id,
-    questionText:     question.text,
-    questionCategory: question.category,
-    questionOptions:  question.options ?? null,
-    answererId:       round.answererId ?? null,
-  });
-
   return { finished: false, round };
 }

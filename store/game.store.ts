@@ -67,6 +67,7 @@ interface GameStore {
   lastRoundScore:    RoundScore | null;
   lastQuizResults:   { correctAnswer: string; results: QuizResult[] } | null;
   lastPenalty:       string | null;
+  nextRoundData:     GameStore["question"] & { id: string; number: number; answererId: string | null } | null;
 
   // Tahmin durumu
   guessCount:    number;
@@ -93,6 +94,7 @@ interface GameStore {
   setGameMode:         (mode: "SOCIAL" | "QUIZ") => void;
   setQuestionOptions:  (options: string[]) => void;
   setTheme:            (theme: GameTheme) => void;
+  setNextRoundData:    (data: GameStore["nextRoundData"]) => void;
   hydrate:             (data: Partial<GameStore>) => void;
   reset:               () => void;
 }
@@ -114,6 +116,7 @@ const initialState = {
   lastRoundScore:   null,
   lastQuizResults:  null,
   lastPenalty:      null,
+  nextRoundData:    null,
   guessCount:       0,
   totalGuessers:    0,
   gameMode:         null,
@@ -144,6 +147,7 @@ export const useGameStore = create<GameStore>()(
       setGameMode:        (gameMode) => set({ gameMode }),
       setQuestionOptions: (options) => set((s) => s.question ? { question: { ...s.question, options } } : {}),
       setTheme:           (theme) => set({ theme }),
+      setNextRoundData:   (nextRoundData) => set({ nextRoundData }),
       hydrate:           (data) => set((s) => ({ ...s, ...data })),
       reset:             () => set(initialState),
     }),
