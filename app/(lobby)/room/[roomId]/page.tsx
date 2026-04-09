@@ -185,12 +185,15 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={() => router.push("/")}
-          className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-bold w-fit mb-2 group"
+          className="flex items-center gap-3 text-slate-100/60 hover:text-white transition-all duration-300 w-fit mb-4 group px-3 py-2 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/10 hover:border-white/20 shadow-lg"
         >
-          <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-            <ChevronLeft size={16} />
+          <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-accent/20 group-hover:text-accent transition-all duration-500 shadow-inner">
+            <ChevronLeft size={20} />
           </div>
-          Odadan Ayrıl
+          <div className="flex flex-col items-start leading-none gap-1">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-50">Yanlış mı bastın?</span>
+            <span className="text-[13px] font-black uppercase tracking-widest">Lobiye Dön</span>
+          </div>
         </motion.button>
 
         {/* Header Section */}
