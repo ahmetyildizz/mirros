@@ -12,11 +12,15 @@ import {
   Users, 
   MessageCircle,
   History,
-  Sparkles
+  Sparkles,
+  Lock,
+  PlayCircle,
+  Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ShareButton } from "./ShareButton";
 import { AIInsightCard } from "./AIInsightCard";
+import { AdBanner } from "@/components/shared/AdBanner";
 import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 import { useGameStore } from "@/store/game.store";
 
@@ -74,6 +78,9 @@ export function ResultsClient({
 }: Props) {
   const { setTheme } = useGameStore();
   const [mounted, setMounted] = useState(false);
+  const [isAIUnlocked, setIsAIUnlocked] = useState(false);
+  const [isAdLoading, setIsAdLoading] = useState(false);
+  const [adProgress, setAdProgress] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -103,6 +110,26 @@ export function ResultsClient({
 
     return () => clearInterval(interval);
   }, []);
+
+  const handleUnlockAI = () => {
+    setIsAdLoading(true);
+    let prog = 0;
+    const interval = setInterval(() => {
+      prog += 5;
+      setAdProgress(prog);
+      if (prog >= 100) {
+        clearInterval(interval);
+        setIsAIUnlocked(true);
+        setIsAdLoading(false);
+        confetti({
+          particleCount: 40,
+          spread: 50,
+          origin: { y: 0.8 },
+          colors: ["#A855F7", "#D946EF"]
+        });
+      }
+    }, 150); // Total ~3 seconds
+  };
 
   const top3 = leaderboard.slice(0, 3).map(p => ({
     ...p,
@@ -239,12 +266,62 @@ export function ResultsClient({
         </div>
       </motion.div>
       
-      {/* AI Insight Section */}
-      <AIInsightCard 
-        intro={aiReport.intro}
-        tag={aiReport.tag}
-        story={aiReport.story}
-      />
+      {/* Results Banner Ad */}
+      <AdBanner type="results" className="px-2" />
+      
+      {/* AI Insight Section (Locked/Unlocked) */}
+      <div className="relative">
+        <div className={cn(
+          "transition-all duration-700",
+          !isAIUnlocked ? "blur-xl grayscale opacity-40 pointer-events-none select-none h-[220px] overflow-hidden" : "blur-0"
+        )}>
+          <AIInsightCard 
+            intro={aiReport.intro}
+            tag={aiReport.tag}
+            story={aiReport.story}
+          />
+        </div>
+
+        {!isAIUnlocked && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 gap-6"
+          >
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] rounded-[2rem]" />
+            <div className="relative z-10 flex flex-col items-center gap-4 text-center">
+              <div className="w-16 h-16 rounded-[1.5rem] bg-accent/20 border border-accent/40 flex items-center justify-center text-accent shadow-lg shadow-accent/20">
+                {isAdLoading ? <Loader2 className="animate-spin" size={32} /> : <Lock size={32} />}
+              </div>
+              <div className="flex flex-col gap-1">
+                <h5 className="text-[15px] font-black text-white uppercase tracking-widest">Kişilik Analizi Kilitli</h5>
+                <p className="text-[11px] font-bold text-slate-400 max-w-[200px]">Kısa bir reklam izleyerek yapay zekanın senin hakkındaki analizini aç!</p>
+              </div>
+
+              {isAdLoading ? (
+                <div className="w-full max-w-[200px] flex flex-col gap-2">
+                  <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-accent"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${adProgress}%` }}
+                    />
+                  </div>
+                  <span className="text-[9px] font-black text-accent uppercase tracking-widest">Sponsor İçerik Yükleniyor...</span>
+                </div>
+              ) : (
+                <button
+                  onClick={handleUnlockAI}
+                  className="px-8 py-4 rounded-2xl bg-white text-black font-black text-[12px] tracking-[0.2em] flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(255,255,255,0.2)]"
+                >
+                  <PlayCircle size={18} />
+                  ANALİZİ AÇ
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </div>
       
       {/* Funniest Moment Section */}
       {funniestRound && (

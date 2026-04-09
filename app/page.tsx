@@ -9,6 +9,7 @@ import { useGameStore } from "@/store/game.store";
 import { Sparkles } from "lucide-react";
 import { DailyWidget } from "@/components/lobby/DailyWidget";
 import { ProfileSettings } from "@/components/lobby/ProfileSettings";
+import { AdBanner } from "@/components/shared/AdBanner";
 
 function LobbyContent() {
   const router   = useRouter();
@@ -159,12 +160,15 @@ function LobbyContent() {
           </motion.div>
         )}
 
+        {/* Advert Section */}
+        <AdBanner type="lobby" />
+
         {/* Footer */}
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.4 }}
           transition={{ delay: 1 }}
-          className="text-center text-[10px] font-bold text-slate-500 tracking-[0.2em] mt-2 uppercase"
+          className="text-center text-[10px] font-bold text-slate-500 tracking-[0.2em] mt-3 uppercase pb-4"
         >
           arkadaşlarını tanı · kendini keşfet
         </motion.p>
