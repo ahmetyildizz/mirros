@@ -7,7 +7,7 @@
     "dev:host": "cross-env DEV_USER_ID=dev-user-001 next dev -p 3000",
     "dev:guest": "cross-env DEV_USER_ID=dev-user-002 next dev -p 3001",
     "postinstall": "prisma generate",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint"
   },
