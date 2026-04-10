@@ -1,203 +1,179 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { SocialButtons } from "@/components/auth/SocialButtons";
+import { ChevronLeft, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
-  const router   = useRouter();
+  const router = useRouter();
+  const [view, setView] = useState<"OPTIONS" | "GUEST_NAME">("OPTIONS");
   const [username, setUsername] = useState("");
-  const [error,    setError]    = useState<string | null>(null);
-  const [loading,  setLoading]  = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [deviceId, setDeviceId] = useState<string>("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    // Cihaz kimliği yoksa oluştur ve sakla
+    let id = localStorage.getItem("mirros_device_id");
+    if (!id) {
+      id = "dev_" + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+      localStorage.setItem("mirros_device_id", id);
+    }
+    setDeviceId(id);
+
+    // Eğer zaten bir kullanıcı adı varsa otomatik doldur
+    const lastUsername = localStorage.getItem("mirros_last_username");
+    if (lastUsername) setUsername(lastUsername);
+  }, []);
+
+  const handleLogin = async (provider: "GUEST" | "GOOGLE" | "APPLE", customName?: string) => {
     setError(null);
     setLoading(true);
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: username.trim() }),
-    });
-    if (res.ok) {
-      router.push("/");
-    } else {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Giriş başarısız");
+
+    // Sosyal girişler için geçici isimler (Gerçek setup için SDK gelince güncellenecek)
+    const loginName = customName || (provider === "GOOGLE" ? "Google Kullanıcısı" : "Apple Kullanıcısı");
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          username: loginName.trim(),
+          provider,
+          deviceId
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem("mirros_last_username", loginName.trim());
+        router.push("/");
+      } else {
+        setError(data.error ?? "Giriş başarısız");
+        setLoading(false);
+      }
+    } catch (err) {
+      setError("Bağlantı hatası");
       setLoading(false);
     }
   };
 
   return (
-    <main style={s.page}>
+    <main className="min-h-dvh flex items-center justify-center p-6 bg-black relative overflow-hidden">
       {/* Aurora bg */}
-      <div className="aurora-bg" aria-hidden>
-        <div className="aurora-blob-1" />
-        <div className="aurora-blob-2" />
-        <div className="aurora-blob-3" />
-      </div>
+      <div className="aurora-bg fixed inset-0 pointer-events-none opacity-40" />
 
-      <div style={s.card} className="glass-card-elevated fade-up">
-        {/* Logo */}
-        <div style={s.logoWrap}>
-          <div style={s.logoOrb} />
-          <h1 className="gradient-text" style={s.logo}>mirros</h1>
-        </div>
-        <p style={s.sub}>Beni ne kadar tanıyorsun?</p>
-
-        <form onSubmit={handleSubmit} style={s.form}>
-          <div style={s.inputWrap}>
-            <span style={s.inputIcon}>👤</span>
-            <input
-              className="input-glass"
-              style={s.input}
-              type="text"
-              placeholder="Kullanıcı adın"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              autoFocus
-              maxLength={20}
-            />
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-sm glass-card-elevated p-8 flex flex-col items-center gap-8 relative z-10"
+      >
+        {/* Logo Section */}
+        <div className="flex flex-col items-center text-center">
+          <div className="relative mb-4">
+            <div className="absolute inset-0 bg-accent/30 blur-2xl rounded-full" />
+            <h1 className="text-4xl font-black gradient-text tracking-tighter relative z-10">mirros</h1>
           </div>
+          <p className="text-slate-400 font-medium text-sm tracking-wide">Beni ne kadar tanıyorsun?</p>
+        </div>
 
-          {error && (
-            <div style={s.errorBox}>
-              <span>⚠️</span>
-              <span>{error}</span>
-            </div>
+        <AnimatePresence mode="wait">
+          {view === "OPTIONS" ? (
+            <motion.div 
+              key="options"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              className="w-full space-y-4"
+            >
+              <SocialButtons 
+                provider="GOOGLE" 
+                onClick={() => handleLogin("GOOGLE")} 
+                isLoading={loading}
+              />
+              <SocialButtons 
+                provider="APPLE" 
+                onClick={() => handleLogin("APPLE")} 
+                isLoading={loading}
+              />
+              
+              <div className="relative py-4">
+                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/5" /></div>
+                <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[.3em] text-slate-500">
+                  <span className="bg-[#050505] px-4">VEYA</span>
+                </div>
+              </div>
+
+              <SocialButtons 
+                provider="GUEST" 
+                onClick={() => setView("GUEST_NAME")} 
+                isLoading={loading}
+              />
+
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-xs p-3 rounded-xl flex items-center gap-2">
+                  <span>⚠️</span> {error}
+                </div>
+              )}
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="guest-name"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="w-full space-y-6"
+            >
+              <button 
+                onClick={() => setView("OPTIONS")}
+                className="flex items-center gap-2 text-slate-500 hover:text-white text-xs font-bold transition-colors"
+              >
+                <ChevronLeft size={16} /> GERİ DÖN
+              </button>
+
+              <div className="space-y-4">
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">👤</span>
+                  <input
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 pl-10 text-white placeholder:text-slate-600 focus:border-accent/50 outline-none transition-all"
+                    type="text"
+                    placeholder="Ekranda görünecek adın"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    autoFocus
+                    maxLength={20}
+                  />
+                </div>
+
+                {error && (
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-xs p-3 rounded-xl flex items-center gap-2">
+                    <span>⚠️</span> {error}
+                  </div>
+                )}
+
+                <button
+                  onClick={() => handleLogin("GUEST", username)}
+                  disabled={loading || username.trim().length < 2}
+                  className="w-full py-4 rounded-2xl bg-white text-black font-black text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                >
+                  {loading ? <Loader2 className="animate-spin" size={18} /> : "OYUNA BAŞLA 👉"}
+                </button>
+              </div>
+
+              <p className="text-[10px] text-slate-500 text-center uppercase tracking-widest leading-relaxed">
+                İsim seçtiğinde bu cihaza kilitlenir,<br />başkası aynı ismi kullanamaz.
+              </p>
+            </motion.div>
           )}
+        </AnimatePresence>
 
-          <button
-            type="submit"
-            disabled={loading || username.trim().length < 2}
-            className="btn-gradient"
-            style={s.btn}
-          >
-            {loading ? (
-              <span style={s.btnInner}>
-                <span style={s.spinner} />
-                Giriş yapılıyor...
-              </span>
-            ) : (
-              "Devam Et →"
-            )}
-          </button>
-        </form>
-
-        <p style={s.hint}>Hesap yoksa otomatik oluşturulur</p>
-      </div>
+        <p className="text-[10px] text-slate-600 font-bold uppercase tracking-tighter opacity-40">
+          Powered by Mirros Engine v2.0
+        </p>
+      </motion.div>
     </main>
   );
 }
-
-const s = {
-  page: {
-    minHeight: "100dvh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "1.5rem",
-    position: "relative" as const,
-    zIndex: 1,
-  },
-  card: {
-    display: "flex",
-    flexDirection: "column" as const,
-    alignItems: "center",
-    gap: "1rem",
-    width: "100%",
-    maxWidth: 360,
-    padding: "2rem 1.5rem",
-  },
-  logoWrap: {
-    position: "relative" as const,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logoOrb: {
-    position: "absolute" as const,
-    width: 80,
-    height: 80,
-    borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(168,85,247,0.3) 0%, transparent 70%)",
-    filter: "blur(16px)",
-  },
-  logo: {
-    fontSize: "2.5rem",
-    fontWeight: 800,
-    letterSpacing: "-0.05em",
-    margin: 0,
-    position: "relative" as const,
-    zIndex: 1,
-  },
-  sub: {
-    color: "var(--fg-secondary)",
-    fontSize: "0.9rem",
-    fontWeight: 500,
-    marginTop: "-0.25rem",
-    textAlign: "center" as const,
-  },
-  form: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "0.75rem",
-    marginTop: "0.5rem",
-  },
-  inputWrap: {
-    position: "relative" as const,
-  },
-  inputIcon: {
-    position: "absolute" as const,
-    left: "0.875rem",
-    top: "50%",
-    transform: "translateY(-50%)",
-    fontSize: "1rem",
-    lineHeight: 1,
-    pointerEvents: "none" as const,
-  },
-  input: {
-    width: "100%",
-    padding: "0.875rem 1rem 0.875rem 2.75rem",
-    fontSize: "1rem",
-    fontFamily: "inherit",
-  },
-  errorBox: {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.4rem",
-    background: "rgba(248,113,113,0.12)",
-    border: "1px solid rgba(248,113,113,0.3)",
-    borderRadius: 10,
-    padding: "0.6rem 0.875rem",
-    color: "#FC8181",
-    fontSize: "0.85rem",
-    fontWeight: 500,
-  },
-  btn: {
-    width: "100%",
-    padding: "0.875rem",
-    fontSize: "1rem",
-    fontFamily: "inherit",
-  },
-  btnInner: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "0.5rem",
-  },
-  spinner: {
-    width: 16,
-    height: 16,
-    borderRadius: "50%",
-    border: "2px solid rgba(255,255,255,0.3)",
-    borderTopColor: "#fff",
-    display: "inline-block",
-    animation: "spin-slow 0.8s linear infinite",
-  },
-  hint: {
-    color: "var(--fg-muted)",
-    fontSize: "0.75rem",
-    textAlign: "center" as const,
-  },
-};
