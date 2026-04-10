@@ -14,7 +14,7 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Build-Version',
-            value: '0.1.3-Elite',
+            value: '0.2.0-Elite-Auth',
           },
         ],
       },
