@@ -98,6 +98,14 @@ export function CreateRoom({ onCreated }: Props) {
       });
       if (res.ok) {
         const data = await res.json();
+        
+        // Mobil cihazda geçiş reklamı göster
+        const { Capacitor } = await import("@capacitor/core");
+        const { AdMobService } = await import("@/lib/services/admob.service");
+        if (Capacitor.isNativePlatform()) {
+          AdMobService.showInterstitial();
+        }
+
         onCreated(data.id, data.code);
       } else if (res.status === 401) {
         window.location.href = "/login";

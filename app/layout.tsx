@@ -15,14 +15,17 @@ export const metadata: Metadata = {
 };
 
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { AdMobProvider } from "@/components/providers/AdMobProvider";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" className={`h-full ${jakarta.variable}`}>
       <body className="min-h-dvh flex flex-col antialiased">
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <AdMobProvider>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </AdMobProvider>
       </body>
     </html>
   );

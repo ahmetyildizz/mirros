@@ -22,6 +22,7 @@ interface QuizRoundScoredPayload {
   results:       QuizResult[];
   playerScores:  Record<string, number>;
   penalty?:      string | null;
+  nextRound?:    any; // Host'un ilerleyebilmesi için
 }
 
 interface AnswerSubmittedPayload {
@@ -119,6 +120,7 @@ export function useGameState(gameId: string, myUserId: string) {
       setLastQuizResults({ correctAnswer: data.correctAnswer, results: data.results });
       setPlayerScores(data.playerScores);
       setLastPenalty(data.penalty ?? null);
+      if (data.nextRound) setNextRoundData(data.nextRound);
       setGameState("SCORING");
     });
 
@@ -166,6 +168,10 @@ export function useGameState(gameId: string, myUserId: string) {
     channel.bind("game-finished", (data: GameFinishedPayload) => {
       setPlayerScores(data.playerScores);
       setGameState("END");
+      // Mobil cihazda geçiş reklamı göster
+      if (Capacitor.isNativePlatform()) {
+        AdMobService.showInterstitial();
+      }
       router.push(`/results/${data.gameId}`);
     });
 

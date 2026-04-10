@@ -6,7 +6,7 @@ import { rateLimit } from "@/lib/rateLimit";
 import { createAuditLog } from "@/lib/audit";
 
 const bodySchema = z.object({
-  username: z.string().min(2).max(20).regex(/^[a-zA-Z0-9_]+$/, "Sadece harf, rakam ve _ kullanabilirsin"),
+  username: z.string().min(2).max(20).regex(/^[a-zA-Z0-9_ğüşıöçĞÜŞİÖÇ ]+$/, "Harf, rakam, boşluk ve _ kullanabilirsin"),
 });
 
 export async function POST(req: NextRequest) {

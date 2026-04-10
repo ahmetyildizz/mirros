@@ -169,6 +169,10 @@ export const useGameStore = create<GameStore>()(
         state:        s.state,
         playerScores: s.playerScores,
         theme:        s.theme,
+        question:     s.question,
+        myRole:       s.myRole,
+        guessCount:   s.guessCount,
+        totalGuessers:s.totalGuessers,
       }),
     }
   )

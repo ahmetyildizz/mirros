@@ -190,11 +190,43 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     }
   }, [state, lastRoundScore]);
 
+  // Kategori degisirse temayı guncelle
+  useEffect(() => {
+    if (question?.category) {
+      setTheme(getThemeFromRoom(question.category, gameMode || "SOCIAL"));
+    }
+  }, [question?.category, gameMode, setTheme]);
+
   if (!gameId || !question) {
     return (
-      <main className="min-h-dvh flex flex-col items-center justify-center p-6 bg-black">
-        <Loader2 className="animate-spin text-accent mb-4" size={32} />
-        <p className="text-slate-400 font-bold tracking-widest text-xs uppercase">Mirros Yükleniyor...</p>
+      <main className="min-h-dvh flex flex-col items-center justify-center p-6 bg-black relative overflow-hidden">
+        <div className="aurora-bg fixed inset-0 pointer-events-none opacity-20" />
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          className="relative z-10 mb-6"
+        >
+          <Loader2 className="text-accent" size={48} />
+        </motion.div>
+        <div className="relative z-10 text-center">
+          <p className="text-white font-black tracking-[0.3em] text-sm uppercase mb-2 animate-pulse">Mirros Hazırlanıyor</p>
+          <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest opacity-60">Oyun verileri senkronize ediliyor...</p>
+        </div>
+        
+        {/* Safety Net: Eğer 5 saniye içinde yüklenmezse lobiye dön butonu göster */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 5 }}
+          className="mt-12 relative z-10"
+        >
+          <button 
+            onClick={() => router.replace("/")}
+            className="text-[10px] font-black text-slate-500 hover:text-white underline underline-offset-4 tracking-widest uppercase"
+          >
+            Çok mu uzun sürdü? Lobiye Dön
+          </button>
+        </motion.div>
       </main>
     );
   }
@@ -529,39 +561,101 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           </motion.div>
         )}
 
-        {/* Quiz Scoring Box */}
+        {/* Quiz Scoring Box (Full Screen) */}
         {isQuiz && state === "SCORING" && lastQuizResults && (
           <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="fixed inset-x-4 top-1/2 -translate-y-1/2 z-50 glass-card-elevated p-6 border-accent/20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 sm:p-12 overflow-y-auto"
           >
-            <div className="flex flex-col items-center gap-4 text-center mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-[0_0_20px_var(--accent-glow)]">
-                <Trophy className="text-white" size={24} />
-              </div>
-              <div>
-                <span className="text-[10px] font-black text-accent uppercase tracking-widest">Doğru Cevap</span>
-                <h4 className="text-2xl font-black text-white">{lastQuizResults.correctAnswer}</h4>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2 max-h-[40dvh] overflow-y-auto">
-              {lastQuizResults.results.map((r) => (
-                <div key={r.userId} className={cn(
-                  "flex items-center gap-3 p-3 rounded-xl border",
-                  r.correct ? "bg-green-500/10 border-green-500/30" : "bg-white/[0.02] border-white/5 opacity-60"
-                )}>
-                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-lg shadow-inner">
-                    {players.find(p => p.id === r.userId)?.avatarUrl || r.username?.[0].toUpperCase()}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">{r.username}</p>
-                    <p className="text-[14px] font-black text-white tracking-tight">{r.answer}</p>
-                  </div>
-                  {r.correct && <CheckCircle2 size={16} className="text-green-500" />}
+            <div className="w-full max-w-lg space-y-8 py-12">
+              <motion.div 
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="flex flex-col items-center gap-6 text-center"
+              >
+                <div className="w-20 h-20 rounded-[2.5rem] bg-accent/20 border border-accent/40 flex items-center justify-center shadow-[0_0_50px_rgba(168,85,247,0.3)] ring-1 ring-accent/30">
+                  <Trophy className="text-accent" size={40} />
                 </div>
-              ))}
+                <div className="space-y-1">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Bilgi Yarışması</span>
+                  <h3 className="text-3xl font-black text-white uppercase tracking-tight">Doğru Cevabı Kim Bildi?</h3>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-white/[0.03] border border-white/10 rounded-[2.5rem] p-8 space-y-4 shadow-2xl relative overflow-hidden group"
+              >
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent via-fuchsia-500 to-accent opacity-50" />
+                <div className="flex flex-col items-center gap-2">
+                  <span className="text-[10px] font-black text-accent uppercase tracking-widest bg-accent/10 px-3 py-1 rounded-full">Doğru Cevap</span>
+                  <h4 className="text-3xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">{lastQuizResults.correctAnswer}</h4>
+                </div>
+              </motion.div>
+
+              <div className="space-y-3">
+                {lastQuizResults.results.map((r, i) => (
+                  <motion.div 
+                    key={r.userId} 
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: i * 0.1 + 0.3 }}
+                    className={cn(
+                      "flex items-center gap-4 p-4 rounded-2xl border transition-all",
+                      r.correct 
+                        ? "bg-green-500/10 border-green-500/30 shadow-[0_0_20px_rgba(34,197,94,0.1)]" 
+                        : "bg-white/[0.02] border-white/5 opacity-60"
+                    )}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl shadow-inner border border-white/10">
+                      {players.find(p => p.id === r.userId)?.avatarUrl || r.username?.[0].toUpperCase()}
+                    </div>
+                    <div className="flex-1 flex flex-col">
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">{r.username}</span>
+                      <span className="text-[15px] font-bold text-white tracking-tight">{r.answer}</span>
+                    </div>
+                    {r.correct && <CheckCircle2 size={18} className="text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]" />}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Next Round Controller */}
+              <motion.div 
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 1 }}
+                className="pt-8"
+              >
+                {useGameStore.getState().isHostPlayer ? (
+                  <button 
+                    onClick={async () => {
+                      if (!nextRoundData) return;
+                      const res = await fetch(`/api/rounds/${nextRoundData.id}/start`, { method: "POST" });
+                      if (!res.ok) {
+                        const err = await res.json();
+                        alert(err.error || "Tura geçilemedi");
+                      }
+                    }}
+                    className="w-full py-6 rounded-[2rem] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_15px_30px_rgba(168,85,247,0.3)] hover:shadow-[0_20px_40px_rgba(168,85,247,0.4)] hover:scale-[1.03] active:scale-95 transition-all flex items-center justify-center gap-3 ring-1 ring-white/20"
+                  >
+                    SIRADAKİ SORUYA GEÇ
+                    <ArrowRight size={20} />
+                  </button>
+                ) : (
+                  <div className="flex flex-col items-center gap-3">
+                    <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] animate-pulse">
+                      Ev Sahibi Yeni Soruyu Getiriyor...
+                    </p>
+                    <div className="flex gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-accent/40 animate-bounce [animation-delay:-0.3s]" />
+                      <div className="w-2 h-2 rounded-full bg-accent/40 animate-bounce [animation-delay:-0.15s]" />
+                      <div className="w-2 h-2 rounded-full bg-accent/40 animate-bounce" />
+                    </div>
+                  </div>
+                )}
+              </motion.div>
             </div>
           </motion.div>
         )}

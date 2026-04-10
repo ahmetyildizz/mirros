@@ -9,6 +9,11 @@ const config: CapacitorConfig = {
     url: 'https://mirros.vercel.app',
     cleartext: true,
   },
+  plugins: {
+    AdMob: {
+      appId: 'ca-app-pub-3057274589981074~2543071348',
+    },
+  },
 };
 
 export default config;

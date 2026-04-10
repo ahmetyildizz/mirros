@@ -95,25 +95,44 @@ export async function POST(req: NextRequest) {
 
   const dbUser = await db.user.findUnique({ where: { id: user.id } });
 
-  await pusherServer.trigger(`room-${room.id}`, "player-joined", {
-    userId:    user.id,
-    username:  body.data.username ?? user.username,
-    avatarUrl: body.data.avatarUrl ?? dbUser?.avatarUrl,
-    role:      isFull && !alreadyIn ? "SPECTATOR" : "PLAYER",
-    players,
-  });
+  // Pusher bildirimi (Hata durumunda istek çökmemeli)
+  try {
+    await pusherServer.trigger(`room-${room.id}`, "player-joined", {
+      userId:    user.id,
+      username:  body.data.username ?? user.username,
+      avatarUrl: body.data.avatarUrl ?? dbUser?.avatarUrl,
+      role:      isFull && !alreadyIn ? "SPECTATOR" : "PLAYER",
+      players,
+    });
+  } catch (err) {
+    console.error("Pusher trigger failed (player-joined):", err);
+  }
 
   if (!alreadyIn && updated && updated.participants.length >= 2) {
     await db.room.update({ where: { id: room.id }, data: { status: "ACTIVE" } });
   }
 
   // Oda doldu → otomatik başlat (Sadece oyuncu sayısı dolunca, izleyici katıldığında değil)
+  let activeGameId = room.games[0]?.id || null;
+  
   if (updated) {
     const activePlayerCount = updated.participants.filter(p => (p as any).role !== "SPECTATOR").length;
     if (activePlayerCount >= room.maxPlayers) {
-      try { await startGame(room.id); } catch { /* zaten başlatılmış olabilir */ }
+      try { 
+        const gameRes = await startGame(room.id); 
+        if (gameRes?.game?.id) {
+          activeGameId = gameRes.game.id;
+        }
+      } catch (err) { 
+        console.error("Auto-start game failed:", err);
+      }
     }
   }
 
-  return NextResponse.json({ id: room.id, code: room.code, players });
+  return NextResponse.json({ 
+    id: room.id, 
+    code: room.code, 
+    players,
+    activeGameId 
+  });
 }

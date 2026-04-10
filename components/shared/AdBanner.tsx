@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Capacitor } from "@capacitor/core";
+import { AdMobService } from "@/lib/services/admob.service";
 
 interface AdBannerProps {
   type?: "lobby" | "results";
@@ -10,6 +13,20 @@ interface AdBannerProps {
 }
 
 export function AdBanner({ type = "lobby", className }: AdBannerProps) {
+  const isNative = Capacitor.isNativePlatform();
+
+  useEffect(() => {
+    if (isNative) {
+      AdMobService.initialize().then(() => {
+        AdMobService.showBanner();
+      });
+
+      return () => {
+        AdMobService.hideBanner();
+      };
+    }
+  }, [isNative]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -27,13 +44,19 @@ export function AdBanner({ type = "lobby", className }: AdBannerProps) {
         "relative rounded-[1.5rem] border border-white/[0.05] bg-white/[0.02] backdrop-blur-md px-4 py-8 flex flex-col items-center justify-center min-h-[100px] group",
         "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity"
       )}>
-        {/* Placeholder Content (To be replaced by real AdSense/AdMob script) */}
-        <div className="flex flex-col items-center gap-2 opacity-20 group-hover:opacity-40 transition-opacity">
-          <div className="w-8 h-8 rounded-full border border-dashed border-white/40 flex items-center justify-center">
-            <span className="text-[10px] font-black tracking-tighter">AD</span>
+        {/* Placeholder Content (Web or Loading state) */}
+        {!isNative ? (
+          <div className="flex flex-col items-center gap-2 opacity-20 group-hover:opacity-40 transition-opacity">
+            <div className="w-8 h-8 rounded-full border border-dashed border-white/40 flex items-center justify-center">
+              <span className="text-[10px] font-black tracking-tighter">AD</span>
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Reklam Alanı</span>
           </div>
-          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Reklam Alanı</span>
-        </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2 opacity-40 animate-pulse">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Mobil Reklam Yükleniyor...</span>
+          </div>
+        )}
 
         {/* Info Icon */}
         <div className="absolute top-2 right-2 opacity-10 hover:opacity-50 transition-opacity cursor-help">

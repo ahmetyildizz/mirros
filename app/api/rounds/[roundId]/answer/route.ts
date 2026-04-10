@@ -158,18 +158,38 @@ async function scoreQuizRound(roundId: string, gameId: string) {
     playerScores[s.guesserId] = (playerScores[s.guesserId] ?? 0) + s.points;
   }
 
+  // 2. Bir sonraki turu arkada başlat veya oyunu bitir
+  const { advanceGame } = await import("@/lib/services/game.service");
+  const advanceResult = await advanceGame(gameId, round.number);
+  const isFinished    = advanceResult.finished;
+  let nextRoundData: any = null;
+
+  if (!isFinished && advanceResult.round) {
+    // Round detaylarını al (Pusher'dan client'a göndereceğiz)
+    const nextR = await db.round.findUnique({
+      where: { id: advanceResult.round.id },
+      include: { question: true }
+    });
+    if (nextR) {
+      nextRoundData = {
+        id:               nextR.id,
+        number:           nextR.number,
+        questionId:       nextR.questionId,
+        questionText:     nextR.question.text,
+        questionCategory: nextR.question.category,
+        questionOptions:  nextR.question.options as string[] | null,
+        answererId:       nextR.answererId,
+      };
+    }
+  }
+
+  // 3. Tek bir event ile hem sonuçları hem de yeni soruyu gönder
   await pusherServer.trigger(`game-${gameId}`, "quiz-round-scored", {
     roundId,
     correctAnswer: correct,
     results,
     playerScores,
-    penalty:            round.question.penalty ?? null,
-    autoAdvanceAfterMs: 4000, // Client bu süre sonra /next endpoint'ini çağırır
+    penalty:   round.question.penalty ?? null,
+    nextRound: nextRoundData, // Host'un 'Sıradaki Tura Geç' butonu için gerekli
   });
-
-  // Sunucu-tarafı bekleme kaldırıldı (serverless timeout riski).
-  // Client, autoAdvanceAfterMs ms sonra POST /rounds/:id/next çağırmalı.
-  // Quiz modunda answererId null olduğundan next endpoint host'a açık bırakıldı.
-  const { advanceGame } = await import("@/lib/services/game.service");
-  await advanceGame(gameId, round.number);
 }

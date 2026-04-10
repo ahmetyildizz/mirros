@@ -131,23 +131,26 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
           username: username.trim() 
         }),
       });
+      
+      const data = await res.json().catch(() => ({}));
+
       if (res.ok) {
-        const data = await res.json();
         onJoined(data.id, data.code);
       } else if (res.status === 401) {
         window.location.href = "/login";
       } else {
-        const data = await res.json().catch(() => ({}));
         setError(data.error || "Odaya katılırken bir hata oluştu.");
         // Eğer oda bulunamadıysa veya kapandıysa koda geri dön
         if (res.status === 404 || res.status === 409) {
           setStep("code");
         }
       }
-    } catch {
+    } catch (err) {
+      console.error("Join error:", err);
       setError("Bağlantı hatası. İnternetini kontrol et.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
