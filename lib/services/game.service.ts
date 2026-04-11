@@ -139,8 +139,17 @@ export async function startGame(roomId: string) {
     });
   }
 
+  // Sadece odaya özel değil, bu katılımcıların oynadığı TÜM oyunlardaki soruları dışla
   const previousRounds = await db.round.findMany({
-    where: { game: { roomId } },
+    where: {
+      game: {
+        room: {
+          participants: {
+             some: { userId: { in: participantIds } }
+          }
+        }
+      }
+    },
     select: { questionId: true },
   });
   const usedIds = previousRounds.map((r) => r.questionId);
@@ -295,9 +304,17 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
   }
 
   const nextNumber = completedRoundNumber + 1;
-  // Bu odadaki tüm oyunların kullandığı soruları dışla
+  // Odadaki veya geçmişteki TÜM oyunların kullandığı soruları dışla
   const allRoomRounds = await db.round.findMany({
-    where: { game: { roomId: game.roomId } },
+    where: {
+      game: {
+        room: {
+          participants: {
+             some: { userId: { in: participantIds } }
+          }
+        }
+      }
+    },
     select: { questionId: true },
   });
   const usedIds = allRoomRounds.map((r) => r.questionId);
