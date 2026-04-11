@@ -137,6 +137,20 @@ async function main() {
     });
   }
 
+  const exposeQuestions = [
+    { text: "Kıyamet kopsa zombi istilasında grupta ilk kim ölür?", category: "Eğlence", penalty: "En yüksek oyu alan kişi zombilerin taklidini yapsın." },
+    { text: "Şu an en gizli sekmesi en tehlikeli olan kişi kimdir?", category: "Tehlike", penalty: "En yüksek oyu alan, telefonunun son 3 aramasını okur." },
+    { text: "Bir soygun yapsak ortadan ilk kim kaybolup bizi satar?", category: "İhanet", penalty: "Kazanan, masaya rüşvet veriyormuş taklidi yapsın." },
+    { text: "Zengin olsa bizi ilk kim tanımazlıktan gelir?", category: "Para", penalty: "Sanki milyoner olmuş gibi iğrenç bir zengin taklidi yapsın." },
+    { text: "Issız bir adaya düşsek grubun hayatta kalma şansını kim sıfırlar?", category: "Kaos", penalty: "Ağaçla kavga ediyormuş gibi yapsın." }
+  ];
+
+  for (const q of exposeQuestions) {
+    await db.question.create({
+      data: { text: q.text, category: q.category, gameMode: "EXPOSE", penalty: q.penalty, options: [], isActive: true },
+    });
+  }
+
   // Quiz çocuk
   for (const q of quizChild) {
     await db.question.create({
@@ -158,8 +172,8 @@ async function main() {
     });
   }
 
-  const total = socialQuestions.length + quizChild.length + quizAdult.length + quizWise.length;
-  console.log(`✓ ${total} soru eklendi`);
+  const total = socialQuestions.length + quizChild.length + quizAdult.length + quizWise.length + exposeQuestions.length;
+  console.log(`✓ ${total} soru eklendi (Expose dahi!)`);
 }
 
 main().catch(console.error).finally(() => db.$disconnect());
