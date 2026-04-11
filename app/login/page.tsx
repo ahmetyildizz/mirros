@@ -20,7 +20,9 @@ export default function LoginPage() {
   const [isNative, setIsNative] = useState(false);
 
   useEffect(() => {
-    setIsNative(Capacitor.isNativePlatform());
+    // Sadece native (iOS/Android) üzerinde aktif edelim. Safari veya masaüstü web tarayıcılarında sahte tetiklenmeyi engelleriz.
+    const isMobileNative = Capacitor.isNativePlatform() && Capacitor.getPlatform() !== 'web';
+    setIsNative(isMobileNative);
 
     // Google Sign-In initialization (Always for Google support)
     GoogleSignIn.initialize({
