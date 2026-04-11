@@ -5,7 +5,7 @@ import { createAuditLog } from "@/lib/audit";
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
-async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
+async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | "EXPOSE", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
   // Tema/Lobi Modu eşleştirmesi
   const themeMap: Record<string, string[]> = {
     "Çift Gecesi": ["İlişki", "Duygu", "Kişilik", "Yaşam"],
@@ -36,7 +36,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ", a
         isActive: true,
         gameMode,
         category: { in: targetCategories },
-        NOT: { options: { equals: [] } }, // Boş dizi olmayanları (şıklıları) bul
+        ...(gameMode === "EXPOSE" ? {} : { NOT: { options: { equals: [] } } }), // Boş dizi olmayanları (şıklıları) bul, EXPOSE ise şık gerekmez
         ...(ageGroup ? {
           OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
         } : {}),
@@ -118,6 +118,7 @@ export async function startGame(roomId: string) {
   if (room.status === "FINISHED") throw new Error("Oda kapandı");
 
   const isQuiz         = room.gameMode === "QUIZ";
+  const isExpose       = room.gameMode === "EXPOSE";
   const participantIds = participants.map((p) => p.userId);
   const totalRounds    = isQuiz ? QUIZ_ROUNDS : SOCIAL_ROUNDS;
 
@@ -183,11 +184,11 @@ export async function startGame(roomId: string) {
     });
 
     // İlk round için de kişiselleştirilmiş yaş grubunu bulalım
-    const answererId = isQuiz ? null : resolveSpotlight(1, participantIds);
-    const answerer   = room.participants.find((p) => p.userId === answererId);
-    const roundAgeGroup = isQuiz ? majorityAgeGroup : (answerer?.ageGroup ?? majorityAgeGroup);
+    const answererId = isQuiz || isExpose ? null : resolveSpotlight(1, participantIds);
+    const answerer   = answererId ? room.participants.find((p) => p.userId === answererId) : null;
+    const roundAgeGroup = isQuiz || isExpose ? majorityAgeGroup : (answerer?.ageGroup ?? majorityAgeGroup);
 
-    const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, isQuiz, roundAgeGroup, room.category, room.id, tx as any);
+    const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, room.gameMode, roundAgeGroup, room.category, room.id, tx as any);
     return { game: newGame, round, question };
   });
 
@@ -219,17 +220,20 @@ async function createRound(
   number:     number,
   participantIds: string[],
   usedQuestionIds: string[],
-  isQuiz:     boolean,
+  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE",
   ageGroup?:  string | null,
   category?:  string | null,
   roomId?:    string | null,
   tx = db
 ) {
-  const answererId = isQuiz ? null : resolveSpotlight(number, participantIds);
+  const isSocial = gameMode === "SOCIAL";
+  const isExpose = gameMode === "EXPOSE";
+  const isQuiz   = gameMode === "QUIZ";
+  const answererId = isSocial ? resolveSpotlight(number, participantIds) : null;
   
   // Eğer SOCIAL modundaysak, answerer'ın kendi yaş grubunu kullanalım (kişiselleştirme)
   let actualAgeGroup = ageGroup;
-  if (!isQuiz && answererId) {
+  if (isSocial && answererId) {
     const participant = await tx.roomParticipant.findFirst({
        where: {
          userId: answererId,
@@ -240,10 +244,10 @@ async function createRound(
     if (participant?.ageGroup) actualAgeGroup = participant.ageGroup;
   }
 
-  const question = await pickQuestion(usedQuestionIds, isQuiz ? "QUIZ" : "SOCIAL", actualAgeGroup, category, roomId, tx as any);
+  const question = await pickQuestion(usedQuestionIds, gameMode, actualAgeGroup, category, roomId, tx as any);
 
   const round = await (tx as any).round.create({
-    data: { gameId, number, questionId: question.id, answererId, status: "ANSWERING" },
+    data: { gameId, number, questionId: question.id, answererId, status: isExpose ? "GUESSING" : "ANSWERING" },
   });
 
   await createAuditLog({
@@ -318,7 +322,7 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
     select: { questionId: true },
   });
   const usedIds = allRoomRounds.map((r) => r.questionId);
-  const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, isQuiz, game.room.ageGroup, game.room.category, game.roomId);
+  const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, game.room.gameMode, game.room.ageGroup, game.room.category, game.roomId);
 
   return { finished: false, round };
 }

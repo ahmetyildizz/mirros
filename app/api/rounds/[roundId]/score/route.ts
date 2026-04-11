@@ -31,21 +31,45 @@ export async function POST(
   const isAnswerer = round.answererId === userId;
   if (!isHost && !isAnswerer) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
 
+  const isExpose = round.game.room.gameMode === "EXPOSE";
   const answer = round.answers.find((a) => a.userId === round.answererId);
-  if (!answer) return NextResponse.json({ error: "Cevap henüz gönderilmedi" }, { status: 422 });
+  if (!isExpose && !answer) return NextResponse.json({ error: "Cevap henüz gönderilmedi" }, { status: 422 });
 
   // Tüm tahminleri değerlendir (her guesser için ayrı skor)
   const scores: { id: string; gameId: string; roundId: string; guesserId: string; matchLevel: string; points: number; createdAt: Date }[] = [];
   const guessResults: { userId: string; username: string; guess: string; reason: string | null; matchLevel: string; points: number }[] = [];
 
+  // EXPOSE Modu için çoğunluk oylaması (Majority Vote)
+  let exposeWinnerContent: string | null = null;
+  if (isExpose && round.guesses.length > 0) {
+    const voteCounts: Record<string, number> = {};
+    for (const g of round.guesses) {
+      voteCounts[g.content] = (voteCounts[g.content] || 0) + 1;
+    }
+    exposeWinnerContent = Object.keys(voteCounts).reduce((a, b) => voteCounts[a] > voteCounts[b] ? a : b);
+  }
+
   for (const guess of round.guesses) {
-    const matchLevel = scoreRound(answer.content, guess.content);
-    const points     = getPoints(matchLevel);
+    let matchLevel = "WRONG";
+    let points = 0;
+
+    if (isExpose) {
+       if (guess.content === exposeWinnerContent) {
+         matchLevel = "EXACT";
+         points = 10;
+       } else {
+         matchLevel = "WRONG";
+         points = 0;
+       }
+    } else {
+       matchLevel = scoreRound(answer!.content, guess.content);
+       points     = getPoints(matchLevel as any);
+    }
 
     const score = await db.score.upsert({
       where:  { roundId_guesserId: { roundId, guesserId: guess.userId } },
-      create: { roundId, gameId: round.gameId, guesserId: guess.userId, matchLevel, points },
-      update: { matchLevel, points },
+      create: { roundId, gameId: round.gameId, guesserId: guess.userId, matchLevel: matchLevel as any, points },
+      update: { matchLevel: matchLevel as any, points },
     });
 
     const isSuccess = matchLevel === "EXACT" || matchLevel === "CLOSE";
@@ -112,7 +136,7 @@ export async function POST(
   await pusherServer.trigger(`game-${round.gameId}`, "round-scored", {
     roundId:      roundId,
     answererId:   round.answererId,
-    answer:       answer.content,
+    answer:       isExpose ? exposeWinnerContent : answer!.content,
     guessResults,
     playerScores,
     penalty:      round.question?.penalty ?? null,

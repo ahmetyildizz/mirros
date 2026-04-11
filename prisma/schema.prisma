@@ -220,6 +220,7 @@ enum Difficulty {
 enum GameMode {
   SOCIAL
   QUIZ
+  EXPOSE
 }
 
 enum AgeGroup {

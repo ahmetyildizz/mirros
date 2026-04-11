@@ -42,6 +42,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     setGameState, setMyRole, setAnswererId,
   } = useGameStore();
   const isQuiz = gameMode === "QUIZ";
+  const isExpose = gameMode === "EXPOSE";
 
   const [myUserId, setMyUserId]   = useState<string | null>(null);
   const [pastAnswers, setPastAnswers] = useState<any[]>([]);
@@ -59,7 +60,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
         
         if (me?.role === "SPECTATOR") {
           setMyRole("spectator");
-        } else if (store.gameMode === "QUIZ") {
+        } else if (store.gameMode === "QUIZ" || store.gameMode === "EXPOSE") {
           setMyRole("guesser");
         } else {
           setMyRole(store.answererId === data.id ? "answerer" : "guesser");
@@ -69,7 +70,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   }, [setMyRole]);
 
   useEffect(() => {
-    if (isQuiz) return;
+    if (isQuiz || isExpose) return;
     if (!myUserId || !answererId) return;
     
     const me = players.find(p => p.id === myUserId);
@@ -78,7 +79,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     } else {
       setMyRole(answererId === myUserId ? "answerer" : "guesser");
     }
-  }, [answererId, myUserId, setMyRole, isQuiz, players]);
+  }, [answererId, myUserId, setMyRole, isQuiz, isExpose, players]);
 
   useGameState(gameId ?? "", myUserId ?? "");
   useRoomState(roomId);
@@ -127,7 +128,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
         }
         if (myUserId) {
           const me = data.players.find((p: any) => p.id === myUserId);
-          const role = me?.role === "SPECTATOR" ? "spectator" : (data.gameMode === "QUIZ" ? "guesser" : (data.answererId === myUserId ? "answerer" : "guesser"));
+          const role = me?.role === "SPECTATOR" ? "spectator" : (data.gameMode === "QUIZ" || data.gameMode === "EXPOSE" ? "guesser" : (data.answererId === myUserId ? "answerer" : "guesser"));
           useGameStore.getState().setMyRole(role);
         }
       }
@@ -148,14 +149,19 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   }, [state]);
 
   useEffect(() => {
-    if (state !== "GUESSING" || !isAnswerer) return;
+    if (state !== "GUESSING") return;
+    const { isHostPlayer } = useGameStore.getState();
+    const canTrigger = isAnswerer || ((isQuiz || isExpose) && isHostPlayer);
+    
+    if (!canTrigger) return;
+
     if (guessCount > 0 && guessCount >= totalGuessers) {
       if (activeRoundId && scoringRoundRef.current !== activeRoundId) {
         scoringRoundRef.current = activeRoundId;
         triggerScore();
       }
     }
-  }, [guessCount, totalGuessers, state, isAnswerer, activeRoundId]);
+  }, [guessCount, totalGuessers, state, isAnswerer, isQuiz, isExpose, activeRoundId]);
 
   useEffect(() => {
     if (state !== "SCORING") return;
@@ -437,7 +443,16 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     </div>
                   ) : (
                     <div className="flex flex-col gap-6">
-                      {question.options ? (
+                      {isExpose ? (
+                        <MultipleChoiceInput 
+                          options={players.filter(p => p.role !== "SPECTATOR").map(p => p.username || "Anonim")} 
+                          onSubmit={submitGuess} 
+                          allowFreeText={false} 
+                          showReason={true} 
+                          gameId={gameId} 
+                          username={players.find(p => p.id === myUserId)?.username} 
+                        />
+                      ) : question.options ? (
                         <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                       ) : (
                         <GuessInput opponentName={spotlightPlayer?.username ?? "Arkadaşın"} onSubmit={submitGuess} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
@@ -494,7 +509,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 </div>
                 <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">Doğru Cevap Şuydu:</h3>
                 <p className="text-3xl font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] italic">
-                  &quot;{lastRoundScore.answer}&quot;
+                  {isExpose ? `En Çok Oy Alan: "${lastRoundScore.answer}"` : `"${lastRoundScore.answer}"`}
                 </p>
               </div>
 

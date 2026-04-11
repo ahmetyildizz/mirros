@@ -1,7 +1,8 @@
 import type { GameTheme } from "@/store/game.store";
 
-export function getThemeFromRoom(category: string | null, gameMode: "SOCIAL" | "QUIZ"): GameTheme {
+export function getThemeFromRoom(category: string | null, gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | string): GameTheme {
   if (gameMode === "QUIZ") return "intel";
+  if (gameMode === "EXPOSE") return "neon";
   if (!category) return "purple";
 
   const lower = category.toLowerCase();

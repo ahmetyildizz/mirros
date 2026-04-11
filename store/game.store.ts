@@ -8,7 +8,7 @@ export type GameState =
   | "SCORING"
   | "END";
 
-export type GameTheme = "purple" | "love" | "warm" | "intel";
+export type GameTheme = "purple" | "love" | "warm" | "intel" | "neon";
 
 export type MatchLevel = "EXACT" | "CLOSE" | "WRONG";
 
@@ -56,7 +56,7 @@ interface GameStore {
   myRole:        "answerer" | "guesser" | "spectator" | null;
   activeRoundId: string | null;
   answererId:    string | null;
-  gameMode:      "SOCIAL" | "QUIZ" | null;
+  gameMode:      "SOCIAL" | "QUIZ" | "EXPOSE" | null;
   theme:         GameTheme;
 
   // Oyuncular
@@ -91,7 +91,7 @@ interface GameStore {
   setLastQuizResults: (r: GameStore["lastQuizResults"]) => void;
   setLastPenalty:     (p: string | null) => void;
   setGuessProgress:    (count: number, total: number) => void;
-  setGameMode:         (mode: "SOCIAL" | "QUIZ") => void;
+  setGameMode:         (mode: "SOCIAL" | "QUIZ" | "EXPOSE") => void;
   setQuestionOptions:  (options: string[]) => void;
   setTheme:            (theme: GameTheme) => void;
   setNextRoundData:    (data: GameStore["nextRoundData"]) => void;

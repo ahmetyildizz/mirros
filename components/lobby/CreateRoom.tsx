@@ -13,7 +13,8 @@ import {
   ArrowRight,
   Baby,
   User,
-  Crown
+  Crown,
+  Flame
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGameStore } from "@/store/game.store";
@@ -23,7 +24,7 @@ interface Props {
   onCreated: (roomId: string, code: string) => void;
 }
 
-type GameMode = "SOCIAL" | "QUIZ";
+type GameMode = "SOCIAL" | "QUIZ" | "EXPOSE";
 type AgeGroup = "CHILD" | "ADULT" | "WISE";
 
 interface Template {
@@ -38,6 +39,7 @@ interface Template {
 
 const TEMPLATES: Template[] = [
   { icon: Users,      label: "Çift Gecesi",      desc: "Birbirinizi ne kadar tanıyorsunuz?", gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 2,  color: "from-rose-500 to-pink-600" },
+  { icon: Flame,      label: "Dedikodu Masası",  desc: "Grupta en çok kim... (Yüzleşme)",    gameMode: "EXPOSE", ageGroup: "ADULT", maxPlayers: 10, color: "from-red-500 to-orange-600" },
   { icon: Users,      label: "Aile Toplantısı", desc: "Aile bağını güçlendirin, birlikte gülün",    gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 6,  color: "from-purple-500 to-indigo-600" },
   { icon: Cake,       label: "Doğum Günü",        desc: "Misafirler konuğu ne kadar tanıyor?",       gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 8,  color: "from-orange-400 to-red-500" },
   { icon: Briefcase,  label: "Takım Building",    desc: "Ekip arkadaşlarınızı keşfedin",             gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 10, color: "from-cyan-500 to-blue-600" },
@@ -66,6 +68,7 @@ export function CreateRoom({ onCreated }: Props) {
     // Apply theme
     let theme: GameTheme = "purple";
     if (tpl.gameMode === "QUIZ") theme = "intel";
+    else if (tpl.gameMode === "EXPOSE") theme = "neon";
     else if (tpl.label === "Çift Gecesi") theme = "love";
     else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü") theme = "warm";
     setTheme(theme);
