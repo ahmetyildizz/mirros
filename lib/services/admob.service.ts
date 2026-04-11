@@ -59,7 +59,12 @@ export const AdMobService = {
   },
 
   async showInterstitial() {
-    if (!Capacitor.isNativePlatform()) return;
+    if (!Capacitor.isNativePlatform()) {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("mock-interstitial"));
+      }
+      return;
+    }
 
     // FREQUENCY CAPPING: Check cooldown
     const now = Date.now();
