@@ -23,6 +23,7 @@ import type { Player } from "@/store/game.store";
 import { cn } from "@/lib/utils";
 import { ManageQuestions } from "@/components/lobby/ManageQuestions";
 import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
+import QRCode from "react-qr-code";
 
 interface GameStartedPayload {
   gameId:           string;
@@ -239,6 +240,18 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
               {roomCode ?? "——"}
             </h2>
           </div>
+
+          {/* QR Code Presentation */}
+          {roomCode && (
+            <div className="p-3 bg-white rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:scale-105 transition-transform">
+              <QRCode 
+                value={typeof window !== "undefined" ? `${window.location.origin}/?code=${roomCode}` : `https://mirros.vercel.app/?code=${roomCode}`}
+                size={140}
+                level="H"
+                className="rounded-lg"
+              />
+            </div>
+          )}
 
           <div className="flex w-full gap-3">
             <button

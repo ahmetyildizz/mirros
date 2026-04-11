@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import html2canvas from "html2canvas";
 import { 
   Share2, 
   Download, 
@@ -24,6 +25,8 @@ interface Props {
 export function ShareButton({ familiarity, gameId, funniestQuestion, funniestAnswer }: Props) {
   const [copied,      setCopied]      = useState(false);
   const [showCard,    setShowCard]    = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const emoji = familiarity >= 90 ? "🔥" : familiarity >= 70 ? "💜" : familiarity >= 50 ? "✨" : familiarity >= 30 ? "🌱" : "🌙";
   const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/results/${gameId}` : "";
@@ -50,6 +53,24 @@ export function ShareButton({ familiarity, gameId, funniestQuestion, funniestAns
 
   const handleWhatsApp = () => {
     window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
+  };
+
+  const handleDownloadImage = async () => {
+    if (!cardRef.current) return;
+    setIsGenerating(true);
+    try {
+      // scale: 3 for ultra crisp text on Retina/Story displays
+      const canvas = await html2canvas(cardRef.current, { scale: 3, useCORS: true, backgroundColor: "#000000" });
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = `mirros-skor-${familiarity}pct.png`;
+      link.click();
+    } catch(err) {
+      console.error("Export failed:", err);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -100,12 +121,12 @@ export function ShareButton({ familiarity, gameId, funniestQuestion, funniestAns
               className="relative w-full max-w-[380px] flex flex-col items-center gap-6"
             >
               <div className="text-center">
-                <p className="text-[13px] font-black text-white/50 uppercase tracking-[0.2em] mb-1">Paylaşılabilir Kart</p>
-                <p className="text-[11px] font-medium text-slate-500 leading-tight">Bu ekranın görüntüsünü alarak arkadaşlarınla paylaş!</p>
+                <p className="text-[13px] font-black text-white/50 uppercase tracking-[0.2em] mb-1">Sosyal Medya Kartı</p>
+                <p className="text-[11px] font-medium text-slate-500 leading-tight">Bu kartı indirip Instagram veya TikTok hikayende paylaş!</p>
               </div>
 
               {/* SHAREABLE CARD */}
-              <div className="relative w-full aspect-[9/16] rounded-[32px] overflow-hidden border border-white/10 shadow-2xl group">
+              <div ref={cardRef} className="relative w-full aspect-[9/16] rounded-[32px] overflow-hidden border border-white/10 shadow-2xl group">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#1a0a2e] to-[#0d0d0d]" />
                 
                 {/* Aurora Blobs for card */}
@@ -144,13 +165,24 @@ export function ShareButton({ familiarity, gameId, funniestQuestion, funniestAns
                 </div>
               </div>
 
-              <motion.button 
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setShowCard(false)}
-                className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white"
-              >
-                <X size={24} />
-              </motion.button>
+              <div className="flex w-full gap-3">
+                <button 
+                  disabled={isGenerating}
+                  onClick={handleDownloadImage}
+                  className="flex-1 bg-accent hover:bg-accent/80 text-white font-black text-[13px] tracking-widest uppercase py-4 rounded-2xl flex items-center justify-center gap-2 transition-all"
+                >
+                  {isGenerating ? <Download size={18} className="animate-bounce" /> : <Download size={18} />}
+                  {isGenerating ? "İNDİRİLİYOR..." : "KARTI İNDİR"}
+                </button>
+                
+                <motion.button 
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setShowCard(false)}
+                  className="w-14 h-[52px] rounded-2xl bg-white/10 flex items-center justify-center text-white shrink-0"
+                >
+                  <X size={24} />
+                </motion.button>
+              </div>
             </motion.div>
           </div>
         )}
