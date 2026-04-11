@@ -3,5 +3,11 @@ import { requireAuth } from "@/lib/auth/session";
 
 export async function GET() {
   const user = await requireAuth();
-  return NextResponse.json({ id: user.id, username: user.username });
+  return NextResponse.json({ 
+    id: user.id, 
+    username: user.username,
+    email: user.email,
+    provider: user.provider,
+    avatarUrl: user.avatarUrl
+  });
 }

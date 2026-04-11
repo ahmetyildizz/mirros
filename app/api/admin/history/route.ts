@@ -40,7 +40,15 @@ export async function GET(req: NextRequest) {
       totalRounds: await db.round.count(),
     };
 
-    return NextResponse.json({ games, stats });
+    const auditLogs = await db.auditLog.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      include: {
+        user: { select: { username: true, email: true, avatarUrl: true } }
+      }
+    });
+
+    return NextResponse.json({ games, stats, auditLogs });
   } catch (error) {
     console.error("Admin history error:", error);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

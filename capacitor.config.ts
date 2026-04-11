@@ -13,6 +13,11 @@ const config: CapacitorConfig = {
     AdMob: {
       appId: 'ca-app-pub-3057274589981074~2543071348',
     },
+    GoogleAuth: {
+      scopes: ['profile', 'email'],
+      serverClientId: '43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com',
+      forceCodeForRefreshToken: true,
+    },
   },
 };
 

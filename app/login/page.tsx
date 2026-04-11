@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { SocialButtons } from "@/components/auth/SocialButtons";
 import { ChevronLeft, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Capacitor } from "@capacitor/core";
+import { GoogleSignIn } from "@capawesome/capacitor-google-sign-in";
+import { SignInWithApple } from "@capacitor-community/apple-sign-in";
+
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,8 +17,37 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [deviceId, setDeviceId] = useState<string>("");
+  const [isNative, setIsNative] = useState(false);
 
   useEffect(() => {
+    setIsNative(Capacitor.isNativePlatform());
+
+    // Google Sign-In initialization (Always for Google support)
+    GoogleSignIn.initialize({
+      clientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
+      webClientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
+      redirectUrl: "https://mirros.vercel.app/login",
+      redirectUri: "https://mirros.vercel.app/login",
+    }).catch(console.error);
+
+    // Web Redirect Callback (Handle returning from Google login on web)
+    if (!Capacitor.isNativePlatform()) {
+      const url = window.location.href;
+      // Sadece URL'de OAuth parametreleri varsa callback'i tetikle (Çökmeyi önlemek için)
+      if (url.includes("code=") || url.includes("id_token=") || url.includes("state=")) {
+        GoogleSignIn.handleRedirectCallback()
+          .then((result) => {
+            if (result && result.idToken) {
+              handleLogin("GOOGLE", undefined, result.idToken);
+            }
+          })
+          .catch((err) => {
+            console.error("Redirect callback error handled:", err);
+            // Hata sessizce yakalanır, uygulama çökmez
+          });
+      }
+    }
+
     // Cihaz kimliği yoksa oluştur ve sakla
     let id = localStorage.getItem("mirros_device_id");
     if (!id) {
@@ -29,34 +61,80 @@ export default function LoginPage() {
     if (lastUsername) setUsername(lastUsername);
   }, []);
 
-  const handleLogin = async (provider: "GUEST" | "GOOGLE" | "APPLE", customName?: string) => {
+  const handleLogin = async (provider: "GUEST" | "GOOGLE" | "APPLE", customName?: string, existingToken?: string) => {
     setError(null);
     setLoading(true);
 
-    // Sosyal girişler için geçici isimler (Gerçek setup için SDK gelince güncellenecek)
-    const loginName = customName || (provider === "GOOGLE" ? "Google Kullanıcısı" : "Apple Kullanıcısı");
-
     try {
+      // Early Init for Google on Web
+      if (provider === "GOOGLE") {
+        await GoogleSignIn.initialize({
+          clientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
+          webClientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
+          redirectUrl: "https://mirros.vercel.app/login",
+          redirectUri: "https://mirros.vercel.app/login",
+        }).catch(console.error);
+      }
+
+      let token: string | undefined = existingToken;
+      let loginName = customName;
+
+      // 1. Auth Akışı (Native & Web)
+      if (provider !== "GUEST" && !token) {
+        if (provider === "GOOGLE") {
+          const result = await GoogleSignIn.signIn({
+            clientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
+            webClientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
+            serverClientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
+            // Shotgun redirect params
+            redirectUrl: "https://mirros.vercel.app/login",
+            redirectUri: "https://mirros.vercel.app/login",
+          });
+          token = result.idToken;
+          loginName = result.authentication.accessToken; // Geçici
+        } else if (provider === "APPLE") {
+          // Apple sadece native'de kalsın (Web kurulumu farklı)
+          if (Capacitor.isNativePlatform()) {
+            const result = await SignInWithApple.authorize({
+              clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID || "com.mirros.app",
+              redirectURI: "https://mirros.vercel.app/api/auth/callback/apple",
+              scopes: "email name",
+            });
+            token = result.response.identityToken;
+          } else {
+            throw new Error("Apple Girişi şu an sadece mobil uygulamada destekleniyor.");
+          }
+        }
+      }
+
+      // 2. Backend Api Çağrısı
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          username: loginName.trim(),
+          username: loginName?.trim(),
           provider,
-          deviceId
+          deviceId,
+          token
         }),
       });
 
       const data = await res.json();
       if (res.ok) {
-        localStorage.setItem("mirros_last_username", loginName.trim());
+        localStorage.setItem("mirros_last_username", data.username);
         router.push("/");
       } else {
         setError(data.error ?? "Giriş başarısız");
         setLoading(false);
       }
-    } catch (err) {
-      setError("Bağlantı hatası");
+    } catch (err: any) {
+      console.error("Login error:", err);
+      // Kullanıcı iptal ettiyse loading'i kapa ama hata basma
+      if (err.message?.includes("cancel") || err.code === "CANCELLED") {
+        setLoading(false);
+        return;
+      }
+      setError("Giriş hatası: " + (err.message || "Bağlantı hatası veya İptal edildi"));
       setLoading(false);
     }
   };
@@ -94,11 +172,13 @@ export default function LoginPage() {
                 onClick={() => handleLogin("GOOGLE")} 
                 isLoading={loading}
               />
-              <SocialButtons 
-                provider="APPLE" 
-                onClick={() => handleLogin("APPLE")} 
-                isLoading={loading}
-              />
+              {isNative && (
+                <SocialButtons 
+                  provider="APPLE" 
+                  onClick={() => handleLogin("APPLE")} 
+                  isLoading={loading}
+                />
+              )}
               
               <div className="relative py-4">
                 <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/5" /></div>

@@ -64,6 +64,15 @@ export async function POST(
       points,
       streak:    updatedParticipant.streak
     } as any);
+
+    await createAuditLog({
+      action: "SUBMIT_SCORE",
+      entityType: "SCORE",
+      entityId: score.id,
+      resource: `Round ${roundId} scored for guesser ${guess.userId}`,
+      userId: userId,
+      details: { points, matchLevel }
+    });
   }
 
   await db.round.update({ where: { id: roundId }, data: { status: "SCORED" } });

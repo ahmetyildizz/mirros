@@ -12,6 +12,7 @@ model User {
   username    String?           @unique
   deviceId    String?           @unique
   provider    String            @default("GUEST")
+  providerId  String?           @unique
   avatarUrl   String?
   createdAt   DateTime          @default(now())
   answers     Answer[]
@@ -23,8 +24,9 @@ model User {
   scores      Score[]
   auditLogs   AuditLog[]
   dailyAnswers DailyAnswer[]
-
+  
   @@index([deviceId])
+  @@index([providerId])
 }
 
 model Room {

@@ -27,6 +27,7 @@ interface AdminData {
     totalUsers: number;
     totalRounds: number;
   };
+  auditLogs: any[];
 }
 
 export default function AdminPage() {
@@ -170,6 +171,69 @@ export default function AdminPage() {
             </AnimatePresence>
           </section>
         </div>
+        {/* Audit Logs Section */}
+        <section className="mt-12 space-y-6">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="text-emerald-400" size={20} />
+            <h2 className="text-xl font-black uppercase tracking-widest text-white">Sistem Aktiviteleri (Audit)</h2>
+          </div>
+          
+          <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden">
+            <div className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-white/5 sticky top-0 z-10">
+                  <tr>
+                    <th className="p-4 text-[10px] font-black tracking-widest text-slate-500 uppercase border-b border-white/5">Tarih</th>
+                    <th className="p-4 text-[10px] font-black tracking-widest text-slate-500 uppercase border-b border-white/5">İşlem Yapan</th>
+                    <th className="p-4 text-[10px] font-black tracking-widest text-slate-500 uppercase border-b border-white/5">Aksiyon</th>
+                    <th className="p-4 text-[10px] font-black tracking-widest text-slate-500 uppercase border-b border-white/5">Detay</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {(data?.auditLogs || []).map((log) => (
+                    <tr key={log.id} className="hover:bg-white/[0.02] transition-colors">
+                      <td className="p-4 text-xs font-medium text-slate-400">
+                        {new Date(log.createdAt).toLocaleString("tr-TR")}
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">{log.user?.avatarUrl || "👤"}</span>
+                          <div>
+                            <p className="text-xs font-bold text-slate-200">{log.user?.username || log.user?.email || "Sistem"}</p>
+                            {log.ipAddress && <p className="text-[9px] text-slate-500">{log.ipAddress}</p>}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <span className="text-[10px] font-black px-2 py-1 rounded bg-white/10 text-slate-300">
+                          {log.action}
+                        </span>
+                        {log.entityType && (
+                          <p className="text-[9px] text-slate-500 mt-1 uppercase tracking-widest">{log.entityType}</p>
+                        )}
+                      </td>
+                      <td className="p-4">
+                        <p className="text-xs text-slate-300">{log.resource}</p>
+                        {(log.oldValue || log.newValue) && (
+                          <div className="mt-2 flex items-center gap-2 text-[10px] font-mono">
+                            {log.oldValue && <span className="line-through text-red-400 bg-red-400/10 px-1.5 py-0.5 rounded">{log.oldValue}</span>}
+                            <span className="text-slate-500">→</span>
+                            {log.newValue && <span className="font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">{log.newValue}</span>}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  {(!data?.auditLogs || data.auditLogs.length === 0) && (
+                    <tr>
+                      <td colSpan={4} className="p-8 text-center text-xs text-slate-500">Aktivite kaydı bulunamadı.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   );

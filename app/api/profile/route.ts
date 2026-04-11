@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAuth, createSession } from "@/lib/auth/session";
+import { createAuditLog } from "@/lib/audit";
 
 export async function PATCH(req: NextRequest) {
   try {
@@ -39,10 +40,23 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Bu kullanıcı adı zaten alınmış" }, { status: 409 });
     }
 
+    const oldUsername = user.username;
+
     // Update DB
     const updated = await db.user.update({
       where: { id: user.id },
       data: { username },
+    });
+
+    // AUDIT LOG
+    await createAuditLog({
+      action: "UPDATE",
+      entityType: "USER",
+      entityId: updated.id,
+      resource: `User renamed from ${oldUsername} to ${updated.username}`,
+      oldValue: oldUsername || "unknown",
+      newValue: updated.username!,
+      userId: user.id
     });
 
     // REFRESH SESSION
