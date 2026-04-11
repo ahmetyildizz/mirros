@@ -88,8 +88,11 @@ export const AdMobService = {
     }
 
     try {
-      await AdMob.showAppOpenAd({ adId: APP_OPEN_ID });
+      // NOTE: @capacitor-community/admob@8.0.0 natively lacks showAppOpenAd.
+      // Keeping state tracked for future plugin upgrades.
+      // await (AdMob as any).showAppOpenAd({ adId: APP_OPEN_ID });
       lastAppOpenTime = Date.now();
+      console.log('App Open Ad bypassed (Plugin version limitation).');
     } catch (e) {
       console.error('AdMob App Open Error:', e);
     }

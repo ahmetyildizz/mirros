@@ -25,10 +25,7 @@ export async function POST(
     return NextResponse.json({ error: "Sadece oda sahibi sonraki tura geçebilir" }, { status: 403 });
   }
 
-  // Turu 'ANSWERING' durumuna getir (eagerly set if not already)
-  if (round.status === "CREATED") {
-    await db.round.update({ where: { id: roundId }, data: { status: "ANSWERING" } });
-  }
+  // The initial state is managed by createRound in game.service.ts
 
   // Broadcat start to all players
   await pusherServer.trigger(`game-${round.gameId}`, "round-started", {

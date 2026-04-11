@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useGameStore } from "@/store/game.store";
 import type { Player, GuessResult, QuizResult } from "@/store/game.store";
+import { Capacitor } from "@capacitor/core";
+import { AdMobService } from "@/lib/services/admob.service";
 
 interface RoundStartedPayload {
   roundId:           string;

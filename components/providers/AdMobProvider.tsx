@@ -1,39 +1,42 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
-import { App } from "@capacitor/app";
+import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
 import { AdMobService } from "@/lib/services/admob.service";
+import { App } from "@capacitor/app";
 
-interface Props {
-  children: ReactNode;
-}
-
-export function AdMobProvider({ children }: Props) {
+export function AdMobProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
 
-    // 1. Initialize AdMob
-    AdMobService.initialize().then(() => {
-      // 2. Initial App Open Ad on launch
-      AdMobService.showAppOpenAd();
-      
-      // 3. Pre-load Interstitial (for later use)
-      AdMobService.prepareInterstitial();
-    });
+    let isInitialized = false;
 
-    // 4. Handle App State Changes (Background to Foreground)
-    const listener = App.addListener("appStateChange", ({ isActive }) => {
-      if (isActive) {
-        // App returned to foreground -> Show App Open Ad
-        AdMobService.showAppOpenAd();
-        // Also refresh Interstitial cache
-        AdMobService.prepareInterstitial();
+    const initAdMob = async () => {
+      try {
+        await AdMobService.initialize();
+        isInitialized = true;
+        // Pre-load units
+        await AdMobService.prepareInterstitial();
+        await AdMobService.prepareRewardAd();
+      } catch (error) {
+        console.error("AdMobProvider: Failed to init AdMob", error);
+      }
+    };
+
+    initAdMob();
+
+    // Emulate "App Open Ad" logic using Interstitials on App Resume
+    const stateChangeListener = App.addListener("appStateChange", async ({ isActive }) => {
+      if (isActive && isInitialized) {
+        console.log("App resumed. Showing Welcome (App Open fallback) Ad.");
+        await AdMobService.showInterstitial();
+        // Prepare next one
+        await AdMobService.prepareInterstitial();
       }
     });
 
     return () => {
-      listener.then(l => l.remove());
+      stateChangeListener.then(listener => listener.remove()).catch(console.error);
     };
   }, []);
 

@@ -39,7 +39,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     gameId, state, question, myRole, answererId, gameMode,
     players, playerScores, lastRoundScore, lastQuizResults, lastPenalty,
     currentRound, totalRounds, activeRoundId,
-    guessCount, totalGuessers, setTheme,
+    guessCount, totalGuessers, setTheme, nextRoundData,
     setGameState, setMyRole, setAnswererId,
   } = useGameStore();
   const isQuiz = gameMode === "QUIZ";
