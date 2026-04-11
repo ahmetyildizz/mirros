@@ -18,18 +18,21 @@ export const metadata: Metadata = {
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { AdMobProvider } from "@/components/providers/AdMobProvider";
 import { AdMockProvider } from "@/components/providers/AdMockProvider";
+import { VersionCheckProvider } from "@/components/providers/VersionCheckProvider";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" className={`h-full ${jakarta.variable}`}>
       <body className="min-h-dvh flex flex-col antialiased">
-        <AdMobProvider>
-          <AdMockProvider>
-            <ThemeProvider>
-              {children}
-            </ThemeProvider>
-          </AdMockProvider>
-        </AdMobProvider>
+        <VersionCheckProvider>
+          <AdMobProvider>
+            <AdMockProvider>
+              <ThemeProvider>
+                {children}
+              </ThemeProvider>
+            </AdMockProvider>
+          </AdMobProvider>
+        </VersionCheckProvider>
       </body>
     </html>
   );
