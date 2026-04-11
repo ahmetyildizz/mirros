@@ -16,7 +16,8 @@ import {
   Zap,
   Loader2,
   Users,
-  Flame
+  Flame,
+  ArrowRight
 } from "lucide-react";
 import { useGameStore } from "@/store/game.store";
 import { useGameState, useRoomState } from "@/hooks/useGameState";

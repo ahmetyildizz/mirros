@@ -105,10 +105,29 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
     }
   }
 
-  // Finalize compatMap for component
   const finalCompatMap: Record<string, { username: string; pct: number; bestGuesser?: { name: string; points: number }; title?: string }> = {};
   
-  // Calculate Titles (Mind Reader, Joker, Ghost, Harmonizer)
+  // Memory logic (Needs to be evaluated before titles)
+  const currentQuestionIds = game.rounds.map((r) => r.questionId);
+  const previousAnswers = await db.answer.findMany({
+    where: {
+      userId: myId,
+      round: {
+        questionId: { in: currentQuestionIds },
+        game: { startedAt: { lt: game.startedAt }, room: { gameMode: "SOCIAL" } },
+      },
+    },
+    select: { round: { select: { questionId: true } }, content: true, submittedAt: true },
+    orderBy: { submittedAt: "desc" },
+  });
+  const pastAnswerMap = new Map<string, { content: string; at: Date }>();
+  for (const a of previousAnswers) {
+    if (!pastAnswerMap.has(a.round.questionId)) {
+      pastAnswerMap.set(a.round.questionId, { content: a.content, at: a.submittedAt });
+    }
+  }
+
+  // Calculate Stats and Titles for ALL players
   const playerStats: Record<string, { exactCount: number; closeCount: number; reasonCount: number; totalRounds: number }> = {};
   for (const p of game.room.participants) playerStats[p.userId] = { exactCount: 0, closeCount: 0, reasonCount: 0, totalRounds: game.rounds.length };
   
@@ -124,9 +143,11 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
     }
   }
 
-  for (const [uid, data] of Object.entries(compatMap)) {
-    const sortedGuessers = Object.values(data.guessers).sort((a, b) => b.points - a.points);
+  for (const p of game.room.participants) {
+    const uid = p.userId;
     const stats = playerStats[uid];
+    const data = compatMap[uid] || { username: p.user.username ?? "?", pct: 0, totalPoints: 0, maxPossible: 0, guessers: {} };
+    const sortedGuessers = Object.values(data.guessers).sort((a, b) => b.points - a.points);
     
     // Advanced Title Logic
     let title = "Oda Sakini";
@@ -155,27 +176,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
     };
   }
 
-  // Memory logic
-  const currentQuestionIds = game.rounds.map((r) => r.questionId);
-  const previousAnswers = await db.answer.findMany({
-    where: {
-      userId: myId,
-      round: {
-        questionId: { in: currentQuestionIds },
-        game: { startedAt: { lt: game.startedAt }, room: { gameMode: "SOCIAL" } },
-      },
-    },
-    select: { round: { select: { questionId: true } }, content: true, submittedAt: true },
-    orderBy: { submittedAt: "desc" },
-  });
-  const pastAnswerMap = new Map<string, { content: string; at: Date }>();
-  for (const a of previousAnswers) {
-    if (!pastAnswerMap.has(a.round.questionId)) {
-      pastAnswerMap.set(a.round.questionId, { content: a.content, at: a.submittedAt });
-    }
-  }
-
-  // AI Telemetry & Real Analysis
+  // Telemetry AI data preparation
   const unpredictableUserId = Object.entries(compatMap).sort((a, b) => a[1].pct - b[1].pct)[0]?.[0];
   const mostIntuitiveUserId = Object.entries(playerStats).sort((a, b) => b[1].exactCount - a[1].exactCount)[0]?.[0];
   const wrongRate = game.rounds.reduce((acc, r) => acc + r.scores.filter(s => s.matchLevel === "WRONG").length, 0) / (game.rounds.length * game.room.participants.length || 1);
@@ -194,7 +195,6 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
 
   const aiReport = await generateAIInsight({
     familiarity,
-    totalRounds: game.totalRounds,
     gameMode: game.room.gameMode || "SOCIAL",
     category: game.room.category || "Genel",
     topPlayerName: leaderboard[0]?.username || "Anonim",

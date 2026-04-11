@@ -211,8 +211,8 @@ export function ResultsClient({
                    </span>
                    <span className="text-xl font-black text-black drop-shadow-sm">{player.points}</span>
                    {player.title && (
-                     <div className="bg-black/10 px-2 py-0.5 rounded-full mt-1">
-                        <span className="text-[8px] font-black text-black/60 uppercase tracking-tighter">{player.title}</span>
+                     <div className="bg-white/20 px-3 py-1 rounded-full mt-2 shadow-[0_0_10px_rgba(255,255,255,0.2)] border border-white/30 backdrop-blur-md z-20 transition-all hover:scale-105">
+                        <span className="text-[9px] md:text-[10px] font-black text-white uppercase tracking-[0.2em] drop-shadow-md">✨ {player.title}</span>
                      </div>
                    )}
                    <span className="text-[9px] font-bold text-black/40 uppercase tracking-widest mt-auto mb-2">
