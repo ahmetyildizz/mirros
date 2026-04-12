@@ -54,7 +54,7 @@ export function VersionCheckProvider({ children }: { children: React.ReactNode }
   }, []);
 
   const handleStoreRedirect = () => {
-    window.location.href = "https://play.google.com/store/apps/details?id=com.mirros.app";
+    window.location.href = "https://play.google.com/store/apps/details?id=com.noyanova.mirros";
   };
 
   return (

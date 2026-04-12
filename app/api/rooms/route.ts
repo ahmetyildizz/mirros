@@ -14,7 +14,7 @@ function generateCode(): string {
 }
 
 const bodySchema = z.object({
-  gameMode:   z.enum(["SOCIAL", "QUIZ"]).default("SOCIAL"),
+  gameMode:   z.enum(["SOCIAL", "QUIZ", "EXPOSE"]).default("SOCIAL"),
   ageGroup:   z.enum(["CHILD", "ADULT", "WISE"]).optional(),
   maxPlayers: z.number().int().min(2).max(12).default(4),
   category:   z.string().optional(),

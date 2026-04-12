@@ -27,7 +27,7 @@ import QRCode from "react-qr-code";
 
 interface GameStartedPayload {
   gameId:           string;
-  gameMode:         "SOCIAL" | "QUIZ";
+  gameMode:         "SOCIAL" | "QUIZ" | "EXPOSE";
   roundId:          string;
   roundNumber:      number;
   totalRounds:      number;
@@ -55,7 +55,7 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
   const [players,     setPlayers]     = useState<Player[]>(storedPlayers);
   const [hostName,    setHostName]    = useState<string | null>(null);
   const [maxPlayers,  setMaxPlayers]  = useState<number>(4);
-  const [gameMode,    setGameMode]    = useState<"SOCIAL" | "QUIZ">("SOCIAL");
+  const [gameMode,    setGameMode]    = useState<"SOCIAL" | "QUIZ" | "EXPOSE">("SOCIAL");
   const [starting,    setStarting]    = useState(false);
   const [startError,  setStartError]  = useState<string | null>(null);
   const [copied,      setCopied]      = useState(false);
@@ -217,6 +217,11 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
               <>
                 <Brain className="text-cyan-400" size={14} />
                 <span className="text-[11px] font-bold text-slate-200">Bilgi Yarışması</span>
+              </>
+            ) : gameMode === "EXPOSE" ? (
+              <>
+                <Flame className="text-red-400" size={14} />
+                <span className="text-[11px] font-bold text-slate-200">Yüzleşme</span>
               </>
             ) : (
               <>

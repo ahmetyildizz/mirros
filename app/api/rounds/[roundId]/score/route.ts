@@ -19,7 +19,7 @@ export async function POST(
       question: { select: { penalty: true } },
       answers: true,
       guesses: { include: { user: { select: { id: true, username: true, email: true } } } },
-      game:    { include: { room: { include: { participants: true } } } },
+      game:    { include: { room: { include: { participants: { include: { user: true } } } } } },
     },
   });
   if (!round)                       return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
@@ -41,12 +41,18 @@ export async function POST(
 
   // EXPOSE Modu için çoğunluk oylaması (Majority Vote)
   let exposeWinnerContent: string | null = null;
+  let exposeWinnerId: string | null = null;
+  
   if (isExpose && round.guesses.length > 0) {
     const voteCounts: Record<string, number> = {};
     for (const g of round.guesses) {
       voteCounts[g.content] = (voteCounts[g.content] || 0) + 1;
     }
     exposeWinnerContent = Object.keys(voteCounts).reduce((a, b) => voteCounts[a] > voteCounts[b] ? a : b);
+    
+    // Kazanan kullanıcının ID'sini bul
+    const winnerPart = round.game.room.participants.find(p => p.user.username === exposeWinnerContent);
+    exposeWinnerId = winnerPart?.userId ?? null;
   }
 
   for (const guess of round.guesses) {
@@ -137,6 +143,7 @@ export async function POST(
     roundId:      roundId,
     answererId:   round.answererId,
     answer:       isExpose ? exposeWinnerContent : answer!.content,
+    winnerId:     exposeWinnerId, // EXPOSE modu için kazanan (kurban) ID'si
     guessResults,
     playerScores,
     penalty:      round.question?.penalty ?? null,

@@ -56,6 +56,7 @@ export function CreateRoom({ onCreated }: Props) {
   const [mode,     setMode]   = useState<GameMode>("SOCIAL");
   const [ageGroup, setAge]    = useState<AgeGroup>("ADULT");
   const [maxPlayers, setMax]  = useState(4);
+  const [category, setCategory] = useState<string | null>(null);
   const [loading,  setLoading] = useState(false);
   const [error,    setError]   = useState<string | null>(null);
 
@@ -64,6 +65,7 @@ export function CreateRoom({ onCreated }: Props) {
     setMode(tpl.gameMode);
     setAge(tpl.ageGroup);
     setMax(tpl.maxPlayers);
+    setCategory(tpl.label);
 
     // Apply theme
     let theme: GameTheme = "purple";
@@ -84,7 +86,7 @@ export function CreateRoom({ onCreated }: Props) {
     finalMode = mode,
     finalAge  = ageGroup,
     finalMax  = maxPlayers,
-    finalCategory?: string,
+    finalCategory = category || undefined,
   ) => {
     setLoading(true);
     setError(null);
@@ -102,14 +104,18 @@ export function CreateRoom({ onCreated }: Props) {
       if (res.ok) {
         const data = await res.json();
         
-        // Mobil cihazda geçiş reklamı göster
-        const { Capacitor } = await import("@capacitor/core");
-        const { AdMobService } = await import("@/lib/services/admob.service");
-        if (Capacitor.isNativePlatform()) {
-          AdMobService.showInterstitial();
-        }
-
         onCreated(data.id, data.code);
+
+        // Reklam mantığını ayır ve bloklamasını engelle
+        try {
+          const { Capacitor } = await import("@capacitor/core");
+          if (Capacitor.isNativePlatform()) {
+            const { AdMobService } = await import("@/lib/services/admob.service");
+            AdMobService.showInterstitial();
+          }
+        } catch (adError) {
+          console.error("Ad showing failed silently:", adError);
+        }
       } else if (res.status === 401) {
         window.location.href = "/login";
       } else {
@@ -192,39 +198,63 @@ export function CreateRoom({ onCreated }: Props) {
               </div>
             </button>
  
-            <div className="flex flex-col gap-4 fade-up">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyun Modu</p>
-              <div className="grid grid-cols-2 gap-3">
-                {(["SOCIAL", "QUIZ"] as GameMode[]).map((m) => (
+            <div className="flex flex-col gap-6 fade-up">
+              <div className="space-y-1 px-1">
+                <p className="text-[10px] font-black text-accent uppercase tracking-[0.3em] mb-1">Seçilen Konsept</p>
+                <h2 className="text-2xl font-black text-white tracking-tighter uppercase italic">{category || "Özelleştirilmiş"}</h2>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyun Modu</p>
+                <div className="grid grid-cols-2 gap-3">
+                {(["SOCIAL", "QUIZ", "EXPOSE"] as GameMode[]).map((m) => (
                   <button
                     key={m}
-                    onClick={() => setMode(m)}
+                    onClick={() => {
+                      setMode(m);
+                      if (m === "EXPOSE") setTheme("neon");
+                      else if (m === "QUIZ") setTheme("intel");
+                      else setTheme("purple");
+                    }}
                     className={cn(
-                      "flex flex-col items-center gap-3 p-4 rounded-3xl transition-all duration-300 border",
+                      "flex flex-col items-center gap-3 p-5 rounded-[2.5rem] transition-all duration-500 border relative overflow-hidden group",
                       mode === m 
-                        ? "bg-accent/10 border-accent/40 shadow-[0_0_25px_rgba(168,85,247,0.15)] ring-1 ring-accent/20" 
+                        ? m === "EXPOSE" 
+                          ? "bg-red-500/10 border-red-500/40 shadow-[0_0_30px_rgba(239,68,68,0.2)] ring-1 ring-red-500/30"
+                          : m === "QUIZ"
+                            ? "bg-cyan-500/10 border-cyan-500/40 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-500/30"
+                            : "bg-accent/10 border-accent/40 shadow-[0_0_30px_rgba(168,85,247,0.2)] ring-1 ring-accent/30" 
                         : "bg-white/[0.02] border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10"
                     )}
                   >
-                    {m === "SOCIAL" ? (
-                      <div className="w-10 h-10 rounded-2xl bg-accent/20 flex items-center justify-center">
-                        <Users className="text-accent" size={20} />
-                      </div>
-                    ) : (
-                      <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 flex items-center justify-center">
-                        <Brain className="text-cyan-400" size={20} />
-                      </div>
+                    {mode === m && (
+                      <motion.div 
+                        layoutId="active-mode-bg"
+                        className="absolute inset-0 bg-gradient-to-br from-transparent via-white/[0.02] to-transparent"
+                      />
                     )}
-                    <span className={cn(
-                      "text-[12px] font-bold tracking-tight uppercase",
-                      mode === m ? "text-white" : "text-slate-400"
+                    
+                    <div className={cn(
+                      "w-12 h-12 rounded-[1.25rem] flex items-center justify-center transition-transform group-hover:scale-110 duration-500",
+                      m === "SOCIAL" ? "bg-accent/20 text-accent" : 
+                      m === "QUIZ" ? "bg-cyan-500/20 text-cyan-400" : 
+                      "bg-red-500/20 text-red-500"
                     )}>
-                      {m === "SOCIAL" ? "Birbirini Tanı" : "Bilgi Yarışması"}
+                      {m === "SOCIAL" ? <Users size={22} /> : m === "QUIZ" ? <Brain size={22} /> : <Flame size={22} />}
+                    </div>
+                    
+                    <span className={cn(
+                      "text-[11px] font-black tracking-widest uppercase",
+                      mode === m ? "text-white" : "text-slate-500"
+                    )}>
+                      {m === "SOCIAL" ? "Birbirini Tanı" : m === "QUIZ" ? "Bilgi Yarışması" : "Yüzleşme"}
                     </span>
                   </button>
                 ))}
               </div>
             </div>
+          </div>
+
  
             <div className="flex flex-col gap-4 fade-up [animation-delay:0.1s]">
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Yaş Grubu</p>

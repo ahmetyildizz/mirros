@@ -54,7 +54,9 @@ export async function POST(req: NextRequest) {
     // Guest Girişi
     if (!requestedName) return NextResponse.json({ error: "İsim gerekli" }, { status: 400 });
     finalUsername = requestedName;
-    finalEmail    = `${finalUsername.toLowerCase().replace(/\s/g, '.')}@mirros.app`;
+    const cleanName = finalUsername.toLowerCase().replace(/\s/g, '.');
+    const randomTag = Math.floor(1000 + Math.random() * 9000);
+    finalEmail    = `${cleanName}.${randomTag}@mirros.app`;
   }
 
   // 2. Kullanıcıyı Bul (Sosyal ise providerId, Guest ise username üzerinden)
@@ -87,13 +89,19 @@ export async function POST(req: NextRequest) {
       if (user.deviceId && user.deviceId !== deviceId) {
         return NextResponse.json({ error: "Bu isim başka bir cihaza ait. Başka isim seçin." }, { status: 403 });
       }
-      // Cihazı yoksa kilitle
-      if (!user.deviceId && deviceId) {
+      
+      // Cihaz zaten başka birine ait mi kontrol et
+      const otherUserWithDevice = deviceId ? await db.user.findFirst({ where: { deviceId, NOT: { id: user.id } } }) : null;
+
+      // Cihazı yoksa ve başka birine ait değilse kilitle
+      if (!user.deviceId && deviceId && !otherUserWithDevice) {
         user = await db.user.update({ where: { id: user.id }, data: { deviceId } });
       }
     }
   } else {
-    // 5. Yeni Kullanıcı Oluştur
+    // 5. Yeni Kullanıcı Oluştur (DeviceId zaten başkasındaysa null geç)
+    const otherUserWithDevice = deviceId ? await db.user.findFirst({ where: { deviceId } }) : null;
+
     user = await db.user.create({
       data: {
         username: finalUsername,
@@ -101,7 +109,7 @@ export async function POST(req: NextRequest) {
         provider,
         avatarUrl,
         providerId: provider !== "GUEST" ? providerId : null,
-        deviceId:   provider === "GUEST" ? deviceId : null,
+        deviceId:   (provider === "GUEST" && !otherUserWithDevice) ? deviceId : null,
       },
     });
   }

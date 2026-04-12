@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.mirros.app',
+  appId: 'com.mirros.studio.game',
   appName: 'mirros',
   webDir: 'out',
   server: {

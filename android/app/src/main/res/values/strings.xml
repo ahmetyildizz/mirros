@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">mirros</string>
     <string name="title_activity_main">mirros</string>
-    <string name="package_name">com.mirros.app</string>
-    <string name="custom_url_scheme">com.mirros.app</string>
+    <string name="package_name">com.mirros.studio.game</string>
+    <string name="custom_url_scheme">com.mirros.studio.game</string>
 </resources>

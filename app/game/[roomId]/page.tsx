@@ -17,7 +17,8 @@ import {
   Loader2,
   Users,
   Flame,
-  ArrowRight
+  ArrowRight,
+  MessageSquareText
 } from "lucide-react";
 import { useGameStore } from "@/store/game.store";
 import { useGameState, useRoomState } from "@/hooks/useGameState";
@@ -505,44 +506,90 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
               <div className="text-center space-y-2">
                 <div className="flex items-center justify-center gap-2 mb-2">
                    <div className="h-px w-8 bg-accent/30" />
-                   <span className="text-[10px] font-black text-accent uppercase tracking-[0.3em]">Tur Özeti</span>
+                   <span className="text-[10px] font-black text-accent uppercase tracking-[0.3em]">{isExpose ? "Gıybet Sonuçları" : "Tur Özeti"}</span>
                    <div className="h-px w-8 bg-accent/30" />
                 </div>
-                <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">Doğru Cevap Şuydu:</h3>
-                <p className="text-3xl font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] italic">
-                  {isExpose ? `En Çok Oy Alan: "${lastRoundScore.answer}"` : `"${lastRoundScore.answer}"`}
+                <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">{isExpose ? "Grup Kararını Verdi:" : "Doğru Cevap Şuydu:"}</h3>
+                <p className={cn(
+                  "text-3xl font-black text-white tracking-tighter italic text-center",
+                  isExpose ? "text-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.5)]" : "drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+                )}>
+                  {isExpose ? `🔥 ${lastRoundScore.answer} 🔥` : `"${lastRoundScore.answer}"`}
                 </p>
               </div>
 
-              <div className="space-y-3 max-h-[40dvh] overflow-y-auto pr-2 custom-scrollbar">
-                {lastRoundScore.guessResults.map((g, i) => (
-                  <motion.div 
-                    key={g.userId} 
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className={cn(
-                      "flex items-center gap-4 p-4 rounded-2xl border transition-all",
-                      g.matchLevel === "EXACT" ? "bg-green-500/10 border-green-500/30" : g.matchLevel === "CLOSE" ? "bg-yellow-500/10 border-yellow-500/30" : "bg-white/[0.02] border-white/5"
-                    )}
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl shadow-inner border border-white/10">
-                      {players.find(p => p.id === g.userId)?.avatarUrl || g.username?.[0].toUpperCase()}
-                    </div>
-                    <div className="flex-1 flex flex-col">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-black text-slate-500 uppercase">{g.username}</span>
-                        {g.matchLevel === "EXACT" && <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />}
+              <div className="space-y-3 max-h-[35dvh] overflow-y-auto pr-2 custom-scrollbar">
+                {lastRoundScore.guessResults.map((g, i) => {
+                  const isVictim = isExpose && g.userId === lastRoundScore.winnerId;
+                  return (
+                    <motion.div 
+                      key={g.userId} 
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      className={cn(
+                        "flex items-center gap-4 p-4 rounded-2xl border transition-all relative overflow-hidden",
+                        isVictim 
+                          ? "bg-red-500/10 border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.2)]"
+                          : g.matchLevel === "EXACT" 
+                            ? "bg-green-500/10 border-green-500/30" 
+                            : g.matchLevel === "CLOSE" 
+                              ? "bg-yellow-500/10 border-yellow-500/30" 
+                              : "bg-white/[0.02] border-white/5"
+                      )}
+                    >
+                      {isVictim && (
+                        <div className="absolute inset-0 bg-red-500/5 animate-pulse pointer-events-none" />
+                      )}
+                      <div className={cn(
+                        "w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-inner border",
+                        isVictim ? "bg-red-500/20 border-red-500/40" : "bg-white/5 border-white/10"
+                      )}>
+                        {players.find(p => p.id === g.userId)?.avatarUrl || g.username?.[0].toUpperCase()}
                       </div>
-                      <span className="text-[15px] font-bold text-white tracking-tight">{g.guess}</span>
-                    </div>
-                    <div className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded-lg">
-                      <Zap size={12} className={cn(g.points > 0 ? "text-yellow-400 fill-yellow-400" : "text-slate-600")} />
-                      <span className="text-[18px] font-black text-white tabular-nums">+{g.points}</span>
-                    </div>
-                  </motion.div>
-                ))}
+                      <div className="flex-1 flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-black text-slate-500 uppercase">{g.username}</span>
+                          {isVictim ? (
+                            <span className="text-[8px] font-black bg-red-500 text-white px-1.5 py-0.5 rounded uppercase tracking-tighter animate-bounce">Exposed</span>
+                          ) : g.matchLevel === "EXACT" && (
+                            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                          )}
+                        </div>
+                        <span className="text-[15px] font-bold text-white tracking-tight">{g.guess}</span>
+                      </div>
+                      <div className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded-lg">
+                        <Zap size={12} className={cn(g.points > 0 ? "text-yellow-400 fill-yellow-400" : "text-slate-600")} />
+                        <span className="text-[18px] font-black text-white tabular-nums">+{g.points}</span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
+
+              {/* Anonymous Gossip Wall (Reasons) */}
+              {isExpose && lastRoundScore.guessResults.filter(g => g.reason).length > 0 && (
+                <div className="space-y-4 pt-4">
+                  <div className="flex items-center gap-2 px-1">
+                    <MessageSquareText size={14} className="text-red-500" />
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Gıybet Duvarı (Anonim)</span>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {lastRoundScore.guessResults.filter(g => g.reason).map((g, idx) => (
+                      <motion.div
+                        key={`reason-${idx}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 + idx * 0.1 }}
+                        className="p-3 bg-white/[0.03] border border-white/5 rounded-2xl italic text-[12px] text-slate-300 leading-relaxed relative"
+                      >
+                        <span className="text-red-500/40 text-xl absolute -top-1 -left-1 font-serif">&ldquo;</span>
+                        {g.reason}
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="pt-6 border-t border-white/10 flex flex-col gap-4">
                 {useGameStore.getState().isHostPlayer ? (
@@ -688,9 +735,11 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           >
             <div className="flex items-center gap-2 mb-1">
               <AlertCircle className="text-orange-500" size={16} />
-              <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest">🎭 Ceza Vakti!</span>
+              <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest">🎭 {isExpose ? "Yüzleşme Cezası!" : "Ceza Vakti!"}</span>
             </div>
-            <p className="text-[14px] font-bold text-orange-200 leading-relaxed italic">&quot;{lastPenalty}&quot;</p>
+            <p className="text-[14px] font-bold text-orange-200 leading-relaxed italic">
+              {isExpose ? `${lastRoundScore?.answer}: ` : ""}&quot;{lastPenalty}&quot;
+            </p>
           </motion.div>
         )}
       </AnimatePresence>

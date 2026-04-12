@@ -52,6 +52,7 @@ interface RoundScoredPayload {
   roundId:      string;
   answererId:   string;
   answer:       string;
+  winnerId?:    string | null;
   guessResults: (GuessResult & { reason?: string | null; streak?: number })[];
   playerScores: Record<string, number>;
   penalty?:     string | null;
@@ -135,6 +136,7 @@ export function useGameState(gameId: string, myUserId: string) {
         roundId:      data.roundId,
         answererId:   data.answererId,
         answer:       data.answer,
+        winnerId:     data.winnerId,
         guessResults: data.guessResults,
       });
 

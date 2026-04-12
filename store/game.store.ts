@@ -33,6 +33,7 @@ export interface RoundScore {
   roundId:     string;
   answererId:  string;
   answer:      string;
+  winnerId?:   string | null;
   guessResults: GuessResult[];
 }
 
