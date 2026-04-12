@@ -201,7 +201,25 @@ export function CreateRoom({ onCreated }: Props) {
             <div className="flex flex-col gap-6 fade-up">
               <div className="space-y-1 px-1">
                 <p className="text-[10px] font-black text-accent uppercase tracking-[0.3em] mb-1">Seçilen Konsept</p>
-                <h2 className="text-2xl font-black text-white tracking-tighter uppercase italic">{category || "Özelleştirilmiş"}</h2>
+                <div className="flex flex-col gap-1">
+                  <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">{category || "Özelleştirilmiş"}</h2>
+                  <AnimatePresence mode="wait">
+                    <motion.p
+                      key={mode}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      className={cn(
+                        "text-[12px] font-bold italic tracking-tight",
+                        mode === "EXPOSE" ? "text-red-400" : mode === "QUIZ" ? "text-cyan-400" : "text-slate-400"
+                      )}
+                    >
+                      {mode === "EXPOSE" ? "Hazırsan yargı dağıtmaya ve maskeleri düşürmeye başlayalım... 🎭🔥" :
+                       mode === "QUIZ" ? "Akıl oyunları başlasın, en zeki olan kazansın! 🧠✨" :
+                       "Samimiyet testi zamanı! Gerçekten birbirinizi tanıyor musunuz? 🤝💎"}
+                    </motion.p>
+                  </AnimatePresence>
+                </div>
               </div>
 
               <div className="flex flex-col gap-4">
@@ -220,17 +238,22 @@ export function CreateRoom({ onCreated }: Props) {
                       "flex flex-col items-center gap-3 p-5 rounded-[2.5rem] transition-all duration-500 border relative overflow-hidden group",
                       mode === m 
                         ? m === "EXPOSE" 
-                          ? "bg-red-500/10 border-red-500/40 shadow-[0_0_30px_rgba(239,68,68,0.2)] ring-1 ring-red-500/30"
+                          ? "bg-red-500/15 border-red-500/50 shadow-[0_0_40px_rgba(239,68,68,0.3)] ring-1 ring-red-500/40"
                           : m === "QUIZ"
-                            ? "bg-cyan-500/10 border-cyan-500/40 shadow-[0_0_30px_rgba(34,211,238,0.2)] ring-1 ring-cyan-500/30"
-                            : "bg-accent/10 border-accent/40 shadow-[0_0_30px_rgba(168,85,247,0.2)] ring-1 ring-accent/30" 
+                            ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_40px_rgba(34,211,238,0.3)] ring-1 ring-cyan-500/40"
+                            : "bg-accent/15 border-accent/50 shadow-[0_0_40px_rgba(168,85,247,0.3)] ring-1 ring-accent/40" 
                         : "bg-white/[0.02] border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10"
                     )}
                   >
                     {mode === m && (
                       <motion.div 
-                        layoutId="active-mode-bg"
-                        className="absolute inset-0 bg-gradient-to-br from-transparent via-white/[0.02] to-transparent"
+                        layoutId="active-mode-glow"
+                        className={cn(
+                          "absolute inset-0 opacity-20 bg-gradient-to-br",
+                          m === "EXPOSE" ? "from-red-600 via-transparent to-orange-600" :
+                          m === "QUIZ" ? "from-cyan-600 via-transparent to-blue-600" :
+                          "from-accent via-transparent to-fuchsia-600"
+                        )}
                       />
                     )}
                     
