@@ -46,7 +46,15 @@ export async function getSession(): Promise<{ id: string; username: string; isAd
 
 export async function requireAuth() {
   const session = await getSession();
-  if (!session) redirect("/login");
+  if (!session) {
+    if (typeof window === "undefined") {
+      // In Server Components or API routes, throw an error that can be caught
+      // or handled naturally by Next.js if it were a server action.
+      // For now, throwing a clear error string for API try/catch blogs.
+      throw new Error("UNAUTHORIZED");
+    }
+    redirect("/login");
+  }
   return session;
 }
 

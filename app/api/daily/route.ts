@@ -137,7 +137,11 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ success: true, answer });
-  } catch (error) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  } catch (error: any) {
+    console.error("Daily question POST error:", error);
+    if (error.message === "UNAUTHORIZED") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    return NextResponse.json({ error: error.message || "Something went wrong" }, { status: 500 });
   }
 }

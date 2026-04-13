@@ -1,5 +1,6 @@
 import { requireAuth, clearSession } from "@/lib/auth/session";
 import { createAuditLog } from "@/lib/audit";
+import { NextResponse } from "next/server";
 
 export async function POST() {
   const user = await requireAuth().catch(() => null);
