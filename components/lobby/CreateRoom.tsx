@@ -60,7 +60,8 @@ export function CreateRoom({ onCreated }: Props) {
   const [loading,  setLoading] = useState(false);
   const [error,    setError]   = useState<string | null>(null);
 
-  const isCustom = !category || category === "Özelleştir";
+  const isManagedTemplate = category && category !== "Özelleştir";
+  const isCustom = !isManagedTemplate;
 
   const handleSelectTemplate = (tpl: Template) => {
     setError(null);
@@ -132,7 +133,10 @@ export function CreateRoom({ onCreated }: Props) {
   };
 
   return (
-    <div className="w-full pb-safe">
+    <div className="w-full pb-safe relative">
+      <div className="absolute -top-10 right-0 text-[8px] font-black text-white/10 select-none pointer-events-none uppercase">
+        Build: v0.4.0-Synced
+      </div>
       <AnimatePresence mode="wait">
         {step === "template" ? (
           <motion.div
