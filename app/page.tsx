@@ -181,7 +181,7 @@ function LobbyContent() {
           transition={{ delay: 1 }}
           className="text-center text-[10px] font-bold text-slate-500 tracking-[0.2em] mt-3 uppercase pb-4"
         >
-          arkadaşlarını tanı · kendini keşfet · v0.1.3-Elite
+          arkadaşlarını tanı · kendini keşfet · v0.4.0
         </motion.p>
       </div>
     </main>
