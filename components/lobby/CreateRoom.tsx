@@ -51,7 +51,7 @@ const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 export function CreateRoom({ onCreated }: Props) {
   const router = useRouter();
-  const { setTheme } = useGameStore();
+  const { setTheme, setCategoryName: setGlobalCategoryName } = useGameStore();
   const [step,     setStep]    = useState<"template" | "config">("template");
   const [mode,     setMode]   = useState<GameMode>("SOCIAL");
   const [ageGroup, setAge]    = useState<AgeGroup>("ADULT");
@@ -60,12 +60,15 @@ export function CreateRoom({ onCreated }: Props) {
   const [loading,  setLoading] = useState(false);
   const [error,    setError]   = useState<string | null>(null);
 
+  const isCustom = !category || category === "Özelleştir";
+
   const handleSelectTemplate = (tpl: Template) => {
     setError(null);
     setMode(tpl.gameMode);
     setAge(tpl.ageGroup);
     setMax(tpl.maxPlayers);
     setCategory(tpl.label);
+    setGlobalCategoryName(tpl.label);
 
     // Apply theme
     let theme: GameTheme = "purple";
@@ -186,7 +189,11 @@ export function CreateRoom({ onCreated }: Props) {
             className="flex flex-col gap-6"
           >
             <button 
-              onClick={() => setStep("template")} 
+              onClick={() => {
+                setStep("template");
+                setGlobalCategoryName(null);
+                setCategory(null);
+              }} 
               className="flex items-center gap-3 text-slate-100/60 hover:text-white transition-all duration-300 w-fit mb-2 group px-3 py-2 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/10"
             >
               <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-accent/20 group-hover:text-accent transition-all duration-500 shadow-inner">
@@ -199,10 +206,36 @@ export function CreateRoom({ onCreated }: Props) {
             </button>
  
             <div className="flex flex-col gap-6 fade-up">
-              <div className="space-y-1 px-1">
-                <p className="text-[10px] font-black text-accent uppercase tracking-[0.3em] mb-1">Seçilen Konsept</p>
+              <div className="space-y-2 px-1">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" />
+                  <p className="text-[11px] font-black text-accent uppercase tracking-[0.3em]">Seçilen Konsept</p>
+                </div>
                 <div className="flex flex-col gap-1">
-                  <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">{category || "Özelleştirilmiş"}</h2>
+                  <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic drop-shadow-lg">
+                    {category || "Özelleştirilmiş"}
+                  </h2>
+                  
+                  {/* Template Info Badge (Only when not custom) */}
+                  {!isCustom && (
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="flex gap-2 mt-1"
+                    >
+                      <div className={cn(
+                        "px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border",
+                        mode === "EXPOSE" ? "bg-red-500/10 border-red-500/20 text-red-400" :
+                        mode === "QUIZ" ? "bg-cyan-500/10 border-cyan-500/20 text-cyan-400" :
+                        "bg-accent/10 border-accent/20 text-accent"
+                      )}>
+                        {mode === "SOCIAL" ? "BİRİBİRİNİ TANI" : mode === "QUIZ" ? "BİLGİ YARIŞMASI" : "YÜZLEŞME"}
+                      </div>
+                      <div className="px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border bg-white/5 border-white/10 text-slate-400">
+                        {ageGroup === "CHILD" ? "ÇOCUK" : ageGroup === "ADULT" ? "YETİŞKİN" : "BİLGE"}
+                      </div>
+                    </motion.div>
+                  )}
                   <AnimatePresence mode="wait">
                     <motion.p
                       key={mode}
@@ -222,87 +255,91 @@ export function CreateRoom({ onCreated }: Props) {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyun Modu</p>
-                <div className="grid grid-cols-2 gap-3">
-                {(["SOCIAL", "QUIZ", "EXPOSE"] as GameMode[]).map((m) => (
-                  <button
-                    key={m}
-                    onClick={() => {
-                      setMode(m);
-                      if (m === "EXPOSE") setTheme("neon");
-                      else if (m === "QUIZ") setTheme("intel");
-                      else setTheme("purple");
-                    }}
-                    className={cn(
-                      "flex flex-col items-center gap-3 p-5 rounded-[2.5rem] transition-all duration-500 border relative overflow-hidden group",
-                      mode === m 
-                        ? m === "EXPOSE" 
-                          ? "bg-red-500/15 border-red-500/50 shadow-[0_0_40px_rgba(239,68,68,0.3)] ring-1 ring-red-500/40"
-                          : m === "QUIZ"
-                            ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_40px_rgba(34,211,238,0.3)] ring-1 ring-cyan-500/40"
-                            : "bg-accent/15 border-accent/50 shadow-[0_0_40px_rgba(168,85,247,0.3)] ring-1 ring-accent/40" 
-                        : "bg-white/[0.02] border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10"
-                    )}
-                  >
-                    {mode === m && (
-                      <motion.div 
-                        layoutId="active-mode-glow"
-                        className={cn(
-                          "absolute inset-0 opacity-20 bg-gradient-to-br",
-                          m === "EXPOSE" ? "from-red-600 via-transparent to-orange-600" :
-                          m === "QUIZ" ? "from-cyan-600 via-transparent to-blue-600" :
-                          "from-accent via-transparent to-fuchsia-600"
-                        )}
-                      />
-                    )}
-                    
-                    <div className={cn(
-                      "w-12 h-12 rounded-[1.25rem] flex items-center justify-center transition-transform group-hover:scale-110 duration-500",
-                      m === "SOCIAL" ? "bg-accent/20 text-accent" : 
-                      m === "QUIZ" ? "bg-cyan-500/20 text-cyan-400" : 
-                      "bg-red-500/20 text-red-500"
-                    )}>
-                      {m === "SOCIAL" ? <Users size={22} /> : m === "QUIZ" ? <Brain size={22} /> : <Flame size={22} />}
-                    </div>
-                    
-                    <span className={cn(
-                      "text-[11px] font-black tracking-widest uppercase",
-                      mode === m ? "text-white" : "text-slate-500"
-                    )}>
-                      {m === "SOCIAL" ? "Birbirini Tanı" : m === "QUIZ" ? "Bilgi Yarışması" : "Yüzleşme"}
-                    </span>
-                  </button>
-                ))}
+              {isCustom && (
+                <div className="flex flex-col gap-4">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyun Modu</p>
+                  <div className="grid grid-cols-2 gap-3">
+                  {(["SOCIAL", "QUIZ", "EXPOSE"] as GameMode[]).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => {
+                        setMode(m);
+                        if (m === "EXPOSE") setTheme("neon");
+                        else if (m === "QUIZ") setTheme("intel");
+                        else setTheme("purple");
+                      }}
+                      className={cn(
+                        "flex flex-col items-center gap-3 p-5 rounded-[2.5rem] transition-all duration-500 border relative overflow-hidden group",
+                        mode === m 
+                          ? m === "EXPOSE" 
+                            ? "bg-red-500/15 border-red-500/50 shadow-[0_0_40px_rgba(239,68,68,0.3)] ring-1 ring-red-500/40"
+                            : m === "QUIZ"
+                              ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_40px_rgba(34,211,238,0.3)] ring-1 ring-cyan-500/40"
+                              : "bg-accent/15 border-accent/50 shadow-[0_0_40px_rgba(168,85,247,0.3)] ring-1 ring-accent/40" 
+                          : "bg-white/[0.02] border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10"
+                      )}
+                    >
+                      {mode === m && (
+                        <motion.div 
+                          layoutId="active-mode-glow"
+                          className={cn(
+                            "absolute inset-0 opacity-20 bg-gradient-to-br",
+                            m === "EXPOSE" ? "from-red-600 via-transparent to-orange-600" :
+                            m === "QUIZ" ? "from-cyan-600 via-transparent to-blue-600" :
+                            "from-accent via-transparent to-fuchsia-600"
+                          )}
+                        />
+                      )}
+                      
+                      <div className={cn(
+                        "w-12 h-12 rounded-[1.25rem] flex items-center justify-center transition-transform group-hover:scale-110 duration-500",
+                        m === "SOCIAL" ? "bg-accent/20 text-accent" : 
+                        m === "QUIZ" ? "bg-cyan-500/20 text-cyan-400" : 
+                        "bg-red-500/20 text-red-500"
+                      )}>
+                        {m === "SOCIAL" ? <Users size={22} /> : m === "QUIZ" ? <Brain size={22} /> : <Flame size={22} />}
+                      </div>
+                      
+                      <span className={cn(
+                        "text-[11px] font-black tracking-widest uppercase",
+                        mode === m ? "text-white" : "text-slate-500"
+                      )}>
+                        {m === "SOCIAL" ? "Birbirini Tanı" : m === "QUIZ" ? "Bilgi Yarışması" : "Yüzleşme"}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+              )}
           </div>
 
  
-            <div className="flex flex-col gap-4 fade-up [animation-delay:0.1s]">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Yaş Grubu</p>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { id: "CHILD", icon: Baby, label: "Çocuk" },
-                  { id: "ADULT", icon: User, label: "Yetişkin" },
-                  { id: "WISE", icon: Crown, label: "Bilge" }
-                ].map((g) => (
-                  <button
-                    key={g.id}
-                    onClick={() => setAge(g.id as AgeGroup)}
-                    className={cn(
-                      "flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-2xl font-bold text-[11px] transition-all duration-300 border",
-                      ageGroup === g.id 
-                        ? "bg-accent/15 border-accent/40 text-white shadow-[0_5px_15px_rgba(168,85,247,0.15)]" 
-                        : "bg-white/[0.02] border-white/[0.05] text-slate-400 hover:bg-white/5"
-                    )}
-                  >
-                    <g.icon size={14} className={cn(ageGroup === g.id ? "text-accent" : "text-slate-500")} />
-                    {g.label}
-                  </button>
-                ))}
+            {isCustom && (
+              <div className="flex flex-col gap-4 fade-up [animation-delay:0.1s]">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Yaş Grubu</p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { id: "CHILD", icon: Baby, label: "Çocuk" },
+                    { id: "ADULT", icon: User, label: "Yetişkin" },
+                    { id: "WISE", icon: Crown, label: "Bilge" }
+                  ].map((g) => (
+                    <button
+                      key={g.id}
+                      onClick={() => setAge(g.id as AgeGroup)}
+                      className={cn(
+                        "flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-2xl font-bold text-[11px] transition-all duration-300 border",
+                        ageGroup === g.id 
+                          ? "bg-accent/15 border-accent/40 text-white shadow-[0_5px_15px_rgba(168,85,247,0.15)]" 
+                          : "bg-white/[0.02] border-white/[0.05] text-slate-400 hover:bg-white/5"
+                      )}
+                    >
+                      <g.icon size={14} className={cn(ageGroup === g.id ? "text-accent" : "text-slate-500")} />
+                      {g.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
  
             <div className="flex flex-col gap-4 fade-up [animation-delay:0.2s]">
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyuncu Sayısı</p>

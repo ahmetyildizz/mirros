@@ -15,7 +15,7 @@ function LobbyContent() {
   const router   = useRouter();
   const params   = useSearchParams();
   const joinCode = params.get("code") ?? "";
-  const { setRoomId, setRoomCode, setIsHostPlayer } = useGameStore();
+  const { setRoomId, setRoomCode, setIsHostPlayer, categoryName } = useGameStore();
   const [isDailyAnswered, setIsDailyAnswered] = useState(false);
 
   const handleCreated = (roomId: string, roomCode: string) => {
@@ -100,10 +100,21 @@ function LobbyContent() {
             transition={{ delay: 0.5 }}
             className="flex flex-col items-center gap-4"
           >
-            <p className="text-slate-400 font-bold tracking-tight flex items-center gap-2.5 text-[15px]">
+            <motion.p 
+              key={categoryName || "default"}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-slate-400 font-bold tracking-tight flex items-center gap-2.5 text-[15px]"
+            >
               <Sparkles size={16} className="text-accent animate-pulse" />
-              Beni ne kadar tanıyorsun?
-            </p>
+              {categoryName ? (
+                <span className="text-white font-black tracking-widest uppercase italic bg-accent/10 px-3 py-0.5 rounded-full border border-accent/20">
+                  {categoryName}
+                </span>
+              ) : (
+                "Beni ne kadar tanıyorsun?"
+              )}
+            </motion.p>
             <div className="w-16 h-1 rounded-full bg-gradient-to-r from-accent to-accent-2 opacity-20" />
           </motion.div>
         </motion.div>

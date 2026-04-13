@@ -15,7 +15,8 @@ import {
   ShieldCheck,
   MessageCircle,
   PlusCircle,
-  ChevronLeft
+  ChevronLeft,
+  Flame
 } from "lucide-react";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useGameStore } from "@/store/game.store";

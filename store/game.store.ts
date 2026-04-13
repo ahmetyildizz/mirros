@@ -59,6 +59,7 @@ interface GameStore {
   answererId:    string | null;
   gameMode:      "SOCIAL" | "QUIZ" | "EXPOSE" | null;
   theme:         GameTheme;
+  categoryName:  string | null;
 
   // Oyuncular
   players:       Player[];
@@ -95,6 +96,7 @@ interface GameStore {
   setGameMode:         (mode: "SOCIAL" | "QUIZ" | "EXPOSE") => void;
   setQuestionOptions:  (options: string[]) => void;
   setTheme:            (theme: GameTheme) => void;
+  setCategoryName:     (name: string | null) => void;
   setNextRoundData:    (data: GameStore["nextRoundData"]) => void;
   hydrate:             (data: Partial<GameStore>) => void;
   reset:               () => void;
@@ -122,6 +124,7 @@ const initialState = {
   totalGuessers:    0,
   gameMode:         null,
   theme:            "purple" as GameTheme,
+  categoryName:     null,
 };
 
 export const useGameStore = create<GameStore>()(
@@ -148,6 +151,7 @@ export const useGameStore = create<GameStore>()(
       setGameMode:        (gameMode) => set({ gameMode }),
       setQuestionOptions: (options) => set((s) => s.question ? { question: { ...s.question, options } } : {}),
       setTheme:           (theme) => set({ theme }),
+      setCategoryName:    (categoryName) => set({ categoryName }),
       setNextRoundData:   (nextRoundData) => set({ nextRoundData }),
       hydrate:           (data) => set((s) => ({ ...s, ...data })),
       reset:             () => set(initialState),
@@ -174,6 +178,7 @@ export const useGameStore = create<GameStore>()(
         myRole:       s.myRole,
         guessCount:   s.guessCount,
         totalGuessers:s.totalGuessers,
+        categoryName: s.categoryName,
       }),
     }
   )
