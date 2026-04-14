@@ -19,5 +19,9 @@ export function getThemeFromRoom(category: string | null, gameMode: "SOCIAL" | "
     return "intel";
   }
 
+  if (lower.includes("ofis") || lower.includes("iş") || lower.includes("office") || lower.includes("work")) {
+    return "corporate";
+  }
+
   return "purple";
 }

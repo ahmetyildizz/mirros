@@ -78,6 +78,18 @@
   --grad-text:    linear-gradient(135deg, #A5F3FC 0%, #C7D2FE 100%);
 }
 
+[data-theme="corporate"] {
+  --accent:       #334155;
+  --accent-2:     #64748B;
+  --accent-3:     #1E293B;
+  --accent-glow:  rgba(51, 65, 85, 0.25);
+  --aurora-1:     rgba(51,65,85,0.20);
+  --aurora-2:     rgba(100,116,139,0.15);
+  --aurora-3:     rgba(30,41,59,0.10);
+  --grad:         linear-gradient(135deg, #334155 0%, #0F172A 100%);
+  --grad-text:    linear-gradient(135deg, #CBD5E1 0%, #94A3B8 100%);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

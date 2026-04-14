@@ -25,20 +25,27 @@ export async function analyzeGameWithGemini(data: GameDataForAI) {
     };
   }
 
+  const isHighSpice = data.gameMode === "EXPOSE" || data.category?.includes(":Hot") || data.category?.includes(":Nuclear");
+  const spiceMultiplier = data.category?.includes(":Nuclear") ? "EKSTREM" : "YÜKSEK";
+
   const prompt = `
-    Sen "Mirros" adlı bir sosyal oyunun eğlenceli ve zeki yapay zekasısın. 
-    Aşağıdaki oyun verilerini analiz et ve oyuncular (arkadaşlar veya partnerler) hakkında eğlenceli, samimi ve biraz da esprili bir özet çıkar.
+    Sen "Mirros" adlı bir sosyal oyunun eğlenceli, zeki ve ${isHighSpice ? `oldukça ${spiceMultiplier} derecede iğneleyici/spicy` : "samimi"} yapay zekasısın. 
+    Aşağıdaki oyun verilerini analiz et ve oyuncular (arkadaşlar veya partnerler) hakkında unutulmaz, bazen maskeleri düşüren, bazen de bağları yücelten bir özet çıkar.
     
     OYUN VERİLERİ:
     - Mod: ${data.gameMode}
     - Kategori: ${data.category || "Genel"}
     - Genel Uyum Skoru: %${data.familiarity}
     - Round Detayları:
-    ${data.rounds.map((r, i) => `Round ${i+1}: "${r.question}" sorusuna ${r.answerer} "${r.answer}" cevabını verdi. Arkadaşları tahminlerde bulundu.`).join("\n")}
+    ${data.rounds.map((r, i) => `Round ${i+1}: "${r.question}" sorusuna ${r.answerer} "${r.answer}" cevabını verdi. Arkadaşları şu tahminleri yaptı: ${r.guesses.map(g => `${g.guesser} (${g.content})`).join(", ")}`).join("\n")}
 
     İSTEKLER:
-    1. "tag": Maksimum 3 kelimelik vurucu bir başlık (Örn: "Ruh İkizleri", "Tatlı Kaos", "Zihin Okuyucular").
-    2. "story": Yaklaşık 3-4 cümlelik, verilen cevaplara ve uyum skoruna spesifik atıfta bulunan, esprili bir analiz yazısı. Türkçe olsun.
+    1. "tag": Maksimum 3 kelimelik vurucu bir başlık. ${isHighSpice ? "Daha agresif veya iddialı olabilir." : "Sempatik olabilir."}
+    2. "story": Yaklaşık 3-4 cümlelik analiz. 
+       - ${isHighSpice ? "Cevaplar arasındaki çelişkileri veya 'iyice saçmalayan' tahminleri tiye al." : "Grubun uyumuna veya komik tesadüflere odaklan."}
+       - Mutlaka en az iki oyuncunun ismini zikret ve verdikleri spesifik cevaplara/tahminlere atıf yap.
+       - ${data.gameMode === "EXPOSE" ? "Eğer EXPOSE moduysa, en çok 'exposed' olan kişiye (kazanana) özel bir gönderme yap." : ""}
+       - Dil: Modern, samimi, 'genç işi' ve etkileyici bir Türkçe.
     
     JSON formatında döndür: { "tag": "...", "story": "..." }
   `;

@@ -8,7 +8,7 @@ export type GameState =
   | "SCORING"
   | "END";
 
-export type GameTheme = "purple" | "love" | "warm" | "intel" | "neon";
+export type GameTheme = "purple" | "love" | "warm" | "intel" | "neon" | "corporate";
 
 export type MatchLevel = "EXACT" | "CLOSE" | "WRONG";
 

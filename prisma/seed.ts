@@ -142,7 +142,16 @@ async function main() {
     { text: "Şu an en gizli sekmesi en tehlikeli olan kişi kimdir?", category: "Tehlike", penalty: "En yüksek oyu alan, telefonunun son 3 aramasını okur." },
     { text: "Bir soygun yapsak ortadan ilk kim kaybolup bizi satar?", category: "İhanet", penalty: "Kazanan, masaya rüşvet veriyormuş taklidi yapsın." },
     { text: "Zengin olsa bizi ilk kim tanımazlıktan gelir?", category: "Para", penalty: "Sanki milyoner olmuş gibi iğrenç bir zengin taklidi yapsın." },
-    { text: "Issız bir adaya düşsek grubun hayatta kalma şansını kim sıfırlar?", category: "Kaos", penalty: "Ağaçla kavga ediyormuş gibi yapsın." }
+    { text: "Issız bir adaya düşsek grubun hayatta kalma şansını kim sıfırlar?", category: "Kaos", penalty: "Ağaçla kavga ediyormuş gibi yapsın." },
+    
+    // ── OFİS KAOSU (YENİ) ──────────────────────────────────────────────────
+    { text: "Şu an Slack/Teams üzerinden gizlice patronu çekiştiren kimdir?", category: "Ofis Kaosu", penalty: "En son attığı iş mesajını 'bebek sesiyle' okusun." },
+    { text: "Şirkette bir soygun planlansa, güvenlik açıklarını ilk kim fark eder?", category: "Ofis Kaosu", penalty: "Casus gibi masanın etrafında sessizce bir tur atsın." },
+    { text: "Pazartesi sendromunu tüm ofise bulaştıran o karanlık enerji kimde?", category: "Ofis Kaosu", penalty: "En dramatik 'Pazartesi sabahı' yüz ifadesini sergilesin." },
+    { text: "Kimin tarayıcı geçmişi ortaya çıksa İK departmanı anında kapıya dayanır?", category: "Ofis Kaosu", penalty: "İK uzmanıymış gibi kendini sertçe sorgulasın." },
+    { text: "Toplantı sırasında 'Benim internetim dondu' yalanına en çok sığınan kim?", category: "Ofis Kaosu", penalty: "30 saniye boyunca robot gibi donmuş taklidi yapsın." },
+    { text: "Ofiste çıkan bedava pizzayı kimseye haber vermeden tek başına bitiren kim?", category: "Ofis Kaosu", penalty: "Sanki ağzı doluymuş gibi konuşmaya çalışsın." },
+    { text: "İstifa dilekçesi şu an masaüstünde 'Draft' olarak bekleyen kim?", category: "Ofis Kaosu", penalty: "Çok havalı bir 'İstifa ediyorum' konuşması yapsın." },
   ];
 
   for (const q of exposeQuestions) {

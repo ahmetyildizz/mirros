@@ -43,6 +43,7 @@ const TEMPLATES: Template[] = [
   { icon: Users,      label: "Aile Toplantısı", desc: "Aile bağını güçlendirin, birlikte gülün",    gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 6,  color: "from-purple-500 to-indigo-600" },
   { icon: Cake,       label: "Doğum Günü",        desc: "Misafirler konuğu ne kadar tanıyor?",       gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 8,  color: "from-orange-400 to-red-500" },
   { icon: Briefcase,  label: "Takım Building",    desc: "Ekip arkadaşlarınızı keşfedin",             gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 10, color: "from-cyan-500 to-blue-600" },
+  { icon: Flame,      label: "Ofis Kaosu",        desc: "İş yerinde maskeleri düşürün!",             gameMode: "EXPOSE", ageGroup: "ADULT", maxPlayers: 8,  color: "from-blue-600 to-slate-800" },
   { icon: Brain,      label: "Bilgi Yarışması",   desc: "Eğlenceli sorular, komik cezalar",          gameMode: "QUIZ",   ageGroup: "ADULT", maxPlayers: 6,  color: "from-emerald-400 to-teal-500" },
   { icon: Settings2,  label: "Özelleştir",        desc: "İstediğin gibi bir oda kur",                gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 4,  color: "from-slate-400 to-slate-600" },
 ];
@@ -59,6 +60,7 @@ export function CreateRoom({ onCreated }: Props) {
   const [category, setCategory] = useState<string | null>(null);
   const [loading,  setLoading] = useState(false);
   const [error,    setError]   = useState<string | null>(null);
+  const [spiceLevel, setSpiceLevel] = useState<"Normal" | "Hot" | "Nuclear">("Normal");
 
   const isManagedTemplate = category && category !== "Özelleştir";
   const isCustom = !isManagedTemplate;
@@ -76,6 +78,7 @@ export function CreateRoom({ onCreated }: Props) {
     if (tpl.gameMode === "QUIZ") theme = "intel";
     else if (tpl.gameMode === "EXPOSE") theme = "neon";
     else if (tpl.label === "Çift Gecesi") theme = "love";
+    else if (tpl.label === "Ofis Kaosu") theme = "corporate";
     else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü") theme = "warm";
     setTheme(theme);
 
@@ -102,7 +105,7 @@ export function CreateRoom({ onCreated }: Props) {
           gameMode: finalMode, 
           ageGroup: finalAge, 
           maxPlayers: finalMax,
-          category: finalCategory 
+          category: finalCategory === "Özelleştir" ? `${finalCategory}:${spiceLevel}` : finalCategory
         }),
       });
       if (res.ok) {
@@ -345,28 +348,54 @@ export function CreateRoom({ onCreated }: Props) {
               </div>
             )}
  
-            <div className="flex flex-col gap-4 fade-up [animation-delay:0.2s]">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyuncu Sayısı</p>
-              <div className="grid grid-cols-4 sm:flex sm:flex-wrap gap-2">
-                {PLAYER_OPTIONS.map((n) => (
-                  <button
-                    key={n}
-                    onClick={() => setMax(n)}
-                    className={cn(
-                      "h-12 flex items-center justify-center rounded-2xl font-black transition-all duration-300 border",
-                      maxPlayers === n 
-                        ? "bg-accent/20 border-accent/60 text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-105 z-10" 
-                        : "bg-white/[0.02] border-white/[0.05] text-slate-500 hover:bg-white/5"
-                    )}
-                  >
-                    {n}
-                  </button>
-                ))}
+              <div className="flex flex-col gap-4 fade-up [animation-delay:0.2s]">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyuncu Sayısı</p>
+                <div className="grid grid-cols-4 sm:flex sm:flex-wrap gap-2">
+                  {PLAYER_OPTIONS.map((n) => (
+                    <button
+                      key={n}
+                      onClick={() => setMax(n)}
+                      className={cn(
+                        "h-12 flex items-center justify-center rounded-2xl font-black transition-all duration-300 border",
+                        maxPlayers === n 
+                          ? "bg-accent/20 border-accent/60 text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-105 z-10" 
+                          : "bg-white/[0.02] border-white/[0.05] text-slate-500 hover:bg-white/5"
+                      )}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <p className="text-[10px] text-slate-500 text-center font-medium opacity-40 italic mt-1">
-                Oda dolduğunda oyun otomatik başlar.
-              </p>
-            </div>
+
+              {isCustom && (
+                <div className="flex flex-col gap-4 fade-up [animation-delay:0.3s]">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1 flex items-center gap-2">
+                    Eğlence Dozu <span className="text-[8px] px-1 bg-red-500/10 text-red-500 rounded border border-red-500/20 italic">Yeni</span>
+                  </p>
+                  <div className="flex gap-2">
+                    {[
+                      { id: "Normal", label: "Normal", color: "text-blue-400", bg: "bg-blue-400/10" },
+                      { id: "Hot", label: "Alevli", color: "text-orange-400", bg: "bg-orange-400/10" },
+                      { id: "Nuclear", label: "Nükleer", color: "text-red-500", bg: "bg-red-500/10" }
+                    ].map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => setSpiceLevel(s.id as any)}
+                        className={cn(
+                          "flex-1 py-3 px-1 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 border flex flex-col items-center gap-1",
+                          spiceLevel === s.id 
+                            ? `${s.bg} border-current ${s.color} shadow-lg scale-105` 
+                            : "bg-white/[0.02] border-white/[0.05] text-slate-500 hover:bg-white/5"
+                        )}
+                      >
+                        <span className={s.color}>{s.label}</span>
+                        {spiceLevel === s.id && <motion.div layoutId="spice-dot" className={cn("w-1 h-1 rounded-full", s.bg.replace('/10', ''))} />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
  
             {error && (
               <motion.div 
