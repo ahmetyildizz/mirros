@@ -105,7 +105,7 @@ export function CreateRoom({ onCreated }: Props) {
           gameMode: finalMode, 
           ageGroup: finalAge, 
           maxPlayers: finalMax,
-          category: finalCategory === "Özelleştir" ? `${finalCategory}:${spiceLevel}` : finalCategory
+          category: (finalCategory === "Özelleştir" || finalMode === "EXPOSE") ? `${finalCategory}:${spiceLevel}` : finalCategory
         }),
       });
       if (res.ok) {

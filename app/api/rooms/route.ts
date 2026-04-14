@@ -13,6 +13,10 @@ function generateCode(): string {
   return code;
 }
 
+const bodySchema = z.object({
+  gameMode:   z.enum(["SOCIAL", "QUIZ", "EXPOSE"]),
+  maxPlayers: z.number().min(2).max(20),
+  ageGroup:   z.enum(["CHILD", "ADULT", "WISE"]).optional(),
   category:   z.string().optional(),
 });
 

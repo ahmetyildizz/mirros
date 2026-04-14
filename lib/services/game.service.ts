@@ -6,20 +6,40 @@ const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
 async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | "EXPOSE", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
+  // Spice Level extraction (e.g., "Dedikodu Masası:Hot")
+  let spiceLevel: "EASY" | "MEDIUM" | "HARD" | null = null;
+  let baseCategory = category;
+
+  if (category?.includes(":")) {
+    const [cat, spice] = category.split(":");
+    baseCategory = cat;
+    if (spice === "Hot") spiceLevel = "MEDIUM";
+    else if (spice === "Nuclear") spiceLevel = "HARD";
+    else spiceLevel = "EASY";
+  }
+
   // Tema/Lobi Modu eşleştirmesi
   const themeMap: Record<string, string[]> = {
     "Çift Gecesi": ["İlişki", "Duygu", "Kişilik", "Yaşam"],
     "Aile Toplantısı": ["Anılar", "Nostalji", "Yemek", "Yaşam", "Sosyal"],
     "Doğum Günü": ["Anılar", "Eğlence", "Kişilik", "Sosyal", "Nostalji"],
     "Takım Building": ["Yaşam", "Duygu", "Değerler", "Sosyal", "Kişilik", "Dijital"],
+    "Dedikodu Masası": ["Eğlence", "Tehlike", "İhanet", "Para", "Kaos"],
+    "Ofis Kaosu": ["Ofis Kaosu"],
   };
 
-  const targetCategories = category ? themeMap[category] : null;
+  const targetCategories = baseCategory ? themeMap[baseCategory] : null;
 
   // 0. ÖNCELİKLİ: Varsa Odaya Özel Soru
   if (roomId) {
     const roomCandidates = await tx.question.findMany({
-      where: { roomId, isActive: true, gameMode, ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}) },
+      where: { 
+        roomId, 
+        isActive: true, 
+        gameMode, 
+        ...(spiceLevel ? { difficulty: spiceLevel } : {}),
+        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}) 
+      },
       select: { id: true },
     });
     if (roomCandidates.length > 0) {
@@ -36,7 +56,8 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         isActive: true,
         gameMode,
         category: { in: targetCategories },
-        ...(gameMode === "EXPOSE" ? {} : { NOT: { options: { equals: [] } } }), // Boş dizi olmayanları (şıklıları) bul, EXPOSE ise şık gerekmez
+        ...(spiceLevel ? { difficulty: spiceLevel } : {}),
+        ...(gameMode === "EXPOSE" ? {} : { NOT: { options: { equals: [] } } }), 
         ...(ageGroup ? {
           OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
         } : {}),
@@ -46,7 +67,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     });
   }
 
-  // 2. ADIM: Havuz boşsa (hiç şıklı soru yoksa veya bitmişse): Tüm Tema Soruları (Şıklı veya Şıksız)
+  // 2. ADIM: Havuz boşsa (hiç şıklı soru yoksa veya bitmişse): Tüm Tema Soruları
   if (candidates.length === 0 && targetCategories) {
     candidates = await tx.question.findMany({
       where: {
@@ -68,6 +89,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
       where: {
         isActive: true,
         gameMode,
+        ...(spiceLevel ? { difficulty: spiceLevel } : {}),
         ...(ageGroup ? {
           OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
         } : {}),
@@ -77,7 +99,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     });
   }
 
-  // 4. ADIM: Son Çare: Her şeyi esnet (exclude ve ageGroup dahil)
+  // 4. ADIM: Son Çare: Her şeyi esnet
   if (candidates.length === 0) {
     candidates = await tx.question.findMany({
       where: { isActive: true, gameMode },
