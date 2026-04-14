@@ -213,45 +213,36 @@ export function CreateRoom({ onCreated }: Props) {
             </button>
  
             <div className="flex flex-col gap-6 fade-up">
-              <div className="space-y-2 px-1">
+              <div className="space-y-4 px-1 pb-2 border-b border-white/5">
                 <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" />
-                  <p className="text-[11px] font-black text-accent uppercase tracking-[0.3em]">Seçilen Konsept</p>
+                  <div className="w-2 h-2 rounded-full bg-accent shadow-[0_0_12px_var(--accent)] animate-pulse" />
+                  <p className="text-[11px] font-black text-accent uppercase tracking-[0.4em]">Seçilen Konsept</p>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic drop-shadow-lg">
+                <div className="flex flex-col gap-2">
+                  <h2 className="text-4xl font-black text-white tracking-tighter uppercase italic drop-shadow-2xl">
                     {category || "Özelleştirilmiş"}
                   </h2>
                   
-                  {/* Template Info Badge (Only when not custom) */}
-                  {!isCustom && (
-                    <motion.div 
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="flex gap-2 mt-1"
-                    >
-                      <div className={cn(
-                        "px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border",
-                        mode === "EXPOSE" ? "bg-red-500/10 border-red-500/20 text-red-400" :
-                        mode === "QUIZ" ? "bg-cyan-500/10 border-cyan-500/20 text-cyan-400" :
-                        "bg-accent/10 border-accent/20 text-accent"
-                      )}>
-                        {mode === "SOCIAL" ? "BİRİBİRİNİ TANI" : mode === "QUIZ" ? "BİLGİ YARIŞMASI" : "YÜZLEŞME"}
-                      </div>
-                      <div className="px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border bg-white/5 border-white/10 text-slate-400">
-                        {ageGroup === "CHILD" ? "ÇOCUK" : ageGroup === "ADULT" ? "YETİŞKİN" : "BİLGE"}
-                      </div>
-                    </motion.div>
-                  )}
+                  <div className="flex gap-2">
+                    <div className={cn(
+                      "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border flex items-center gap-2",
+                      mode === "EXPOSE" ? "bg-red-500/10 border-red-500/20 text-red-400" :
+                      mode === "QUIZ" ? "bg-cyan-500/10 border-cyan-500/20 text-cyan-400" :
+                      "bg-accent/10 border-accent/20 text-accent"
+                    )}>
+                      {mode === "EXPOSE" ? <Flame size={12} /> : mode === "QUIZ" ? <Brain size={12} /> : <Users size={12} />}
+                      {mode === "SOCIAL" ? "BİRBİRİNİ TANI" : mode === "QUIZ" ? "BİLGİ YARIŞMASI" : "YÜZLEŞME"}
+                    </div>
+                  </div>
+                  
                   <AnimatePresence mode="wait">
                     <motion.p
                       key={mode}
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -5 }}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
                       className={cn(
-                        "text-[12px] font-bold italic tracking-tight",
-                        mode === "EXPOSE" ? "text-red-400" : mode === "QUIZ" ? "text-cyan-400" : "text-slate-400"
+                        "text-[13px] font-bold italic tracking-tight leading-relaxed",
+                        mode === "EXPOSE" ? "text-red-400/80" : mode === "QUIZ" ? "text-cyan-400/80" : "text-slate-400"
                       )}
                     >
                       {mode === "EXPOSE" ? "Hazırsan yargı dağıtmaya ve maskeleri düşürmeye başlayalım... 🎭🔥" :
@@ -321,32 +312,6 @@ export function CreateRoom({ onCreated }: Props) {
           </div>
 
  
-            {isCustom && (
-              <div className="flex flex-col gap-4 fade-up [animation-delay:0.1s]">
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Yaş Grubu</p>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { id: "CHILD", icon: Baby, label: "Çocuk" },
-                    { id: "ADULT", icon: User, label: "Yetişkin" },
-                    { id: "WISE", icon: Crown, label: "Bilge" }
-                  ].map((g) => (
-                    <button
-                      key={g.id}
-                      onClick={() => setAge(g.id as AgeGroup)}
-                      className={cn(
-                        "flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-2xl font-bold text-[11px] transition-all duration-300 border",
-                        ageGroup === g.id 
-                          ? "bg-accent/15 border-accent/40 text-white shadow-[0_5px_15px_rgba(168,85,247,0.15)]" 
-                          : "bg-white/[0.02] border-white/[0.05] text-slate-400 hover:bg-white/5"
-                      )}
-                    >
-                      <g.icon size={14} className={cn(ageGroup === g.id ? "text-accent" : "text-slate-500")} />
-                      {g.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
  
               <div className="flex flex-col gap-4 fade-up [animation-delay:0.2s]">
                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Oyuncu Sayısı</p>
@@ -368,7 +333,7 @@ export function CreateRoom({ onCreated }: Props) {
                 </div>
               </div>
 
-              {isCustom && (
+              {(isCustom || mode === "EXPOSE") && (
                 <div className="flex flex-col gap-4 fade-up [animation-delay:0.3s]">
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1 flex items-center gap-2">
                     Eğlence Dozu <span className="text-[8px] px-1 bg-red-500/10 text-red-500 rounded border border-red-500/20 italic">Yeni</span>
@@ -394,6 +359,11 @@ export function CreateRoom({ onCreated }: Props) {
                       </button>
                     ))}
                   </div>
+                  <p className="text-[9px] text-slate-500/60 font-medium px-2 italic">
+                    {spiceLevel === "Nuclear" ? "Dikkat: Arkadaşlıklar bitebilir! 🔥💀" : 
+                     spiceLevel === "Hot" ? "Isı artıyor, samimiyet dozu yüksek. 🌶️" : 
+                     "Sakin ve keyifli bir sosyal deneyim. ✨"}
+                  </p>
                 </div>
               )}
  
