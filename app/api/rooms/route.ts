@@ -13,12 +13,16 @@ function generateCode(): string {
   return code;
 }
 
-const bodySchema = z.object({
-  gameMode:   z.enum(["SOCIAL", "QUIZ", "EXPOSE"]).default("SOCIAL"),
-  ageGroup:   z.enum(["CHILD", "ADULT", "WISE"]).optional(),
-  maxPlayers: z.number().int().min(2).max(12).default(4),
   category:   z.string().optional(),
 });
+
+const PROFANITY_FILTER = ["sik", "yarrak", "am", "göt", "fuck", "shit"]; // Örnek küfür filtresi
+
+function isOffensive(text: string): boolean {
+  if (!text) return false;
+  const lower = text.toLowerCase();
+  return PROFANITY_FILTER.some(word => lower.includes(word));
+}
 
 // ageGroup artık room'a değil katılımcıya kaydedilir
 
@@ -28,6 +32,10 @@ export async function POST(req: NextRequest) {
 
     const json = await req.json().catch(() => ({}));
     const body = bodySchema.parse(json);
+
+    if (body.category && isOffensive(body.category)) {
+      return NextResponse.json({ error: "Geçersiz kategori adı" }, { status: 400 });
+    }
 
     let code: string;
     let attempts = 0;
