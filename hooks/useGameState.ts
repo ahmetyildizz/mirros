@@ -208,6 +208,14 @@ export function useRoomState(roomId: string) {
 
     channel.bind("player-joined", (data: PlayerJoinedPayload) => {
       setPlayers(data.players);
+      
+      const store = useGameStore.getState();
+      const gameMode = store.gameMode;
+      if (store.state === "GUESSING" || store.state === "ANSWERING") {
+        const uniquePlayers = Array.from(new Map(data.players.map(p => [p.id, p])).values()).filter(p => p.role === "PLAYER");
+        const newTotal = gameMode === "EXPOSE" ? uniquePlayers.length : Math.max(0, uniquePlayers.length - 1);
+        setGuessProgress(store.guessCount, newTotal);
+      }
     });
 
     channel.bind("game-started", (data: any) => {

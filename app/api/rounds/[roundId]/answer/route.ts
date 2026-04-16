@@ -68,9 +68,11 @@ export async function POST(
   });
 
   if (isQuiz) {
-    const totalParticipants = round.game.room.participants.length;
+    const players = round.game.room.participants.filter(p => p.role === "PLAYER");
+    const uniquePlayers = Array.from(new Map(players.map(p => [p.userId, p])).values());
+    const totalParticipants = uniquePlayers.length;
     const answerCount       = await db.answer.count({ where: { roundId } });
-    const allAnswered       = answerCount >= totalParticipants;
+    const allAnswered       = answerCount >= totalParticipants && totalParticipants >= 2;
 
     await pusherServer.trigger(`game-${round.gameId}`, "answer-submitted", {
       roundId,
@@ -102,7 +104,11 @@ export async function POST(
     }
 
     await db.round.update({ where: { id: roundId }, data: { status: "GUESSING" } });
-    const totalGuessers = round.game.room.participants.length - 1; // answerer hariç
+    
+    const players = round.game.room.participants.filter(p => p.role === "PLAYER");
+    const uniquePlayers = Array.from(new Map(players.map(p => [p.userId, p])).values());
+    const totalGuessers = Math.max(0, uniquePlayers.length - 1); // answerer hariç
+
     await pusherServer.trigger(`game-${round.gameId}`, "answer-submitted", {
       roundId,
       answererId:   user.id,

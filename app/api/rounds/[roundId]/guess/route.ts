@@ -47,20 +47,23 @@ export async function POST(
   });
 
   const isExpose     = round.game.room.gameMode === "EXPOSE";
-
-  // Kaç kişi tahmin etti?
+  const participants = round.game.room.participants.filter(p => p.role === "PLAYER");
+  
+  // Tekilleştirme (Aynı kullanıcı ID'si kazara iki kez varsa)
+  const uniqueParticipants = Array.from(new Map(participants.map(p => [p.userId, p])).values());
   const guessCount    = await db.guess.count({ where: { roundId } });
-  // EXPOSE modunda herkes tahmin eder (answerer yok), SOCIAL'da answerer hariç
+
+  // EXPOSE modunda herkes tahmin eder, SOCIAL'da answerer hariç
   const totalGuessers = isExpose
-    ? round.game.room.participants.length
-    : round.game.room.participants.length - 1;
+    ? uniqueParticipants.length
+    : Math.max(0, uniqueParticipants.length - 1);
 
   await pusherServer.trigger(`game-${round.gameId}`, "guess-submitted", {
     roundId,
     userId:      user.id,
     guessCount,
     totalGuessers,
-    allDone: guessCount >= totalGuessers,
+    allDone: guessCount >= totalGuessers && totalGuessers >= 2,
   });
 
   return NextResponse.json(guess, { status: 201 });
