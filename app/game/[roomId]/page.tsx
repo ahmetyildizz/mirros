@@ -48,6 +48,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   const [myUserId, setMyUserId]   = useState<string | null>(null);
   const [pastAnswers, setPastAnswers] = useState<any[]>([]);
+  const [timeLeft, setTimeLeft] = useState(60);
 
   const scoringRoundRef  = useRef<string | null>(null);
   const advancingRoundRef = useRef<string | null>(null);
@@ -147,6 +148,40 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   const spotlightPlayer = players.find((p) => p.id === answererId);
   const isAnswerer      = myRole === "answerer";
+  const { isHostPlayer } = useGameStore.getState();
+
+  // Timer Countdown Logic
+  useEffect(() => {
+    if (state !== "ANSWERING" && state !== "GUESSING") {
+      setTimeLeft(60);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          // Auto-trigger on timeout
+          if (state === "GUESSING" && isHostPlayer) {
+            triggerScore();
+          } else if (state === "ANSWERING" && isAnswerer) {
+            submitAnswer("..."); // Timeout answer
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [state, activeRoundId, isHostPlayer, isAnswerer]); // Reset on state or round change
+
+  // Reset timer on state transition
+  useEffect(() => {
+    if (state === "ANSWERING" || state === "GUESSING") {
+      setTimeLeft(60);
+    }
+  }, [state, activeRoundId]);
 
   useEffect(() => {
     if (state === "ANSWERING") {
@@ -277,6 +312,21 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
       <div className="relative z-10 flex flex-col w-full max-w-[480px] mx-auto px-4 py-6 gap-6 h-full min-h-dvh">
         <GameHeader roundNumber={currentRound} totalRounds={totalRounds} />
+
+        {/* Global Timer Bar */}
+        {(state === "ANSWERING" || state === "GUESSING") && (
+          <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-2">
+            <motion.div 
+              initial={{ width: "100%" }}
+              animate={{ width: `${(timeLeft / 60) * 100}%` }}
+              transition={{ duration: 1, ease: "linear" }}
+              className={cn(
+                "h-full transition-colors duration-500",
+                timeLeft > 20 ? "bg-accent" : timeLeft > 10 ? "bg-orange-500" : "bg-red-500 animate-pulse"
+              )}
+            />
+          </div>
+        )}
 
         {/* Scoring Bar */}
         <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none px-1">
@@ -480,6 +530,19 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 </motion.div>
               ) : null}
             </AnimatePresence>
+
+            {/* Host Skip/Force Score Button */}
+            {isHostPlayer && (state === "ANSWERING" || state === "GUESSING") && (
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={() => state === "GUESSING" ? triggerScore() : submitAnswer("...")}
+                className="mt-4 w-full py-3 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 group"
+              >
+                <Zap size={12} className="group-hover:text-yellow-400 transition-colors" />
+                Süreyi Bitir ve İlerle
+              </motion.button>
+            )}
           </div>
 
           {/* Final Results Redirect (if state is END) */}
