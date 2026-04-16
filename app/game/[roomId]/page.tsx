@@ -150,6 +150,15 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   const isAnswerer      = myRole === "answerer";
   const { isHostPlayer } = useGameStore.getState();
 
+  // Global Flow Guard: Eğer her şeyin sonunda hala state ANSWERING ise ama answererId yoksa, bu bir EXPOSE/QUIZ tuluğudur.
+  // Otomatik olarak GUESSING'e zorla.
+  useEffect(() => {
+    if (state === "ANSWERING" && !isQuiz && !answererId && gameId) {
+      console.log("Global Flow Guard: Auto-correcting state to GUESSING (null answerer detected)");
+      useGameStore.getState().setGameState("GUESSING");
+    }
+  }, [state, answererId, isQuiz, gameId]);
+
   // Timer Countdown Logic
   useEffect(() => {
     if (state !== "ANSWERING" && state !== "GUESSING") {
@@ -165,7 +174,9 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           if (state === "GUESSING" && isHostPlayer) {
             triggerScore();
           } else if (state === "ANSWERING" && isAnswerer) {
-            submitAnswer("..."); // Timeout answer
+            submitAnswer("..."); 
+          } else if (state === "ANSWERING" && isQuiz) {
+            submitAnswer("...");
           }
           return 0;
         }
@@ -174,7 +185,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [state, activeRoundId, isHostPlayer, isAnswerer]); // Reset on state or round change
+  }, [state, activeRoundId, isHostPlayer, isAnswerer, isQuiz]); 
 
   // Reset timer on state transition
   useEffect(() => {
@@ -409,6 +420,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           <div className="flex flex-col gap-4">
             <AnimatePresence mode="wait">
               {myRole === "spectator" ? (
+                /* 1. SPECTATOR VIEW */
                 <motion.div 
                   key="spectator-view"
                   initial={{ opacity: 0 }}
@@ -425,96 +437,60 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     </p>
                   </div>
                 </motion.div>
-              ) : state === "ANSWERING" && answererId !== null ? (
-                <motion.div 
-                  key="answering-area"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                >
-                  {isQuiz ? (
+              ) : (isQuiz || isExpose) ? (
+                /* 2. QUIZ VEYA EXPOSE: Doğrudan Giriş/Tahmin Alanı (State ne olursa olsun) */
+                <motion.div key="simultaneous-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
+                  {isExpose ? (
+                    <MultipleChoiceInput 
+                      options={players.filter(p => p.role !== "SPECTATOR").map(p => p.username || "Anonim")} 
+                      onSubmit={submitGuess} 
+                      allowFreeText={false} 
+                      showReason={true} 
+                      gameId={gameId} 
+                      username={players.find(p => p.id === myUserId)?.username} 
+                    />
+                  ) : (
                     question.options
                       ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
-                      : (
-                        <div className="flex flex-col gap-2">
-                           <div className="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full w-fit mx-auto mb-2">
-                             <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Serbest Yazım ✍️</span>
-                           </div>
-                           <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
-                        </div>
-                      )
-                  ) : (
-                    isAnswerer
-                      ? (question.options
-                          ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
-                          : (
-                            <div className="flex flex-col gap-2">
-                               <div className="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full w-fit mx-auto mb-2">
-                                 <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Serbest Yazım ✍️</span>
-                               </div>
-                               <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
-                            </div>
-                          )
-                        )
-                      : (
-                        <div className="glass-card-elevated p-8 flex flex-col items-center gap-4 text-center">
-                          <div className="relative">
-                            <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-12 h-12 rounded-full border-2 border-dashed border-accent/30" />
-                            <UserIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-accent" size={20} />
-                          </div>
-                          <p className="text-[13px] font-medium text-slate-300 leading-relaxed">
-                            <span className="text-white font-black">{spotlightPlayer?.username ?? "Arkadaşın"}</span> şu an cevap veriyor...
-                          </p>
-                        </div>
-                      )
+                      : <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                   )}
                 </motion.div>
-              ) : !isQuiz && state === "GUESSING" ? (
-                <motion.div 
-                  key="guessing-area"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                >
+              ) : state === "ANSWERING" && answererId !== null ? (
+                /* 3. SOCIAL MODE - ANSWERING */
+                <motion.div key="answering-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
+                  {isAnswerer ? (
+                    question.options
+                      ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
+                      : <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
+                  ) : (
+                    <div className="glass-card-elevated p-8 flex flex-col items-center gap-4 text-center">
+                      <div className="relative">
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-12 h-12 rounded-full border-2 border-dashed border-accent/30" />
+                        <UserIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-accent" size={20} />
+                      </div>
+                      <p className="text-[13px] font-medium text-slate-300 leading-relaxed">
+                        <span className="text-white font-black">{spotlightPlayer?.username ?? "Arkadaşın"}</span> şu an cevap veriyor...
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
+              ) : state === "GUESSING" ? (
+                /* 4. SOCIAL MODE - GUESSING */
+                <motion.div key="guessing-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
                   {isAnswerer ? (
                     <div className="glass-card-elevated p-8 flex flex-col items-center gap-6">
-                      <div className="flex flex-col items-center gap-2">
-                        <p className="text-[11px] font-black text-slate-500 tracking-[0.2em] uppercase">Tahminler Bekleniyor</p>
-                        <div className="flex gap-2">
-                          {Array.from({ length: totalGuessers }).map((_, i) => (
-                            <motion.div 
-                              key={i}
-                              animate={i < guessCount ? { scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] } : {}}
-                              className={cn(
-                                "w-3 h-3 rounded-full transition-colors duration-500",
-                                i < guessCount ? "bg-accent shadow-[0_0_10px_var(--accent)]" : "bg-white/10"
-                              )} 
-                            />
-                          ))}
-                        </div>
-                      </div>
                       <p className="text-[15px] font-bold text-white tracking-tight">
                         {guessCount} / {totalGuessers} arkadaşın tahmin etti
                       </p>
                     </div>
                   ) : (
-                    <div className="flex flex-col gap-6">
-                      {isExpose ? (
-                        <MultipleChoiceInput 
-                          options={players.filter(p => p.role !== "SPECTATOR").map(p => p.username || "Anonim")} 
-                          onSubmit={submitGuess} 
-                          allowFreeText={false} 
-                          showReason={true} 
-                          gameId={gameId} 
-                          username={players.find(p => p.id === myUserId)?.username} 
-                        />
-                      ) : question.options ? (
-                        <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
-                      ) : (
-                        <GuessInput opponentName={spotlightPlayer?.username ?? "Arkadaşın"} onSubmit={submitGuess} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
-                      )}
+                    question.options
+                      ? <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
+                      : <GuessInput opponentName={spotlightPlayer?.username ?? "Arkadaşın"} onSubmit={submitGuess} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
+                  )}
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
 
                       {/* Flashback/Hafıza Kartı */}
                       <AnimatePresence>

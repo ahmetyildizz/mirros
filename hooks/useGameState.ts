@@ -96,9 +96,8 @@ export function useGameState(gameId: string, myUserId: string) {
     channel.bind("round-started", (data: RoundStartedPayload) => {
       const store = useGameStore.getState();
       const gameMode = store.gameMode;
-      // EXPOSE modunda round başlatılınca doğrudan GUESSING'e geç
-      // Fallback: gameMode henüz yüklenmemişse answererId'nin null olması EXPOSE veya QUIZ (guessing tabanlı) olduğunu gösterir
-      const initialState = (gameMode === "EXPOSE" || (!gameMode && !data.answererId)) ? "GUESSING" : "ANSWERING";
+      // Global Flow Guard: gameMode EXPOSE/QUIZ ise veya answererId yoksa başlangıç durumu GUESSING'dir
+      const initialState = (gameMode === "EXPOSE" || gameMode === "QUIZ" || !data.answererId) ? "GUESSING" : "ANSWERING";
       setGameState(initialState);
       setActiveRoundId(data.roundId);
       setCurrentRound(data.roundNumber);
@@ -212,8 +211,8 @@ export function useRoomState(roomId: string) {
     });
 
     channel.bind("game-started", (data: any) => {
-      // EXPOSE modunda round zaten GUESSING status'unda başlar (server'da)
-      const initialState = data.gameMode === "EXPOSE" ? "GUESSING" : "ANSWERING";
+      // Global Flow Guard: gameMode EXPOSE/QUIZ ise veya answererId yoksa başlangıç durumu GUESSING'dir
+      const initialState = (data.gameMode === "EXPOSE" || data.gameMode === "QUIZ" || !data.answererId) ? "GUESSING" : "ANSWERING";
       useGameStore.getState().hydrate({
         gameId:        data.gameId,
         gameMode:      data.gameMode,
