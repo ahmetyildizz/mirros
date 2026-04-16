@@ -1,0 +1,272 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String            @id @default(cuid())
+  email        String            @unique
+  username     String?           @unique
+  avatarUrl    String?
+  createdAt    DateTime          @default(now())
+  deviceId     String?           @unique
+  provider     String            @default("GUEST")
+  providerId   String?           @unique
+  answers      Answer[]
+  auditLogs    AuditLog[]
+  dailyAnswers DailyAnswer[]
+  guesses      Guess[]
+  insightsA    Insight[]         @relation("InsightUserA")
+  insightsB    Insight[]         @relation("InsightUserB")
+  hostedRooms  Room[]            @relation("HostedRooms")
+  rooms        RoomParticipant[]
+  scores       Score[]
+
+  @@index([deviceId])
+  @@index([providerId])
+}
+
+model Room {
+  id           String            @id @default(cuid())
+  code         String            @unique
+  status       RoomStatus        @default(WAITING)
+  hostId       String
+  createdAt    DateTime          @default(now())
+  maxPlayers   Int               @default(8)
+  ageGroup     AgeGroup?
+  gameMode     GameMode          @default(SOCIAL)
+  category     String?
+  games        Game[]
+  host         User              @relation("HostedRooms", fields: [hostId], references: [id])
+  participants RoomParticipant[]
+}
+
+model RoomParticipant {
+  id       String          @id @default(cuid())
+  roomId   String
+  userId   String
+  joinedAt DateTime        @default(now())
+  ageGroup AgeGroup?
+  role     ParticipantRole @default(PLAYER)
+  streak   Int             @default(0)
+  room     Room            @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user     User            @relation(fields: [userId], references: [id])
+
+  @@unique([roomId, userId])
+}
+
+model Game {
+  id          String     @id @default(cuid())
+  roomId      String
+  totalRounds Int        @default(5)
+  status      GameStatus @default(ACTIVE)
+  startedAt   DateTime   @default(now())
+  finishedAt  DateTime?
+  room        Room       @relation(fields: [roomId], references: [id])
+  insights    Insight[]
+  rounds      Round[]
+  scores      Score[]
+
+  @@index([roomId])
+  @@index([status])
+}
+
+model Round {
+  id         String      @id @default(cuid())
+  gameId     String
+  number     Int
+  questionId String
+  answererId String?
+  status     RoundStatus @default(ANSWERING)
+  answers    Answer[]
+  guesses    Guess[]
+  game       Game        @relation(fields: [gameId], references: [id])
+  question   Question    @relation(fields: [questionId], references: [id])
+  scores     Score[]
+
+  @@index([gameId])
+  @@index([gameId, status])
+}
+
+model Answer {
+  id          String   @id @default(cuid())
+  roundId     String
+  userId      String
+  content     String
+  submittedAt DateTime @default(now())
+  round       Round    @relation(fields: [roundId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@unique([roundId, userId])
+}
+
+model Guess {
+  id          String   @id @default(cuid())
+  roundId     String
+  userId      String
+  content     String
+  submittedAt DateTime @default(now())
+  reason      String?
+  round       Round    @relation(fields: [roundId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@unique([roundId, userId])
+}
+
+model Score {
+  id         String     @id @default(cuid())
+  roundId    String
+  gameId     String
+  guesserId  String
+  matchLevel MatchLevel
+  points     Int
+  createdAt  DateTime   @default(now())
+  game       Game       @relation(fields: [gameId], references: [id])
+  guesser    User       @relation(fields: [guesserId], references: [id])
+  round      Round      @relation(fields: [roundId], references: [id])
+
+  @@unique([roundId, guesserId])
+  @@index([gameId])
+  @@index([guesserId])
+}
+
+model Question {
+  id           String          @id @default(cuid())
+  text         String
+  category     String
+  difficulty   Difficulty      @default(EASY)
+  language     String          @default("tr")
+  isActive     Boolean         @default(true)
+  ageGroup     AgeGroup?
+  correct      String?
+  gameMode     GameMode        @default(SOCIAL)
+  options      Json?
+  penalty      String?
+  roomId       String?
+  dailyEntries DailyQuestion[]
+  rounds       Round[]
+}
+
+model DailyQuestion {
+  id         String        @id @default(cuid())
+  date       DateTime      @unique @default(now())
+  questionId String
+  answers    DailyAnswer[]
+  question   Question      @relation(fields: [questionId], references: [id])
+}
+
+model DailyAnswer {
+  id              String        @id @default(cuid())
+  dailyQuestionId String
+  userId          String
+  content         String
+  createdAt       DateTime      @default(now())
+  dailyQuestion   DailyQuestion @relation(fields: [dailyQuestionId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
+
+  @@unique([dailyQuestionId, userId])
+}
+
+model Insight {
+  id         String   @id @default(cuid())
+  gameId     String
+  userAId    String
+  userBId    String
+  text       String
+  patternKey String
+  createdAt  DateTime @default(now())
+  game       Game     @relation(fields: [gameId], references: [id])
+  userA      User     @relation("InsightUserA", fields: [userAId], references: [id])
+  userB      User     @relation("InsightUserB", fields: [userBId], references: [id])
+}
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  action     AuditAction
+  entityType TargetType?
+  entityId   String?
+  resource   String?
+  details    Json?
+  oldValue   String?
+  newValue   String?
+  ipAddress  String?
+  userAgent  String?
+  userId     String?
+  createdAt  DateTime    @default(now())
+  user       User?       @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([entityId])
+}
+
+enum ParticipantRole {
+  PLAYER
+  SPECTATOR
+}
+
+enum RoomStatus {
+  WAITING
+  ACTIVE
+  FINISHED
+}
+
+enum GameStatus {
+  ACTIVE
+  FINISHED
+}
+
+enum RoundStatus {
+  ANSWERING
+  GUESSING
+  SCORED
+}
+
+enum MatchLevel {
+  EXACT
+  CLOSE
+  WRONG
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum GameMode {
+  SOCIAL
+  QUIZ
+}
+
+enum AgeGroup {
+  CHILD
+  ADULT
+  WISE
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  START_GAME
+  JOIN_ROOM
+  SUBMIT_ANSWER
+  SUBMIT_GUESS
+  SUBMIT_SCORE
+}
+
+enum TargetType {
+  ROOM
+  GAME
+  ROUND
+  ANSWER
+  GUESS
+  SCORE
+  QUESTION
+  USER
+}
