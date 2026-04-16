@@ -216,37 +216,33 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
             exit={{ opacity: 0, x: -10 }}
             className="flex flex-col gap-6"
           >
-            <button 
-              onClick={() => setStep("code")} 
-              className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-bold w-fit mb-2 group"
-            >
-              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                <ChevronLeft size={16} />
-              </div>
-              Kodu Değiştir
-            </button>
+            {/* Kodu Değiştir (Sadece manuel girişte) */}
+            {!initialCode && (
+              <button 
+                onClick={() => setStep("code")} 
+                className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-bold w-fit mb-2 group"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                  <ChevronLeft size={16} />
+                </div>
+                Kodu Değiştir
+              </button>
+            )}
 
             {/* İsim Girişi */}
-            <div className="flex flex-col gap-4 fade-up">
-              <div className="flex items-center justify-between px-1">
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Senin İsmin</p>
-                {username && !isEditingName && (
-                  <button 
-                    onClick={() => setIsEditingName(true)}
-                    className="text-[10px] font-bold text-accent hover:underline decoration-accent/30 underline-offset-4"
-                  >
-                    Değiştir
-                  </button>
-                )}
-              </div>
-              
+            <div className="flex flex-col gap-3 fade-up">
               {username && !isEditingName ? (
                 <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl px-5 py-4 flex items-center justify-between shadow-sm">
                   <div className="flex items-center gap-3">
                     <span className="text-xl">✨</span>
                     <span className="text-sm font-black text-white">{username}</span>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter bg-white/5 px-2 py-0.5 rounded-md">Hoş geldin!</span>
+                  <button 
+                    onClick={() => setIsEditingName(true)}
+                    className="text-[10px] font-bold text-accent hover:underline decoration-accent/30 underline-offset-4"
+                  >
+                    Değiştir
+                  </button>
                 </div>
               ) : (
                 <div className="relative group">
@@ -258,7 +254,7 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="İsim yazın..."
+                    placeholder="İsmini buraya yaz..."
                     maxLength={20}
                     autoFocus={!username}
                   />
@@ -269,7 +265,7 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
 
             {/* Avatar Seçimi */}
             <div className="flex flex-col gap-4 fade-up [animation-delay:0.1s]">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Karakterini Seç</p>
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Bir Karakter Seç</p>
               <div className="grid grid-cols-6 gap-2">
                 {AVATAR_OPTIONS.map((av) => (
                   <button
@@ -287,43 +283,6 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
                 ))}
               </div>
             </div>
-
-            {/* Yaş Grubu Seçimi */}
-            {!isCoupleNight && (
-              <div className="flex flex-col gap-4 fade-up [animation-delay:0.2s]">
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1">Senin Yaş Grubun</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {AGE_OPTIONS.map((g) => (
-                    <button
-                      key={g.value}
-                      onClick={() => setAge(g.value as AgeGroup)}
-                      className={cn(
-                        "flex flex-col items-center gap-2 p-4 rounded-3xl transition-all duration-300 border shrink-0",
-                        ageGroup === g.value 
-                          ? "bg-accent/15 border-accent/40 shadow-[0_0_20px_rgba(168,85,247,0.15)] ring-1 ring-accent/10" 
-                          : "bg-white/[0.02] border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10"
-                      )}
-                    >
-                      <div className={cn(
-                        "w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-500",
-                        ageGroup === g.value ? "bg-accent/20" : "bg-white/5"
-                      )}>
-                        <g.icon className={cn(ageGroup === g.value ? "text-accent" : "text-slate-500")} size={22} />
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <span className={cn(
-                          "text-[12px] font-black tracking-tight uppercase",
-                          ageGroup === g.value ? "text-white" : "text-slate-500"
-                        )}>
-                          {g.label}
-                        </span>
-                        <span className="text-[8px] text-slate-500 font-bold whitespace-nowrap opacity-60 uppercase">{g.desc}</span>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {error && (
               <motion.div 
