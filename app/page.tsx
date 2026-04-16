@@ -32,7 +32,13 @@ function LobbyContent() {
     router.push(`/room/${roomId}`);
   };
 
-  const isJoining = !!joinCode;
+  useEffect(() => {
+    // Eğer yeni bir odaya katılmıyorsak (QR veya Link değilse) 
+    // eski oyun verilerini (Kategori adı, tema vb.) temizle.
+    if (!isJoining) {
+      useGameStore.getState().reset();
+    }
+  }, [isJoining]);
 
   return (
     <main className="relative min-h-dvh flex flex-col items-center justify-center pt-safe pb-safe px-6 overflow-hidden bg-black/20">
@@ -166,21 +172,6 @@ function LobbyContent() {
             <DailyWidget onAnsweredStatus={setIsDailyAnswered} />
           </motion.div>
         )}
-
-        {/* Advert Section */}
-        <AdBanner type="lobby" />
-
-        {/* Footer */}
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.4 }}
-          transition={{ delay: 1 }}
-          className="text-center text-[10px] font-bold text-slate-500 tracking-[0.2em] mt-3 uppercase pb-4"
-        >
-          arkadaşlarını tanı · kendini keşfet · v0.4.0
-        </motion.p>
-      </div>
-    </main>
 
         {/* Advert Section */}
         <AdBanner type="lobby" />
