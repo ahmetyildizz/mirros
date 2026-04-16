@@ -133,6 +133,12 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           const role = me?.role === "SPECTATOR" ? "spectator" : (data.gameMode === "QUIZ" || data.gameMode === "EXPOSE" ? "guesser" : (data.answererId === myUserId ? "answerer" : "guesser"));
           useGameStore.getState().setMyRole(role);
         }
+
+        // AGGRESSIVE SYNC: Eğer EXPOSE/QUIZ modundaysak ve state ANSWERING olarak gelmişse (race condition), GUESSING'e zorla
+        if ((data.gameMode === "EXPOSE" || data.gameMode === "QUIZ" || !data.answererId) && data.state === "ANSWERING") {
+          console.log("Auto-correcting state to GUESSING for non-answering mode");
+          useGameStore.getState().setGameState("GUESSING");
+        }
       }
     } catch (e) {
       console.error("Game recovery failed", e);
@@ -369,7 +375,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     </p>
                   </div>
                 </motion.div>
-              ) : state === "ANSWERING" && !isExpose ? (
+              ) : state === "ANSWERING" && answererId !== null ? (
                 <motion.div 
                   key="answering-area"
                   initial={{ opacity: 0, scale: 0.95 }}
