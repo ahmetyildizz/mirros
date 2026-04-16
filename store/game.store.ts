@@ -142,7 +142,9 @@ export const useGameStore = create<GameStore>()(
       setQuestion:       (question) => set({ question }),
       setMyRole:         (myRole) => set({ myRole }),
       setAnswererId:     (answererId) => set({ answererId }),
-      setPlayers:        (players) => set({ players }),
+      setPlayers:        (players) => set({ 
+        players: Array.from(new Map(players.map(p => [p.id, p])).values()) 
+      }),
       setPlayerScores:   (playerScores) => set({ playerScores }),
       setLastRoundScore:  (lastRoundScore) => set({ lastRoundScore }),
       setLastQuizResults: (lastQuizResults) => set({ lastQuizResults }),

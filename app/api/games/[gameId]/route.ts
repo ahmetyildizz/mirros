@@ -66,9 +66,12 @@ export async function GET(
       ? game.room.participants.length
       : (game.room.participants.length - 1) || 0,
     totalParticipants: game.room.participants.length,
-    players: game.room.participants.map((p) => ({
-      id:       p.userId,
-      username: (p as any).user?.username ?? (p as any).user?.email ?? "?",
-    })),
+    players: Array.from(new Map(game.room.participants.map((p) => [
+      p.userId,
+      {
+        id:       p.userId,
+        username: (p as any).user?.username ?? (p as any).user?.email ?? "?",
+      }
+    ])).values()),
   });
 }

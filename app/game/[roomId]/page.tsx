@@ -369,7 +369,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     </p>
                   </div>
                 </motion.div>
-              ) : state === "ANSWERING" ? (
+              ) : state === "ANSWERING" && !isExpose ? (
                 <motion.div 
                   key="answering-area"
                   initial={{ opacity: 0, scale: 0.95 }}

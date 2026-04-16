@@ -97,7 +97,8 @@ export function useGameState(gameId: string, myUserId: string) {
       const store = useGameStore.getState();
       const gameMode = store.gameMode;
       // EXPOSE modunda round başlatılınca doğrudan GUESSING'e geç
-      const initialState = gameMode === "EXPOSE" ? "GUESSING" : "ANSWERING";
+      // Fallback: gameMode henüz yüklenmemişse answererId'nin null olması EXPOSE veya QUIZ (guessing tabanlı) olduğunu gösterir
+      const initialState = (gameMode === "EXPOSE" || (!gameMode && !data.answererId)) ? "GUESSING" : "ANSWERING";
       setGameState(initialState);
       setActiveRoundId(data.roundId);
       setCurrentRound(data.roundNumber);

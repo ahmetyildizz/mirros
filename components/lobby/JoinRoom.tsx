@@ -55,6 +55,14 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
       .catch(() => {});
   }, []);
 
+  // QR Auto-Advance
+  useEffect(() => {
+    if (initialCode && step === "code" && !loading && !error) {
+      handleCodeNext();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialCode]);
+
   const updateCode = (newCode: string) => {
     setCode(newCode.toUpperCase());
     if (error) setError("");
