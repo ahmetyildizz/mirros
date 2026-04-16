@@ -38,7 +38,7 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
   const [code,     setCode]    = useState(initialCode);
   const [ageGroup, setAge]     = useState<AgeGroup>("ADULT");
   const [avatar,   setAvatar]  = useState(AVATAR_OPTIONS[0]);
-  const [loading,  setLoading] = useState(false);
+  const [loading,  setLoading] = useState(initialCode ? true : false);
   const [isCoupleNight, setIsCoupleNight] = useState(false);
   const [username, setUsername] = useState("");
   const [isEditingName, setIsEditingName] = useState(false);
@@ -57,7 +57,7 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
 
   // QR Auto-Advance
   useEffect(() => {
-    if (initialCode && step === "code" && !loading && !error) {
+    if (initialCode && step === "code") {
       handleCodeNext();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

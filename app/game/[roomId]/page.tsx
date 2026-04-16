@@ -27,6 +27,7 @@ import { QuestionCard }         from "@/components/game/QuestionCard";
 import { AnswerInput }          from "@/components/game/AnswerInput";
 import { GuessInput }           from "@/components/game/GuessInput";
 import { MultipleChoiceInput }  from "@/components/game/MultipleChoiceInput";
+import { GoogleAd }             from "@/components/ads/GoogleAd";
 import { FlashbackCard }        from "@/components/game/FlashbackCard";
 import { sounds }               from "@/lib/sounds";
 import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
@@ -637,6 +638,9 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
               )}
 
               <div className="pt-6 border-t border-white/10 flex flex-col gap-4">
+                {/* Ad Space */}
+                <GoogleAd slot="2233445566" className="mt-2" />
+                
                 {useGameStore.getState().isHostPlayer ? (
                   <button 
                     onClick={async () => {
@@ -728,6 +732,8 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                   </motion.div>
                 ))}
               </div>
+
+              <GoogleAd slot="3344556677" className="mt-4" />
 
               {/* Next Round Controller */}
               <motion.div 
