@@ -26,9 +26,10 @@ export async function POST(
   if (round.status === "SCORED")    return NextResponse.json({ error: "Zaten skorlandı" }, { status: 409 });
   if (round.status !== "GUESSING")  return NextResponse.json({ error: "Round henüz tahmin aşamasında değil" }, { status: 409 });
 
-  // Sadece odanın host'u veya round'un answerer'ı skorlayabilir
+  // EXPOSE modunda answererId null olduğundan isAnswerer her zaman false,
+  // EXPOSE'da sadece host scoring yapabilir.
   const isHost     = round.game.room.hostId === userId;
-  const isAnswerer = round.answererId === userId;
+  const isAnswerer = round.answererId !== null && round.answererId === userId;
   if (!isHost && !isAnswerer) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
 
   const isExpose = round.game.room.gameMode === "EXPOSE";

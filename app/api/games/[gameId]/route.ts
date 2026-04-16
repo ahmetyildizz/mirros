@@ -61,7 +61,10 @@ export async function GET(
     },
     playerScores,
     guessCount,
-    totalGuessers: (game.room.participants.length - 1) || 0,
+    // EXPOSE modunda herkes tahmin eder, SOCIAL/QUIZ'de answerer hariç
+    totalGuessers: game.room.gameMode === "EXPOSE"
+      ? game.room.participants.length
+      : (game.room.participants.length - 1) || 0,
     totalParticipants: game.room.participants.length,
     players: game.room.participants.map((p) => ({
       id:       p.userId,

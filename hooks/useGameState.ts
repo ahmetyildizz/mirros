@@ -94,12 +94,21 @@ export function useGameState(gameId: string, myUserId: string) {
     const channel = pusher.subscribe(`game-${gameId}`);
 
     channel.bind("round-started", (data: RoundStartedPayload) => {
-      setGameState("ANSWERING");
+      const store = useGameStore.getState();
+      const gameMode = store.gameMode;
+      // EXPOSE modunda round başlatılınca doğrudan GUESSING'e geç
+      const initialState = gameMode === "EXPOSE" ? "GUESSING" : "ANSWERING";
+      setGameState(initialState);
       setActiveRoundId(data.roundId);
       setCurrentRound(data.roundNumber);
       setAnswererId(data.answererId ?? null);
-      setMyRole(data.answererId ? (data.answererId === myUserId ? "answerer" : "guesser") : "guesser");
-      setGuessProgress(0, 0);
+      // EXPOSE'da herkes guesser
+      setMyRole(gameMode === "EXPOSE" ? "guesser" : (data.answererId ? (data.answererId === myUserId ? "answerer" : "guesser") : "guesser"));
+      
+      const totalPlayers = store.players.length;
+      const initialTotalGuessers = gameMode === "EXPOSE" ? totalPlayers : (totalPlayers - 1);
+      setGuessProgress(0, initialTotalGuessers);
+      
       setNextRoundData(null); // Clear pre-loaded next round
       if (data.questionText) {
         setQuestion({ id: data.questionId, text: data.questionText, category: data.questionCategory ?? "", options: data.questionOptions ?? null });
@@ -202,10 +211,12 @@ export function useRoomState(roomId: string) {
     });
 
     channel.bind("game-started", (data: any) => {
+      // EXPOSE modunda round zaten GUESSING status'unda başlar (server'da)
+      const initialState = data.gameMode === "EXPOSE" ? "GUESSING" : "ANSWERING";
       useGameStore.getState().hydrate({
         gameId:        data.gameId,
         gameMode:      data.gameMode,
-        state:         "ANSWERING",
+        state:         initialState,
         currentRound:  1,
         totalRounds:   data.totalRounds,
         activeRoundId: data.roundId,

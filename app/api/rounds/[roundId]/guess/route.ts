@@ -46,9 +46,14 @@ export async function POST(
     details: { content: body.data.content, reason: body.data.reason },
   });
 
+  const isExpose     = round.game.room.gameMode === "EXPOSE";
+
   // Kaç kişi tahmin etti?
   const guessCount    = await db.guess.count({ where: { roundId } });
-  const totalGuessers = round.game.room.participants.length - 1; // answerer hariç
+  // EXPOSE modunda herkes tahmin eder (answerer yok), SOCIAL'da answerer hariç
+  const totalGuessers = isExpose
+    ? round.game.room.participants.length
+    : round.game.room.participants.length - 1;
 
   await pusherServer.trigger(`game-${round.gameId}`, "guess-submitted", {
     roundId,

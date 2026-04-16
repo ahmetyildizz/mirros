@@ -36,7 +36,13 @@ export async function POST(
   const isParticipant = round.game.room.participants.some((p) => p.userId === user.id);
   if (!isParticipant) return NextResponse.json({ error: "Bu oyunun katılımcısı değilsin" }, { status: 403 });
 
-  const isQuiz = round.game.room.gameMode === "QUIZ";
+  const isQuiz   = round.game.room.gameMode === "QUIZ";
+  const isExpose  = round.game.room.gameMode === "EXPOSE";
+
+  // EXPOSE modunda tahminler /guess endpoint'i üzerinden yapılır, /answer kullanılmaz
+  if (isExpose) {
+    return NextResponse.json({ error: "EXPOSE modunda cevap endpoint'i kullanılmaz" }, { status: 409 });
+  }
 
   // SOCIAL: sadece answererId cevap verebilir
   if (!isQuiz && round.answererId !== user.id) {
