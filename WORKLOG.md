@@ -6,6 +6,17 @@
 
 ---
 
+## 2026-04-17 — Claude (audit + agent kurulum)
+
+- Kapsamlı audit tamamlandı: 87 bulgu (3 P0, 20 P1, 35 P2, 29 P3)
+- Audit raporu kaydedildi: `docs/audit_2026-04-17.md`
+- 3 agent oluşturuldu: `mirros-security-fixer`, `mirros-game-state-debugger`, `mirros-performance-optimizer`
+- 3 skill oluşturuldu: `mirros-audit`, `mirros-fix-security`, `mirros-fix-game-state`
+- **Açık P0'lar:** seed endpoint PUBLIC, EXPOSE winner string match, startGame race condition
+- **Sonraki önerilen adım:** P0 güvenlik fixleri (`mirros-fix-security` skill ile başla)
+
+---
+
 ## 2026-04-17 — Gemini
 
 - **Focused Mode UI:** QR Join ve Create Room (Config aşaması) için ana sayfadaki tüm dikkat dağıtıcı öğeler (Günün sorusu, VEYA ayracı vb.) gizlendi.
