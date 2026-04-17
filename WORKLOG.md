@@ -6,6 +6,16 @@
 
 ---
 
+## 2026-04-17 — Claude (P1 game state fixleri)
+
+- `score/route.ts` — EXPOSE winner: case-insensitive match + tie → rastgele kazanan
+- `game.service.ts` — startGame race condition: existingGame kontrolü transaction'a taşındı
+- `useGameState.ts` — tüm Pusher handler'larına try/catch eklendi
+- Build önceden zaten bozuk (`app/game/[roomId]/page.tsx` syntax hataları — benim değişiklerimden değil)
+- **Açık P0:** seed endpoint PUBLIC (`middleware.ts:8`) — henüz dokunulmadı
+
+---
+
 ## 2026-04-17 — Claude (audit + agent kurulum)
 
 - Kapsamlı audit tamamlandı: 87 bulgu (3 P0, 20 P1, 35 P2, 29 P3)
