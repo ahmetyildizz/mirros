@@ -47,7 +47,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     players, playerScores, lastRoundScore, lastQuizResults, lastPenalty,
     currentRound, totalRounds, activeRoundId,
     guessCount, totalGuessers, setTheme, nextRoundData,
-    bluffOptions, bluffAnswers,
+    bluffOptions, bluffAnswers, isHostPlayer,
     setGameState, setMyRole, setAnswererId,
   } = useGameStore();
   const isQuiz   = gameMode === "QUIZ";
@@ -58,8 +58,9 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   const [pastAnswers, setPastAnswers] = useState<any[]>([]);
   const [timeLeft, setTimeLeft] = useState(60);
 
-  const scoringRoundRef  = useRef<string | null>(null);
-  const advancingRoundRef = useRef<string | null>(null);
+  const scoringRoundRef     = useRef<string | null>(null);
+  const advancingRoundRef   = useRef<string | null>(null);
+  const hasAutoSubmitted    = useRef(false);
 
   useEffect(() => {
     fetch("/api/me")
@@ -156,7 +157,6 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   const spotlightPlayer = players.find((p) => p.id === answererId);
   const isAnswerer      = myRole === "answerer";
-  const { isHostPlayer } = useGameStore.getState();
 
   // Global Flow Guard: Eğer her şeyin sonunda hala state ANSWERING ise ama answererId yoksa, bu bir EXPOSE/QUIZ tuluğudur.
   // Otomatik olarak GUESSING'e zorla.
@@ -167,40 +167,41 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     }
   }, [state, answererId, isQuiz, gameId]);
 
-  // Timer Countdown Logic
+  // Timer: say down every second while active
   useEffect(() => {
-    if (state !== "ANSWERING" && state !== "GUESSING") {
-      setTimeLeft(60);
-      return;
-    }
-
+    if (state !== "ANSWERING" && state !== "GUESSING") return;
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          // Auto-trigger on timeout
-          if (state === "GUESSING" && isHostPlayer) {
-            triggerScore();
-          } else if (state === "ANSWERING" && isAnswerer) {
-            submitAnswer("..."); 
-          } else if (state === "ANSWERING" && isQuiz) {
-            submitAnswer("...");
-          }
-          return 0;
-        }
-        return prev - 1;
-      });
+      setTimeLeft((prev) => Math.max(0, prev - 1));
     }, 1000);
-
     return () => clearInterval(timer);
-  }, [state, activeRoundId, isHostPlayer, isAnswerer, isQuiz]); 
+  }, [state, activeRoundId]);
 
-  // Reset timer on state transition
+  // Reset timer + auto-submit guard on new round/state
   useEffect(() => {
     if (state === "ANSWERING" || state === "GUESSING") {
       setTimeLeft(60);
+      hasAutoSubmitted.current = false;
     }
   }, [state, activeRoundId]);
+
+  // Auto-submit / skip when time runs out
+  useEffect(() => {
+    if (timeLeft !== 0 || hasAutoSubmitted.current) return;
+    if (state === "ANSWERING" && (isAnswerer || isQuiz)) {
+      hasAutoSubmitted.current = true;
+      submitAnswer("...").catch(() => {});
+    } else if (state === "GUESSING" && isHostPlayer) {
+      hasAutoSubmitted.current = true;
+      triggerScore();
+    }
+  }, [timeLeft, state, isAnswerer, isHostPlayer, isQuiz]);
+
+  // Warning sound at 10 seconds
+  useEffect(() => {
+    if (timeLeft === 10 && (state === "ANSWERING" || state === "GUESSING")) {
+      sounds.ping();
+    }
+  }, [timeLeft, state]);
 
   useEffect(() => {
     if (state === "ANSWERING") {
@@ -347,16 +348,24 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
         {/* Global Timer Bar */}
         {(state === "ANSWERING" || state === "GUESSING") && (
-          <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-2">
-            <motion.div 
-              initial={{ width: "100%" }}
-              animate={{ width: `${(timeLeft / 60) * 100}%` }}
-              transition={{ duration: 1, ease: "linear" }}
-              className={cn(
-                "h-full transition-colors duration-500",
-                timeLeft > 20 ? "bg-accent" : timeLeft > 10 ? "bg-orange-500" : "bg-red-500 animate-pulse"
-              )}
-            />
+          <div className="flex items-center gap-2 mb-2">
+            <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: "100%" }}
+                animate={{ width: `${(timeLeft / 60) * 100}%` }}
+                transition={{ duration: 1, ease: "linear" }}
+                className={cn(
+                  "h-full transition-colors duration-500",
+                  timeLeft > 20 ? "bg-accent" : timeLeft > 10 ? "bg-orange-500" : "bg-red-500 animate-pulse"
+                )}
+              />
+            </div>
+            <span className={cn(
+              "text-[11px] font-black tabular-nums min-w-[24px] text-right transition-colors",
+              timeLeft > 20 ? "text-accent" : timeLeft > 10 ? "text-orange-500" : "text-red-500 animate-pulse"
+            )}>
+              {timeLeft}s
+            </span>
           </div>
         )}
 
@@ -525,6 +534,14 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                       <p className="text-[13px] font-medium text-slate-300 leading-relaxed">
                         <span className="text-white font-black">{spotlightPlayer?.username ?? "Arkadaşın"}</span> şu an cevap veriyor...
                       </p>
+                      <span className={cn(
+                        "text-[11px] font-black tabular-nums px-3 py-1 rounded-full border",
+                        timeLeft <= 10
+                          ? "text-red-400 border-red-500/30 bg-red-500/10 animate-pulse"
+                          : "text-slate-500 border-white/10"
+                      )}>
+                        {timeLeft}s kaldı
+                      </span>
                     </div>
                   )}
                 </motion.div>
