@@ -94,98 +94,122 @@ export function useGameState(gameId: string, myUserId: string) {
     const channel = pusher.subscribe(`game-${gameId}`);
 
     channel.bind("round-started", (data: RoundStartedPayload) => {
-      const store = useGameStore.getState();
-      const gameMode = store.gameMode;
-      // Global Flow Guard: gameMode EXPOSE/QUIZ ise veya answererId yoksa başlangıç durumu GUESSING'dir
-      const initialState = (gameMode === "EXPOSE" || gameMode === "QUIZ" || !data.answererId) ? "GUESSING" : "ANSWERING";
-      setGameState(initialState);
-      setActiveRoundId(data.roundId);
-      setCurrentRound(data.roundNumber);
-      setAnswererId(data.answererId ?? null);
-      // EXPOSE'da herkes guesser
-      setMyRole(gameMode === "EXPOSE" ? "guesser" : (data.answererId ? (data.answererId === myUserId ? "answerer" : "guesser") : "guesser"));
-      
-      const totalPlayers = store.players.length;
-      const initialTotalGuessers = gameMode === "EXPOSE" ? totalPlayers : (totalPlayers - 1);
-      setGuessProgress(0, initialTotalGuessers);
-      
-      setNextRoundData(null); // Clear pre-loaded next round
-      if (data.questionText) {
-        setQuestion({ id: data.questionId, text: data.questionText, category: data.questionCategory ?? "", options: data.questionOptions ?? null });
+      try {
+        const store = useGameStore.getState();
+        const gameMode = store.gameMode;
+        // Global Flow Guard: gameMode EXPOSE/QUIZ ise veya answererId yoksa başlangıç durumu GUESSING'dir
+        const initialState = (gameMode === "EXPOSE" || gameMode === "QUIZ" || !data.answererId) ? "GUESSING" : "ANSWERING";
+        setGameState(initialState);
+        setActiveRoundId(data.roundId);
+        setCurrentRound(data.roundNumber);
+        setAnswererId(data.answererId ?? null);
+        // EXPOSE'da herkes guesser
+        setMyRole(gameMode === "EXPOSE" ? "guesser" : (data.answererId ? (data.answererId === myUserId ? "answerer" : "guesser") : "guesser"));
+
+        const totalPlayers = store.players.length;
+        const initialTotalGuessers = gameMode === "EXPOSE" ? totalPlayers : (totalPlayers - 1);
+        setGuessProgress(0, initialTotalGuessers);
+
+        setNextRoundData(null); // Clear pre-loaded next round
+        if (data.questionText) {
+          setQuestion({ id: data.questionId, text: data.questionText, category: data.questionCategory ?? "", options: data.questionOptions ?? null });
+        }
+      } catch (err) {
+        console.error("[useGameState] round-started handler error:", err);
       }
     });
 
     channel.bind("answer-submitted", (data: AnswerSubmittedPayload) => {
-      if (data.answererId !== undefined) {
-        // SOCIAL: guessing'e geç, varsa güncellenmiş şıkları uygula
-        if (data.updatedOptions) setQuestionOptions(data.updatedOptions);
-        // totalGuessers'ı sıfırla ki UI 0/0 göstermesin
-        setGuessProgress(0, data.totalGuessers ?? 0);
-        setGameState("GUESSING");
-        return;
+      try {
+        if (data.answererId !== undefined) {
+          // SOCIAL: guessing'e geç, varsa güncellenmiş şıkları uygula
+          if (data.updatedOptions) setQuestionOptions(data.updatedOptions);
+          // totalGuessers'ı sıfırla ki UI 0/0 göstermesin
+          setGuessProgress(0, data.totalGuessers ?? 0);
+          setGameState("GUESSING");
+          return;
+        }
+        // QUIZ: kaç kişi cevapladı bilgisi güncelle
+        setGuessProgress(data.answerCount ?? 0, data.totalParticipants ?? 0);
+      } catch (err) {
+        console.error("[useGameState] answer-submitted handler error:", err);
       }
-      // QUIZ: kaç kişi cevapladı bilgisi güncelle
-      setGuessProgress(data.answerCount ?? 0, data.totalParticipants ?? 0);
     });
 
     channel.bind("quiz-round-scored", (data: QuizRoundScoredPayload) => {
-      setLastQuizResults({ correctAnswer: data.correctAnswer, results: data.results });
-      setPlayerScores(data.playerScores);
-      setLastPenalty(data.penalty ?? null);
-      if (data.nextRound) setNextRoundData(data.nextRound);
-      setGameState("SCORING");
+      try {
+        setLastQuizResults({ correctAnswer: data.correctAnswer, results: data.results });
+        setPlayerScores(data.playerScores);
+        setLastPenalty(data.penalty ?? null);
+        if (data.nextRound) setNextRoundData(data.nextRound);
+        setGameState("SCORING");
+      } catch (err) {
+        console.error("[useGameState] quiz-round-scored handler error:", err);
+      }
     });
 
     channel.bind("guess-submitted", (data: GuessSubmittedPayload) => {
-      setGuessProgress(data.guessCount, data.totalGuessers);
+      try {
+        setGuessProgress(data.guessCount, data.totalGuessers);
+      } catch (err) {
+        console.error("[useGameState] guess-submitted handler error:", err);
+      }
     });
 
     channel.bind("round-scored", (data: RoundScoredPayload) => {
-      setLastRoundScore({
-        roundId:      data.roundId,
-        answererId:   data.answererId,
-        answer:       data.answer,
-        winnerId:     data.winnerId,
-        guessResults: data.guessResults,
-      });
-
-      // Update streaks in players list
-      const store = useGameStore.getState();
-      const updatedPlayers = store.players.map(p => {
-        const res = data.guessResults.find(gr => gr.userId === p.id);
-        if (res && res.streak !== undefined) {
-          return { ...p, streak: res.streak };
-        }
-        return p;
-      });
-      setPlayers(updatedPlayers);
-
-      setPlayerScores(data.playerScores);
-      setLastPenalty(data.penalty ?? null);
-
-      if (data.nextRound) {
-        setNextRoundData({
-          id:       data.nextRound.id,
-          text:     data.nextRound.questionText,
-          category: data.nextRound.questionCategory,
-          options:  data.nextRound.questionOptions,
-          number:   data.nextRound.number,
-          answererId: data.nextRound.answererId,
+      try {
+        setLastRoundScore({
+          roundId:      data.roundId,
+          answererId:   data.answererId,
+          answer:       data.answer,
+          winnerId:     data.winnerId,
+          guessResults: data.guessResults,
         });
-      }
 
-      // Sadece skor aşamasına geç, yeni round verisi olsa bile (host başlatacak)
-      setGameState("SCORING");
+        // Update streaks in players list
+        const store = useGameStore.getState();
+        const updatedPlayers = store.players.map(p => {
+          const res = data.guessResults.find(gr => gr.userId === p.id);
+          if (res && res.streak !== undefined) {
+            return { ...p, streak: res.streak };
+          }
+          return p;
+        });
+        setPlayers(updatedPlayers);
+
+        setPlayerScores(data.playerScores);
+        setLastPenalty(data.penalty ?? null);
+
+        if (data.nextRound) {
+          setNextRoundData({
+            id:       data.nextRound.id,
+            text:     data.nextRound.questionText,
+            category: data.nextRound.questionCategory,
+            options:  data.nextRound.questionOptions,
+            number:   data.nextRound.number,
+            answererId: data.nextRound.answererId,
+          });
+        }
+
+        // Sadece skor aşamasına geç, yeni round verisi olsa bile (host başlatacak)
+        setGameState("SCORING");
+      } catch (err) {
+        console.error("[useGameState] round-scored handler error:", err);
+      }
     });
 
     channel.bind("game-finished", (data: GameFinishedPayload) => {
-      setPlayerScores(data.playerScores);
-      setGameState("END");
-      // Mobil cihazda geçiş reklamı göster
-      if (Capacitor.isNativePlatform()) {
-        AdMobService.showInterstitial();
+      try {
+        setPlayerScores(data.playerScores);
+        setGameState("END");
+        // Mobil cihazda geçiş reklamı göster
+        if (Capacitor.isNativePlatform()) {
+          AdMobService.showInterstitial();
+        }
+        router.push(`/results/${data.gameId}`);
+      } catch (err) {
+        console.error("[useGameState] game-finished handler error:", err);
       }
-      router.push(`/results/${data.gameId}`);
     });
 
     return () => {

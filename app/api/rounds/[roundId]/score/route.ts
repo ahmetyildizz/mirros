@@ -49,10 +49,16 @@ export async function POST(
     for (const g of round.guesses) {
       voteCounts[g.content] = (voteCounts[g.content] || 0) + 1;
     }
-    exposeWinnerContent = Object.keys(voteCounts).reduce((a, b) => voteCounts[a] > voteCounts[b] ? a : b);
-    
-    // Kazanan kullanıcının ID'sini bul
-    const winnerPart = round.game.room.participants.find(p => p.user.username === exposeWinnerContent);
+    // Beraberlik durumunda kazananlardan rastgele birini seç
+    const maxVotes = Math.max(...Object.values(voteCounts));
+    const tiedOptions = Object.keys(voteCounts).filter(k => voteCounts[k] === maxVotes);
+    exposeWinnerContent = tiedOptions[Math.floor(Math.random() * tiedOptions.length)];
+
+    // Kazanan kullanıcının ID'sini bul (büyük/küçük harf + boşluk toleranslı)
+    const normalizedWinner = exposeWinnerContent.toLowerCase().trim();
+    const winnerPart = round.game.room.participants.find(
+      p => (p.user.username ?? p.user.email ?? "").toLowerCase().trim() === normalizedWinner
+    );
     exposeWinnerId = winnerPart?.userId ?? null;
   }
 

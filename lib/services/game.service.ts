@@ -117,17 +117,6 @@ function resolveSpotlight(roundNumber: number, participantIds: string[]): string
 }
 
 export async function startGame(roomId: string) {
-  // Atomik kontrol: zaten aktif bir game varsa erken çık (race condition önlemi)
-  const existingGame = await db.game.findFirst({
-    where: { roomId, status: "ACTIVE" },
-    include: { rounds: { take: 1 } },
-  });
-
-  // Eğer oyun varsa ve round'u da varsa hata ver. Ama round'u yoksa (ghost game), onu bitmiş sayıp yeni başlatabiliriz.
-  if (existingGame && existingGame.rounds.length > 0) {
-    throw new Error("Oyun zaten başlatıldı");
-  }
-
   const room = await db.room.findUnique({
     where:   { id: roomId },
     include: { participants: { orderBy: { joinedAt: "asc" }, include: { user: true } } },
@@ -177,21 +166,29 @@ export async function startGame(roomId: string) {
   });
   const usedIds = previousRounds.map((r) => r.questionId);
 
-  // Ghost game'i temizle (varsa)
-  if (existingGame) {
-    await db.game.update({ where: { id: existingGame.id }, data: { status: "FINISHED" } });
-    await createAuditLog({
-      action: "UPDATE",
-      entityType: "GAME",
-      entityId: existingGame.id,
-      resource: "Ghost Game Cleaned",
-      details: { status: "FINISHED" },
-      oldValue: JSON.stringify({ status: "ACTIVE" }),
-      newValue: JSON.stringify({ status: "FINISHED" }),
-    });
-  }
-
   const { game, round, question } = await db.$transaction(async (tx) => {
+    // Transaction içinde atomik kontrol — race condition önlemi
+    const existingGame = await tx.game.findFirst({
+      where: { roomId, status: "ACTIVE" },
+      include: { rounds: { take: 1 } },
+    });
+    if (existingGame && existingGame.rounds.length > 0) {
+      throw new Error("Oyun zaten başlatıldı");
+    }
+    // Ghost game'i temizle (varsa — round'u olmayan aktif oyun)
+    if (existingGame) {
+      await tx.game.update({ where: { id: existingGame.id }, data: { status: "FINISHED" } });
+      await createAuditLog({
+        action: "UPDATE",
+        entityType: "GAME",
+        entityId: existingGame.id,
+        resource: "Ghost Game Cleaned",
+        details: { status: "FINISHED" },
+        oldValue: JSON.stringify({ status: "ACTIVE" }),
+        newValue: JSON.stringify({ status: "FINISHED" }),
+        tx,
+      });
+    }
     const newGame = await tx.game.create({
       data: { roomId, totalRounds, status: "ACTIVE" },
     });
