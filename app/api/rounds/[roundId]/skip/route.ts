@@ -44,8 +44,15 @@ export async function POST(
   }
 
   const advanceResult = await advanceGame(round.gameId, round.number);
+
+  // advanceGame son turda game-finished event'ini kendi atar — round-scored atmaya gerek yok.
+  if (advanceResult.finished) {
+    return NextResponse.json({ ok: true, skipped: true, finished: true });
+  }
+
+  // Sonraki tur varsa round-scored ile client'ı SCORING'e çek
   let nextRoundData: any = null;
-  if (!advanceResult.finished && advanceResult.round) {
+  if (advanceResult.round) {
     const nextR = await db.round.findUnique({
       where:   { id: advanceResult.round.id },
       include: { question: true },

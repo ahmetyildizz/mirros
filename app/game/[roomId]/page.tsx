@@ -187,21 +187,18 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   // Auto-submit / skip when time runs out
   useEffect(() => {
     if (timeLeft !== 0 || hasAutoSubmitted.current) return;
+    hasAutoSubmitted.current = true;
+
     if (state === "ANSWERING") {
-      hasAutoSubmitted.current = true;
-      if (isAnswerer || isQuiz) {
-        // Answerer kendi adına gönder
-        submitAnswer("...").catch(() => {
-          // Yetki hatası — host olarak skip et
-          if (isHostPlayer) skipRound().catch(() => {});
-        });
-      } else if (isHostPlayer) {
-        // Answerer client'ı cevap göndermedi, host bypass eder
-        skipRound().catch(() => {});
+      // Answerer kendi cevabını gönderir (server 403 verirse susar)
+      if (isAnswerer || isQuiz) submitAnswer("...").catch(() => {});
+      // Host bağımsız olarak skip atar — server race condition'ı 409 ile reddeder, sorun olmaz
+      if (isHostPlayer) skipRound().catch(() => {});
+    } else if (state === "GUESSING") {
+      // Önce score dene (tahminleri değerlendir), başarısız olursa skip
+      if (isHostPlayer || isAnswerer) {
+        triggerScore().catch(() => skipRound().catch(() => {}));
       }
-    } else if (state === "GUESSING" && isHostPlayer) {
-      hasAutoSubmitted.current = true;
-      triggerScore().catch(() => skipRound().catch(() => {}));
     }
   }, [timeLeft, state, isAnswerer, isHostPlayer, isQuiz]);
 
@@ -339,7 +336,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     const res = await fetch(`/api/rounds/${activeRoundId}/score`, { method: "POST" });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Skor hesaplanamadı" }));
-      console.error("[triggerScore]", err.error);
+      throw new Error(err.error || "Skor hesaplanamadı");
     }
   }
 
