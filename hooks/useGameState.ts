@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useGameStore } from "@/store/game.store";
@@ -81,6 +81,12 @@ interface PlayerJoinedPayload {
 
 export function useGameState(gameId: string, myUserId: string) {
   const router = useRouter();
+  // Ref pattern: myUserId her değiştiğinde Pusher'ı yeniden bağlamayı önler.
+  // /api/me yüklenmesi sırasındaki kısa unsubscribe/resubscribe penceresinde
+  // answer-submitted eventinin kaçırılmasını engeller.
+  const myUserIdRef = useRef(myUserId);
+  useEffect(() => { myUserIdRef.current = myUserId; }, [myUserId]);
+
   const {
     setGameState, setQuestion, setMyRole, setCurrentRound,
     setActiveRoundId, setAnswererId, setPlayerScores,
@@ -107,7 +113,7 @@ export function useGameState(gameId: string, myUserId: string) {
         setBluffOptions([]); // Yeni round başlayınca temizle
         setBluffAnswers([]);
         // EXPOSE/BLUFF'da herkes cevap verir (guesser rolü)
-        setMyRole(gameMode === "EXPOSE" || gameMode === "BLUFF" ? "guesser" : (data.answererId ? (data.answererId === myUserId ? "answerer" : "guesser") : "guesser"));
+        setMyRole(gameMode === "EXPOSE" || gameMode === "BLUFF" ? "guesser" : (data.answererId ? (data.answererId === myUserIdRef.current ? "answerer" : "guesser") : "guesser"));
 
         const totalPlayers = store.players.length;
         const initialTotalGuessers = gameMode === "EXPOSE" ? totalPlayers : (totalPlayers - 1);
@@ -230,7 +236,10 @@ export function useGameState(gameId: string, myUserId: string) {
       channel.unbind_all();
       pusher.unsubscribe(`game-${gameId}`);
     };
-  }, [gameId, myUserId, router, setGameState, setQuestion, setMyRole, setCurrentRound,
+  // myUserId kasıtlı olarak dep array dışında — ref üzerinden okunuyor.
+  // Böylece /api/me yüklenince Pusher yeniden bağlanmaz, event kaçırılmaz.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameId, router, setGameState, setQuestion, setMyRole, setCurrentRound,
       setActiveRoundId, setAnswererId, setPlayerScores, setLastRoundScore, setLastQuizResults,
       setGuessProgress, setPlayers, setQuestionOptions, setLastPenalty, setNextRoundData,
       setBluffOptions, setBluffAnswers]);

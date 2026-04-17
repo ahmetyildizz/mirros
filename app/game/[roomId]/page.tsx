@@ -302,10 +302,14 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   async function submitAnswer(content: string) {
     if (!activeRoundId) return;
-    await fetch(`/api/rounds/${activeRoundId}/answer`, {
+    const res = await fetch(`/api/rounds/${activeRoundId}/answer`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content }),
     });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: "Sunucu hatası" }));
+      throw new Error(err.error || "Cevap gönderilemedi");
+    }
   }
 
   async function submitGuess(content: string, reason?: string) {
