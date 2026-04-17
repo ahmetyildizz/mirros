@@ -33,8 +33,9 @@ export async function POST(
   if (!isHost && !isAnswerer) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
 
   const isExpose = round.game.room.gameMode === "EXPOSE";
+  const isBluff  = round.game.room.gameMode === "BLUFF";
   const answer = round.answers.find((a) => a.userId === round.answererId);
-  if (!isExpose && !answer) return NextResponse.json({ error: "Cevap henüz gönderilmedi" }, { status: 422 });
+  if (!isExpose && !isBluff && !answer) return NextResponse.json({ error: "Cevap henüz gönderilmedi" }, { status: 422 });
 
   // Tüm tahminleri değerlendir (her guesser için ayrı skor)
   const scores: { id: string; gameId: string; roundId: string; guesserId: string; matchLevel: string; points: number; createdAt: Date }[] = [];
@@ -60,6 +61,75 @@ export async function POST(
       p => (p.user.username ?? p.user.email ?? "").toLowerCase().trim() === normalizedWinner
     );
     exposeWinnerId = winnerPart?.userId ?? null;
+  }
+
+  // BLUFF Modu skoru
+  if (isBluff) {
+    const bluffRound = await db.round.findUnique({
+      where: { id: roundId },
+      include: {
+        question: true,
+        answers: { include: { user: { select: { id: true, username: true } } } },
+        guesses: { include: { user: { select: { id: true, username: true } } } },
+      },
+    });
+    if (!bluffRound) return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
+
+    const realAnswer = bluffRound.question.correct ?? "";
+    const bluffGuessResults: { userId: string; username: string; guess: string; reason: string | null; matchLevel: string; points: number }[] = [];
+
+    // 1. Doğru cevabı tahmin edenlere +5 puan
+    for (const g of bluffRound.guesses) {
+      const isCorrect = g.content.trim().toLocaleLowerCase("tr") === realAnswer.trim().toLocaleLowerCase("tr");
+      const pts = isCorrect ? 5 : 0;
+      await db.score.upsert({
+        where:  { roundId_guesserId: { roundId, guesserId: g.userId } },
+        create: { roundId, gameId: round.gameId, guesserId: g.userId, matchLevel: isCorrect ? "EXACT" : "WRONG", points: pts },
+        update: { matchLevel: isCorrect ? "EXACT" : "WRONG", points: pts },
+      });
+      bluffGuessResults.push({ userId: g.userId, username: g.user.username ?? "?", guess: g.content, reason: g.reason ?? null, matchLevel: isCorrect ? "EXACT" : "WRONG", points: pts });
+    }
+
+    // 2. Sahte cevabına oy gelen oyunculara +3 puan/oy
+    for (const ans of bluffRound.answers) {
+      const votesForBluff = bluffRound.guesses.filter(g => g.content.trim().toLocaleLowerCase("tr") === ans.content.trim().toLocaleLowerCase("tr")).length;
+      if (votesForBluff > 0) {
+        const bonusPts = votesForBluff * 3;
+        await db.score.upsert({
+          where:  { roundId_guesserId: { roundId, guesserId: ans.userId } },
+          create: { roundId, gameId: round.gameId, guesserId: ans.userId, matchLevel: "CLOSE", points: bonusPts },
+          update: (s: any) => ({ points: (s.points ?? 0) + bonusPts }),
+        } as any);
+      }
+    }
+
+    await db.round.update({ where: { id: roundId }, data: { status: "SCORED" } });
+
+    const allScores = await db.score.findMany({ where: { gameId: round.gameId } });
+    const bluffPlayerScores: Record<string, number> = {};
+    for (const s of allScores) {
+      bluffPlayerScores[s.guesserId] = (bluffPlayerScores[s.guesserId] ?? 0) + s.points;
+    }
+
+    const { advanceGame } = await import("@/lib/services/game.service");
+    const bluffAdvance = await advanceGame(round.gameId, round.number);
+    let bluffNextRound: any = null;
+    if (!bluffAdvance.finished && bluffAdvance.round) {
+      const nextR = await db.round.findUnique({ where: { id: bluffAdvance.round.id }, include: { question: true } });
+      if (nextR) bluffNextRound = { id: nextR.id, number: nextR.number, questionId: nextR.questionId, questionText: nextR.question.text, questionCategory: nextR.question.category, questionOptions: nextR.question.options as string[] | null, answererId: nextR.answererId };
+    }
+
+    await safeTrigger(`game-${round.gameId}`, "round-scored", {
+      roundId,
+      answererId:   null,
+      answer:       realAnswer,
+      guessResults: bluffGuessResults,
+      playerScores: bluffPlayerScores,
+      penalty:      null,
+      nextRound:    bluffNextRound,
+    });
+
+    return NextResponse.json({ bluffPlayerScores, nextRound: bluffNextRound });
   }
 
   for (const guess of round.guesses) {

@@ -136,7 +136,7 @@ export async function generateQuizQuestions(
  */
 export async function generateAndSaveQuestionsForRoom(
   roomId:     string,
-  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE",
+  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF",
   category:   string | null,
   ageGroup:   "CHILD" | "ADULT" | "WISE" | null,
   playerNames: string[],
@@ -192,7 +192,7 @@ export async function generateAndSaveQuestionsForRoom(
  * pickQuestion() havuz < LOW_WATER_MARK olduğunda bunu çağırır.
  */
 export async function refillGlobalPool(
-  gameMode: "SOCIAL" | "QUIZ" | "EXPOSE",
+  gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF",
   category: string,
   count = 15
 ): Promise<number> {

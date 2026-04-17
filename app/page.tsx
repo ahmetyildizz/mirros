@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { CreateRoom } from "@/components/lobby/CreateRoom";
 import { JoinRoom } from "@/components/lobby/JoinRoom";
@@ -189,14 +190,28 @@ function LobbyContent() {
         {/* Advert Section */}
         <AdBanner type="lobby" />
 
+        {/* Packs Link */}
+        {!isFocused && (
+          <motion.button
+            type="button"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9 }}
+            onClick={() => router.push("/packs")}
+            className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white/[0.03] border border-white/8 hover:bg-white/8 text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
+          >
+            📦 Soru Paketleri
+          </motion.button>
+        )}
+
         {/* Footer */}
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.4 }}
           transition={{ delay: 1 }}
           className="text-center text-[10px] font-bold text-slate-500 tracking-[0.2em] mt-3 uppercase pb-4"
         >
-          arkadaşlarını tanı · kendini keşfet · v0.4.0
+          arkadaşlarını tanı · kendini keşfet · v0.5.0
         </motion.p>
       </div>
     </main>

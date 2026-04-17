@@ -23,8 +23,12 @@ model User {
   rooms       RoomParticipant[]
   scores      Score[]
   auditLogs   AuditLog[]
-  dailyAnswers DailyAnswer[]
-  
+  dailyAnswers   DailyAnswer[]
+  packs          QuestionPack[]
+  streak         Int            @default(0)
+  longestStreak  Int            @default(0)
+  lastPlayedAt   DateTime?
+
   @@index([deviceId])
   @@index([providerId])
 }
@@ -221,12 +225,40 @@ enum GameMode {
   SOCIAL
   QUIZ
   EXPOSE
+  BLUFF
 }
 
 enum AgeGroup {
   CHILD
   ADULT
   WISE
+}
+
+model QuestionPack {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  name        String
+  description String?
+  creatorId   String
+  isPublic    Boolean        @default(false)
+  gameMode    GameMode       @default(SOCIAL)
+  category    String
+  playCount   Int            @default(0)
+  questions   PackQuestion[]
+  creator     User           @relation(fields: [creatorId], references: [id])
+  createdAt   DateTime       @default(now())
+
+  @@index([creatorId])
+  @@index([isPublic])
+}
+
+model PackQuestion {
+  id      String       @id @default(cuid())
+  packId  String
+  text    String
+  options Json?        // string[] — seçenekler (QUIZ için)
+  correct String?
+  pack    QuestionPack @relation(fields: [packId], references: [id], onDelete: Cascade)
 }
 
 model AuditLog {

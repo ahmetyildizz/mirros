@@ -37,7 +37,8 @@ export async function POST(
   if (!isParticipant) return NextResponse.json({ error: "Bu oyunun katılımcısı değilsin" }, { status: 403 });
 
   const isQuiz   = round.game.room.gameMode === "QUIZ";
-  const isExpose  = round.game.room.gameMode === "EXPOSE";
+  const isExpose = round.game.room.gameMode === "EXPOSE";
+  const isBluff  = round.game.room.gameMode === "BLUFF";
 
   // EXPOSE modunda tahminler /guess endpoint'i üzerinden yapılır, /answer kullanılmaz
   if (isExpose) {
@@ -45,7 +46,7 @@ export async function POST(
   }
 
   // SOCIAL: sadece answererId cevap verebilir
-  if (!isQuiz && round.answererId !== user.id) {
+  if (!isQuiz && !isBluff && round.answererId !== user.id) {
     return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
   }
 
@@ -67,7 +68,49 @@ export async function POST(
     details: { content: normalizedContent, isQuiz },
   });
 
-  if (isQuiz) {
+  if (isBluff) {
+    const players = round.game.room.participants.filter(p => p.role === "PLAYER");
+    const uniquePlayers = Array.from(new Map(players.map(p => [p.userId, p])).values());
+    const totalParticipants = uniquePlayers.length;
+    const answerCount = await db.answer.count({ where: { roundId } });
+    const allBluffed  = answerCount >= totalParticipants && totalParticipants >= 2;
+
+    await safeTrigger(`game-${round.gameId}`, "answer-submitted", {
+      roundId,
+      userId:        user.id,
+      answerCount,
+      totalParticipants,
+      allAnswered: allBluffed,
+    });
+
+    if (allBluffed) {
+      // Tüm sahte cevaplar geldi — gerçek cevabı karıştır ve GUESSING'e geç
+      const question = await db.question.findUnique({ where: { id: round.questionId } });
+      const allAnswers = await db.answer.findMany({
+        where:   { roundId },
+        include: { user: { select: { id: true, username: true } } },
+      });
+
+      const realAnswer = question?.correct ?? "";
+      // Sahte cevaplar + gerçek cevap karıştır (Fisher-Yates)
+      const options = [...allAnswers.map(a => a.content), realAnswer];
+      for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+      }
+
+      await db.round.update({ where: { id: roundId }, data: { status: "GUESSING" } });
+
+      await safeTrigger(`game-${round.gameId}`, "bluff-guessing-started", {
+        roundId,
+        options,   // sahte + gerçek karışık
+        authors:   allAnswers.map(a => ({ userId: a.userId, username: a.user.username ?? "?" })),
+        totalGuessers: totalParticipants,
+      });
+    }
+
+    return NextResponse.json({ ok: true }, { status: 201 });
+  } else if (isQuiz) {
     const players = round.game.room.participants.filter(p => p.role === "PLAYER");
     const uniquePlayers = Array.from(new Map(players.map(p => [p.userId, p])).values());
     const totalParticipants = uniquePlayers.length;

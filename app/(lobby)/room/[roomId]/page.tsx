@@ -3,20 +3,21 @@
 import { use, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Copy, 
-  Share2, 
-  Users, 
-  Brain, 
-  Sparkles, 
-  CheckCircle2, 
-  Loader2, 
+import {
+  Copy,
+  Share2,
+  Users,
+  Brain,
+  Sparkles,
+  CheckCircle2,
+  Loader2,
   ArrowRight,
   ShieldCheck,
   MessageCircle,
   PlusCircle,
   ChevronLeft,
-  Flame
+  Flame,
+  Monitor
 } from "lucide-react";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useGameStore } from "@/store/game.store";
@@ -410,22 +411,33 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
 
             {isHost ? (
             <>
-              <button
-                onClick={handleStartGame}
-                disabled={starting || !canStart}
-                className={cn(
-                  "btn-gradient w-full py-4 rounded-2xl text-[13px] tracking-widest font-black flex items-center justify-center gap-3 shadow-[0_4px_24px_rgba(168,85,247,0.4)]",
-                  !canStart && "opacity-40 grayscale pointer-events-none"
-                )}
-              >
-                {starting ? (
-                  <>
-                    <Loader2 className="animate-spin" size={20} /> BAŞLATILIYOR...
-                  </>
-                ) : (
-                  <>OYUNU BAŞLAT <ArrowRight size={18} /></>
-                )}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleStartGame}
+                  disabled={starting || !canStart}
+                  className={cn(
+                    "btn-gradient flex-1 py-4 rounded-2xl text-[13px] tracking-widest font-black flex items-center justify-center gap-3 shadow-[0_4px_24px_rgba(168,85,247,0.4)]",
+                    !canStart && "opacity-40 grayscale pointer-events-none"
+                  )}
+                >
+                  {starting ? (
+                    <>
+                      <Loader2 className="animate-spin" size={20} /> BAŞLATILIYOR...
+                    </>
+                  ) : (
+                    <>OYUNU BAŞLAT <ArrowRight size={18} /></>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => window.open(`/game/${roomId}?display=tv`, "_blank")}
+                  title="TV'de Göster"
+                  className="w-14 flex items-center justify-center rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-accent/10 hover:border-accent/30 text-slate-400 hover:text-accent transition-all"
+                >
+                  <Monitor size={20} />
+                </button>
+              </div>
               {startError && <p className="text-red-400 text-[11px] text-center font-bold">{startError}</p>}
             </>
           ) : (

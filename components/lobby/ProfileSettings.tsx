@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Edit2 } from "lucide-react";
+import { User, Edit2, Flame } from "lucide-react";
 import { ProfileModal } from "@/components/profile/ProfileModal";
 
 export function ProfileSettings() {
@@ -66,6 +66,21 @@ export function ProfileSettings() {
             <Edit2 size={12} className="text-slate-500 group-hover:text-accent transition-colors translate-y-[1px]" />
           </span>
         </div>
+        {(user.streak ?? 0) >= 2 && (
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-500/10 border border-orange-500/20"
+          >
+            <motion.div
+              animate={{ scale: [1, 1.3, 1] }}
+              transition={{ repeat: Infinity, duration: 0.8 }}
+            >
+              <Flame size={12} className="text-orange-500 fill-orange-500" />
+            </motion.div>
+            <span className="text-[10px] font-black text-orange-400">{user.streak} gün</span>
+          </motion.div>
+        )}
       </motion.div>
 
       <ProfileModal 

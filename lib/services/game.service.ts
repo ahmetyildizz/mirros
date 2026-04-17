@@ -9,7 +9,7 @@ const LOW_WATER_MARK = 5;
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
-async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | "EXPOSE", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
+async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
   // Spice Level extraction (e.g., "Dedikodu Masası:Hot")
   let spiceLevel: "EASY" | "MEDIUM" | "HARD" | null = null;
   let baseCategory = category;
@@ -32,17 +32,20 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     "Ofis Kaosu": ["Ofis Kaosu"],
   };
 
+  // BLUFF modu QUIZ sorularını kullanır (correct alanı dolu olduğu için)
+  const effectiveMode: "SOCIAL" | "QUIZ" | "EXPOSE" = gameMode === "BLUFF" ? "QUIZ" : gameMode;
+
   const targetCategories = baseCategory ? themeMap[baseCategory] : null;
 
   // 0. ÖNCELİKLİ: Varsa Odaya Özel Soru
   if (roomId) {
     const roomCandidates = await tx.question.findMany({
-      where: { 
-        roomId, 
-        isActive: true, 
-        gameMode, 
+      where: {
+        roomId,
+        isActive: true,
+        gameMode: effectiveMode,
         ...(spiceLevel ? { difficulty: spiceLevel } : {}),
-        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}) 
+        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {})
       },
       select: { id: true },
     });
@@ -58,10 +61,10 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     candidates = await tx.question.findMany({
       where: {
         isActive: true,
-        gameMode,
+        gameMode: effectiveMode,
         category: { in: targetCategories },
         ...(spiceLevel ? { difficulty: spiceLevel } : {}),
-        ...(gameMode === "EXPOSE" ? {} : { NOT: { options: { equals: [] } } }), 
+        ...(effectiveMode === "EXPOSE" ? {} : { NOT: { options: { equals: [] } } }),
         ...(ageGroup ? {
           OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
         } : {}),
@@ -76,7 +79,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     candidates = await tx.question.findMany({
       where: {
         isActive: true,
-        gameMode,
+        gameMode: effectiveMode,
         category: { in: targetCategories },
         ...(ageGroup ? {
           OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
@@ -92,7 +95,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     candidates = await tx.question.findMany({
       where: {
         isActive: true,
-        gameMode,
+        gameMode: effectiveMode,
         ...(spiceLevel ? { difficulty: spiceLevel } : {}),
         ...(ageGroup ? {
           OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
@@ -106,7 +109,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
   // 4. ADIM: Son Çare: Her şeyi esnet
   if (candidates.length === 0) {
     candidates = await tx.question.findMany({
-      where: { isActive: true, gameMode },
+      where: { isActive: true, gameMode: effectiveMode },
       select: { id: true },
     });
   }
@@ -115,8 +118,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
 
   // LOW_WATER_MARK altındaysa arka planda global havuzu doldur (non-blocking)
   if (candidates.length < LOW_WATER_MARK && baseCategory) {
-    const spice: "EASY" | "MEDIUM" | "HARD" = spiceLevel ?? "MEDIUM";
-    refillGlobalPool(gameMode, baseCategory, 15).catch((e) =>
+    refillGlobalPool(effectiveMode, baseCategory, 15).catch((e) =>
       console.error("[AI] refillGlobalPool arka plan hatası:", e)
     );
   }
@@ -143,6 +145,7 @@ export async function startGame(roomId: string) {
 
   const isQuiz         = room.gameMode === "QUIZ";
   const isExpose       = room.gameMode === "EXPOSE";
+  const isBluff        = room.gameMode === "BLUFF";
   const participantIds = participants.map((p) => p.userId);
   const totalRounds    = isQuiz ? QUIZ_ROUNDS : SOCIAL_ROUNDS;
 
@@ -232,9 +235,9 @@ export async function startGame(roomId: string) {
     });
 
     // İlk round için de kişiselleştirilmiş yaş grubunu bulalım
-    const answererId = isQuiz || isExpose ? null : resolveSpotlight(1, participantIds);
+    const answererId = isQuiz || isExpose || isBluff ? null : resolveSpotlight(1, participantIds);
     const answerer   = answererId ? room.participants.find((p) => p.userId === answererId) : null;
-    const roundAgeGroup = isQuiz || isExpose ? majorityAgeGroup : (answerer?.ageGroup ?? majorityAgeGroup);
+    const roundAgeGroup = isQuiz || isExpose || isBluff ? majorityAgeGroup : (answerer?.ageGroup ?? majorityAgeGroup);
 
     const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, room.gameMode, roundAgeGroup, room.category, room.id, tx as any);
     return { game: newGame, round, question };
@@ -268,7 +271,7 @@ async function createRound(
   number:     number,
   participantIds: string[],
   usedQuestionIds: string[],
-  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE",
+  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF",
   ageGroup?:  string | null,
   category?:  string | null,
   roomId?:    string | null,
@@ -277,6 +280,7 @@ async function createRound(
   const isSocial = gameMode === "SOCIAL";
   const isExpose = gameMode === "EXPOSE";
   const isQuiz   = gameMode === "QUIZ";
+  const isBluff  = gameMode === "BLUFF";
   const answererId = isSocial ? resolveSpotlight(number, participantIds) : null;
   
   // Eğer SOCIAL modundaysak, answerer'ın kendi yaş grubunu kullanalım (kişiselleştirme)
@@ -295,7 +299,7 @@ async function createRound(
   const question = await pickQuestion(usedQuestionIds, gameMode, actualAgeGroup, category, roomId, tx as any);
 
   const round = await (tx as any).round.create({
-    data: { gameId, number, questionId: question.id, answererId, status: isExpose ? "GUESSING" : "ANSWERING" },
+    data: { gameId, number, questionId: question.id, answererId, status: (isExpose || isBluff) ? "ANSWERING" : (isQuiz ? "ANSWERING" : "ANSWERING") },
   });
 
   await createAuditLog({
@@ -349,6 +353,27 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
     const playerScores: Record<string, number> = {};
     for (const s of allScores) {
       playerScores[s.guesserId] = (playerScores[s.guesserId] ?? 0) + s.points;
+    }
+
+    // Streak güncelle: bugün oynayan oyuncuların streak'ini artır
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    for (const userId of participantIds) {
+      const user = await db.user.findUnique({ where: { id: userId }, select: { streak: true, longestStreak: true, lastPlayedAt: true } });
+      if (!user) continue;
+      const lastPlayed = user.lastPlayedAt ? new Date(user.lastPlayedAt) : null;
+      if (lastPlayed) lastPlayed.setHours(0, 0, 0, 0);
+      const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+      const playedToday     = lastPlayed?.getTime() === today.getTime();
+      const playedYesterday = lastPlayed?.getTime() === yesterday.getTime();
+      const newStreak = playedToday ? user.streak : (playedYesterday ? user.streak + 1 : 1);
+      const longestStreak = Math.max(user.longestStreak, newStreak);
+      if (!playedToday) {
+        await db.user.update({
+          where: { id: userId },
+          data: { streak: newStreak, longestStreak, lastPlayedAt: new Date() },
+        });
+      }
     }
 
     await safeTrigger(`game-${gameId}`, "game-finished", { gameId, playerScores });

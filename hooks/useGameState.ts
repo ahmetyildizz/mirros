@@ -86,6 +86,7 @@ export function useGameState(gameId: string, myUserId: string) {
     setActiveRoundId, setAnswererId, setPlayerScores,
     setLastRoundScore, setLastQuizResults, setGuessProgress, setPlayers,
     setQuestionOptions, setLastPenalty, setNextRoundData,
+    setBluffOptions, setBluffAnswers,
   } = useGameStore();
 
   useEffect(() => {
@@ -103,8 +104,10 @@ export function useGameState(gameId: string, myUserId: string) {
         setActiveRoundId(data.roundId);
         setCurrentRound(data.roundNumber);
         setAnswererId(data.answererId ?? null);
-        // EXPOSE'da herkes guesser
-        setMyRole(gameMode === "EXPOSE" ? "guesser" : (data.answererId ? (data.answererId === myUserId ? "answerer" : "guesser") : "guesser"));
+        setBluffOptions([]); // Yeni round başlayınca temizle
+        setBluffAnswers([]);
+        // EXPOSE/BLUFF'da herkes cevap verir (guesser rolü)
+        setMyRole(gameMode === "EXPOSE" || gameMode === "BLUFF" ? "guesser" : (data.answererId ? (data.answererId === myUserId ? "answerer" : "guesser") : "guesser"));
 
         const totalPlayers = store.players.length;
         const initialTotalGuessers = gameMode === "EXPOSE" ? totalPlayers : (totalPlayers - 1);
@@ -129,10 +132,21 @@ export function useGameState(gameId: string, myUserId: string) {
           setGameState("GUESSING");
           return;
         }
-        // QUIZ: kaç kişi cevapladı bilgisi güncelle
+        // QUIZ / BLUFF: kaç kişi cevapladı bilgisi güncelle
         setGuessProgress(data.answerCount ?? 0, data.totalParticipants ?? 0);
       } catch (err) {
         console.error("[useGameState] answer-submitted handler error:", err);
+      }
+    });
+
+    channel.bind("bluff-guessing-started", (data: { roundId: string; options: string[]; authors: { userId: string; username: string }[]; totalGuessers: number }) => {
+      try {
+        setBluffOptions(data.options);
+        setBluffAnswers(data.authors);
+        setGuessProgress(0, data.totalGuessers);
+        setGameState("GUESSING");
+      } catch (err) {
+        console.error("[useGameState] bluff-guessing-started handler error:", err);
       }
     });
 
@@ -218,7 +232,8 @@ export function useGameState(gameId: string, myUserId: string) {
     };
   }, [gameId, myUserId, router, setGameState, setQuestion, setMyRole, setCurrentRound,
       setActiveRoundId, setAnswererId, setPlayerScores, setLastRoundScore, setLastQuizResults,
-      setGuessProgress, setPlayers, setQuestionOptions, setLastPenalty, setNextRoundData]);
+      setGuessProgress, setPlayers, setQuestionOptions, setLastPenalty, setNextRoundData,
+      setBluffOptions, setBluffAnswers]);
 }
 
 /** Bekleme odası için: oyuncular listesini dinle */

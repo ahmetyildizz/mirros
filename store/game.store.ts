@@ -57,7 +57,7 @@ interface GameStore {
   myRole:        "answerer" | "guesser" | "spectator" | null;
   activeRoundId: string | null;
   answererId:    string | null;
-  gameMode:      "SOCIAL" | "QUIZ" | "EXPOSE" | null;
+  gameMode:      "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | null;
   theme:         GameTheme;
   categoryName:  string | null;
 
@@ -74,6 +74,10 @@ interface GameStore {
   // Tahmin durumu
   guessCount:    number;
   totalGuessers: number;
+
+  // BLUFF modu
+  bluffOptions:  string[];   // karışık seçenekler (sahte + gerçek)
+  bluffAnswers:  { userId: string; username: string }[];  // kim cevap verdi (içerik gizli)
 
   // Actions
   setGameId:          (id: string) => void;
@@ -93,7 +97,9 @@ interface GameStore {
   setLastQuizResults: (r: GameStore["lastQuizResults"]) => void;
   setLastPenalty:     (p: string | null) => void;
   setGuessProgress:    (count: number, total: number) => void;
-  setGameMode:         (mode: "SOCIAL" | "QUIZ" | "EXPOSE") => void;
+  setGameMode:         (mode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF") => void;
+  setBluffOptions:     (opts: string[]) => void;
+  setBluffAnswers:     (answers: { userId: string; username: string }[]) => void;
   setQuestionOptions:  (options: string[]) => void;
   setTheme:            (theme: GameTheme) => void;
   setCategoryName:     (name: string | null) => void;
@@ -122,6 +128,8 @@ const initialState = {
   nextRoundData:    null,
   guessCount:       0,
   totalGuessers:    0,
+  bluffOptions:     [],
+  bluffAnswers:     [],
   gameMode:         null,
   theme:            "purple" as GameTheme,
   categoryName:     null,
@@ -151,6 +159,8 @@ export const useGameStore = create<GameStore>()(
       setLastPenalty:     (lastPenalty) => set({ lastPenalty }),
       setGuessProgress:   (guessCount, totalGuessers) => set({ guessCount, totalGuessers }),
       setGameMode:        (gameMode) => set({ gameMode }),
+      setBluffOptions:    (bluffOptions) => set({ bluffOptions }),
+      setBluffAnswers:    (bluffAnswers) => set({ bluffAnswers }),
       setQuestionOptions: (options) => set((s) => s.question ? { question: { ...s.question, options } } : {}),
       setTheme:           (theme) => set({ theme }),
       setCategoryName:    (categoryName) => set({ categoryName }),

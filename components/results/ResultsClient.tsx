@@ -60,7 +60,7 @@ interface Props {
   compatMap: Record<string, { username: string; pct: number; bestGuesser?: { name: string; points: number }; title?: string }>;
   aiReport: { intro: string; tag: string; story: string };
   roomCategory: string | null;
-  gameMode: "SOCIAL" | "QUIZ" | "EXPOSE";
+  gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF";
 }
 
 export function ResultsClient({ 

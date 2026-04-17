@@ -1,7 +1,8 @@
 "use client";
 
 import { use, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { TvDisplay } from "@/components/game/TvDisplay";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { 
@@ -35,17 +36,23 @@ import { cn } from "@/lib/utils";
 
 export default function GamePage({ params }: { params: Promise<{ roomId: string }> }) {
   const { roomId } = use(params);
-  const router     = useRouter();
+  const router       = useRouter();
+  const searchParams = useSearchParams();
+  const isTv         = searchParams.get("display") === "tv";
+
+  if (isTv) return <TvDisplay roomId={roomId} />;
 
   const {
     gameId, state, question, myRole, answererId, gameMode,
     players, playerScores, lastRoundScore, lastQuizResults, lastPenalty,
     currentRound, totalRounds, activeRoundId,
     guessCount, totalGuessers, setTheme, nextRoundData,
+    bluffOptions, bluffAnswers,
     setGameState, setMyRole, setAnswererId,
   } = useGameStore();
-  const isQuiz = gameMode === "QUIZ";
+  const isQuiz   = gameMode === "QUIZ";
   const isExpose = gameMode === "EXPOSE";
+  const isBluff  = gameMode === "BLUFF";
 
   const [myUserId, setMyUserId]   = useState<string | null>(null);
   const [pastAnswers, setPastAnswers] = useState<any[]>([]);
@@ -281,7 +288,8 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           transition={{ delay: 5 }}
           className="mt-12 relative z-10"
         >
-          <button 
+          <button
+            type="button"
             onClick={() => router.replace("/")}
             className="text-[10px] font-black text-slate-500 hover:text-white underline underline-offset-4 tracking-widest uppercase"
           >
@@ -438,17 +446,50 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     </p>
                   </div>
                 </motion.div>
+              ) : isBluff ? (
+                /* 2b. BLUFF MODU */
+                <motion.div key="bluff-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
+                  {state === "ANSWERING" ? (
+                    <div className="flex flex-col gap-3">
+                      <div className="bg-violet-500/10 border border-violet-500/20 rounded-2xl px-4 py-3 text-center">
+                        <p className="text-[11px] font-black text-violet-400 uppercase tracking-widest">🎭 Sahte Cevap Yaz!</p>
+                        <p className="text-[10px] text-slate-400 mt-1">Başkalarını kandır — gerçekmiş gibi görünen bir cevap yaz</p>
+                      </div>
+                      <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
+                      <p className="text-center text-[10px] text-slate-600 font-bold">{guessCount} / {totalGuessers} cevap gönderildi</p>
+                    </div>
+                  ) : state === "GUESSING" && bluffOptions.length > 0 ? (
+                    <div className="flex flex-col gap-3">
+                      <div className="bg-violet-500/10 border border-violet-500/20 rounded-2xl px-4 py-3 text-center">
+                        <p className="text-[11px] font-black text-violet-400 uppercase tracking-widest">🔍 Hangisi Gerçek?</p>
+                        <p className="text-[10px] text-slate-400 mt-1">Doğru cevabı bul — sahte yazanlara oy gelirse onlar da kazanır!</p>
+                      </div>
+                      <MultipleChoiceInput
+                        options={bluffOptions}
+                        onSubmit={submitGuess}
+                        allowFreeText={false}
+                        gameId={gameId}
+                        username={players.find(p => p.id === myUserId)?.username}
+                      />
+                    </div>
+                  ) : (
+                    <div className="glass-card-elevated p-8 flex flex-col items-center gap-4 text-center">
+                      <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-12 h-12 rounded-full border-2 border-dashed border-violet-500/40" />
+                      <p className="text-[13px] font-bold text-slate-400">Cevaplar toplanıyor…</p>
+                    </div>
+                  )}
+                </motion.div>
               ) : (isQuiz || isExpose) ? (
                 /* 2. QUIZ VEYA EXPOSE: Doğrudan Giriş/Tahmin Alanı (State ne olursa olsun) */
                 <motion.div key="simultaneous-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
                   {isExpose ? (
-                    <MultipleChoiceInput 
-                      options={players.filter(p => p.role !== "SPECTATOR").map(p => p.username || "Anonim")} 
-                      onSubmit={submitGuess} 
-                      allowFreeText={false} 
-                      showReason={true} 
-                      gameId={gameId} 
-                      username={players.find(p => p.id === myUserId)?.username} 
+                    <MultipleChoiceInput
+                      options={players.filter(p => p.role !== "SPECTATOR").map(p => p.username || "Anonim")}
+                      onSubmit={submitGuess}
+                      allowFreeText={false}
+                      showReason={true}
+                      gameId={gameId}
+                      username={players.find(p => p.id === myUserId)?.username}
                     />
                   ) : (
                     question.options
@@ -637,7 +678,8 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 <GoogleAd slot="2233445566" className="mt-2" />
                 
                 {useGameStore.getState().isHostPlayer ? (
-                  <button 
+                  <button
+                    type="button"
                     onClick={async () => {
                       if (!nextRoundData) return;
                       const res = await fetch(`/api/rounds/${nextRoundData.id}/start`, { method: "POST" });
@@ -738,7 +780,8 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 className="pt-8"
               >
                 {useGameStore.getState().isHostPlayer ? (
-                  <button 
+                  <button
+                    type="button"
                     onClick={async () => {
                       if (!nextRoundData) return;
                       const res = await fetch(`/api/rounds/${nextRoundData.id}/start`, { method: "POST" });
