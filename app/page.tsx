@@ -17,6 +17,7 @@ function LobbyContent() {
   const joinCode = params.get("code") ?? "";
   const { setRoomId, setRoomCode, setIsHostPlayer, categoryName } = useGameStore();
   const [isDailyAnswered, setIsDailyAnswered] = useState(false);
+  const [isConfiguring, setIsConfiguring] = useState(false);
 
   const handleCreated = (roomId: string, roomCode: string) => {
     setRoomId(roomId);
@@ -31,6 +32,9 @@ function LobbyContent() {
     setIsHostPlayer(false);
     router.push(`/room/${roomId}`);
   };
+
+  const isJoining = !!joinCode;
+  const isFocused = isJoining || isConfiguring;
 
   useEffect(() => {
     // Eğer yeni bir odaya katılmıyorsak (QR veya Link değilse) 
@@ -62,8 +66,8 @@ function LobbyContent() {
       </div>
 
       <div className="relative z-10 w-full max-w-[420px] flex flex-col gap-6">
-        {/* Profile/User Settings - Hide if joining */}
-        {!isJoining && (
+        {/* Profile/User Settings - Hide if focused */}
+        {!isFocused && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -86,7 +90,7 @@ function LobbyContent() {
             </h1>
           </div>
           
-          {!isJoining && (
+          {!isFocused && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -113,8 +117,8 @@ function LobbyContent() {
           )}
         </motion.div>
 
-        {/* Daily Question Section - Hide if joining */}
-        {!isJoining && !isDailyAnswered && (
+        {/* Daily Question Section - Hide if focused */}
+        {!isFocused && !isDailyAnswered && (
           <motion.div layout>
             <DailyWidget onAnsweredStatus={setIsDailyAnswered} />
           </motion.div>
@@ -122,48 +126,57 @@ function LobbyContent() {
 
         {/* Action Sections - Hide CreateRoom if joining */}
         {!isJoining && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              layout
-              transition={{ delay: 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="glass-card-elevated rounded-[2.5rem] shadow-[0_20px_50px_-20px_rgba(168,85,247,0.3)]"
-            >
-              <div className="p-2">
-                <CreateRoom onCreated={handleCreated} />
-              </div>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              className="flex items-center gap-5 px-4"
-            >
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
-              <span className="text-[12px] font-black text-slate-600 uppercase tracking-[0.4em]">veya</span>
-              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
-            </motion.div>
-          </>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            layout
+            transition={{ delay: 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className={cn(
+               "rounded-[2.5rem] shadow-[0_20px_50px_-20px_rgba(168,85,247,0.3)] transition-all",
+               isConfiguring ? "glass-card-elevated ring-2 ring-accent/20" : "glass-card-elevated"
+            )}
+          >
+            <div className="p-2">
+              <CreateRoom 
+                onCreated={handleCreated} 
+                onStepChange={(step) => setIsConfiguring(step === "config")} 
+              />
+            </div>
+          </motion.div>
         )}
 
-        {/* JOIN FLOW (Highest Priority) */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          layout
-          transition={{ delay: isJoining ? 0 : 0.6, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className={cn(
-            "rounded-[2rem] p-4 shadow-xl transition-all duration-700",
-            isJoining ? "glass-card-elevated ring-2 ring-accent/20" : "glass-card"
-          )}
-        >
-          <JoinRoom onJoined={handleJoined} initialCode={joinCode} />
-        </motion.div>
+        {/* Divider - Hide if focused */}
+        {!isFocused && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="flex items-center gap-5 px-4"
+          >
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent to-white/10" />
+            <span className="text-[12px] font-black text-slate-600 uppercase tracking-[0.4em]">veya</span>
+            <div className="flex-1 h-px bg-gradient-to-l from-transparent to-white/10" />
+          </motion.div>
+        )}
 
-        {/* Hide bottom bits if joining */}
-        {!isJoining && isDailyAnswered && (
+        {/* JOIN FLOW - Hide if configuring room */}
+        {!isConfiguring && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            layout
+            transition={{ delay: isJoining ? 0 : 0.6, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className={cn(
+              "rounded-[2rem] p-4 shadow-xl transition-all duration-700",
+              isJoining ? "glass-card-elevated ring-2 ring-accent/20" : "glass-card"
+            )}
+          >
+            <JoinRoom onJoined={handleJoined} initialCode={joinCode} />
+          </motion.div>
+        )}
+
+        {/* Hide bottom bits if focused */}
+        {!isFocused && isDailyAnswered && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

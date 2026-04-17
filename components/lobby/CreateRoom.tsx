@@ -22,6 +22,7 @@ import type { GameTheme } from "@/store/game.store";
 
 interface Props {
   onCreated: (roomId: string, code: string) => void;
+  onStepChange?: (step: "template" | "config") => void;
 }
 
 type GameMode = "SOCIAL" | "QUIZ" | "EXPOSE";
@@ -62,6 +63,11 @@ export function CreateRoom({ onCreated }: Props) {
   const [error,    setError]   = useState<string | null>(null);
   const [spiceLevel, setSpiceLevel] = useState<"Normal" | "Hot" | "Nuclear">("Normal");
 
+  const changeStep = (newStep: "template" | "config") => {
+    setStep(newStep);
+    onStepChange?.(newStep);
+  };
+
   const isManagedTemplate = category && category !== "Özelleştir";
   const isCustom = !isManagedTemplate;
 
@@ -85,7 +91,7 @@ export function CreateRoom({ onCreated }: Props) {
     if (tpl.label === "Çift Gecesi") {
       handleCreate(tpl.gameMode, tpl.ageGroup, tpl.maxPlayers, tpl.label);
     } else {
-      setStep("config");
+      changeStep("config");
     }
   };
 
@@ -197,7 +203,7 @@ export function CreateRoom({ onCreated }: Props) {
           >
             <button 
               onClick={() => {
-                setStep("template");
+                changeStep("template");
                 setGlobalCategoryName(null);
                 setCategory(null);
               }} 
