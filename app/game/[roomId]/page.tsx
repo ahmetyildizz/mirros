@@ -314,15 +314,23 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   async function submitGuess(content: string, reason?: string) {
     if (!activeRoundId) return;
-    await fetch(`/api/rounds/${activeRoundId}/guess`, {
+    const res = await fetch(`/api/rounds/${activeRoundId}/guess`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content, reason }),
     });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: "Tahmin gönderilemedi" }));
+      throw new Error(err.error || "Tahmin gönderilemedi");
+    }
   }
 
   async function triggerScore() {
     if (!activeRoundId) return;
-    await fetch(`/api/rounds/${activeRoundId}/score`, { method: "POST" });
+    const res = await fetch(`/api/rounds/${activeRoundId}/score`, { method: "POST" });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: "Skor hesaplanamadı" }));
+      console.error("[triggerScore]", err.error);
+    }
   }
 
   return (

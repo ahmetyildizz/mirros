@@ -295,5 +295,5 @@ export function useRoomState(roomId: string) {
       channel.unbind_all();
       pusher.unsubscribe(`room-${roomId}`);
     };
-  }, [roomId, setPlayers]);
+  }, [roomId, setPlayers, setGuessProgress]);
 }

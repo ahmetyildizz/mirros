@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  CheckCircle2, 
-  ChevronRight, 
-  PenLine, 
-  MessageSquareText, 
+import {
+  CheckCircle2,
+  ChevronRight,
+  PenLine,
+  MessageSquareText,
   Send,
-  Loader2
+  Loader2,
+  AlertCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { sounds } from "@/lib/sounds";
@@ -31,16 +32,19 @@ export function MultipleChoiceInput({
   const [reason,     setReason]     = useState("");
   const [sending,    setSending]    = useState(false);
   const [submitted,  setSubmitted]  = useState(false);
-
+  const [error,      setError]      = useState<string | null>(null);
 
   const handleSubmit = async () => {
     const value = showFree ? freeText.trim() : selected;
     if (!value || sending || submitted) return;
     setSending(true);
-    sounds.pop(); // Gönderim sesi
+    setError(null);
+    sounds.pop();
     try {
       await onSubmit(value, reason.trim() || undefined);
       setSubmitted(true);
+    } catch (e: any) {
+      setError(e?.message || "Gönderilemedi, tekrar dene");
     } finally {
       setSending(false);
     }
@@ -157,6 +161,17 @@ export function MultipleChoiceInput({
       <div className="flex justify-end items-center px-1 py-1">
         {showFree && <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">{freeText.length}/120</span>}
       </div>
+
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-xl"
+        >
+          <AlertCircle size={14} className="text-red-400 shrink-0" />
+          <span className="text-[12px] font-bold text-red-400">{error}</span>
+        </motion.div>
+      )}
 
       <motion.button
         whileTap={{ scale: 0.98 }}
