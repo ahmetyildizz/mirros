@@ -61,6 +61,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   const scoringRoundRef     = useRef<string | null>(null);
   const advancingRoundRef   = useRef<string | null>(null);
   const hasAutoSubmitted    = useRef(false);
+  const timerHasRun         = useRef(false); // Bu round için timer gerçekten çalıştı mı?
 
   useEffect(() => {
     fetch("/api/me")
@@ -181,7 +182,11 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   useEffect(() => {
     if (state !== "ANSWERING" && state !== "GUESSING") return;
     const timer = setInterval(() => {
-      setTimeLeft((prev) => Math.max(0, prev - 1));
+      setTimeLeft((prev) => {
+        const next = Math.max(0, prev - 1);
+        if (next < prev) timerHasRun.current = true; // Timer bu round için çalıştı
+        return next;
+      });
     }, 1000);
     return () => clearInterval(timer);
   }, [state, activeRoundId]);
@@ -191,12 +196,14 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     if (state === "ANSWERING" || state === "GUESSING") {
       setTimeLeft(60);
       hasAutoSubmitted.current = false;
+      timerHasRun.current = false; // Yeni round: timer henüz çalışmadı
     }
   }, [state, activeRoundId]);
 
   // Auto-submit / skip when time runs out
   useEffect(() => {
-    if (timeLeft !== 0 || hasAutoSubmitted.current) return;
+    // timerHasRun guard: önceki round'dan kalan timeLeft=0 ile yanlış tetiklenmeyi önler
+    if (timeLeft !== 0 || hasAutoSubmitted.current || !timerHasRun.current) return;
     hasAutoSubmitted.current = true;
 
     if (state === "ANSWERING") {
@@ -525,10 +532,11 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     </div>
                   )}
                 </motion.div>
-              ) : (isQuiz || isExpose) ? (
+              ) : (isQuiz || isExpose || (state === "ANSWERING" && !answererId)) ? (
                 /* 2. QUIZ VEYA EXPOSE: Doğrudan Giriş/Tahmin Alanı (State ne olursa olsun) */
+                /* VEYA: ANSWERING durumunda answererId yoksa bu bir senkronizasyon hatasıdır, oylamaya zorla */
                 <motion.div key="simultaneous-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
-                  {isExpose ? (
+                  {isExpose || (state === "ANSWERING" && !answererId && !isQuiz) ? (
                     <MultipleChoiceInput
                       options={players.filter(p => p.role !== "SPECTATOR").map(p => p.username || "Anonim")}
                       onSubmit={submitGuess}
