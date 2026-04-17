@@ -200,6 +200,18 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     }
   }, [state, activeRoundId]);
 
+  // Pusher event kaybolunca (state desync) periyodik recovery:
+  // ANSWERING/GUESSING durumunda 20 sn'de bir server'dan state yenile.
+  useEffect(() => {
+    if (state !== "ANSWERING" && state !== "GUESSING") return;
+    if (!gameId) return;
+    const interval = setInterval(() => {
+      recoverGameState(gameId).catch(() => {});
+    }, 20_000);
+    return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, activeRoundId, gameId]);
+
   // Auto-submit / skip when time runs out
   useEffect(() => {
     // timerHasRun guard: önceki round'dan kalan timeLeft=0 ile yanlış tetiklenmeyi önler
@@ -332,6 +344,11 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Sunucu hatası" }));
+      // 409: round durumu değişmiş ama Pusher eventi kaybolmuş → state'i yenile
+      if (res.status === 409 && gameId) {
+        recoverGameState(gameId).catch(() => {});
+        return; // hatayı UI'a yansıtma, recovery devralacak
+      }
       throw new Error(err.error || "Cevap gönderilemedi");
     }
   }
@@ -344,6 +361,11 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Tahmin gönderilemedi" }));
+      // 409: state desync → yenile
+      if (res.status === 409 && gameId) {
+        recoverGameState(gameId).catch(() => {});
+        return;
+      }
       throw new Error(err.error || "Tahmin gönderilemedi");
     }
   }
