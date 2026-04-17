@@ -4,51 +4,61 @@ import { requireAuth } from "@/lib/auth/session";
 
 export async function GET(req: NextRequest) {
   try {
-    // Admin yetkisi kontrolü (normalde session kontrolü var ama bu link özel bir backdoor için)
-    // Yine de session kontrolünü açık tutalım
-    await requireAuth();
+    const session = await requireAuth();
+    if (!session.isAdmin) {
+      return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
+    }
 
-    const games = await db.game.findMany({
-      orderBy: { startedAt: "desc" },
-      take: 50, // Son 50 oyun
-      include: {
-        room: {
-          include: {
-            participants: {
-              include: { user: { select: { username: true, avatarUrl: true } } }
-            }
-          }
-        },
-        rounds: {
-          orderBy: { number: "asc" },
-          include: {
-            question: true,
-            answers: {
-              include: { user: { select: { username: true } } }
+    const { searchParams } = req.nextUrl;
+    const page  = Math.max(1, parseInt(searchParams.get("page")  ?? "1", 10));
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "20", 10)));
+    const skip  = (page - 1) * limit;
+
+    const [games, [totalGames, totalUsers, totalRounds], auditLogs] = await Promise.all([
+      db.game.findMany({
+        orderBy: { startedAt: "desc" },
+        skip,
+        take: limit,
+        include: {
+          room: {
+            include: {
+              participants: {
+                include: { user: { select: { username: true, avatarUrl: true } } },
+              },
             },
-            guesses: {
-              include: { user: { select: { username: true } } }
-            }
-          }
-        }
-      }
+          },
+          rounds: {
+            orderBy: { number: "asc" },
+            select: {
+              id:         true,
+              number:     true,
+              status:     true,
+              answererId: true,
+              question:   { select: { text: true, category: true } },
+            },
+          },
+        },
+      }),
+      db.$transaction([
+        db.game.count(),
+        db.user.count(),
+        db.round.count(),
+      ]),
+      db.auditLog.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 50,
+        include: {
+          user: { select: { username: true, email: true, avatarUrl: true } },
+        },
+      }),
+    ]);
+
+    return NextResponse.json({
+      games,
+      stats: { totalGames, totalUsers, totalRounds },
+      auditLogs,
+      pagination: { page, limit, total: totalGames },
     });
-
-    const stats = {
-      totalGames: await db.game.count(),
-      totalUsers: await db.user.count(),
-      totalRounds: await db.round.count(),
-    };
-
-    const auditLogs = await db.auditLog.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 50,
-      include: {
-        user: { select: { username: true, email: true, avatarUrl: true } }
-      }
-    });
-
-    return NextResponse.json({ games, stats, auditLogs });
   } catch (error) {
     console.error("Admin history error:", error);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

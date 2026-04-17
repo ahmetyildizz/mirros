@@ -1,7 +1,10 @@
 import { OAuth2Client } from "google-auth-library";
 import appleSignin from "apple-signin-auth";
 
-const CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com";
+if (!process.env.GOOGLE_CLIENT_ID) {
+  throw new Error("GOOGLE_CLIENT_ID env değişkeni tanımlı değil");
+}
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "";
 
 const googleClient = new OAuth2Client(CLIENT_ID, CLIENT_SECRET);

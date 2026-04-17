@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
-import { pusherServer } from "@/lib/pusher/server";
+import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 
 export async function POST(
   _req: NextRequest,
@@ -28,7 +28,7 @@ export async function POST(
   // The initial state is managed by createRound in game.service.ts
 
   // Broadcat start to all players
-  await pusherServer.trigger(`game-${round.gameId}`, "round-started", {
+  await safeTrigger(`game-${round.gameId}`, "round-started", {
     roundId:          round.id,
     roundNumber:      round.number,
     questionId:       round.questionId,

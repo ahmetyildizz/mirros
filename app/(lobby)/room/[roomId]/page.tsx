@@ -92,22 +92,24 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
       .catch(() => {});
   }, [roomId, storePlayers, setRoomCode, setRoomId, setGameId, storeGameMode, router]);
 
+  const joinUrl = roomCode
+    ? `${typeof window !== "undefined" ? window.location.origin : "https://mirros.vercel.app"}/join/${roomCode}`
+    : null;
+
   const handleCopy = useCallback(() => {
-    if (!roomCode) return;
-    const joinUrl = `${window.location.origin}/?code=${roomCode}`;
+    if (!joinUrl) return;
     navigator.clipboard.writeText(joinUrl).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     });
-  }, [roomCode]);
+  }, [joinUrl]);
 
   const handleWhatsApp = useCallback(() => {
-    if (!roomCode) return;
-    const joinUrl  = `${window.location.origin}/?code=${roomCode}`;
-    const label    = gameMode === "QUIZ" ? "Bilgi yarışması" : "Mirros";
-    const text     = encodeURIComponent(`${label} oynayalım! Oda kodu: ${roomCode}\n${joinUrl}`);
+    if (!joinUrl || !roomCode) return;
+    const label = gameMode === "QUIZ" ? "Bilgi yarışması" : "Mirros";
+    const text  = encodeURIComponent(`${label} oynayalım! 🎮\n${joinUrl}`);
     window.open(`https://wa.me/?text=${text}`, "_blank");
-  }, [roomCode, gameMode]);
+  }, [joinUrl, roomCode, gameMode]);
 
   useEffect(() => {
     const pusher  = getPusherClient();
@@ -251,8 +253,8 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
           {/* QR Code Presentation */}
           {roomCode && (
             <div className="p-3 bg-white rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:scale-105 transition-transform">
-              <QRCode 
-                value={typeof window !== "undefined" ? `${window.location.origin}/?code=${roomCode}` : `https://mirros.vercel.app/?code=${roomCode}`}
+              <QRCode
+                value={joinUrl ?? `https://mirros.vercel.app/join/${roomCode}`}
                 size={140}
                 level="H"
                 className="rounded-lg"
@@ -383,6 +385,7 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
                   <motion.div animate={{ opacity: [0.2, 1, 0.2] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.4 }} className="w-1.5 h-1.5 rounded-full bg-slate-500" />
                 </div>
               </div>
+            ))}
             {/* Ad Space */}
             <GoogleAd slot="1234567890" className="mt-4" />
           </div>

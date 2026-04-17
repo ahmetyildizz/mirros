@@ -223,7 +223,7 @@ export function useGameState(gameId: string, myUserId: string) {
 
 /** Bekleme odası için: oyuncular listesini dinle */
 export function useRoomState(roomId: string) {
-  const { setPlayers } = useGameStore();
+  const { setPlayers, setGuessProgress } = useGameStore();
 
   useEffect(() => {
     if (!roomId) return;

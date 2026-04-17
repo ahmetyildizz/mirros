@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { createAuditLog } from "@/lib/audit";
 
-import { generateQuestionsWithAI } from "@/lib/services/ai.service";
+import { refillGlobalPool } from "@/lib/services/ai.service";
 
 function generateCode(): string {
   const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -61,22 +61,10 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // AI Soru Üretimi (Arka planda başlat ama odayı hemen dön)
+    // Global havuzu arka planda doldur (oyuncular lobide beklerken sorular hazır olsun)
     if (body.category) {
-      generateQuestionsWithAI(body.category, 10).then(async (aiQuestions) => {
-        if (aiQuestions && aiQuestions.length > 0) {
-          await db.question.createMany({
-            data: aiQuestions.map((q: any) => ({
-              roomId:   room.id,
-              text:     q.text,
-              options:  q.options || null,
-              difficulty: q.difficulty || "EASY",
-              category: body.category!,
-              gameMode: body.gameMode,
-            }))
-          });
-        }
-      }).catch(err => console.error("AI Generation Failed in background:", err));
+      refillGlobalPool(body.gameMode, body.category, 10)
+        .catch(err => console.error("[AI] Room creation pool refill failed:", err));
     }
 
     await createAuditLog({

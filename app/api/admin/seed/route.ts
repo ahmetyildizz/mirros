@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   ];
 
   for (const q of exposeQuestions) {
-    await db.question.create({ data: { ...q, isActive: true, options: [] } });
+    await db.question.create({ data: { ...q, isActive: true, options: [], gameMode: q.gameMode as any, difficulty: q.difficulty as any } });
   }
 
   // ─── SOSYAL SORULAR ──────────────────────────────────────────────────────────

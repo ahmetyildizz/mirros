@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
-import { pusherServer } from "@/lib/pusher/server";
+import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { scoreRound, getPoints } from "@/lib/services/scoring.service";
 import { advanceGame } from "@/lib/services/game.service";
 import { createAuditLog } from "@/lib/audit";
@@ -146,7 +146,7 @@ export async function POST(
   }
 
   // 3. Tek bir event ile hem sonuçları hem de yeni soruyu gönder
-  await pusherServer.trigger(`game-${round.gameId}`, "round-scored", {
+  await safeTrigger(`game-${round.gameId}`, "round-scored", {
     roundId:      roundId,
     answererId:   round.answererId,
     answer:       isExpose ? exposeWinnerContent : answer!.content,

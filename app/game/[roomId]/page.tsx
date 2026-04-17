@@ -493,19 +493,14 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
               ) : null}
             </AnimatePresence>
 
-                      {/* Flashback/Hafıza Kartı */}
-                      <AnimatePresence>
-                        {pastAnswers.length > 0 && (
-                          <FlashbackCard 
-                            username={spotlightPlayer?.username ?? "Arkadaşın"} 
-                            pastAnswers={pastAnswers} 
-                          />
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  )}
-                </motion.div>
-              ) : null}
+            {/* Flashback/Hafıza Kartı */}
+            <AnimatePresence>
+              {pastAnswers.length > 0 && (
+                <FlashbackCard
+                  username={spotlightPlayer?.username ?? "Arkadaşın"}
+                  pastAnswers={pastAnswers}
+                />
+              )}
             </AnimatePresence>
 
             {/* Host Skip/Force Score Button */}

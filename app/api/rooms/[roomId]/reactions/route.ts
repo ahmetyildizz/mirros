@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/session";
-import { pusherServer } from "@/lib/pusher/server";
+import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 
 export async function POST(
   req: NextRequest,
@@ -12,7 +12,7 @@ export async function POST(
 
   if (!emoji) return NextResponse.json({ error: "Emoji gerekli" }, { status: 400 });
 
-  await pusherServer.trigger(`room-${roomId}`, "reaction-received", {
+  await safeTrigger(`room-${roomId}`, "reaction-received", {
     userId:   user.id,
     username: user.username || "Anonim",
     emoji:    emoji,

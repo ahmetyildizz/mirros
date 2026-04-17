@@ -16,7 +16,7 @@ const bodySchema = z.object({
 
 export async function POST(req: NextRequest) {
   const ip  = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const { allowed } = rateLimit(`login:${ip}`, { max: 10, windowMs: 60_000 });
+  const { allowed } = await rateLimit(`login:${ip}`, { max: 10, windowMs: 60_000 });
   if (!allowed) {
     return NextResponse.json({ error: "Çok fazla deneme. 1 dakika bekle." }, { status: 429 });
   }

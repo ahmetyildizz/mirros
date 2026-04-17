@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
-import { pusherServer } from "@/lib/pusher/server";
+import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { createAuditLog } from "@/lib/audit";
 
 const bodySchema = z.object({
@@ -58,12 +58,12 @@ export async function POST(
     ? uniqueParticipants.length
     : Math.max(0, uniqueParticipants.length - 1);
 
-  await pusherServer.trigger(`game-${round.gameId}`, "guess-submitted", {
+  await safeTrigger(`game-${round.gameId}`, "guess-submitted", {
     roundId,
     userId:      user.id,
     guessCount,
     totalGuessers,
-    allDone: guessCount >= totalGuessers && totalGuessers >= 2,
+    allDone: guessCount >= totalGuessers && totalGuessers >= 1,
   });
 
   return NextResponse.json(guess, { status: 201 });

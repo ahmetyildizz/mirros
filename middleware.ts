@@ -5,7 +5,7 @@ const SECRET = new TextEncoder().encode(
   process.env.NEXTAUTH_SECRET ?? "changeme-in-production"
 );
 
-const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/auth/logout", "/api/admin/seed"];
+const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/auth/logout"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -15,7 +15,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // Dev bypass: getSession() ile tutarlı olması için aynı koşul
-  if (process.env.NODE_ENV !== "production" && process.env.DEV_USER_ID) {
+  if (process.env.NODE_ENV === "development" && process.env.DEV_USER_ID) {
     return NextResponse.next();
   }
 

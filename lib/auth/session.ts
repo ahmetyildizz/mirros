@@ -17,16 +17,16 @@ export async function createSession(userId: string, username: string, isAdmin: b
   jar.set("mirros_session", token, {
     httpOnly: true,
     secure:   process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "strict",
     maxAge:   60 * 60 * 24 * 30,
     path:     "/",
   });
 }
 
 export async function getSession(): Promise<{ id: string; username: string; isAdmin?: boolean } | null> {
-  // Dev bypass
-  if (process.env.NODE_ENV !== "production" && process.env.DEV_USER_ID) {
-    return { id: process.env.DEV_USER_ID, username: "dev", isAdmin: true };
+  // Dev bypass — sadece local development, staging veya production'da KULLANMA
+  if (process.env.NODE_ENV === "development" && process.env.DEV_USER_ID) {
+    return { id: process.env.DEV_USER_ID, username: "dev", isAdmin: false };
   }
 
   try {

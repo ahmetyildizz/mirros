@@ -27,9 +27,7 @@ export default function LoginPage() {
     // Google Sign-In initialization (Always for Google support)
     GoogleSignIn.initialize({
       clientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
-      webClientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
       redirectUrl: "https://mirros.vercel.app/login",
-      redirectUri: "https://mirros.vercel.app/login",
     }).catch(console.error);
 
     // Web Redirect Callback (Handle returning from Google login on web)
@@ -72,9 +70,7 @@ export default function LoginPage() {
       if (provider === "GOOGLE") {
         await GoogleSignIn.initialize({
           clientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
-          webClientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
           redirectUrl: "https://mirros.vercel.app/login",
-          redirectUri: "https://mirros.vercel.app/login",
         }).catch(console.error);
       }
 
@@ -84,16 +80,8 @@ export default function LoginPage() {
       // 1. Auth Akışı (Native & Web)
       if (provider !== "GUEST" && !token) {
         if (provider === "GOOGLE") {
-          const result = await GoogleSignIn.signIn({
-            clientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
-            webClientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
-            serverClientId: "43704745497-foo9egeveuq8fk3uifma6tn1p0ou38jk.apps.googleusercontent.com",
-            // Shotgun redirect params
-            redirectUrl: "https://mirros.vercel.app/login",
-            redirectUri: "https://mirros.vercel.app/login",
-          });
+          const result = await GoogleSignIn.signIn();
           token = result.idToken;
-          loginName = result.authentication.accessToken; // Geçici
         } else if (provider === "APPLE") {
           // Apple sadece native'de kalsın (Web kurulumu farklı)
           if (Capacitor.isNativePlatform()) {

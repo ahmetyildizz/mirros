@@ -513,6 +513,8 @@ export function ResultsClient({
           gameId={gameId}
           funniestQuestion={funniestRound?.question}
           funniestAnswer={funniestRound?.answer}
+          aiTag={aiReport.tag}
+          winner={top3[0]?.username}
         />
         
         <a 

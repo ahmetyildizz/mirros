@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
-import { pusherServer } from "@/lib/pusher/server";
+import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { startGame } from "@/lib/services/game.service";
 import { createAuditLog } from "@/lib/audit";
 
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
 
   // Pusher bildirimi (Hata durumunda istek çökmemeli)
   try {
-    await pusherServer.trigger(`room-${room.id}`, "player-joined", {
+    await safeTrigger(`room-${room.id}`, "player-joined", {
       userId:    user.id,
       username:  body.data.username ?? user.username,
       avatarUrl: body.data.avatarUrl ?? dbUser?.avatarUrl,

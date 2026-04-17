@@ -51,7 +51,7 @@ const TEMPLATES: Template[] = [
 
 const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-export function CreateRoom({ onCreated }: Props) {
+export function CreateRoom({ onCreated, onStepChange }: Props) {
   const router = useRouter();
   const { setTheme, setCategoryName: setGlobalCategoryName } = useGameStore();
   const [step,     setStep]    = useState<"template" | "config">("template");

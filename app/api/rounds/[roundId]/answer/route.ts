@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
-import { pusherServer } from "@/lib/pusher/server";
+import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { createAuditLog } from "@/lib/audit";
 
 /** Türkçeye duyarlı metin normalleştirme: ilk harf büyük, trim, çoklu boşluk temizle */
@@ -74,7 +74,7 @@ export async function POST(
     const answerCount       = await db.answer.count({ where: { roundId } });
     const allAnswered       = answerCount >= totalParticipants && totalParticipants >= 2;
 
-    await pusherServer.trigger(`game-${round.gameId}`, "answer-submitted", {
+    await safeTrigger(`game-${round.gameId}`, "answer-submitted", {
       roundId,
       userId:        user.id,
       answerCount,
@@ -109,7 +109,7 @@ export async function POST(
     const uniquePlayers = Array.from(new Map(players.map(p => [p.userId, p])).values());
     const totalGuessers = Math.max(0, uniquePlayers.length - 1); // answerer hariç
 
-    await pusherServer.trigger(`game-${round.gameId}`, "answer-submitted", {
+    await safeTrigger(`game-${round.gameId}`, "answer-submitted", {
       roundId,
       answererId:   user.id,
       roomId:       round.game.roomId,
@@ -136,7 +136,7 @@ async function scoreQuizRound(roundId: string, gameId: string) {
   const results: { userId: string; username: string; answer: string; correct: boolean; points: number }[] = [];
 
   for (const ans of round.answers) {
-    const isCorrect = ans.content.trim().toLowerCase() === correct.trim().toLowerCase();
+    const isCorrect = ans.content.trim().toLocaleLowerCase("tr") === correct.trim().toLocaleLowerCase("tr");
     const points    = isCorrect ? 10 : 0;
 
     const score = await db.score.upsert({
@@ -196,7 +196,7 @@ async function scoreQuizRound(roundId: string, gameId: string) {
   }
 
   // 3. Tek bir event ile hem sonuçları hem de yeni soruyu gönder
-  await pusherServer.trigger(`game-${gameId}`, "quiz-round-scored", {
+  await safeTrigger(`game-${gameId}`, "quiz-round-scored", {
     roundId,
     correctAnswer: correct,
     results,

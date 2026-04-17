@@ -1,6 +1,10 @@
 import { db } from "@/lib/db";
-import { pusherServer } from "@/lib/pusher/server";
+import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { createAuditLog } from "@/lib/audit";
+import { generateAndSaveQuestionsForRoom, refillGlobalPool } from "@/lib/services/ai.service";
+
+// Havuzda bu sayının altına düşünce AI ile doldur
+const LOW_WATER_MARK = 5;
 
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
@@ -108,6 +112,15 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
   }
 
   if (candidates.length === 0) throw new Error("Soru havuzu gerçekten boş");
+
+  // LOW_WATER_MARK altındaysa arka planda global havuzu doldur (non-blocking)
+  if (candidates.length < LOW_WATER_MARK && baseCategory) {
+    const spice: "EASY" | "MEDIUM" | "HARD" = spiceLevel ?? "MEDIUM";
+    refillGlobalPool(gameMode, baseCategory, 15).catch((e) =>
+      console.error("[AI] refillGlobalPool arka plan hatası:", e)
+    );
+  }
+
   const pick = candidates[Math.floor(Math.random() * candidates.length)];
   return tx.question.findUniqueOrThrow({ where: { id: pick.id } });
 }
@@ -150,6 +163,22 @@ export async function startGame(roomId: string) {
       newValue: JSON.stringify({ ageGroup: majorityAgeGroup }),
     });
   }
+
+  // ── AI: Oyuncu isimleriyle kişiselleştirilmiş sorular üret (arka planda, non-blocking) ──
+  const playerNames = participants.map((p) => p.user.username ?? p.user.email ?? "Oyuncu");
+  const baseSpiceLevel: "EASY" | "MEDIUM" | "HARD" =
+    room.category?.includes(":Nuclear") ? "HARD"
+    : room.category?.includes(":Hot") ? "MEDIUM"
+    : "EASY";
+
+  generateAndSaveQuestionsForRoom(
+    roomId,
+    room.gameMode,
+    room.category,
+    room.ageGroup,
+    playerNames,
+    baseSpiceLevel
+  ).catch((e) => console.error("[AI] generateAndSaveQuestionsForRoom hatası:", e));
 
   // Sadece odaya özel değil, bu katılımcıların oynadığı TÜM oyunlardaki soruları dışla
   const previousRounds = await db.round.findMany({
@@ -216,7 +245,7 @@ export async function startGame(roomId: string) {
     username: p.user.username ?? p.user.email,
   }));
 
-  await pusherServer.trigger(`room-${roomId}`, "game-started", {
+  await safeTrigger(`room-${roomId}`, "game-started", {
     gameId:           game.id,
     gameMode:         room.gameMode,
     ageGroup:         room.ageGroup,
@@ -322,7 +351,7 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
       playerScores[s.guesserId] = (playerScores[s.guesserId] ?? 0) + s.points;
     }
 
-    await pusherServer.trigger(`game-${gameId}`, "game-finished", { gameId, playerScores });
+    await safeTrigger(`game-${gameId}`, "game-finished", { gameId, playerScores });
     return { finished: true, playerScores };
   }
 

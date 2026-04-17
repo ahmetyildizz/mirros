@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/session";
-import { pusherServer } from "@/lib/pusher/server";
+import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 
 export async function POST(
   req: NextRequest,
@@ -16,7 +16,7 @@ export async function POST(
     }
 
     // Reaction eventini tüm oyuna duyur
-    await pusherServer.trigger(`game-${gameId}`, "reaction-received", {
+    await safeTrigger(`game-${gameId}`, "reaction-received", {
       userId,
       username: username || "Anonim",
       emoji,
