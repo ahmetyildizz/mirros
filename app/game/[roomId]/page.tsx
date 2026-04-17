@@ -48,7 +48,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     currentRound, totalRounds, activeRoundId,
     guessCount, totalGuessers, setTheme, nextRoundData,
     bluffOptions, bluffAnswers, isHostPlayer,
-    setGameState, setMyRole, setAnswererId,
+    setGameState, setMyRole, setAnswererId, setIsHostPlayer,
   } = useGameStore();
   const isQuiz   = gameMode === "QUIZ";
   const isExpose = gameMode === "EXPOSE";
@@ -69,7 +69,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
         setMyUserId(data.id);
         const store = useGameStore.getState();
         const me    = store.players.find(p => p.id === data.id);
-        
+
         if (me?.role === "SPECTATOR") {
           setMyRole("spectator");
         } else if (store.gameMode === "QUIZ" || store.gameMode === "EXPOSE") {
@@ -77,9 +77,18 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
         } else {
           setMyRole(store.answererId === data.id ? "answerer" : "guesser");
         }
+
+        // isHostPlayer: /api/rooms ile doğrula — localStorage ya da lobby
+        // akışından gelen değer yanlış olabilir (yenileme, farklı cihaz).
+        fetch(`/api/rooms/${roomId}`)
+          .then(r => r.json())
+          .then(room => {
+            if (room.hostId) setIsHostPlayer(room.hostId === data.id);
+          })
+          .catch(() => {});
       })
       .catch(() => {});
-  }, [setMyRole]);
+  }, [setMyRole, roomId, setIsHostPlayer]);
 
   useEffect(() => {
     if (isQuiz || isExpose) return;
@@ -142,6 +151,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           const me = data.players.find((p: any) => p.id === myUserId);
           const role = me?.role === "SPECTATOR" ? "spectator" : (data.gameMode === "QUIZ" || data.gameMode === "EXPOSE" ? "guesser" : (data.answererId === myUserId ? "answerer" : "guesser"));
           useGameStore.getState().setMyRole(role);
+          if (data.hostId) useGameStore.getState().setIsHostPlayer(data.hostId === myUserId);
         }
 
         // AGGRESSIVE SYNC: Eğer EXPOSE/QUIZ modundaysak ve state ANSWERING olarak gelmişse (race condition), GUESSING'e zorla

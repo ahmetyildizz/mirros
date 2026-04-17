@@ -47,6 +47,7 @@ export async function GET(
   return NextResponse.json({
     gameId:       game.id,
     roomId:       game.roomId,
+    hostId:       game.room.hostId,
     gameMode:     game.room.gameMode,
     state:        currentRound.status,
     activeRoundId:currentRound.id,
