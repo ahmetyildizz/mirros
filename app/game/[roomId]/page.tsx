@@ -187,12 +187,21 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   // Auto-submit / skip when time runs out
   useEffect(() => {
     if (timeLeft !== 0 || hasAutoSubmitted.current) return;
-    if (state === "ANSWERING" && (isAnswerer || isQuiz)) {
+    if (state === "ANSWERING") {
       hasAutoSubmitted.current = true;
-      submitAnswer("...").catch(() => {});
+      if (isAnswerer || isQuiz) {
+        // Answerer kendi adına gönder
+        submitAnswer("...").catch(() => {
+          // Yetki hatası — host olarak skip et
+          if (isHostPlayer) skipRound().catch(() => {});
+        });
+      } else if (isHostPlayer) {
+        // Answerer client'ı cevap göndermedi, host bypass eder
+        skipRound().catch(() => {});
+      }
     } else if (state === "GUESSING" && isHostPlayer) {
       hasAutoSubmitted.current = true;
-      triggerScore();
+      triggerScore().catch(() => skipRound().catch(() => {}));
     }
   }, [timeLeft, state, isAnswerer, isHostPlayer, isQuiz]);
 
@@ -331,6 +340,15 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Skor hesaplanamadı" }));
       console.error("[triggerScore]", err.error);
+    }
+  }
+
+  async function skipRound() {
+    if (!activeRoundId) return;
+    const res = await fetch(`/api/rounds/${activeRoundId}/skip`, { method: "POST" });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: "Geçilemedi" }));
+      console.error("[skipRound]", err.error);
     }
   }
 
@@ -578,7 +596,10 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
               <motion.button
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                onClick={() => state === "GUESSING" ? triggerScore() : submitAnswer("...")}
+                onClick={() => {
+                  if (state === "GUESSING") triggerScore().catch(() => skipRound().catch(() => {}));
+                  else skipRound();
+                }}
                 className="mt-4 w-full py-3 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 group"
               >
                 <Zap size={12} className="group-hover:text-yellow-400 transition-colors" />
