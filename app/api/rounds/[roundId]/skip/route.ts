@@ -19,7 +19,7 @@ export async function POST(
 
   const round = await db.round.findUnique({
     where:   { id: roundId },
-    include: { game: { include: { room: true } } },
+    include: { game: { include: { room: { include: { participants: true } } } } },
   });
 
   if (!round)                    return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
@@ -28,10 +28,22 @@ export async function POST(
     return NextResponse.json({ error: "Geçilemez durum" }, { status: 409 });
   }
 
-  const isHost     = round.game.room.hostId === userId;
-  const isAnswerer = round.answererId !== null && round.answererId === userId;
-  if (!isHost && !isAnswerer) {
+  const isHost        = round.game.room.hostId === userId;
+  const isAnswerer    = round.answererId !== null && round.answererId === userId;
+  const isParticipant = round.game.room.participants.some((p) => p.userId === userId);
+
+  if (!isParticipant) {
     return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
+  }
+
+  // Host ve answerer her zaman skip yapabilir.
+  // Diğer oyuncular yalnızca round 58 saniyeden eskiyse skip yapabilir
+  // (client timer 60s, bu guard bant genişliği farkını tolere eder).
+  if (!isHost && !isAnswerer) {
+    const ageSec = (Date.now() - round.createdAt.getTime()) / 1000;
+    if (ageSec < 58) {
+      return NextResponse.json({ error: "Süre henüz dolmadı" }, { status: 403 });
+    }
   }
 
   await db.round.update({ where: { id: roundId }, data: { status: "SCORED" } });

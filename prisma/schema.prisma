@@ -92,6 +92,7 @@ model Round {
   questionId String
   answererId String?
   status     RoundStatus @default(ANSWERING)
+  createdAt  DateTime    @default(now())
   answers    Answer[]
   guesses    Guess[]
   game       Game        @relation(fields: [gameId], references: [id])

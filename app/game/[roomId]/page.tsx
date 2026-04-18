@@ -221,8 +221,11 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     if (state === "ANSWERING") {
       // Answerer kendi cevabını gönderir (server 403 verirse susar)
       if (isAnswerer || isQuiz) submitAnswer("...").catch(() => {});
-      // Host bağımsız olarak skip atar — server race condition'ı 409 ile reddeder, sorun olmaz
-      if (isHostPlayer) skipRound().catch(() => {});
+      // Tüm oyuncular skipRound dener: host/answerer her zaman geçebilir,
+      // diğerleri server-side 58s guard'a takılır (normal şartlarda timer=60s
+      // dolunca round zaten 60s+ eski olduğu için guard geçer).
+      // Böylece host bağlantısı kesse bile oyun ilerler.
+      skipRound().catch(() => {});
     } else if (state === "GUESSING") {
       // Önce score dene (tahminleri değerlendir), başarısız olursa skip
       if (isHostPlayer || isAnswerer) {
