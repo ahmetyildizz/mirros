@@ -159,7 +159,10 @@ export async function POST(
 
     const maxVotes = Math.max(...Object.values(voteCounts));
     const tiedOptions = Object.keys(voteCounts).filter(k => voteCounts[k] === maxVotes);
-    const majorityVote = tiedOptions[Math.floor(Math.random() * tiedOptions.length)];
+    
+    // Beraberlik durumunda Casus lehine karar ver: Sadece TEK BİR isim en çok oyu aldıysa ve o casussa yakalanır.
+    // Eğer oylarda beraberlik varsa (örn: 1-1-1 veya 2-2), casus yakalanmamış sayılır.
+    const majorityVote = tiedOptions.length === 1 ? tiedOptions[0] : "BERABERLIK";
 
     const spyUser = round.game.room.participants.find(p => p.userId === spyId)?.user;
     const spyUsername = spyUser?.username ?? spyUser?.email ?? "";

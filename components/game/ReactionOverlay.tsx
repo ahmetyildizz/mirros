@@ -12,10 +12,10 @@ interface Reaction {
 
 const SFX_MAP: Record<string, string> = {
   "😂": "/sfx/laugh.mp3",
-  "😱": "/sfx/oops.mp3",
+  "😱": "/sfx/gasp.mp3",
   "💩": "/sfx/fart.mp3",
-  "🔥": "/sfx/wow.mp3",
-  "🤡": "/sfx/clown.mp3",
+  "🔥": "/sfx/fire.mp3",
+  "🤡": "/sfx/honk.mp3",
   "💔": "/sfx/sad.mp3",
 };
 

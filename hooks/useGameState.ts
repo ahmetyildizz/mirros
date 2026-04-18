@@ -105,7 +105,7 @@ export function useGameState(gameId: string, myUserId: string) {
         const store = useGameStore.getState();
         const gameMode = store.gameMode;
         // Global Flow Guard: gameMode EXPOSE/QUIZ ise veya answererId yoksa başlangıç durumu GUESSING'dir
-        const initialState = (gameMode === "EXPOSE" || gameMode === "QUIZ" || !data.answererId) ? "GUESSING" : "ANSWERING";
+        const initialState = (gameMode === "EXPOSE" || gameMode === "QUIZ" || (!data.answererId && gameMode !== "SPY")) ? "GUESSING" : "ANSWERING";
         setGameState(initialState);
         setActiveRoundId(data.roundId);
         setCurrentRound(data.roundNumber);
