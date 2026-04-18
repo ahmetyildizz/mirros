@@ -142,9 +142,9 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           // Sync Theme
           setTheme(getThemeFromRoom(data.category, data.gameMode || "SOCIAL"));
 
-          if (data.activeGameId !== gameId) {
-            recoverGameState(data.activeGameId);
-          }
+          // Her zaman recover: game-started eventini kaçıran kullanıcı stale soru görebilir.
+          // gameId eşleşse bile soru eksik olabilir (lobby fetch gameId yazıyor ama soruyu yazmıyor).
+          recoverGameState(data.activeGameId);
         } else {
           router.replace("/");
         }
