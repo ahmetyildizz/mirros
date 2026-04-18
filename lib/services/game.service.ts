@@ -106,7 +106,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     });
   }
 
-  // 4. ADIM: Son Çare: Her şeyi esnet
+  // 4. ADIM: Son Çare: excludeIds kısıtını da kaldır (tüm havuz)
   if (candidates.length === 0) {
     candidates = await tx.question.findMany({
       where: { isActive: true, gameMode: effectiveMode },
@@ -116,9 +116,9 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
 
   if (candidates.length === 0) throw new Error("Soru havuzu gerçekten boş");
 
-  // LOW_WATER_MARK altındaysa arka planda global havuzu doldur (non-blocking)
+  // Havuz azaldığında daha agresif dolum: 30 soru üret (önceden 15'ti)
   if (candidates.length < LOW_WATER_MARK && baseCategory) {
-    refillGlobalPool(effectiveMode, baseCategory, 15).catch((e) =>
+    refillGlobalPool(effectiveMode, baseCategory, 30).catch((e) =>
       console.error("[AI] refillGlobalPool arka plan hatası:", e)
     );
   }
@@ -183,13 +183,16 @@ export async function startGame(roomId: string) {
     baseSpiceLevel
   ).catch((e) => console.error("[AI] generateAndSaveQuestionsForRoom hatası:", e));
 
-  // Sadece odaya özel değil, bu katılımcıların oynadığı TÜM oyunlardaki soruları dışla
+  // Son 30 gündeki oyunlarda bu katılımcıların gördüğü soruları dışla.
+  // 30 günlük pencere: eski sorular havuza geri döner, havuz tükenmez.
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
   const previousRounds = await db.round.findMany({
     where: {
       game: {
+        startedAt: { gte: thirtyDaysAgo },
         room: {
           participants: {
-             some: { userId: { in: participantIds } }
+            some: { userId: { in: participantIds } }
           }
         }
       }
@@ -395,13 +398,15 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
   }
 
   const nextNumber = completedRoundNumber + 1;
-  // Odadaki veya geçmişteki TÜM oyunların kullandığı soruları dışla
+  // Son 30 gündeki oyunlarda bu katılımcıların gördüğü soruları dışla.
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
   const allRoomRounds = await db.round.findMany({
     where: {
       game: {
+        startedAt: { gte: thirtyDaysAgo },
         room: {
           participants: {
-             some: { userId: { in: participantIds } }
+            some: { userId: { in: participantIds } }
           }
         }
       }
