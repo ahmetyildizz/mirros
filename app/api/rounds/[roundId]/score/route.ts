@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer, safeTrigger } from "@/lib/pusher/server";
-import { scoreRound, getPoints } from "@/lib/services/scoring.service";
+import { scoreRound, getPoints, normalize } from "@/lib/services/scoring.service";
 import { advanceGame } from "@/lib/services/game.service";
 import { createAuditLog } from "@/lib/audit";
 
@@ -90,7 +90,7 @@ export async function POST(
 
     // 1. Doğru cevabı tahmin edenlere +5 puan
     for (const g of bluffRound.guesses) {
-      const isCorrect = g.content.trim().toLocaleLowerCase("tr") === realAnswer.trim().toLocaleLowerCase("tr");
+      const isCorrect = normalize(g.content) === normalize(realAnswer);
       const pts = isCorrect ? 5 : 0;
       await db.score.upsert({
         where:  { roundId_guesserId: { roundId, guesserId: g.userId } },
@@ -102,7 +102,7 @@ export async function POST(
 
     // 2. Sahte cevabına oy gelen oyunculara +3 puan/oy
     for (const ans of bluffRound.answers) {
-      const votesForBluff = bluffRound.guesses.filter(g => g.content.trim().toLocaleLowerCase("tr") === ans.content.trim().toLocaleLowerCase("tr")).length;
+      const votesForBluff = bluffRound.guesses.filter(g => normalize(g.content) === normalize(ans.content)).length;
       if (votesForBluff > 0) {
         const bonusPts = votesForBluff * 3;
         // Mevcut skoru oku, üzerine ekle (Prisma upsert.update fonksiyon kabul etmez)

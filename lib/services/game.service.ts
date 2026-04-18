@@ -359,26 +359,36 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
       playerScores[s.guesserId] = (playerScores[s.guesserId] ?? 0) + s.points;
     }
 
-    // Streak güncelle: bugün oynayan oyuncuların streak'ini artır
+    // Streak güncelle: bugün oynayan oyuncuların streak'ini artır (batch — N*2 sorgu yerine 1+N)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    for (const userId of participantIds) {
-      const user = await db.user.findUnique({ where: { id: userId }, select: { streak: true, longestStreak: true, lastPlayedAt: true } });
-      if (!user) continue;
-      const lastPlayed = user.lastPlayedAt ? new Date(user.lastPlayedAt) : null;
-      if (lastPlayed) lastPlayed.setHours(0, 0, 0, 0);
-      const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
-      const playedToday     = lastPlayed?.getTime() === today.getTime();
-      const playedYesterday = lastPlayed?.getTime() === yesterday.getTime();
-      const newStreak = playedToday ? user.streak : (playedYesterday ? user.streak + 1 : 1);
-      const longestStreak = Math.max(user.longestStreak, newStreak);
-      if (!playedToday) {
-        await db.user.update({
-          where: { id: userId },
-          data: { streak: newStreak, longestStreak, lastPlayedAt: new Date() },
-        });
-      }
-    }
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const users = await db.user.findMany({
+      where: { id: { in: participantIds } },
+      select: { id: true, streak: true, longestStreak: true, lastPlayedAt: true },
+    });
+
+    await db.$transaction(
+      users
+        .filter((user) => {
+          const lastPlayed = user.lastPlayedAt ? new Date(user.lastPlayedAt) : null;
+          if (lastPlayed) lastPlayed.setHours(0, 0, 0, 0);
+          return lastPlayed?.getTime() !== today.getTime(); // bugün zaten oynamamış
+        })
+        .map((user) => {
+          const lastPlayed = user.lastPlayedAt ? new Date(user.lastPlayedAt) : null;
+          if (lastPlayed) lastPlayed.setHours(0, 0, 0, 0);
+          const playedYesterday = lastPlayed?.getTime() === yesterday.getTime();
+          const newStreak       = playedYesterday ? user.streak + 1 : 1;
+          const longestStreak   = Math.max(user.longestStreak, newStreak);
+          return db.user.update({
+            where: { id: user.id },
+            data:  { streak: newStreak, longestStreak, lastPlayedAt: new Date() },
+          });
+        })
+    );
 
     await safeTrigger(`game-${gameId}`, "game-finished", { gameId, playerScores });
     return { finished: true, playerScores };

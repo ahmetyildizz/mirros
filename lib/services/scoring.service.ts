@@ -12,7 +12,7 @@ const POINTS: Record<MatchLevel, number> = {
   WRONG: 0,
 };
 
-function normalize(str: string): string {
+export function normalize(str: string): string {
   return str
     .toLowerCase()
     .trim()

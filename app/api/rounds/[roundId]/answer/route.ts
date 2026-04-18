@@ -5,6 +5,7 @@ import { requireAuth } from "@/lib/auth/session";
 import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { createAuditLog } from "@/lib/audit";
 import { rateLimit } from "@/lib/rateLimit";
+import { normalize } from "@/lib/services/scoring.service";
 
 /** Türkçeye duyarlı metin normalleştirme: ilk harf büyük, trim, çoklu boşluk temizle */
 function normalizeAnswer(text: string): string {
@@ -199,7 +200,7 @@ async function scoreQuizRound(roundId: string, gameId: string) {
   const results: { userId: string; username: string; answer: string; correct: boolean; points: number }[] = [];
 
   for (const ans of round.answers) {
-    const isCorrect = ans.content.trim().toLocaleLowerCase("tr") === correct.trim().toLocaleLowerCase("tr");
+    const isCorrect = normalize(ans.content) === normalize(correct);
     const points    = isCorrect ? 10 : 0;
 
     const score = await db.score.upsert({

@@ -46,6 +46,8 @@ model Room {
   games         Game[]
   host          User              @relation("HostedRooms", fields: [hostId], references: [id])
   participants  RoomParticipant[]
+
+  @@index([hostId])
 }
 
 model RoomParticipant {
@@ -74,7 +76,7 @@ model Game {
   status      GameStatus @default(ACTIVE)
   startedAt   DateTime   @default(now())
   finishedAt  DateTime?
-  room        Room       @relation(fields: [roomId], references: [id])
+  room        Room       @relation(fields: [roomId], references: [id], onDelete: Cascade)
   insights    Insight[]
   rounds      Round[]
   scores      Score[]
@@ -98,6 +100,7 @@ model Round {
 
   @@index([gameId])
   @@index([gameId, status])
+  @@index([answererId])
   @@unique([gameId, number])
 }
 
@@ -158,6 +161,8 @@ model Question {
   roomId     String?    // Eğer null ise genel havuz, doluysa o odaya özel
   rounds     Round[]
   dailyEntries DailyQuestion[]
+
+  @@index([roomId, isActive, gameMode])
 }
 
 model DailyQuestion {

@@ -183,7 +183,9 @@ export async function generateAndSaveQuestionsForRoom(
     }
   }
 
-  console.log(`[AI] ${saved}/${count} soru oda ${roomId} için kaydedildi (${gameMode})`);
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`[AI] ${saved}/${count} soru oda ${roomId} için kaydedildi (${gameMode})`);
+  }
   return saved;
 }
 
@@ -233,6 +235,8 @@ export async function refillGlobalPool(
     }
   }
 
-  console.log(`[AI] global havuz: ${saved} soru eklendi (${gameMode}/${category})`);
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`[AI] global havuz: ${saved} soru eklendi (${gameMode}/${category})`);
+  }
   return saved;
 }

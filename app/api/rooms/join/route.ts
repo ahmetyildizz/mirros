@@ -113,18 +113,28 @@ export async function POST(req: NextRequest) {
   }
 
   // Oda doldu → otomatik başlat (Sadece oyuncu sayısı dolunca, izleyici katıldığında değil)
+  // startGame() kendi içinde transaction + existingGame guard'ı var; eş zamanlı iki istek
+  // gelirse biri "Oyun zaten başlatıldı" fırlatır — bu catch'te güvenle yutulur.
   let activeGameId = room.games[0]?.id || null;
-  
+
   if (updated) {
     const activePlayerCount = updated.participants.filter(p => (p as any).role !== "SPECTATOR").length;
     if (activePlayerCount >= room.maxPlayers) {
-      try { 
-        const gameRes = await startGame(room.id); 
+      try {
+        const gameRes = await startGame(room.id);
         if (gameRes?.game?.id) {
           activeGameId = gameRes.game.id;
         }
-      } catch (err) { 
-        console.error("Auto-start game failed:", err);
+      } catch (err: any) {
+        if (err?.message !== "Oyun zaten başlatıldı") {
+          console.error("Auto-start game failed:", err);
+        }
+        // "Oyun zaten başlatıldı" → race condition, diğer istek başlattı, sessizce geç
+        const existingActive = await db.game.findFirst({
+          where: { roomId: room.id, status: "ACTIVE" },
+          select: { id: true },
+        });
+        if (existingActive) activeGameId = existingActive.id;
       }
     }
   }
