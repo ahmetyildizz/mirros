@@ -37,18 +37,26 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    // 3. Eğer bugün için soru seçilmemişse, havuzdan rastgele bir tane seç
+    // 3. Eğer bugün için soru seçilmemişse, havuzdan daha önce kullanılmamış bir tane seç
     if (!daily) {
-      const allQuestionIds = await db.question.findMany({
-        where: { gameMode: "SOCIAL", isActive: true },
+      const usedIds = (await db.dailyQuestion.findMany({ select: { questionId: true } }))
+        .map((d) => d.questionId);
+
+      const candidates = await db.question.findMany({
+        where: { gameMode: "SOCIAL", isActive: true, id: { notIn: usedIds } },
         select: { id: true },
       });
 
-      if (allQuestionIds.length === 0) {
+      // Tüm sorular kullanılmışsa havuzu sıfırla (döngüsel)
+      const pool = candidates.length > 0
+        ? candidates
+        : await db.question.findMany({ where: { gameMode: "SOCIAL", isActive: true }, select: { id: true } });
+
+      if (pool.length === 0) {
         return NextResponse.json({ error: "No questions available" }, { status: 404 });
       }
 
-      const randomId = allQuestionIds[Math.floor(Math.random() * allQuestionIds.length)].id;
+      const randomId = pool[Math.floor(Math.random() * pool.length)].id;
 
       daily = await db.dailyQuestion.create({
         data: {
