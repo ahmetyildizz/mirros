@@ -31,15 +31,15 @@ export function ReactionToolbar({ roomId }: { roomId: string }) {
             initial={{ opacity: 0, scale: 0.5, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.5, y: 20 }}
-            className="absolute bottom-16 right-0 bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-2 grid grid-cols-2 gap-2 shadow-2xl"
+            className="absolute bottom-16 right-0 bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-3 grid grid-cols-3 gap-3 shadow-2xl"
           >
             {EMOJIS.map((emoji) => (
               <motion.button
                 key={emoji}
-                whileHover={{ scale: 1.2 }}
+                whileHover={{ scale: 1.15 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => sendReaction(emoji)}
-                className="w-10 h-10 flex items-center justify-center text-2xl hover:bg-white/10 rounded-xl transition-colors"
+                className="w-14 h-14 flex items-center justify-center text-3xl hover:bg-white/10 rounded-2xl transition-colors"
               >
                 {emoji}
               </motion.button>
