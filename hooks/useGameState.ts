@@ -110,18 +110,18 @@ export function useGameState(gameId: string, myUserId: string) {
         setActiveRoundId(data.roundId);
         setCurrentRound(data.roundNumber);
         setAnswererId(data.answererId ?? null);
-        setBluffOptions([]); // Yeni round başlayınca temizle
-        setBluffAnswers([]);
-        // EXPOSE/BLUFF'da herkes cevap verir (guesser rolü)
-        setMyRole(gameMode === "EXPOSE" || gameMode === "BLUFF" ? "guesser" : (data.answererId ? (data.answererId === myUserIdRef.current ? "answerer" : "guesser") : "guesser"));
+        setGameState("ANSWERING");
+        setNextRoundData(null); 
 
-        const totalPlayers = store.players.length;
-        const initialTotalGuessers = gameMode === "EXPOSE" ? totalPlayers : (totalPlayers - 1);
-        setGuessProgress(0, initialTotalGuessers);
-
-        setNextRoundData(null); // Clear pre-loaded next round
-        if (data.questionText) {
-          setQuestion({ id: data.questionId, text: data.questionText, category: data.questionCategory ?? "", options: data.questionOptions ?? null });
+        // Eğer text null gelmişse (Spy modu senkronizasyon gereksinimi),
+        // arka planda taze veriyi çek.
+        if (data.questionText === null) {
+          fetch(`/api/games/${gameId}`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.gameId) hydrate(data);
+            })
+            .catch(err => console.error("[round-started] Sync failed", err));
         }
       } catch (err) {
         console.error("[useGameState] round-started handler error:", err);
@@ -131,14 +131,11 @@ export function useGameState(gameId: string, myUserId: string) {
     channel.bind("answer-submitted", (data: AnswerSubmittedPayload) => {
       try {
         if (data.answererId !== undefined) {
-          // SOCIAL: guessing'e geç, varsa güncellenmiş şıkları uygula
           if (data.updatedOptions) setQuestionOptions(data.updatedOptions);
-          // totalGuessers'ı sıfırla ki UI 0/0 göstermesin
           setGuessProgress(0, data.totalGuessers ?? 0);
           setGameState("GUESSING");
           return;
         }
-        // QUIZ / BLUFF: kaç kişi cevapladı bilgisi güncelle
         setGuessProgress(data.answerCount ?? 0, data.totalParticipants ?? 0);
       } catch (err) {
         console.error("[useGameState] answer-submitted handler error:", err);

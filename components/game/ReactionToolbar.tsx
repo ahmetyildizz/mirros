@@ -12,7 +12,7 @@ export function ReactionToolbar({ roomId }: { roomId: string }) {
 
   const sendReaction = async (emoji: string) => {
     try {
-      await fetch(`/api/rooms/${roomId}/react`, {
+      await fetch(`/api/rooms/${roomId}/reactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ emoji }),

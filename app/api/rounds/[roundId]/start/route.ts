@@ -27,12 +27,14 @@ export async function POST(
 
   // The initial state is managed by createRound in game.service.ts
 
+  const isSpyMode = round.game.room.gameMode === "SPY";
+
   // Broadcat start to all players
   await safeTrigger(`game-${round.gameId}`, "round-started", {
     roundId:          round.id,
     roundNumber:      round.number,
     questionId:       round.questionId,
-    questionText:     round.question.text,
+    questionText:     isSpyMode ? null : round.question.text,
     questionCategory: round.question.category,
     questionOptions:  round.question.options ?? null,
     answererId:       round.answererId ?? null,
