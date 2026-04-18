@@ -88,7 +88,7 @@ export interface AIQuestion {
   options:    string[];
   difficulty: "EASY" | "MEDIUM" | "HARD";
   category:   string;
-  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE";
+  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE" | "SPY";
   correct?:   string;
   penalty?:   string;
   ageGroup?:  "CHILD" | "ADULT" | "WISE";
@@ -155,7 +155,7 @@ export async function generateSpyQuestions(
  */
 export async function generateAndSaveQuestionsForRoom(
   roomId:     string,
-  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF",
+  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY",
   category:   string | null,
   ageGroup:   "CHILD" | "ADULT" | "WISE" | null,
   playerNames: string[],
@@ -215,7 +215,7 @@ export async function generateAndSaveQuestionsForRoom(
  * pickQuestion() havuz < LOW_WATER_MARK olduğunda bunu çağırır.
  */
 export async function refillGlobalPool(
-  gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF",
+  gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY",
   category: string,
   count = 15
 ): Promise<number> {
