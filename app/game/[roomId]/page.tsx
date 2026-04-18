@@ -564,7 +564,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                   {state === "ANSWERING" ? (
                     <div className="flex flex-col gap-3">
                       <div className="bg-violet-500/10 border border-violet-500/20 rounded-2xl px-4 py-3 text-center">
-                        <p className="text-[11px] font-black text-violet-400 uppercase tracking-widest">🎭 Sahte Cevap Yaz!</p>
+                        <p className="text-[11px] font-black text-violet-400 uppercase tracking-widest">Sahte Cevap Yaz!</p>
                         <p className="text-[10px] text-slate-400 mt-1">Başkalarını kandır — gerçekmiş gibi görünen bir cevap yaz</p>
                       </div>
                       <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
@@ -573,7 +573,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                   ) : state === "GUESSING" && bluffOptions.length > 0 ? (
                     <div className="flex flex-col gap-3">
                       <div className="bg-violet-500/10 border border-violet-500/20 rounded-2xl px-4 py-3 text-center">
-                        <p className="text-[11px] font-black text-violet-400 uppercase tracking-widest">🔍 Hangisi Gerçek?</p>
+                        <p className="text-[11px] font-black text-violet-400 uppercase tracking-widest">Hangisi Gerçek?</p>
                         <p className="text-[10px] text-slate-400 mt-1">Doğru cevabı bul — sahte yazanlara oy gelirse onlar da kazanır!</p>
                       </div>
                       <MultipleChoiceInput
@@ -597,7 +597,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                   {state === "ANSWERING" ? (
                     <div className="flex flex-col gap-3">
                       <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl px-4 py-3 text-center">
-                        <p className="text-[11px] font-black text-orange-400 uppercase tracking-widest">🕵️ İpucu Zamanı!</p>
+                        <p className="text-[11px] font-black text-orange-400 uppercase tracking-widest">İpucu Zamanı!</p>
                         <p className="text-[10px] text-slate-400 mt-1">Konun hakkında kapalı bir ipucu yaz. Casus olduğunu belli etme!</p>
                       </div>
                       <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
@@ -605,7 +605,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                   ) : state === "GUESSING" ? (
                     <div className="flex flex-col gap-3">
                       <div className="bg-red-500/10 border border-red-500/20 rounded-2xl px-4 py-3 text-center">
-                        <p className="text-[11px] font-black text-red-400 uppercase tracking-widest">🚨 Casus Kim?</p>
+                        <p className="text-[11px] font-black text-red-400 uppercase tracking-widest">Casus Kim?</p>
                         <p className="text-[10px] text-slate-400 mt-1">İpuçlarını dinledin. Sence gruptaki casus kim?</p>
                       </div>
                       <MultipleChoiceInput
@@ -747,7 +747,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                   "text-3xl font-black text-white tracking-tighter italic text-center",
                   (isExpose || isSpy) ? "text-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.5)]" : "drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
                 )}>
-                  {(isExpose || isSpy) ? `🔥 ${lastRoundScore.answer} 🔥` : `"${lastRoundScore.answer}"`}
+                  {`"${lastRoundScore.answer}"`}
                 </p>
               </div>
 
@@ -977,7 +977,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           >
             <div className="flex items-center gap-2 mb-1">
               <AlertCircle className="text-orange-500" size={16} />
-              <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest">🎭 {isExpose ? "Yüzleşme Cezası!" : "Ceza Vakti!"}</span>
+              <span className="text-[11px] font-black text-orange-500 uppercase tracking-widest">{isExpose ? "Yüzleşme Cezası!" : "Ceza Vakti!"}</span>
             </div>
             <p className="text-[14px] font-bold text-orange-200 leading-relaxed italic">
               {isExpose ? `${lastRoundScore?.answer}: ` : ""}&quot;{lastPenalty}&quot;

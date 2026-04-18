@@ -61,17 +61,22 @@ export async function POST(
     for (const g of round.guesses) {
       voteCounts[g.content] = (voteCounts[g.content] || 0) + 1;
     }
-    // Beraberlik durumunda kazananlardan rastgele birini seç
     const maxVotes = Math.max(...Object.values(voteCounts));
     const tiedOptions = Object.keys(voteCounts).filter(k => voteCounts[k] === maxVotes);
-    exposeWinnerContent = tiedOptions[Math.floor(Math.random() * tiedOptions.length)];
 
-    // Kazanan kullanıcının ID'sini bul (büyük/küçük harf + boşluk toleranslı)
-    const normalizedWinner = exposeWinnerContent.toLowerCase().trim();
-    const winnerPart = round.game.room.participants.find(
-      p => (p.user.username ?? p.user.email ?? "").toLowerCase().trim() === normalizedWinner
-    );
-    exposeWinnerId = winnerPart?.userId ?? null;
+    if (tiedOptions.length === 1) {
+      // Açık kazanan var
+      exposeWinnerContent = tiedOptions[0];
+      const normalizedWinner = exposeWinnerContent.toLowerCase().trim();
+      const winnerPart = round.game.room.participants.find(
+        p => (p.user.username ?? p.user.email ?? "").toLowerCase().trim() === normalizedWinner
+      );
+      exposeWinnerId = winnerPart?.userId ?? null;
+    } else {
+      // Beraberlik: kimse expose edilmiyor, kimse puan almıyor
+      exposeWinnerContent = null;
+      exposeWinnerId = null;
+    }
   }
 
   // BLUFF Modu skoru
@@ -234,13 +239,17 @@ export async function POST(
     let points = 0;
 
     if (isExpose) {
-       if (guess.content === exposeWinnerContent) {
-         matchLevel = "EXACT";
-         points = 10;
-       } else {
-         matchLevel = "WRONG";
-         points = 0;
-       }
+      if (exposeWinnerContent === null) {
+        // Beraberlik — kimse puan almaz
+        matchLevel = "WRONG";
+        points = 0;
+      } else if (guess.content === exposeWinnerContent) {
+        matchLevel = "EXACT";
+        points = 10;
+      } else {
+        matchLevel = "WRONG";
+        points = 0;
+      }
     } else {
        matchLevel = scoreRound(answer!.content, guess.content);
        points     = getPoints(matchLevel as any);
@@ -316,7 +325,7 @@ export async function POST(
   await safeTrigger(`game-${round.gameId}`, "round-scored", {
     roundId:      roundId,
     answererId:   round.answererId,
-    answer:       isExpose ? exposeWinnerContent : answer!.content,
+    answer:       isExpose ? (exposeWinnerContent ?? "Beraberlik! Kimse expose edilmedi.") : answer!.content,
     winnerId:     exposeWinnerId, // EXPOSE modu için kazanan (kurban) ID'si
     guessResults,
     playerScores,

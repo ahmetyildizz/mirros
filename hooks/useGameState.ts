@@ -111,6 +111,7 @@ export function useGameState(gameId: string, myUserId: string) {
         setCurrentRound(data.roundNumber);
         setAnswererId(data.answererId ?? null);
         setNextRoundData(null);
+        setGuessProgress(0, 0); // Yeni turda stale guessCount'u sıfırla, aksi halde scoring effect anında tetiklenir
 
         // Soru verisi geldiyse store'u güncelle (her turda yeni soru göstermek için zorunlu)
         if (data.questionText) {

@@ -60,7 +60,7 @@ export async function GET(
     roomId:       game.roomId,
     hostId:       game.room.hostId,
     gameMode:     game.room.gameMode,
-    state:        currentRound.status,
+    state:        currentRound.status === "SCORED" ? "SCORING" : currentRound.status,
     activeRoundId:currentRound.id,
     currentRound: currentRound.number,
     totalRounds:  game.totalRounds,
