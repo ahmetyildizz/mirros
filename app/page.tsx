@@ -10,6 +10,9 @@ import { useGameStore } from "@/store/game.store";
 import { Sparkles } from "lucide-react";
 import { DailyWidget } from "@/components/lobby/DailyWidget";
 import { ProfileSettings } from "@/components/lobby/ProfileSettings";
+import { WelcomeDashboard } from "@/components/lobby/WelcomeDashboard";
+import { LiveStats } from "@/components/lobby/LiveStats";
+import { GameGuide } from "@/components/lobby/GameGuide";
 import { AdBanner } from "@/components/shared/AdBanner";
 
 function LobbyContent() {
@@ -19,6 +22,21 @@ function LobbyContent() {
   const { setRoomId, setRoomCode, setIsHostPlayer, categoryName } = useGameStore();
   const [isDailyAnswered, setIsDailyAnswered] = useState(false);
   const [isConfiguring, setIsConfiguring] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  const fetchUser = async () => {
+    try {
+      const res = await fetch("/api/me");
+      const data = await res.json();
+      setUser(data);
+    } catch (e) {
+      console.error("User fetch failed", e);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const handleCreated = (roomId: string, roomCode: string) => {
     setRoomId(roomId);
@@ -73,8 +91,11 @@ function LobbyContent() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
+            className="flex flex-col gap-6"
           >
-            <ProfileSettings />
+            <ProfileSettings user={user} onRefresh={fetchUser} />
+            <WelcomeDashboard user={user} />
+            <LiveStats />
           </motion.div>
         )}
 
@@ -202,6 +223,16 @@ function LobbyContent() {
           >
             📦 Soru Paketleri
           </motion.button>
+        )}
+
+        {!isFocused && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+             <GameGuide />
+          </motion.div>
         )}
 
         {/* Footer */}

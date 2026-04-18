@@ -5,23 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { User, Edit2, Flame } from "lucide-react";
 import { ProfileModal } from "@/components/profile/ProfileModal";
 
-export function ProfileSettings() {
-  const [user, setUser] = useState<any>(null);
+export function ProfileSettings({ user, onRefresh }: { user: any; onRefresh: () => void }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const fetchUser = async () => {
-    try {
-      const res = await fetch("/api/me");
-      const data = await res.json();
-      setUser(data);
-    } catch (e) {
-      console.error("User fetch failed", e);
-    }
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   const handleUpdate = async (newName: string) => {
     const res = await fetch("/api/profile", {
@@ -35,8 +20,7 @@ export function ProfileSettings() {
       throw new Error(data.error || "Güncelleme başarısız");
     }
 
-    // Refresh user data localy
-    setUser((prev: any) => ({ ...prev, username: newName }));
+    onRefresh();
   };
 
   if (!user) return null;

@@ -6,13 +6,31 @@ export async function GET() {
   const user = await requireAuth();
   const full = await db.user.findUnique({
     where: { id: user.id },
-    select: { id: true, username: true, email: true, provider: true, avatarUrl: true, streak: true, longestStreak: true, lastPlayedAt: true },
+    select: { 
+      id: true, 
+      username: true, 
+      email: true, 
+      provider: true, 
+      avatarUrl: true, 
+      streak: true, 
+      longestStreak: true, 
+      lastPlayedAt: true,
+      badges: true
+    },
   });
-  return NextResponse.json(full ?? {
-    id: user.id,
-    username: user.username,
-    streak: 0,
-    longestStreak: 0,
-    lastPlayedAt: null,
+
+  if (!full) return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+  // İstatistikleri hesapla
+  const stats = await db.score.aggregate({
+    where: { guesserId: user.id },
+    _sum: { points: true },
+    _count: { id: true }
+  });
+
+  return NextResponse.json({
+    ...full,
+    totalPoints: stats._sum.points ?? 0,
+    gamesPlayed: stats._count.id
   });
 }
