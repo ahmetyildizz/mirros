@@ -13,6 +13,8 @@ import { ProfileSettings } from "@/components/lobby/ProfileSettings";
 import { WelcomeDashboard } from "@/components/lobby/WelcomeDashboard";
 import { LiveStats } from "@/components/lobby/LiveStats";
 import { GameGuide } from "@/components/lobby/GameGuide";
+import { VersionHistoryModal } from "@/components/lobby/VersionHistoryModal";
+import { CURRENT_VERSION } from "@/lib/version-config";
 import { AdBanner } from "@/components/shared/AdBanner";
 
 function LobbyContent() {
@@ -22,6 +24,7 @@ function LobbyContent() {
   const { setRoomId, setRoomCode, setIsHostPlayer, categoryName } = useGameStore();
   const [isDailyAnswered, setIsDailyAnswered] = useState(false);
   const [isConfiguring, setIsConfiguring] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
 
   const fetchUser = async () => {
@@ -236,14 +239,28 @@ function LobbyContent() {
         )}
 
         {/* Footer */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.4 }}
-          transition={{ delay: 1 }}
-          className="text-center text-[10px] font-bold text-slate-500 tracking-[0.2em] mt-3 uppercase pb-4"
+        <motion.div
+           initial={{ opacity: 0 }}
+           animate={{ opacity: 0.4 }}
+           transition={{ delay: 1 }}
+           className="flex flex-col items-center gap-2 mt-3 pb-8 cursor-pointer group"
+           onClick={() => setIsHistoryOpen(true)}
         >
-          arkadaşlarını tanı · kendini keşfet · v0.5.0
-        </motion.p>
+          <p className="text-center text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase group-hover:text-white transition-colors">
+            arkadaşlarını tanı · kendini keşfet
+          </p>
+          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/5 border border-white/10 group-hover:border-accent/40 group-hover:bg-accent/10 transition-all">
+            <div className="w-1 h-1 rounded-full bg-slate-500 animate-pulse group-hover:bg-accent" />
+            <span className="text-[10px] font-black text-slate-500 tracking-widest uppercase group-hover:text-accent">
+              {CURRENT_VERSION}
+            </span>
+          </div>
+        </motion.div>
+
+        <VersionHistoryModal 
+          isOpen={isHistoryOpen} 
+          onClose={() => setIsHistoryOpen(false)} 
+        />
       </div>
     </main>
   );
