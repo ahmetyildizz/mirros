@@ -272,6 +272,14 @@ export async function startGame(roomId: string) {
   return { game, round };
 }
 
+async function createRound(
+  gameId: string,
+  number: number,
+  participantIds: string[],
+  usedQuestionIds: string[],
+  gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY",
+  ageGroup: string | null,
+  category: string | null,
   roomId?:    string | null,
   tx = db
 ) {

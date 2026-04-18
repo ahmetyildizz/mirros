@@ -193,6 +193,12 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
     }))
   }));
 
+  const aiReport = await generateAIInsight({
+    familiarity,
+    gameMode: game.room.gameMode || "SOCIAL",
+    category: game.room.category || "Genel",
+    topPlayerName: leaderboard[0]?.username || "Anonim",
+    unpredictableName: game.room.participants.find(p => p.userId === unpredictableUserId)?.user.username || "Gizemli",
     mostIntuitiveName: game.room.participants.find(p => p.userId === mostIntuitiveUserId)?.user.username || "Zihin Okuyucu",
     chaoticLevel: wrongRate > 0.5 ? "HIGH" : wrongRate > 0.2 ? "MEDIUM" : "LOW",
     rounds: roundsDataForAI

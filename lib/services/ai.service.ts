@@ -1,3 +1,4 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { SOCIAL_PROMPT, EXPOSE_PROMPT, QUIZ_PROMPT, SPY_PROMPT } from "../prompts/question-gen";
 import { db } from "../db";
 

@@ -33,20 +33,21 @@ export async function POST(req: NextRequest) {
   const alreadyIn = room.participants.some((p) => p.userId === user.id);
   const isFull = participantCount >= room.maxPlayers;
 
+  const userRecord = await db.user.findUnique({ where: { id: user.id }, select: { avatarUrl: true } });
+
   if (isFull && !alreadyIn) {
     // İzleyici olarak katılacak, hata vermiyoruz
   } else if (isFull && alreadyIn) {
     // Zaten içeride, sorun yok
-  }
-
+  } else if (body.data.avatarUrl || body.data.username) {
     await db.user.update({
       where: { id: user.id },
-      data:  { 
+      data:  {
         ...(body.data.avatarUrl && { avatarUrl: body.data.avatarUrl }),
         ...(body.data.username  && { username: body.data.username }),
       },
     });
-  } else if (!user.avatarUrl) {
+  } else if (!userRecord?.avatarUrl) {
     // Eğer hiç avatarı yoksa AI Avatar ata
     await db.user.update({
       where: { id: user.id },

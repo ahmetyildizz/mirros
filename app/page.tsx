@@ -30,6 +30,13 @@ function LobbyContent() {
   const fetchUser = async () => {
     try {
       const res = await fetch("/api/me");
+      if (!res.ok) {
+        if (res.status === 401) {
+           setUser(null);
+           return;
+        }
+        throw new Error(`API error: ${res.status}`);
+      }
       const data = await res.json();
       setUser(data);
     } catch (e) {
