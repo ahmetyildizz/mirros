@@ -26,6 +26,16 @@ export async function POST(
   if (round.status === "SCORED")    return NextResponse.json({ error: "Zaten skorlandı" }, { status: 409 });
   if (round.status !== "GUESSING")  return NextResponse.json({ error: "Round henüz tahmin aşamasında değil" }, { status: 409 });
 
+  // Race condition koruması: GUESSING → SCORED geçişini atomik olarak sahiplen.
+  // İki eş zamanlı istek gelirse sadece biri 1 satır günceller, diğeri 0 alır → erken çıkar.
+  const claimed = await db.round.updateMany({
+    where: { id: roundId, status: "GUESSING" },
+    data:  { status: "SCORED" },
+  });
+  if (claimed.count === 0) {
+    return NextResponse.json({ error: "Zaten skorlandı" }, { status: 409 });
+  }
+
   // EXPOSE modunda answererId null olduğundan isAnswerer her zaman false,
   // EXPOSE'da sadece host scoring yapabilir.
   const isHost     = round.game.room.hostId === userId;
@@ -95,15 +105,19 @@ export async function POST(
       const votesForBluff = bluffRound.guesses.filter(g => g.content.trim().toLocaleLowerCase("tr") === ans.content.trim().toLocaleLowerCase("tr")).length;
       if (votesForBluff > 0) {
         const bonusPts = votesForBluff * 3;
+        // Mevcut skoru oku, üzerine ekle (Prisma upsert.update fonksiyon kabul etmez)
+        const existing = await db.score.findUnique({
+          where: { roundId_guesserId: { roundId, guesserId: ans.userId } },
+        });
         await db.score.upsert({
           where:  { roundId_guesserId: { roundId, guesserId: ans.userId } },
           create: { roundId, gameId: round.gameId, guesserId: ans.userId, matchLevel: "CLOSE", points: bonusPts },
-          update: (s: any) => ({ points: (s.points ?? 0) + bonusPts }),
-        } as any);
+          update: { matchLevel: "CLOSE", points: (existing?.points ?? 0) + bonusPts },
+        });
       }
     }
 
-    await db.round.update({ where: { id: roundId }, data: { status: "SCORED" } });
+    // round.update kaldırıldı — optimistic lock ile yukarıda zaten SCORED yapıldı
 
     const allScores = await db.score.findMany({ where: { gameId: round.gameId } });
     const bluffPlayerScores: Record<string, number> = {};
@@ -182,7 +196,7 @@ export async function POST(
     });
   }
 
-  await db.round.update({ where: { id: roundId }, data: { status: "SCORED" } });
+  // round.update kaldırıldı — optimistic lock ile yukarıda zaten SCORED yapıldı
 
   // 1. Her oyuncunun toplam puanı
   const allScores = await db.score.findMany({ where: { gameId: round.gameId } });

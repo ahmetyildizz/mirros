@@ -16,15 +16,17 @@ function normalize(str: string): string {
   return str
     .toLowerCase()
     .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    // Türkçe karakter normalizasyonu
+    // Türkçe karakterler NFD'den ÖNCE değiştirilmeli; NFD "ğ" → "g\u0306" yaparak
+    // sonraki replace'lerin eşleşmesini bozar.
     .replace(/ğ/g, "g")
     .replace(/ü/g, "u")
     .replace(/ş/g, "s")
     .replace(/ı/g, "i")
     .replace(/ö/g, "o")
-    .replace(/ç/g, "c");
+    .replace(/ç/g, "c")
+    // Kalan aksanlı harfleri temizle (é, ñ, vs.)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 function levenshtein(a: string, b: string): number {

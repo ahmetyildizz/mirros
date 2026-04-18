@@ -6,6 +6,16 @@
 
 ---
 
+## 2026-04-17 — Gemini
+
+- **Dedikodu Masası (EXPOSE) Canlı Testi:** 10 turluk tam bir oyun akışı canlı sistemde (`mirros.vercel.app`) simüle edildi.
+  - TestHost (Tarayıcı) ve TestGuest (Script) rolleriyle 2 kişilik senaryo başarıyla tamamlandı.
+  - Oylama, oyların Pusher üzerinden senkronizasyonu ve kurban kartı (Exposed) gösterimi doğrulandı.
+  - Oyunun final liderlik tablosuna kadar kesintisiz ilerlediği görüldü.
+- **Bot Script:** Canlı API üzerinden oyun akışını test etmek için `scratch/tester_bot.js` ve `scratch/bot_session.json` araçları oluşturuldu.
+
+---
+
 ## 2026-04-17 — Claude (viral büyüme — share card, davet linki)
 
 ### Share Card — AI Tag Entegrasyonu

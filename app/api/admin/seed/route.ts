@@ -4,9 +4,9 @@ import { db } from "@/lib/db";
 export async function POST(req: NextRequest) {
   const secret         = req.headers.get("x-seed-secret");
   const expectedSecret = process.env.SEED_SECRET;
-  
-  // Production'da güvenlik için secret zorunlu
-  if (process.env.NODE_ENV === "production" && (!expectedSecret || secret !== expectedSecret)) {
+
+  // Her ortamda secret zorunlu — development dahil
+  if (!expectedSecret || secret !== expectedSecret) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

@@ -8,19 +8,17 @@ export async function PATCH(req: NextRequest) {
     const user = await requireAuth();
     const { username, passcode } = await req.json();
 
-    // ADMIN RECLAIM LOGIC
-    if (username === "Noyan" && passcode === "546906") {
-      // Find the ORIGINAL Noyan user record
+    // ADMIN RECLAIM LOGIC — passcode env'den okunur, kaynak kodda hardcoded değil
+    const adminPasscode = process.env.ADMIN_RECLAIM_PASSCODE;
+    if (adminPasscode && username === "Noyan" && passcode === adminPasscode) {
       const noyanUser = await db.user.findUnique({
         where: { username: "Noyan" },
       });
 
       if (noyanUser) {
-        // If found, we "Log in" as that user by refreshing the session with their ID and isAdmin flag
         await createSession(noyanUser.id, noyanUser.username!, true);
         return NextResponse.json({ success: true, username: noyanUser.username, reclaimed: true, isAdmin: true });
       }
-      // If NOT found, we'll just fall through and let the current user take the name
     }
 
     if (!username || username.length < 3) {

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/session";
 
 export async function GET(req: NextRequest) {
+  await requireAuth();
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
 

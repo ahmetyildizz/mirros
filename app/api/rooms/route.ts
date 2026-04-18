@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { createAuditLog } from "@/lib/audit";
+import { rateLimit } from "@/lib/rateLimit";
 
 import { refillGlobalPool } from "@/lib/services/ai.service";
 
@@ -14,10 +15,11 @@ function generateCode(): string {
 }
 
 const bodySchema = z.object({
-  gameMode:   z.enum(["SOCIAL", "QUIZ", "EXPOSE"]),
-  maxPlayers: z.number().min(2).max(20),
-  ageGroup:   z.enum(["CHILD", "ADULT", "WISE"]).optional(),
-  category:   z.string().optional(),
+  gameMode:    z.enum(["SOCIAL", "QUIZ", "EXPOSE", "BLUFF"]),
+  maxPlayers:  z.number().min(2).max(20),
+  totalRounds: z.number().min(1).max(20).optional(),
+  ageGroup:    z.enum(["CHILD", "ADULT", "WISE"]).optional(),
+  category:    z.string().optional(),
 });
 
 const PROFANITY_FILTER = ["sik", "yarrak", "am", "göt", "fuck", "shit"]; // Örnek küfür filtresi
@@ -33,6 +35,10 @@ function isOffensive(text: string): boolean {
 export async function POST(req: NextRequest) {
   try {
     const user = await requireAuth();
+
+    // Rate limit: kullanıcı başına 5 oda/dakika
+    const rl = await rateLimit(`rooms:${user.id}`, { max: 5, windowMs: 60_000 });
+    if (!rl.allowed) return NextResponse.json({ error: "Çok fazla oda oluşturuyorsun" }, { status: 429 });
 
     const json = await req.json().catch(() => ({}));
     const body = bodySchema.parse(json);

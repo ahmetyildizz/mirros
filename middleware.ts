@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const SECRET = new TextEncoder().encode(
-  process.env.NEXTAUTH_SECRET ?? "changeme-in-production"
-);
+const rawSecret = process.env.NEXTAUTH_SECRET;
+if (!rawSecret) throw new Error("NEXTAUTH_SECRET ortam değişkeni tanımlı değil");
+const SECRET = new TextEncoder().encode(rawSecret);
 
 const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/auth/logout"];
 

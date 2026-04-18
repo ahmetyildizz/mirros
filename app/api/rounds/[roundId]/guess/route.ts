@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { createAuditLog } from "@/lib/audit";
+import { rateLimit } from "@/lib/rateLimit";
 
 const bodySchema = z.object({
   content: z.string().min(1).max(120),
@@ -15,6 +16,11 @@ export async function POST(
   { params }: { params: Promise<{ roundId: string }> }
 ) {
   const user = await requireAuth();
+
+  // Rate limit: kullanıcı başına 15 tahmin/dakika
+  const rl = await rateLimit(`guess:${user.id}`, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return NextResponse.json({ error: "Çok fazla istek gönderdin" }, { status: 429 });
+
   const { roundId } = await params;
   const body = bodySchema.safeParse(await req.json());
   if (!body.success) return NextResponse.json({ error: "Geçersiz içerik" }, { status: 400 });

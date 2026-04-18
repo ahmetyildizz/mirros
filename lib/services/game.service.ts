@@ -204,11 +204,12 @@ export async function startGame(roomId: string) {
       where: { roomId, status: "ACTIVE" },
       include: { rounds: { take: 1 } },
     });
-    if (existingGame && existingGame.rounds.length > 0) {
-      throw new Error("Oyun zaten başlatıldı");
-    }
-    // Ghost game'i temizle (varsa — round'u olmayan aktif oyun)
+
     if (existingGame) {
+      if (existingGame.rounds.length > 0) {
+        throw new Error("Oyun zaten başlatıldı");
+      }
+      // Ghost game'i temizle (varsa — round'u olmayan aktif oyun)
       await tx.game.update({ where: { id: existingGame.id }, data: { status: "FINISHED" } });
       await createAuditLog({
         action: "UPDATE",
@@ -298,8 +299,11 @@ async function createRound(
 
   const question = await pickQuestion(usedQuestionIds, gameMode, actualAgeGroup, category, roomId, tx as any);
 
+  // EXPOSE ve QUIZ modunda herkes oylama/tahmin ile başlar, bekleme (ANSWERING) yoktur.
+  const initialStatus = (isExpose || isQuiz) ? "GUESSING" : "ANSWERING";
+
   const round = await (tx as any).round.create({
-    data: { gameId, number, questionId: question.id, answererId, status: (isExpose || isBluff) ? "ANSWERING" : (isQuiz ? "ANSWERING" : "ANSWERING") },
+    data: { gameId, number, questionId: question.id, answererId, status: initialStatus },
   });
 
   await createAuditLog({

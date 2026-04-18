@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { createAuditLog } from "@/lib/audit";
+import { rateLimit } from "@/lib/rateLimit";
 
 /** Türkçeye duyarlı metin normalleştirme: ilk harf büyük, trim, çoklu boşluk temizle */
 function normalizeAnswer(text: string): string {
@@ -22,6 +23,11 @@ export async function POST(
   { params }: { params: Promise<{ roundId: string }> }
 ) {
   const user = await requireAuth();
+
+  // Rate limit: kullanıcı başına 10 cevap/dakika (spam önlemi)
+  const rl = await rateLimit(`answer:${user.id}`, { max: 10, windowMs: 60_000 });
+  if (!rl.allowed) return NextResponse.json({ error: "Çok fazla istek gönderdin" }, { status: 429 });
+
   const { roundId } = await params;
   const body = bodySchema.safeParse(await req.json());
   if (!body.success) return NextResponse.json({ error: "Geçersiz içerik" }, { status: 400 });
@@ -30,15 +36,21 @@ export async function POST(
     where:   { id: roundId },
     include: { game: { include: { room: { include: { participants: true } } } } },
   });
-  if (!round)                       return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
-  if (round.status !== "ANSWERING") return NextResponse.json({ error: "Bu round cevap kabul etmiyor" }, { status: 409 });
-
-  const isParticipant = round.game.room.participants.some((p) => p.userId === user.id);
-  if (!isParticipant) return NextResponse.json({ error: "Bu oyunun katılımcısı değilsin" }, { status: 403 });
+  if (!round) return NextResponse.json({ error: "Round bulunamadı" }, { status: 404 });
 
   const isQuiz   = round.game.room.gameMode === "QUIZ";
   const isExpose = round.game.room.gameMode === "EXPOSE";
   const isBluff  = round.game.room.gameMode === "BLUFF";
+
+  // QUIZ roundları GUESSING status ile başlar (tüm oyuncular eş zamanlı cevap verir).
+  // SOCIAL/BLUFF için ANSWERING beklenir.
+  const validStatus = isQuiz ? ["ANSWERING", "GUESSING"] : ["ANSWERING"];
+  if (!validStatus.includes(round.status)) {
+    return NextResponse.json({ error: "Bu round cevap kabul etmiyor" }, { status: 409 });
+  }
+
+  const isParticipant = round.game.room.participants.some((p) => p.userId === user.id);
+  if (!isParticipant) return NextResponse.json({ error: "Bu oyunun katılımcısı değilsin" }, { status: 403 });
 
   // EXPOSE modunda tahminler /guess endpoint'i üzerinden yapılır, /answer kullanılmaz
   if (isExpose) {
@@ -165,6 +177,14 @@ export async function POST(
 }
 
 async function scoreQuizRound(roundId: string, gameId: string) {
+  // Optimistic lock: GUESSING → SCORED atomik geçiş. İki eş zamanlı çağrı gelirse
+  // sadece biri devam eder; diğeri 0 güncelleme alır ve erken çıkar.
+  const claimed = await db.round.updateMany({
+    where: { id: roundId, status: { in: ["ANSWERING", "GUESSING"] } },
+    data:  { status: "SCORED" },
+  });
+  if (claimed.count === 0) return;
+
   const round = await db.round.findUnique({
     where:   { id: roundId },
     include: {
@@ -173,7 +193,7 @@ async function scoreQuizRound(roundId: string, gameId: string) {
       game:     { include: { room: { include: { participants: true } } } },
     },
   });
-  if (!round || round.status === "SCORED") return;
+  if (!round) return;
 
   const correct = round.question.correct ?? "";
   const results: { userId: string; username: string; answer: string; correct: boolean; points: number }[] = [];
@@ -205,7 +225,7 @@ async function scoreQuizRound(roundId: string, gameId: string) {
     });
   }
 
-  await db.round.update({ where: { id: roundId }, data: { status: "SCORED" } });
+  // round.update kaldırıldı — optimistic lock ile yukarıda zaten SCORED yapıldı
 
   const allScores = await db.score.findMany({ where: { gameId } });
   const playerScores: Record<string, number> = {};

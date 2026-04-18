@@ -8,15 +8,22 @@ export const pusherServer = new Pusher({
   useTLS:  true,
 });
 
-/** Pusher trigger wrapper — hataları loglar, re-throw etmez (DB zaten güncellendi) */
+/** Pusher trigger wrapper — 3 deneme, üstel bekleme, re-throw etmez */
 export async function safeTrigger(
   channel: string,
   event: string,
-  data: object
+  data: object,
+  retries = 3
 ): Promise<void> {
-  try {
-    await pusherServer.trigger(channel, event, data);
-  } catch (err) {
-    console.error(`[Pusher] trigger failed channel=${channel} event=${event}`, err);
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      await pusherServer.trigger(channel, event, data);
+      return;
+    } catch (err) {
+      console.error(`[Pusher] trigger failed attempt=${attempt}/${retries} channel=${channel} event=${event}`, err);
+      if (attempt < retries) {
+        await new Promise(r => setTimeout(r, 200 * attempt));
+      }
+    }
   }
 }
