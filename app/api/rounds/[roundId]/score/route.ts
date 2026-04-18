@@ -223,7 +223,7 @@ export async function POST(
       winnerId:     isSpyCaught ? null : spyId,
       guessResults: spyRoundResults,
       playerScores: spyPlayerScores,
-      nextRound:    spyNextRound,
+      nextRound:    spyNextRound ? { ...spyNextRound, questionText: null } : null,
     });
 
     return NextResponse.json({ playerScores: spyPlayerScores, nextRound: spyNextRound });
@@ -321,7 +321,7 @@ export async function POST(
     guessResults,
     playerScores,
     penalty:      round.question?.penalty ?? null,
-    nextRound:    nextRoundData, // Opsiyonel: varsa client hemen geçer
+    nextRound:    nextRoundData ? (round.game.room.gameMode === "SPY" ? { ...nextRoundData, questionText: null } : nextRoundData) : null, // SPY modunda metni gizle
   });
 
   return NextResponse.json({ scores, playerScores, nextRound: nextRoundData });

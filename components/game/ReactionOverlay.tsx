@@ -23,10 +23,20 @@ export function ReactionOverlay() {
   const [reactions, setReactions] = useState<Reaction[]>([]);
 
   const playSound = useCallback((emoji: string) => {
-    const src = SFX_MAP[emoji] || "/sfx/pop.mp3";
-    const audio = new Audio(src);
-    audio.volume = 0.4;
-    audio.play().catch(() => {}); // Autoplay policies might block
+    import("@/lib/sounds").then(({ sounds }) => {
+      const src = SFX_MAP[emoji];
+      if (!src) {
+        sounds.reaction();
+        return;
+      }
+      
+      const audio = new Audio(src);
+      audio.volume = 0.7;
+      audio.play().catch((err) => {
+        console.warn("[SFX] Playback failed, falling back to tone:", err);
+        sounds.reaction();
+      });
+    });
   }, []);
 
   useEffect(() => {

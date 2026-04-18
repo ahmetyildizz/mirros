@@ -6,12 +6,21 @@ if (!rawSecret) throw new Error("NEXTAUTH_SECRET ortam değişkeni tanımlı de�
 const SECRET = new TextEncoder().encode(rawSecret);
 
 const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/auth/logout"];
+const SEED_PATHS   = ["/api/admin/seed", "/api/admin/refill-daily"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
     return NextResponse.next();
+  }
+
+  // Seed/admin endpoint'leri: x-seed-secret ile erişilebilir, oturum gerekmez
+  if (SEED_PATHS.some((p) => pathname.startsWith(p))) {
+    const secret = req.headers.get("x-seed-secret");
+    if (secret && secret === process.env.SEED_SECRET) {
+      return NextResponse.next();
+    }
   }
 
   // Dev bypass: getSession() ile tutarlı olması için aynı koşul

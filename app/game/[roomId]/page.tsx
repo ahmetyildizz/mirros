@@ -124,6 +124,17 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   }, [state, myRole, answererId, question?.id, isQuiz, activeRoundId]);
 
   useEffect(() => {
+    // Audio context'i ilk etkileşimde "unlock" et (Autoplay politikası için)
+    const unlockAudio = () => {
+      import("@/lib/sounds").then(({ sounds }) => {
+        sounds.tick(); // Hafif bir sesle context'i uyandır
+      });
+      document.removeEventListener("click", unlockAudio);
+      document.removeEventListener("touchstart", unlockAudio);
+    };
+    document.addEventListener("click", unlockAudio);
+    document.addEventListener("touchstart", unlockAudio);
+
     fetch(`/api/rooms/${roomId}`)
       .then((r) => r.json())
       .then((data) => {
@@ -214,6 +225,15 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     return () => clearInterval(interval);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, activeRoundId, gameId]);
+
+  // SPY MODE SYNC: activeRoundId her değiştiğinde (yeni round), 
+  // SPY modundayken oyuncunun kendi özel konusunu çekmesi için zorunlu recovery.
+  useEffect(() => {
+    if (isSpy && activeRoundId && gameId) {
+      recoverGameState(gameId).catch(() => {});
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeRoundId, isSpy, gameId]);
 
   // Auto-submit / skip when time runs out
   useEffect(() => {

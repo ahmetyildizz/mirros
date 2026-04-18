@@ -262,7 +262,7 @@ export async function startGame(roomId: string) {
     roundNumber:      1,
     totalRounds,
     questionId:       question.id,
-    questionText:     question.text,
+    questionText:     room.gameMode === "SPY" ? null : question.text,
     questionCategory: question.category,
     questionOptions:  question.options ?? null,
     answererId:       round.answererId ?? null,
