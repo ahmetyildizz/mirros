@@ -33,6 +33,8 @@ import { FlashbackCard }        from "@/components/game/FlashbackCard";
 import { sounds }               from "@/lib/sounds";
 import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 import { cn } from "@/lib/utils";
+import { ReactionOverlay } from "@/components/game/ReactionOverlay";
+import { ReactionToolbar } from "@/components/game/ReactionToolbar";
 
 export default function GamePage({ params }: { params: Promise<{ roomId: string }> }) {
   const { roomId } = use(params);
@@ -53,6 +55,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   const isQuiz   = gameMode === "QUIZ";
   const isExpose = gameMode === "EXPOSE";
   const isBluff  = gameMode === "BLUFF";
+  const isSpy    = gameMode === "SPY";
 
   const [myUserId, setMyUserId]   = useState<string | null>(null);
   const [pastAnswers, setPastAnswers] = useState<any[]>([]);
@@ -398,7 +401,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.1)_0%,transparent_50%)] pointer-events-none" />
       
       {/* Floating Reactions Layer */}
-      <FloatingReactions />
+      <ReactionOverlay />
 
       <div className="relative z-10 flex flex-col w-full max-w-[480px] mx-auto px-4 py-6 gap-6 h-full min-h-dvh">
         <GameHeader roundNumber={currentRound} totalRounds={totalRounds} />
@@ -557,6 +560,33 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     </div>
                   )}
                 </motion.div>
+              ) : isSpy ? (
+                /* 2c. SPY MODU */
+                <motion.div key="spy-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
+                  {state === "ANSWERING" ? (
+                    <div className="flex flex-col gap-3">
+                      <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl px-4 py-3 text-center">
+                        <p className="text-[11px] font-black text-orange-400 uppercase tracking-widest">🕵️ İpucu Zamanı!</p>
+                        <p className="text-[10px] text-slate-400 mt-1">Konun hakkında kapalı bir ipucu yaz. Casus olduğunu belli etme!</p>
+                      </div>
+                      <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
+                    </div>
+                  ) : state === "GUESSING" ? (
+                    <div className="flex flex-col gap-3">
+                      <div className="bg-red-500/10 border border-red-500/20 rounded-2xl px-4 py-3 text-center">
+                        <p className="text-[11px] font-black text-red-400 uppercase tracking-widest">🚨 Casus Kim?</p>
+                        <p className="text-[10px] text-slate-400 mt-1">İpuçlarını dinledin. Sence gruptaki casus kim?</p>
+                      </div>
+                      <MultipleChoiceInput
+                        options={players.filter(p => p.role !== "SPECTATOR").map(p => p.username || "Anonim")}
+                        onSubmit={submitGuess}
+                        allowFreeText={false}
+                        gameId={gameId}
+                        username={players.find(p => p.id === myUserId)?.username}
+                      />
+                    </div>
+                  ) : null}
+                </motion.div>
               ) : (isQuiz || isExpose || (state === "ANSWERING" && !answererId)) ? (
                 /* 2. QUIZ VEYA EXPOSE: Doğrudan Giriş/Tahmin Alanı (State ne olursa olsun) */
                 /* VEYA: ANSWERING durumunda answererId yoksa bu bir senkronizasyon hatasıdır, oylamaya zorla */
@@ -678,15 +708,15 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
               <div className="text-center space-y-2">
                 <div className="flex items-center justify-center gap-2 mb-2">
                    <div className="h-px w-8 bg-accent/30" />
-                   <span className="text-[10px] font-black text-accent uppercase tracking-[0.3em]">{isExpose ? "Gıybet Sonuçları" : "Tur Özeti"}</span>
+                   <span className="text-[10px] font-black text-accent uppercase tracking-[0.3em]">{isExpose ? "Gıybet Sonuçları" : isSpy ? "Casus İfşası" : "Tur Özeti"}</span>
                    <div className="h-px w-8 bg-accent/30" />
                 </div>
-                <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">{isExpose ? "Grup Kararını Verdi:" : "Doğru Cevap Şuydu:"}</h3>
+                <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">{isExpose ? "Grup Kararını Verdi:" : isSpy ? "Gruptaki Casus Şuydu:" : "Doğru Cevap Şuydu:"}</h3>
                 <p className={cn(
                   "text-3xl font-black text-white tracking-tighter italic text-center",
-                  isExpose ? "text-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.5)]" : "drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+                  (isExpose || isSpy) ? "text-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.5)]" : "drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
                 )}>
-                  {isExpose ? `🔥 ${lastRoundScore.answer} 🔥` : `"${lastRoundScore.answer}"`}
+                  {(isExpose || isSpy) ? `🔥 ${lastRoundScore.answer} 🔥` : `"${lastRoundScore.answer}"`}
                 </p>
               </div>
 

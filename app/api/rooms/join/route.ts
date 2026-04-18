@@ -5,6 +5,7 @@ import { requireAuth } from "@/lib/auth/session";
 import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { startGame } from "@/lib/services/game.service";
 import { createAuditLog } from "@/lib/audit";
+import { getAiAvatarUrl } from "@/lib/services/avatar.service";
 
 const bodySchema = z.object({
   code:      z.string().min(4).max(8),
@@ -38,13 +39,18 @@ export async function POST(req: NextRequest) {
     // Zaten içeride, sorun yok
   }
 
-  if (body.data.avatarUrl || body.data.username) {
     await db.user.update({
       where: { id: user.id },
       data:  { 
         ...(body.data.avatarUrl && { avatarUrl: body.data.avatarUrl }),
         ...(body.data.username  && { username: body.data.username }),
       },
+    });
+  } else if (!user.avatarUrl) {
+    // Eğer hiç avatarı yoksa AI Avatar ata
+    await db.user.update({
+      where: { id: user.id },
+      data: { avatarUrl: getAiAvatarUrl(user.id) }
     });
   }
 

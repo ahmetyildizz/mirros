@@ -193,16 +193,37 @@ export default async function ResultsPage({ params }: { params: Promise<{ gameId
     }))
   }));
 
-  const aiReport = await generateAIInsight({
-    familiarity,
-    gameMode: game.room.gameMode || "SOCIAL",
-    category: game.room.category || "Genel",
-    topPlayerName: leaderboard[0]?.username || "Anonim",
-    unpredictableName: game.room.participants.find(p => p.userId === unpredictableUserId)?.user.username || "Gizemli",
     mostIntuitiveName: game.room.participants.find(p => p.userId === mostIntuitiveUserId)?.user.username || "Zihin Okuyucu",
     chaoticLevel: wrongRate > 0.5 ? "HIGH" : wrongRate > 0.2 ? "MEDIUM" : "LOW",
     rounds: roundsDataForAI
   });
+
+  // Save Player Badges to DB
+  if (aiReport.playerBadges && aiReport.playerBadges.length > 0) {
+    for (const pb of aiReport.playerBadges) {
+      if (!pb.userId) continue;
+      try {
+        const user = await db.user.findUnique({ where: { id: pb.userId }, select: { badges: true } });
+        const existingBadges = (user?.badges as any[]) || [];
+        
+        // Sadece yeni veya değişmiş rozetleri ekle/güncelle (basitlik için son 5'i tutalım)
+        const badgeExists = existingBadges.some((b: any) => b.badgeSlug === pb.badgeSlug);
+        if (!badgeExists) {
+          const updatedBadges = [
+            { badgeSlug: pb.badgeSlug, badgeEmoji: pb.badgeEmoji, badgeName: pb.badgeName, earnedAt: new Date() },
+            ...existingBadges
+          ].slice(0, 5); // Son 5 rozet kalsın
+          
+          await db.user.update({
+            where: { id: pb.userId },
+            data: { badges: updatedBadges as any }
+          });
+        }
+      } catch (err) {
+        console.error("Failed to save badge for user", pb.userId, err);
+      }
+    }
+  }
 
   // Funniest Moment
   const funniestRound = game.rounds.reduce<typeof game.rounds[0] | null>((best, r) => {

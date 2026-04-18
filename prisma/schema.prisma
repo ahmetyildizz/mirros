@@ -28,6 +28,8 @@ model User {
   streak         Int            @default(0)
   longestStreak  Int            @default(0)
   lastPlayedAt   DateTime?
+  badges         Json?             @default("[]")
+  aiAvatar       String?
 
   @@index([deviceId])
   @@index([providerId])
@@ -98,6 +100,8 @@ model Round {
   game       Game        @relation(fields: [gameId], references: [id])
   question   Question    @relation(fields: [questionId], references: [id])
   scores     Score[]
+  spyId      String?     // SPY modunda casus olan kişinin ID'si
+  metadata   Json?       // Round özelinde ek bilgiler (farklı promptlar vb.)
 
   @@index([gameId])
   @@index([gameId, status])
@@ -233,6 +237,7 @@ enum GameMode {
   QUIZ
   EXPOSE
   BLUFF
+  SPY
 }
 
 enum AgeGroup {

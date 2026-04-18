@@ -44,6 +44,17 @@ export async function GET(
     guessCount = currentRound.answers.length;
   }
 
+  // SPY Modu için kişiselleştirilmiş konu
+  let displayQuestionText = currentRound.question.text;
+  if (game.room.gameMode === "SPY" && currentRound.metadata) {
+    const meta = currentRound.metadata as any;
+    if (user.id === currentRound.spyId) {
+      displayQuestionText = `SEN CASUSSUN! Senin gizli konun: ${meta.spySubject}`;
+    } else {
+      displayQuestionText = `Sen Vatandaşsın. Ortak konunuz: ${meta.citizenSubject}`;
+    }
+  }
+
   return NextResponse.json({
     gameId:       game.id,
     roomId:       game.roomId,
@@ -56,7 +67,7 @@ export async function GET(
     answererId:   currentRound.answererId,
     question: {
       id:       currentRound.question.id,
-      text:     currentRound.question.text,
+      text:     displayQuestionText,
       category: currentRound.question.category,
       options:  currentRound.question.options,
     },

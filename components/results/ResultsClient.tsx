@@ -58,7 +58,7 @@ interface Props {
   rounds: RoundData[];
   funniestRound?: { question: string; answer: string; reason?: string | null; username?: string | null } | null;
   compatMap: Record<string, { username: string; pct: number; bestGuesser?: { name: string; points: number }; title?: string }>;
-  aiReport: { intro: string; tag: string; story: string };
+  aiReport: { intro: string; tag: string; story: string; playerBadges?: { userId: string; badgeName: string; badgeEmoji: string; badgeSlug: string }[] };
   roomCategory: string | null;
   gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF";
 }
@@ -224,6 +224,40 @@ export function ResultsClient({
           })}
         </div>
       </div>
+
+      {/* Social Badges Section */}
+      {aiReport.playerBadges && aiReport.playerBadges.length > 0 && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
+          className="flex flex-col gap-4"
+        >
+          <div className="flex items-center gap-2 px-1 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center justify-center">
+            <span className="h-px flex-1 bg-white/5" />
+            🌟 AI Sosyal Rozetler
+            <span className="h-px flex-1 bg-white/5" />
+          </div>
+          <div className="flex flex-wrap justify-center gap-3">
+            {aiReport.playerBadges.map((pb, i) => (
+              <motion.div
+                key={i}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 1.2 + i * 0.1, type: "spring" }}
+                className="bg-white/5 border border-white/10 rounded-2xl p-3 flex flex-col items-center gap-1 min-w-[100px] shadow-sm hover:border-accent/40 transition-colors"
+                title={`${pb.badgeName} — Bu turdaki performansınla kazandın!`}
+              >
+                <span className="text-3xl mb-1">{pb.badgeEmoji}</span>
+                <span className="text-[10px] font-black text-white uppercase text-center">{pb.badgeName}</span>
+                <span className="text-[8px] font-bold text-slate-500 uppercase tracking-tighter">
+                  {leaderboard.find(l => l.userId === pb.userId)?.username || "Oyuncu"}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
 
       {/* Social Similarity Card */}
       <motion.div 

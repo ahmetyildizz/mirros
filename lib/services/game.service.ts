@@ -9,7 +9,7 @@ const LOW_WATER_MARK = 5;
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
-async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
+async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
   // Spice Level extraction (e.g., "Dedikodu Masası:Hot")
   let spiceLevel: "EASY" | "MEDIUM" | "HARD" | null = null;
   let baseCategory = category;
@@ -32,8 +32,9 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     "Ofis Kaosu": ["Ofis Kaosu"],
   };
 
-  // BLUFF modu QUIZ sorularını kullanır (correct alanı dolu olduğu için)
-  const effectiveMode: "SOCIAL" | "QUIZ" | "EXPOSE" = gameMode === "BLUFF" ? "QUIZ" : gameMode;
+  // BLUFF ve SPY modları kendi özel sorularına veya QUIZ sorularına yönelebilir
+  const effectiveMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "SPY" = 
+    gameMode === "BLUFF" ? "QUIZ" : gameMode;
 
   const targetCategories = baseCategory ? themeMap[baseCategory] : null;
 
@@ -146,8 +147,9 @@ export async function startGame(roomId: string) {
   const isQuiz         = room.gameMode === "QUIZ";
   const isExpose       = room.gameMode === "EXPOSE";
   const isBluff        = room.gameMode === "BLUFF";
+  const isSpy          = room.gameMode === "SPY";
   const participantIds = participants.map((p) => p.userId);
-  const totalRounds    = isQuiz ? QUIZ_ROUNDS : SOCIAL_ROUNDS;
+  const totalRounds    = (isQuiz || isSpy) ? QUIZ_ROUNDS : SOCIAL_ROUNDS;
 
   const ageCounts: Record<string, number> = {};
   for (const p of room.participants) {
@@ -239,7 +241,7 @@ export async function startGame(roomId: string) {
     });
 
     // İlk round için de kişiselleştirilmiş yaş grubunu bulalım
-    const answererId = isQuiz || isExpose || isBluff ? null : resolveSpotlight(1, participantIds);
+    const answererId = isQuiz || isExpose || isBluff || isSpy ? null : resolveSpotlight(1, participantIds);
     const answerer   = answererId ? room.participants.find((p) => p.userId === answererId) : null;
     const roundAgeGroup = isQuiz || isExpose || isBluff ? majorityAgeGroup : (answerer?.ageGroup ?? majorityAgeGroup);
 
@@ -270,14 +272,6 @@ export async function startGame(roomId: string) {
   return { game, round };
 }
 
-async function createRound(
-  gameId:     string,
-  number:     number,
-  participantIds: string[],
-  usedQuestionIds: string[],
-  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF",
-  ageGroup?:  string | null,
-  category?:  string | null,
   roomId?:    string | null,
   tx = db
 ) {
@@ -285,8 +279,11 @@ async function createRound(
   const isExpose = gameMode === "EXPOSE";
   const isQuiz   = gameMode === "QUIZ";
   const isBluff  = gameMode === "BLUFF";
+  const isSpy    = gameMode === "SPY";
   const answererId = isSocial ? resolveSpotlight(number, participantIds) : null;
   
+  // SPY modunda rastgele bir casus seç
+  const spyId = isSpy ? participantIds[Math.floor(Math.random() * participantIds.length)] : null;
   // Eğer SOCIAL modundaysak, answerer'ın kendi yaş grubunu kullanalım (kişiselleştirme)
   let actualAgeGroup = ageGroup;
   if (isSocial && answererId) {
@@ -303,10 +300,22 @@ async function createRound(
   const question = await pickQuestion(usedQuestionIds, gameMode, actualAgeGroup, category, roomId, tx as any);
 
   // EXPOSE ve QUIZ modunda herkes oylama/tahmin ile başlar, bekleme (ANSWERING) yoktur.
+  // SPY modunda herkes "ipucu" yazar, yani ANSWERING ile başlar.
   const initialStatus = (isExpose || isQuiz) ? "GUESSING" : "ANSWERING";
 
   const round = await (tx as any).round.create({
-    data: { gameId, number, questionId: question.id, answererId, status: initialStatus },
+    data: { 
+      gameId, 
+      number, 
+      questionId: question.id, 
+      answererId, 
+      status: initialStatus,
+      spyId: spyId,
+      metadata: isSpy ? {
+        spySubject: question.correct,
+        citizenSubject: question.text
+      } : null
+    },
   });
 
   await createAuditLog({

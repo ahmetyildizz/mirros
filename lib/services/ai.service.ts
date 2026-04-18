@@ -1,5 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { SOCIAL_PROMPT, EXPOSE_PROMPT, QUIZ_PROMPT } from "../prompts/question-gen";
+import { SOCIAL_PROMPT, EXPOSE_PROMPT, QUIZ_PROMPT, SPY_PROMPT } from "../prompts/question-gen";
 import { db } from "../db";
 
 const API_KEY = process.env.GOOGLE_GEMINI_API_KEY || "";
@@ -59,7 +58,14 @@ export async function analyzeGameWithGemini(data: GameDataForAI) {
        - ${data.gameMode === "EXPOSE" ? "Eğer EXPOSE moduysa, en çok 'exposed' olan kişiye (kazanana) özel bir gönderme yap." : ""}
        - Dil: Modern, samimi, 'genç işi' ve etkileyici bir Türkçe.
 
-    JSON formatında döndür: { "tag": "...", "story": "..." }
+    JSON formatında döndür: { 
+      "tag": "...", 
+      "story": "...",
+      "playerBadges": [
+        { "userId": "...", "badgeSlug": "toxic_tongue", "badgeEmoji": "🐍", "badgeName": "Zehirli Dil" },
+        ...
+      ]
+    }
   `;
 
   try {
@@ -130,6 +136,18 @@ export async function generateQuizQuestions(
   return callGeminiForQuestions(QUIZ_PROMPT(category, count, ageGroup));
 }
 
+/** Global havuz için SPY konuları üretir. */
+export async function generateSpyQuestions(
+  category: string,
+  count = 10
+): Promise<AIQuestion[]> {
+  const pairs = await callGeminiForQuestions(SPY_PROMPT(category, count));
+  return pairs.map(p => ({
+    ...p,
+    gameMode: "SPY"
+  }));
+}
+
 /**
  * Bir oda için kişiselleştirilmiş sorular üretir ve DB'ye kaydeder.
  * pickQuestion() oda-özel soruları önce seçer, bu sayede her oyun taze hissettirirk.
@@ -155,6 +173,8 @@ export async function generateAndSaveQuestionsForRoom(
     questions = await generateExposeQuestions(cat, count, spiceLevel, playerNames);
   } else if (gameMode === "QUIZ") {
     questions = await generateQuizQuestions(cat, count, ageGroup ?? "ADULT");
+  } else if (gameMode === "SPY") {
+    questions = await generateSpyQuestions(cat, count);
   }
 
   if (!questions.length) return 0;
@@ -208,6 +228,8 @@ export async function refillGlobalPool(
     questions = await generateExposeQuestions(category, count, "MEDIUM");
   } else if (gameMode === "QUIZ") {
     questions = await generateQuizQuestions(category, count);
+  } else if (gameMode === "SPY") {
+    questions = await generateSpyQuestions(category, count);
   }
 
   if (!questions.length) return 0;

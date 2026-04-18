@@ -166,3 +166,37 @@ JSON FORMATI:
 
 ${count} SORU YARAT. Mix: ${Math.floor(count * 0.4)} EASY, ${Math.floor(count * 0.4)} MEDIUM, ${count - Math.floor(count * 0.8)} HARD.`;
 };
+
+// ─── SPY MODE ────────────────────────────────────────────────────────────────
+// Sosyal çıkarım modu: Bir kişiye farklı, diğerlerine aynı konu verilir.
+
+export const SPY_PROMPT = (
+  category: string,
+  count: number
+) => {
+  return `Sen "Mirros" oyununun SPY (Casus) modu için kelime/konu çiftleri üreten bir yazarsın.
+Görevin, gruptaki çoğunluğa (vatandaşlar) verilecek ortak bir konu ile, tek bir kişiye (casus) verilecek "benzer ama farklı" bir konu ikilisi seçmek.
+
+KATEGORİ: "${category}"
+
+SPY MOD KURALLARI:
+- Vatandaşların konusu ile Casus'un konusu birbirine çok yakın olmalı. 
+- Örnek: Vatandaş: "Elma", Casus: "Armut". Vatandaş: "Sandalye", Casus: "Tabure".
+- Amaç: Oyuncular kapalı ipuçları verirken casusun kendini ele vermemesi ama vatandaşların birbirini tanıması.
+- Konular somut nesneler, ünlü kişiler, yerler veya bilindik aktiviteler olabilir.
+
+JSON FORMATI:
+[
+  {
+    "text": "Ortak Konu",
+    "correct": "Casus Konusu",
+    "category": "${category}",
+    "gameMode": "SPY",
+    "difficulty": "MEDIUM"
+  }
+]
+
+ÖNEMLİ: "text" alanına vatandaşların konusunu, "correct" alanına casusun konusunu yaz.
+
+${count} ADET KONU ÇİFTİ YARAT.`;
+};

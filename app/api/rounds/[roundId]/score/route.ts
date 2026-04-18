@@ -44,8 +44,9 @@ export async function POST(
 
   const isExpose = round.game.room.gameMode === "EXPOSE";
   const isBluff  = round.game.room.gameMode === "BLUFF";
+  const isSpy    = round.game.room.gameMode === "SPY";
   const answer = round.answers.find((a) => a.userId === round.answererId);
-  if (!isExpose && !isBluff && !answer) return NextResponse.json({ error: "Cevap henüz gönderilmedi" }, { status: 422 });
+  if (!isExpose && !isBluff && !isSpy && !answer) return NextResponse.json({ error: "Cevap henüz gönderilmedi" }, { status: 422 });
 
   // Tüm tahminleri değerlendir (her guesser için ayrı skor)
   const scores: { id: string; gameId: string; roundId: string; guesserId: string; matchLevel: string; points: number; createdAt: Date }[] = [];
@@ -144,6 +145,85 @@ export async function POST(
     });
 
     return NextResponse.json({ bluffPlayerScores, nextRound: bluffNextRound });
+  }
+
+  // SPY Modu skoru
+  if (isSpy) {
+    const spyId = round.spyId;
+    if (!spyId) return NextResponse.json({ error: "Spy ID missing" }, { status: 500 });
+
+    const voteCounts: Record<string, number> = {};
+    for (const g of round.guesses) {
+      voteCounts[g.content] = (voteCounts[g.content] || 0) + 1;
+    }
+
+    const maxVotes = Math.max(...Object.values(voteCounts));
+    const tiedOptions = Object.keys(voteCounts).filter(k => voteCounts[k] === maxVotes);
+    const majorityVote = tiedOptions[Math.floor(Math.random() * tiedOptions.length)];
+
+    const spyUser = round.game.room.participants.find(p => p.userId === spyId)?.user;
+    const spyUsername = spyUser?.username ?? spyUser?.email ?? "";
+    const isSpyCaught = majorityVote.toLowerCase().trim() === spyUsername.toLowerCase().trim();
+
+    const spyRoundResults: any[] = [];
+    
+    // 1. Puanları dağıt
+    for (const p of round.game.room.participants.filter(pt => pt.role !== "SPECTATOR")) {
+      let pts = 0;
+      let matchLabel = "WRONG";
+
+      if (p.userId === spyId) {
+        // Casus yakalanmadıysa +10
+        pts = isSpyCaught ? 0 : 10;
+        matchLabel = isSpyCaught ? "WRONG" : "EXACT";
+      } else {
+        // Vatandaşlar casusu bulduysa +5 (oy verenler)
+        const myGuess = round.guesses.find(g => g.userId === p.userId)?.content ?? "";
+        const didIVoteForSpy = myGuess.toLowerCase().trim() === spyUsername.toLowerCase().trim();
+        pts = (didIVoteForSpy && isSpyCaught) ? 5 : 0;
+        matchLabel = (didIVoteForSpy && isSpyCaught) ? "EXACT" : "WRONG";
+      }
+
+      await db.score.upsert({
+        where:  { roundId_guesserId: { roundId, guesserId: p.userId } },
+        create: { roundId, gameId: round.gameId, guesserId: p.userId, matchLevel: matchLabel as any, points: pts },
+        update: { matchLevel: matchLabel as any, points: pts },
+      });
+
+      spyRoundResults.push({
+        userId:    p.userId,
+        username:  p.user.username ?? p.user.email,
+        guess:     round.guesses.find(g => g.userId === p.userId)?.content ?? "-",
+        reason:    round.guesses.find(g => g.userId === p.userId)?.reason ?? null,
+        matchLevel: matchLabel,
+        points:     pts,
+      });
+    }
+
+    const allScores = await db.score.findMany({ where: { gameId: round.gameId } });
+    const spyPlayerScores: Record<string, number> = {};
+    for (const s of allScores) {
+      spyPlayerScores[s.guesserId] = (spyPlayerScores[s.guesserId] ?? 0) + s.points;
+    }
+
+    const advanceRes = await advanceGame(round.gameId, round.number);
+    let spyNextRound: any = null;
+    if (!advanceRes.finished && advanceRes.round) {
+      const nextR = await db.round.findUnique({ where: { id: advanceRes.round.id }, include: { question: true } });
+      if (nextR) spyNextRound = { id: nextR.id, number: nextR.number, questionId: nextR.questionId, questionText: nextR.question.text, questionCategory: nextR.question.category, questionOptions: nextR.question.options as string[] | null, answererId: nextR.answererId };
+    }
+
+    await safeTrigger(`game-${round.gameId}`, "round-scored", {
+      roundId,
+      answererId:   spyId, // Casus "odak" olsun
+      answer:       spyUsername,
+      winnerId:     isSpyCaught ? null : spyId,
+      guessResults: spyRoundResults,
+      playerScores: spyPlayerScores,
+      nextRound:    spyNextRound,
+    });
+
+    return NextResponse.json({ playerScores: spyPlayerScores, nextRound: spyNextRound });
   }
 
   for (const guess of round.guesses) {

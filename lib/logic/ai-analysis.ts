@@ -23,6 +23,7 @@ export async function generateAIInsight(telemetry: GameTelemetry) {
   return {
     intro,
     tag: result.tag,
-    story: result.story
+    story: result.story,
+    playerBadges: result.playerBadges || []
   };
 }
