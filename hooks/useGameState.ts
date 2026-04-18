@@ -104,77 +104,97 @@ export function useGameState(gameId: string, myUserId: string) {
       try {
         const store = useGameStore.getState();
         const gameMode = store.gameMode;
-        // Global Flow Guard: gameMode EXPOSE/QUIZ ise veya answererId yoksa başlangıç durumu GUESSING'dir
-        const initialState = (gameMode === "EXPOSE" || gameMode === "QUIZ" || (!data.answererId && gameMode !== "SPY")) ? "GUESSING" : "ANSWERING";
-        setGameState(initialState);
+        // Global Flow Guard: EXPOSE/QUIZ veya answererId yoksa GUESSING; SPY için ANSWERING
+        const nextState = (gameMode === "EXPOSE" || gameMode === "QUIZ" || (!data.answererId && gameMode !== "SPY")) ? "GUESSING" : "ANSWERING";
+        console.log("[MIRROS] 🟢 round-started", { round: data.roundNumber, roundId: data.roundId, gameMode, answererId: data.answererId, hasText: !!data.questionText, nextState });
         setActiveRoundId(data.roundId);
         setCurrentRound(data.roundNumber);
         setAnswererId(data.answererId ?? null);
-        setGameState("ANSWERING");
-        setNextRoundData(null); 
+        setNextRoundData(null);
 
-        // Eğer text null gelmişse (Spy modu senkronizasyon gereksinimi),
-        // arka planda taze veriyi çek.
-        if (data.questionText === null) {
+        // Soru verisi geldiyse store'u güncelle (her turda yeni soru göstermek için zorunlu)
+        if (data.questionText) {
+          setQuestion({
+            id:       data.questionId,
+            text:     data.questionText,
+            category: data.questionCategory ?? store.question?.category ?? "",
+            options:  data.questionOptions ?? null,
+          });
+          setGameState(nextState);
+          console.log("[MIRROS] ✅ round-started: soru set edildi, state →", nextState);
+        } else {
+          // Spy modu veya eksik veri: server'dan çek, hydrate tamamlanınca state geç
+          console.log("[MIRROS] ⚠️ round-started: questionText yok, server'dan çekiliyor...");
           fetch(`/api/games/${gameId}`)
             .then(res => res.json())
-            .then(data => {
-              if (data.gameId) hydrate(data);
+            .then(freshData => {
+              if (freshData.gameId) useGameStore.getState().hydrate(freshData);
+              setGameState(nextState);
+              console.log("[MIRROS] ✅ round-started: hydrate tamamlandı, state →", nextState);
             })
-            .catch(err => console.error("[round-started] Sync failed", err));
+            .catch(err => {
+              console.error("[MIRROS] ❌ round-started: sync failed", err);
+              setGameState(nextState);
+            });
         }
       } catch (err) {
-        console.error("[useGameState] round-started handler error:", err);
+        console.error("[MIRROS] ❌ round-started handler error:", err);
       }
     });
 
     channel.bind("answer-submitted", (data: AnswerSubmittedPayload) => {
       try {
         if (data.answererId !== undefined) {
+          console.log("[MIRROS] 🟡 answer-submitted (SOCIAL)", { answererId: data.answererId, totalGuessers: data.totalGuessers, hasOptions: !!data.updatedOptions });
           if (data.updatedOptions) setQuestionOptions(data.updatedOptions);
           setGuessProgress(0, data.totalGuessers ?? 0);
           setGameState("GUESSING");
           return;
         }
+        console.log("[MIRROS] 🟡 answer-submitted (QUIZ)", { answerCount: data.answerCount, total: data.totalParticipants, allAnswered: data.allAnswered });
         setGuessProgress(data.answerCount ?? 0, data.totalParticipants ?? 0);
       } catch (err) {
-        console.error("[useGameState] answer-submitted handler error:", err);
+        console.error("[MIRROS] ❌ answer-submitted handler error:", err);
       }
     });
 
     channel.bind("bluff-guessing-started", (data: { roundId: string; options: string[]; authors: { userId: string; username: string }[]; totalGuessers: number }) => {
       try {
+        console.log("[MIRROS] 🎭 bluff-guessing-started", { optionCount: data.options.length, totalGuessers: data.totalGuessers });
         setBluffOptions(data.options);
         setBluffAnswers(data.authors);
         setGuessProgress(0, data.totalGuessers);
         setGameState("GUESSING");
       } catch (err) {
-        console.error("[useGameState] bluff-guessing-started handler error:", err);
+        console.error("[MIRROS] ❌ bluff-guessing-started handler error:", err);
       }
     });
 
     channel.bind("quiz-round-scored", (data: QuizRoundScoredPayload) => {
       try {
+        console.log("[MIRROS] 🏆 quiz-round-scored", { correctAnswer: data.correctAnswer, hasNextRound: !!data.nextRound, nextRoundId: data.nextRound?.id });
         setLastQuizResults({ correctAnswer: data.correctAnswer, results: data.results });
         setPlayerScores(data.playerScores);
         setLastPenalty(data.penalty ?? null);
         if (data.nextRound) setNextRoundData(data.nextRound);
         setGameState("SCORING");
       } catch (err) {
-        console.error("[useGameState] quiz-round-scored handler error:", err);
+        console.error("[MIRROS] ❌ quiz-round-scored handler error:", err);
       }
     });
 
     channel.bind("guess-submitted", (data: GuessSubmittedPayload) => {
       try {
+        console.log("[MIRROS] 🔵 guess-submitted", { guessCount: data.guessCount, totalGuessers: data.totalGuessers, allDone: data.allDone });
         setGuessProgress(data.guessCount, data.totalGuessers);
       } catch (err) {
-        console.error("[useGameState] guess-submitted handler error:", err);
+        console.error("[MIRROS] ❌ guess-submitted handler error:", err);
       }
     });
 
     channel.bind("round-scored", (data: RoundScoredPayload) => {
       try {
+        console.log("[MIRROS] 🏅 round-scored (SOCIAL)", { roundId: data.roundId, answer: data.answer, hasNextRound: !!data.nextRound, nextRoundId: data.nextRound?.id });
         setLastRoundScore({
           roundId:      data.roundId,
           answererId:   data.answererId,
@@ -206,17 +226,21 @@ export function useGameState(gameId: string, myUserId: string) {
             number:   data.nextRound.number,
             answererId: data.nextRound.answererId,
           });
+          console.log("[MIRROS] ✅ nextRoundData set:", { id: data.nextRound.id, number: data.nextRound.number });
+        } else {
+          console.warn("[MIRROS] ⚠️ round-scored: nextRound yok → son tur veya advanceGame hatası");
         }
 
         // Sadece skor aşamasına geç, yeni round verisi olsa bile (host başlatacak)
         setGameState("SCORING");
       } catch (err) {
-        console.error("[useGameState] round-scored handler error:", err);
+        console.error("[MIRROS] ❌ round-scored handler error:", err);
       }
     });
 
     channel.bind("game-finished", (data: GameFinishedPayload) => {
       try {
+        console.log("[MIRROS] 🎉 game-finished", { gameId: data.gameId });
         setPlayerScores(data.playerScores);
         setGameState("END");
         // Mobil cihazda geçiş reklamı göster
@@ -225,7 +249,7 @@ export function useGameState(gameId: string, myUserId: string) {
         }
         router.push(`/results/${data.gameId}`);
       } catch (err) {
-        console.error("[useGameState] game-finished handler error:", err);
+        console.error("[MIRROS] ❌ game-finished handler error:", err);
       }
     });
 

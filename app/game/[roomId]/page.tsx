@@ -265,6 +265,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   }, [timeLeft, state]);
 
   useEffect(() => {
+    console.log("[MIRROS] 🔄 state →", state, { myRole, gameMode, answererId, activeRoundId, questionText: question?.text?.slice(0, 40) });
     if (state === "ANSWERING") {
       sounds.newRound();
       sounds.ping(); // Ekstra bildirim sesi
@@ -364,12 +365,14 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   async function submitAnswer(content: string) {
     if (!activeRoundId) return;
+    console.log("[MIRROS] 📤 submitAnswer", { roundId: activeRoundId, content: content.slice(0, 30) });
     const res = await fetch(`/api/rounds/${activeRoundId}/answer`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content }),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Sunucu hatası" }));
+      console.error("[MIRROS] ❌ submitAnswer failed", res.status, err);
       // 409: round durumu değişmiş ama Pusher eventi kaybolmuş → state'i yenile
       if (res.status === 409 && gameId) {
         recoverGameState(gameId).catch(() => {});
@@ -377,16 +380,19 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
       }
       throw new Error(err.error || "Cevap gönderilemedi");
     }
+    console.log("[MIRROS] ✅ submitAnswer ok");
   }
 
   async function submitGuess(content: string, reason?: string) {
     if (!activeRoundId) return;
+    console.log("[MIRROS] 📤 submitGuess", { roundId: activeRoundId, content: content.slice(0, 30) });
     const res = await fetch(`/api/rounds/${activeRoundId}/guess`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content, reason }),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Tahmin gönderilemedi" }));
+      console.error("[MIRROS] ❌ submitGuess failed", res.status, err);
       // 409: state desync → yenile
       if (res.status === 409 && gameId) {
         recoverGameState(gameId).catch(() => {});
@@ -394,23 +400,28 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
       }
       throw new Error(err.error || "Tahmin gönderilemedi");
     }
+    console.log("[MIRROS] ✅ submitGuess ok");
   }
 
   async function triggerScore() {
     if (!activeRoundId) return;
+    console.log("[MIRROS] 📤 triggerScore", { roundId: activeRoundId });
     const res = await fetch(`/api/rounds/${activeRoundId}/score`, { method: "POST" });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Skor hesaplanamadı" }));
+      console.error("[MIRROS] ❌ triggerScore failed", res.status, err);
       throw new Error(err.error || "Skor hesaplanamadı");
     }
+    console.log("[MIRROS] ✅ triggerScore ok");
   }
 
   async function skipRound() {
     if (!activeRoundId) return;
+    console.log("[MIRROS] ⏭️ skipRound", { roundId: activeRoundId });
     const res = await fetch(`/api/rounds/${activeRoundId}/skip`, { method: "POST" });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Geçilemedi" }));
-      console.error("[skipRound]", err.error);
+      console.error("[MIRROS] ❌ skipRound failed", res.status, err);
     }
   }
 
@@ -817,9 +828,10 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 {/* Ad Space */}
                 <GoogleAd slot="2233445566" className="mt-2" />
                 
-                {useGameStore.getState().isHostPlayer ? (
+                {isHostPlayer ? (
                   <button
                     type="button"
+                    disabled={!nextRoundData}
                     onClick={async () => {
                       if (!nextRoundData) return;
                       const res = await fetch(`/api/rounds/${nextRoundData.id}/start`, { method: "POST" });
@@ -828,7 +840,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                         alert(err.error || "Tura geçilemedi");
                       }
                     }}
-                    className="w-full py-5 rounded-[24px] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                    className="w-full py-5 rounded-[24px] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-wait"
                   >
                     SIRADAKİ TURA GEÇ
                     <ChevronRight size={18} />
@@ -919,9 +931,10 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 transition={{ delay: 1 }}
                 className="pt-8"
               >
-                {useGameStore.getState().isHostPlayer ? (
+                {isHostPlayer ? (
                   <button
                     type="button"
+                    disabled={!nextRoundData}
                     onClick={async () => {
                       if (!nextRoundData) return;
                       const res = await fetch(`/api/rounds/${nextRoundData.id}/start`, { method: "POST" });
@@ -930,7 +943,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                         alert(err.error || "Tura geçilemedi");
                       }
                     }}
-                    className="w-full py-6 rounded-[2rem] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_15px_30px_rgba(168,85,247,0.3)] hover:shadow-[0_20px_40px_rgba(168,85,247,0.4)] hover:scale-[1.03] active:scale-95 transition-all flex items-center justify-center gap-3 ring-1 ring-white/20"
+                    className="w-full py-6 rounded-[2rem] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_15px_30px_rgba(168,85,247,0.3)] hover:shadow-[0_20px_40px_rgba(168,85,247,0.4)] hover:scale-[1.03] active:scale-95 transition-all flex items-center justify-center gap-3 ring-1 ring-white/20 disabled:opacity-50 disabled:cursor-wait"
                   >
                     SIRADAKİ SORUYA GEÇ
                     <ArrowRight size={20} />

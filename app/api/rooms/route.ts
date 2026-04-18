@@ -15,7 +15,7 @@ function generateCode(): string {
 }
 
 const bodySchema = z.object({
-  gameMode:    z.enum(["SOCIAL", "QUIZ", "EXPOSE", "BLUFF"]),
+  gameMode:    z.enum(["SOCIAL", "QUIZ", "EXPOSE", "BLUFF", "SPY"]),
   maxPlayers:  z.number().min(2).max(20),
   totalRounds: z.number().min(1).max(20).optional(),
   ageGroup:    z.enum(["CHILD", "ADULT", "WISE"]).optional(),

@@ -57,7 +57,7 @@ interface GameStore {
   myRole:        "answerer" | "guesser" | "spectator" | null;
   activeRoundId: string | null;
   answererId:    string | null;
-  gameMode:      "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | null;
+  gameMode:      "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY" | null;
   theme:         GameTheme;
   categoryName:  string | null;
 
@@ -97,7 +97,7 @@ interface GameStore {
   setLastQuizResults: (r: GameStore["lastQuizResults"]) => void;
   setLastPenalty:     (p: string | null) => void;
   setGuessProgress:    (count: number, total: number) => void;
-  setGameMode:         (mode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF") => void;
+  setGameMode:         (mode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY") => void;
   setBluffOptions:     (opts: string[]) => void;
   setBluffAnswers:     (answers: { userId: string; username: string }[]) => void;
   setQuestionOptions:  (options: string[]) => void;
