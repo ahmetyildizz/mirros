@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mirros Sound Test</title>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 20px; }
+        .button { background: #A855F7; color: white; border: none; padding: 15px 30px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 200px; text-align: center; }
+        .button:hover { background: #D946EF; }
+    </style>
+</head>
+<body>
+    <h1>Mirros Sound Test</h1>
+    <div id="status">Sırayla çalmak için butona bas!</div>
+    <button class="button" onclick="playAll()">Sırayla Çal</button>
+
+    <script>
+        const sounds = [
+            { name: "Kahkaha (😂)", url: "/sfx/laugh.mp3" },
+            { name: "Şaşırma (😱)", url: "/sfx/gasp.mp3" },
+            { name: "Osuruk (💩)", url: "/sfx/fart.mp3" },
+            { name: "Whoosh (🔥)", url: "/sfx/fire.mp3" },
+            { name: "Korna (🤡)", url: "/sfx/honk.mp3" },
+            { name: "Hüzün (💔)", url: "/sfx/sad.mp3" }
+        ];
+
+        async function playAll() {
+            const status = document.getElementById('status');
+            for (const s of sounds) {
+                status.innerText = "Çalıyor: " + s.name;
+                const audio = new Audio(s.url);
+                await new Promise((resolve) => {
+                    audio.onended = resolve;
+                    audio.play();
+                });
+            }
+            status.innerText = "Bitti! ✨";
+        }
+    </script>
+</body>
+</html>

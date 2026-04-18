@@ -6,6 +6,19 @@
 
 ---
 
+## 2026-04-18 — Gemini
+
+- **Sosyal Özellikler Entegrasyonu:** (Badges, Spy Mode, Reactions, Avatars)
+  - **Prisma & DB:** `GameMode.SPY` eklendi, `User.badges` ve `User.aiAvatar` alanları eklendi.
+  - **AI Servisleri:** `SPY_PROMPT` ile casus modu soru üretimi ve `analyzeGameWithGemini` ile otomatik rozet (Badge) saptama mantığı kuruldu.
+  - **Canlı Reaksiyonlar:** `ReactionOverlay` ve `ReactionToolbar` bileşenleri eklendi. Pusher üzerinden emoji ve SFX (komik sesler) senkronizasyonu sağlandı.
+  - **Casus Modu (SPY):** 1 Casus vs N Vatandaş mantığı kuruldu. Casus yakalanırsa vatandaşlar (+5), yakalanmazsa casus (+10) puan alır.
+  - **AI Avatars:** DiceBear API entegrasyonu ile yeni katılan kullanıcılara otomatik premium avatarlar atandı.
+  - **Rozet Sistemi:** Oyun sonunda kazanılan rozetlerin kullanıcı profilinde kalıcı olarak saklanması ve sonuç ekranında gösterilmesi sağlandı.
+- **Teknik:** `score/route.ts` ve `game.service.ts` mod bazlı puanlama ve round yönetimi için güncellendi.
+
+---
+
 ## 2026-04-17 — Gemini
 
 - **Dedikodu Masası (EXPOSE) Canlı Testi:** 10 turluk tam bir oyun akışı canlı sistemde (`mirros.vercel.app`) simüle edildi.
