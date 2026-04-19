@@ -25,8 +25,8 @@ const nextConfig = {
 };
 
 export default withSentryConfig(nextConfig, {
-  org: "mirros",
-  project: "mirros-web",
+  org: "noyan-pi",
+  project: "javascript-nextjsmirros",
   silent: true,
   widenClientFileUpload: true,
   hideSourceMaps: true,
