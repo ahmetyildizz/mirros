@@ -9,14 +9,34 @@ const LOW_WATER_MARK = 5;
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
-/** Katılımcıların daha önce gördüğü tüm soru ID'lerini getirir. */
+/** Katılımcıların daha önce gördüğü tüm soru ID'lerini getirir.
+ *  UserSeenQuestion (yeni sistem) + 90 günlük round geçmişi (retroactive) birleştirilir.
+ */
 async function getSeenQuestionIds(participantIds: string[]): Promise<string[]> {
-  const seen = await db.userSeenQuestion.findMany({
-    where:  { userId: { in: participantIds } },
-    select: { questionId: true },
-    distinct: ["questionId"],
-  });
-  return seen.map((s) => s.questionId);
+  const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+
+  const [seen, historical] = await Promise.all([
+    db.userSeenQuestion.findMany({
+      where:    { userId: { in: participantIds } },
+      select:   { questionId: true },
+      distinct: ["questionId"],
+    }),
+    db.round.findMany({
+      where: {
+        game: {
+          startedAt: { gte: ninetyDaysAgo },
+          room: { participants: { some: { userId: { in: participantIds } } } },
+        },
+      },
+      select: { questionId: true },
+      distinct: ["questionId"],
+    }),
+  ]);
+
+  const ids = new Set<string>();
+  seen.forEach((s) => ids.add(s.questionId));
+  historical.forEach((r) => ids.add(r.questionId));
+  return Array.from(ids);
 }
 
 /** Soruyu tüm katılımcılar için "görüldü" olarak işaretler. */
@@ -109,7 +129,27 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     });
   }
 
-  // 3. ADIM: Hala boşsa: Tema kısıtlamasını kaldır, genel havuzdan seç
+  // 3. ADIM: Tema soruları var ama hepsi görüldü → excludeIds gevşet, tema koru
+  // (alakasız soru göstermekten tema tekrarı daha iyi)
+  if (candidates.length === 0 && targetCategories) {
+    candidates = await tx.question.findMany({
+      where: {
+        isActive: true,
+        gameMode: effectiveMode,
+        category: { in: targetCategories },
+        ...(ageGroup ? {
+          OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
+        } : {}),
+      },
+      select: { id: true },
+    });
+    // Havuz doluyken AI tetikle (arka planda)
+    if (candidates.length > 0 && baseCategory) {
+      refillGlobalPool(effectiveMode, baseCategory, 30).catch(() => {});
+    }
+  }
+
+  // 4. ADIM: Tema yok veya temada hiç soru yok → genel havuzdan seç (excludeIds dahil)
   if (candidates.length === 0) {
     candidates = await tx.question.findMany({
       where: {
@@ -125,7 +165,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     });
   }
 
-  // 4. ADIM: Son Çare: excludeIds kısıtını da kaldır (tüm havuz)
+  // 5. ADIM: Son Çare: excludeIds kısıtını da kaldır (tüm havuz)
   if (candidates.length === 0) {
     candidates = await tx.question.findMany({
       where: { isActive: true, gameMode: effectiveMode },
@@ -263,8 +303,8 @@ export async function startGame(roomId: string) {
     return { game: newGame, round, question };
   });
 
-  // İlk soruyu tüm katılımcılar için "görüldü" işaretle (arka planda)
-  markQuestionSeen(question.id, participantIds).catch(() => {});
+  // İlk soruyu "görüldü" işaretle — sonraki turda race condition olmaması için await
+  await markQuestionSeen(question.id, participantIds);
 
   const players = room.participants.map((p) => ({
     id:       p.userId,
@@ -436,8 +476,8 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
   const usedIds = await getSeenQuestionIds(participantIds);
   const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, game.room.gameMode, game.room.ageGroup, game.room.category, game.roomId);
 
-  // Yeni soruyu tüm katılımcılar için "görüldü" işaretle (arka planda)
-  markQuestionSeen(question.id, participantIds).catch(() => {});
+  // await: bir sonraki advanceGame çağrısı bu kaydı görmeli
+  await markQuestionSeen(question.id, participantIds);
 
   return { finished: false, round };
 }
