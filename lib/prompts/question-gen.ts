@@ -5,17 +5,22 @@
 export const SOCIAL_PROMPT = (
   category: string,
   count: number,
-  playerNames?: string[]
+  playerNames?: string[],
+  answerMemory?: string
 ) => {
   const namesContext = playerNames?.length
     ? `Oyundaki gerçek kişiler: ${playerNames.join(", ")}. Sorularda bu isimleri kullan — [İSİM] yerine gerçek isimleri yaz. Farklı kişileri hedef al.`
     : `Sorularda cevaplayacak kişi için [İSİM] placeholder'ını kullan.`;
 
+  const memoryContext = answerMemory
+    ? `\nBU GRUBUN ÖNCEKİ OYUNLARDAKI CEVAPLARI (derinleştiren veya karşılaştıran sorular için kullan):\n${answerMemory}\n`
+    : "";
+
   return `Sen "Mirros" adlı viral sosyal oyunun soru yazarısın. Görevin insanları birbirine bağlayan, güldüren ve "hah, tam senin gibiydi bu!" dedirten sorular yazmak.
 
 KATEGORİ: "${category}"
 ${namesContext}
-
+${memoryContext}
 SOSYAL MOD KURALLARI:
 - Bir kişi (answerer) kendisi hakkında cevap verir, arkadaşları o kişiyi tahmin eder
 - Sorular kişiyi "ifşa eder" ama sevgi dolu bir şekilde
@@ -59,7 +64,8 @@ export const EXPOSE_PROMPT = (
   category: string,
   count: number,
   spiceLevel: "EASY" | "MEDIUM" | "HARD",
-  playerNames?: string[]
+  playerNames?: string[],
+  answerMemory?: string
 ) => {
   const spiceInstructions = {
     EASY: "Hafif, güldürücü, sosyal ortamda rahatça sorulabilir. Kimseyi rencide etmez.",
@@ -71,11 +77,16 @@ export const EXPOSE_PROMPT = (
     ? `Oyundaki gerçek kişiler: ${playerNames.join(", ")}. Sorularda bu isimleri kullanabilirsin — "Bu gruptan kim?" yerine bazen "Ahmet ile Zeynep'ten hangisi?" gibi. UYARI: Tüm sorular keyifli ve eğlenceli kalmalı, birini gerçekten incitecek sorular yazma.`
     : `Sorularda "Bu gruptan kim?" veya "Aramızdan hangisi?" ifadelerini kullan.`;
 
+  const memoryContext = answerMemory
+    ? `\nBU GRUBUN ÖNCEKİ OYUNLARDAKI CEVAPLARI (sorularda referans ver veya konuyu derinleştir):\n${answerMemory}\n`
+    : "";
+
   return `Sen "Mirros" adlı viral sosyal oyunun en eğlenceli modu olan EXPOSE (Yüzleşme) için soru yazarısın.
 
 KATEGORİ: "${category}"
 ACILILIK SEVİYESİ: ${spiceLevel} — ${spiceInstructions[spiceLevel]}
 ${namesContext}
+${memoryContext}
 
 EXPOSE MOD KURALLARI:
 - Herkes oy verir: "Bu özellik en çok kime uyar?"

@@ -113,9 +113,10 @@ async function callGeminiForQuestions(prompt: string): Promise<AIQuestion[]> {
 export async function generateSocialQuestions(
   category: string,
   count = 10,
-  playerNames?: string[]
+  playerNames?: string[],
+  answerMemory?: string
 ): Promise<AIQuestion[]> {
-  return callGeminiForQuestions(SOCIAL_PROMPT(category, count, playerNames));
+  return callGeminiForQuestions(SOCIAL_PROMPT(category, count, playerNames, answerMemory));
 }
 
 /** Global havuz için EXPOSE soruları üretir. */
@@ -123,9 +124,10 @@ export async function generateExposeQuestions(
   category: string,
   count = 10,
   spiceLevel: "EASY" | "MEDIUM" | "HARD" = "MEDIUM",
-  playerNames?: string[]
+  playerNames?: string[],
+  answerMemory?: string
 ): Promise<AIQuestion[]> {
-  return callGeminiForQuestions(EXPOSE_PROMPT(category, count, spiceLevel, playerNames));
+  return callGeminiForQuestions(EXPOSE_PROMPT(category, count, spiceLevel, playerNames, answerMemory));
 }
 
 /** Global havuz için QUIZ soruları üretir. */
@@ -154,24 +156,25 @@ export async function generateSpyQuestions(
  * pickQuestion() oda-özel soruları önce seçer, bu sayede her oyun taze hissettirirk.
  */
 export async function generateAndSaveQuestionsForRoom(
-  roomId:     string,
-  gameMode:   "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY",
-  category:   string | null,
-  ageGroup:   "CHILD" | "ADULT" | "WISE" | null,
+  roomId:      string,
+  gameMode:    "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY",
+  category:    string | null,
+  ageGroup:    "CHILD" | "ADULT" | "WISE" | null,
   playerNames: string[],
-  spiceLevel: "EASY" | "MEDIUM" | "HARD" = "MEDIUM"
+  spiceLevel:  "EASY" | "MEDIUM" | "HARD" = "MEDIUM",
+  answerMemory?: string   // Önceki oyunlardaki cevaplar — kişiselleştirme için
 ): Promise<number> {
   if (!API_KEY) return 0;
 
   const cat   = category ?? "Genel";
-  const count = 12; // Oda başına 12 kişisel soru
+  const count = 12;
 
   let questions: AIQuestion[] = [];
 
   if (gameMode === "SOCIAL") {
-    questions = await generateSocialQuestions(cat, count, playerNames);
+    questions = await generateSocialQuestions(cat, count, playerNames, answerMemory);
   } else if (gameMode === "EXPOSE") {
-    questions = await generateExposeQuestions(cat, count, spiceLevel, playerNames);
+    questions = await generateExposeQuestions(cat, count, spiceLevel, playerNames, answerMemory);
   } else if (gameMode === "QUIZ") {
     questions = await generateQuizQuestions(cat, count, ageGroup ?? "ADULT");
   } else if (gameMode === "SPY") {

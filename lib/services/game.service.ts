@@ -9,6 +9,24 @@ const LOW_WATER_MARK = 5;
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
 
+/** Katılımcıların daha önce gördüğü tüm soru ID'lerini getirir. */
+async function getSeenQuestionIds(participantIds: string[]): Promise<string[]> {
+  const seen = await db.userSeenQuestion.findMany({
+    where:  { userId: { in: participantIds } },
+    select: { questionId: true },
+    distinct: ["questionId"],
+  });
+  return seen.map((s) => s.questionId);
+}
+
+/** Soruyu tüm katılımcılar için "görüldü" olarak işaretler. */
+async function markQuestionSeen(questionId: string, participantIds: string[]) {
+  await db.userSeenQuestion.createMany({
+    data:           participantIds.map((userId) => ({ userId, questionId })),
+    skipDuplicates: true,
+  });
+}
+
 async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
   // Spice Level extraction (e.g., "Dedikodu Masası:Hot")
   let spiceLevel: "EASY" | "MEDIUM" | "HARD" | null = null;
@@ -169,39 +187,35 @@ export async function startGame(roomId: string) {
     });
   }
 
-  // ── AI: Oyuncu isimleriyle kişiselleştirilmiş sorular üret (arka planda, non-blocking) ──
   const playerNames = participants.map((p) => p.user.username ?? p.user.email ?? "Oyuncu");
   const baseSpiceLevel: "EASY" | "MEDIUM" | "HARD" =
     room.category?.includes(":Nuclear") ? "HARD"
     : room.category?.includes(":Hot") ? "MEDIUM"
     : "EASY";
 
+  // Cevap hafızası: AI'ye önceki oyunlardaki cevapları bağlam olarak ver
+  const recentAnswers = await db.answer.findMany({
+    where:   { userId: { in: participantIds } },
+    orderBy: { submittedAt: "desc" },
+    take:    20,
+    include: {
+      user:  { select: { username: true } },
+      round: { include: { question: { select: { text: true } } } },
+    },
+  });
+  const answerMemory = recentAnswers.length > 0
+    ? recentAnswers
+        .map((a) => `${a.user.username}: "${a.content}" (soru: "${a.round.question.text}")`)
+        .join("\n")
+    : undefined;
+
+  // ── AI: Kişiselleştirilmiş sorular üret (arka planda) ──
   generateAndSaveQuestionsForRoom(
-    roomId,
-    room.gameMode,
-    room.category,
-    room.ageGroup,
-    playerNames,
-    baseSpiceLevel
+    roomId, room.gameMode, room.category, room.ageGroup, playerNames, baseSpiceLevel, answerMemory
   ).catch((e) => console.error("[AI] generateAndSaveQuestionsForRoom hatası:", e));
 
-  // Son 30 gündeki oyunlarda bu katılımcıların gördüğü soruları dışla.
-  // 30 günlük pencere: eski sorular havuza geri döner, havuz tükenmez.
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  const previousRounds = await db.round.findMany({
-    where: {
-      game: {
-        startedAt: { gte: thirtyDaysAgo },
-        room: {
-          participants: {
-            some: { userId: { in: participantIds } }
-          }
-        }
-      }
-    },
-    select: { questionId: true },
-  });
-  const usedIds = previousRounds.map((r) => r.questionId);
+  // Kullanıcı bazlı görülmüş soru dışlama — her oyuncu hiç aynı soruyu görmez
+  const usedIds = await getSeenQuestionIds(participantIds);
 
   const { game, round, question } = await db.$transaction(async (tx) => {
     // Transaction içinde atomik kontrol — race condition önlemi
@@ -248,6 +262,9 @@ export async function startGame(roomId: string) {
     const { round, question } = await createRound(newGame.id, 1, participantIds, usedIds, room.gameMode, roundAgeGroup, room.category, room.id, tx as any);
     return { game: newGame, round, question };
   });
+
+  // İlk soruyu tüm katılımcılar için "görüldü" işaretle (arka planda)
+  markQuestionSeen(question.id, participantIds).catch(() => {});
 
   const players = room.participants.map((p) => ({
     id:       p.userId,
@@ -415,10 +432,12 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
   }
 
   const nextNumber = completedRoundNumber + 1;
-  // Sadece mevcut oyundaki soruları dışla — 30 günlük geçmiş havuzu tüketince
-  // step-4 fallback'i tetikler ve aynı oyun içinde tekrar gösterir.
-  const usedIds = game.rounds.map((r) => r.questionId);
+  // Kullanıcı bazlı görülmüş soru dışlama
+  const usedIds = await getSeenQuestionIds(participantIds);
   const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, game.room.gameMode, game.room.ageGroup, game.room.category, game.roomId);
+
+  // Yeni soruyu tüm katılımcılar için "görüldü" işaretle (arka planda)
+  markQuestionSeen(question.id, participantIds).catch(() => {});
 
   return { finished: false, round };
 }
