@@ -195,7 +195,8 @@ export function useGameState(gameId: string, myUserId: string) {
 
     channel.bind("round-scored", (data: RoundScoredPayload) => {
       try {
-        console.log("[MIRROS] 🏅 round-scored (SOCIAL)", { roundId: data.roundId, answer: data.answer, hasNextRound: !!data.nextRound, nextRoundId: data.nextRound?.id });
+        console.log("[MIRROS] 🏅 round-scored (SOCIAL)", { roundId: data.roundId, answer: data.answer, answererId: data.answererId, hasNextRound: !!data.nextRound, nextRoundId: data.nextRound?.id });
+        setAnswererId(data.answererId ?? null);
         setLastRoundScore({
           roundId:      data.roundId,
           answererId:   data.answererId,
