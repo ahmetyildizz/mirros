@@ -15,16 +15,18 @@ import { cn } from "@/lib/utils";
 import { sounds } from "@/lib/sounds";
 
 interface Props {
-  options:      string[];
-  onSubmit:     (value: string, reason?: string) => void | Promise<void>;
+  options:        string[];
+  onSubmit:       (value: string, reason?: string) => void | Promise<void>;
   allowFreeText?: boolean;
-  showReason?:  boolean;
-  gameId?:      string | null;
-  username?:    string | null;
+  showReason?:    boolean;
+  gameId?:        string | null;
+  username?:      string | null;
+  guessCount?:    number;
+  totalGuessers?: number;
 }
 
-export function MultipleChoiceInput({ 
-  options, onSubmit, allowFreeText = false, showReason = false, gameId, username 
+export function MultipleChoiceInput({
+  options, onSubmit, allowFreeText = false, showReason = false, gameId, username, guessCount, totalGuessers
 }: Props) {
   const [selected,   setSelected]   = useState<string | null>(null);
   const [freeText,   setFreeText]   = useState("");
@@ -51,17 +53,34 @@ export function MultipleChoiceInput({
   };
 
   if (submitted) {
+    const hasProgress = totalGuessers != null && totalGuessers > 0;
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="glass-card p-6 flex flex-col items-center gap-3 border-green-500/20 text-center"
+        className="glass-card p-6 flex flex-col items-center gap-4 border-green-500/20 text-center"
       >
         <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center text-green-500">
           <CheckCircle2 size={24} />
         </div>
-        <p className="text-[13px] font-black text-green-400 uppercase tracking-widest">Başarıyla Gönderildi</p>
-        
+        <p className="text-[13px] font-black text-green-400 uppercase tracking-widest">Oyun Gönderildi</p>
+        {hasProgress && (
+          <div className="w-full flex flex-col items-center gap-2">
+            <p className="text-[11px] font-bold text-slate-400">
+              {guessCount} / {totalGuessers} kişi oy kullandı
+            </p>
+            <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${Math.min(100, ((guessCount ?? 0) / totalGuessers) * 100)}%` }}
+                className="h-full bg-accent rounded-full"
+              />
+            </div>
+            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest animate-pulse">
+              Diğerleri bekleniyor...
+            </p>
+          </div>
+        )}
       </motion.div>
     );
   }

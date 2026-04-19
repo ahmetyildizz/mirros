@@ -289,27 +289,17 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     }
   }, [guessCount, totalGuessers, state, isAnswerer, isQuiz, isExpose, activeRoundId]);
 
-  // Auto-advance: SCORING'e girildiğinde host 5 saniye sonra otomatik ilerler
+  // Auto-advance: SCORING'e girildiğinde host hemen ilerler (kısa gecikme Pusher işleme için)
   useEffect(() => {
     if (state !== "SCORING") { setScoringCountdown(null); return; }
-    if (!isHostPlayer || !nextRoundData) return;
-    setScoringCountdown(5);
-    const interval = setInterval(() => {
-      setScoringCountdown(prev => {
-        if (prev === null || prev <= 1) {
-          clearInterval(interval);
-          return null;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    if (!isHostPlayer) return;
     const timeout = setTimeout(async () => {
       const store = useGameStore.getState();
       const nd = store.nextRoundData;
       if (!nd?.id) return;
       await fetch(`/api/rounds/${nd.id}/start`, { method: "POST" }).catch(() => {});
-    }, 5000);
-    return () => { clearInterval(interval); clearTimeout(timeout); };
+    }, 1500);
+    return () => clearTimeout(timeout);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, isHostPlayer]);
 
@@ -655,6 +645,8 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                       showReason={true}
                       gameId={gameId}
                       username={players.find(p => p.id === myUserId)?.username}
+                      guessCount={guessCount}
+                      totalGuessers={totalGuessers}
                     />
                   ) : (
                     question.options
@@ -868,7 +860,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     }}
                     className="w-full py-5 rounded-[24px] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-wait"
                   >
-                    {scoringCountdown !== null ? `${scoringCountdown}s` : "SIRADAKİ TURA GEÇ"}
+                    SIRADAKİ TURA GEÇ
                     <ChevronRight size={18} />
                   </button>
                 ) : (
@@ -972,7 +964,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     }}
                     className="w-full py-6 rounded-[2rem] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_15px_30px_rgba(168,85,247,0.3)] hover:shadow-[0_20px_40px_rgba(168,85,247,0.4)] hover:scale-[1.03] active:scale-95 transition-all flex items-center justify-center gap-3 ring-1 ring-white/20 disabled:opacity-50 disabled:cursor-wait"
                   >
-                    {scoringCountdown !== null ? `${scoringCountdown}s` : "SIRADAKİ SORUYA GEÇ"}
+                    SIRADAKİ SORUYA GEÇ
                     <ArrowRight size={20} />
                   </button>
                 ) : (
