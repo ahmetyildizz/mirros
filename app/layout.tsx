@@ -19,8 +19,6 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { AdMobProvider } from "@/components/providers/AdMobProvider";
 import { AdMockProvider } from "@/components/providers/AdMockProvider";
 import { VersionCheckProvider } from "@/components/providers/VersionCheckProvider";
-import { DebugLogOverlay } from "@/components/shared/DebugLogOverlay";
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" className={`h-full ${jakarta.variable}`}>
@@ -34,7 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </AdMockProvider>
           </AdMobProvider>
         </VersionCheckProvider>
-        <DebugLogOverlay />
       </body>
     </html>
   );

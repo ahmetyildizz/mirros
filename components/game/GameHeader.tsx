@@ -1,7 +1,8 @@
-import { motion } from "framer-motion";
-import { Sparkles, History } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles, History, LogOut } from "lucide-react";
 import { SoundToggle } from "./SoundToggle";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { GameHistory } from "./GameHistory";
 import { useGameStore } from "@/store/game.store";
 
@@ -12,16 +13,18 @@ interface Props {
 
 export function GameHeader({ roundNumber, totalRounds }: Props) {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const { gameId } = useGameStore();
+  const router = useRouter();
 
   return (
     <>
-      <motion.header 
+      <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="flex items-center justify-between py-2 px-1 border-b border-white/5 mb-2"
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col cursor-pointer" onClick={() => setShowExitConfirm(true)}>
           <span className="text-2xl font-black tracking-tighter gradient-text leading-none drop-shadow-sm">
             mirros
           </span>
@@ -48,11 +51,55 @@ export function GameHeader({ roundNumber, totalRounds }: Props) {
         </div>
       </motion.header>
 
-      <GameHistory 
-        gameId={gameId ?? ""} 
-        isOpen={isHistoryOpen} 
-        onClose={() => setIsHistoryOpen(false)} 
+      <GameHistory
+        gameId={gameId ?? ""}
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
       />
+
+      <AnimatePresence>
+        {showExitConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm"
+            onClick={() => setShowExitConfirm(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="glass-card p-6 flex flex-col gap-4 max-w-xs w-full text-center"
+            >
+              <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto">
+                <LogOut size={22} className="text-red-400" />
+              </div>
+              <div>
+                <p className="font-black text-white text-[15px]">Oyundan Çıkılsın mı?</p>
+                <p className="text-[12px] text-slate-500 mt-1">İlerlemen kaybolacak.</p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowExitConfirm(false)}
+                  type="button"
+                  className="flex-1 py-3 rounded-xl bg-white/[0.05] border border-white/10 text-[13px] font-bold text-slate-400 hover:text-white transition-colors"
+                >
+                  Kal
+                </button>
+                <button
+                  onClick={() => router.push("/")}
+                  type="button"
+                  className="flex-1 py-3 rounded-xl bg-red-500/20 border border-red-500/30 text-[13px] font-black text-red-400 hover:bg-red-500/30 transition-colors"
+                >
+                  Çık
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
