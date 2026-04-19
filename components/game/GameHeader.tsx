@@ -33,6 +33,7 @@ export function GameHeader({ roundNumber, totalRounds }: Props) {
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setIsHistoryOpen(true)}
+            aria-label="Geçmişi Gör"
             className="p-2 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] transition-colors"
           >
             <History size={18} className="text-slate-400 hover:text-white transition-colors" />
