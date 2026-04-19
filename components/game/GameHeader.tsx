@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, History, LogOut } from "lucide-react";
 import { SoundToggle } from "./SoundToggle";
+import { ReportButton } from "./ReportButton";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { GameHistory } from "./GameHistory";
@@ -9,12 +10,13 @@ import { useGameStore } from "@/store/game.store";
 interface Props {
   roundNumber: number;
   totalRounds: number;
+  gameMode?: string;
 }
 
-export function GameHeader({ roundNumber, totalRounds }: Props) {
+export function GameHeader({ roundNumber, totalRounds, gameMode }: Props) {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
-  const { gameId } = useGameStore();
+  const { gameId, roomId } = useGameStore();
   const router = useRouter();
 
   return (
@@ -46,8 +48,15 @@ export function GameHeader({ roundNumber, totalRounds }: Props) {
             </span>
           </div>
           
+          <ReportButton
+            gameId={gameId ?? undefined}
+            roomId={roomId ?? undefined}
+            roundNumber={roundNumber}
+            gameMode={gameMode}
+          />
+
           <div className="w-px h-6 bg-white/10" />
-          
+
           <SoundToggle />
         </div>
       </motion.header>

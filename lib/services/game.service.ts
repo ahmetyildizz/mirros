@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { createAuditLog } from "@/lib/audit";
 import { generateAndSaveQuestionsForRoom, refillGlobalPool } from "@/lib/services/ai.service";
+import { captureApiError } from "@/lib/monitoring";
 
 // Havuzda bu sayının altına düşünce AI ile doldur
 const LOW_WATER_MARK = 5;
@@ -173,10 +174,15 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     });
   }
 
-  if (candidates.length === 0) throw new Error("Soru havuzu gerçekten boş");
+  if (candidates.length === 0) {
+    const err = new Error("Soru havuzu gerçekten boş");
+    captureApiError(err, "pickQuestion", { gameMode: effectiveMode, category: baseCategory, excludeCount: excludeIds.length });
+    throw err;
+  }
 
   // Havuz azaldığında daha agresif dolum: 30 soru üret (önceden 15'ti)
   if (candidates.length < LOW_WATER_MARK && baseCategory) {
+    captureApiError(new Error("Soru havuzu kritik seviyede"), "pickQuestion/lowWaterMark", { gameMode: effectiveMode, category: baseCategory, count: candidates.length });
     refillGlobalPool(effectiveMode, baseCategory, 30).catch((e) =>
       console.error("[AI] refillGlobalPool arka plan hatası:", e)
     );
