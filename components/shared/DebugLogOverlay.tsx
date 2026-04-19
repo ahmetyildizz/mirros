@@ -75,7 +75,7 @@ export function DebugLogOverlay() {
   if (!visible) return null;
 
   return (
-    <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 99999, background: "#000", borderBottom: "2px solid #eab308", fontFamily: "monospace", fontSize: 10 }}>
+    <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 99999, background: "#1a0000", borderBottom: "2px solid #ef4444", fontFamily: "monospace", fontSize: 10 }}>
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-white/10">
         <div className="flex items-center gap-2">
