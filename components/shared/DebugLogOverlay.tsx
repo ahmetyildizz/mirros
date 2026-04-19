@@ -76,9 +76,8 @@ export function DebugLogOverlay() {
 
   return (
     <div className={cn(
-      "fixed top-0 left-0 right-0 z-[200] border-b border-white/10",
-      "bg-black/95 backdrop-blur-md shadow-2xl font-mono text-[10px]",
-      "max-w-[480px] mx-auto"
+      "fixed top-0 inset-x-0 z-[9999] border-b-2 border-yellow-500/60",
+      "bg-black font-mono text-[10px]"
     )}>
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-white/10">
