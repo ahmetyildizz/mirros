@@ -65,6 +65,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   const advancingRoundRef   = useRef<string | null>(null);
   const hasAutoSubmitted    = useRef(false);
   const timerHasRun         = useRef(false); // Bu round için timer gerçekten çalıştı mı?
+  const [scoringCountdown, setScoringCountdown] = useState<number | null>(null);
 
   useEffect(() => {
     fetch("/api/me")
@@ -288,9 +289,33 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
     }
   }, [guessCount, totalGuessers, state, isAnswerer, isQuiz, isExpose, activeRoundId]);
 
+  // Auto-advance: SCORING'e girildiğinde host 5 saniye sonra otomatik ilerler
+  useEffect(() => {
+    if (state !== "SCORING") { setScoringCountdown(null); return; }
+    if (!isHostPlayer || !nextRoundData) return;
+    setScoringCountdown(5);
+    const interval = setInterval(() => {
+      setScoringCountdown(prev => {
+        if (prev === null || prev <= 1) {
+          clearInterval(interval);
+          return null;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    const timeout = setTimeout(async () => {
+      const store = useGameStore.getState();
+      const nd = store.nextRoundData;
+      if (!nd?.id) return;
+      await fetch(`/api/rounds/${nd.id}/start`, { method: "POST" }).catch(() => {});
+    }, 5000);
+    return () => { clearInterval(interval); clearTimeout(timeout); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, isHostPlayer]);
+
   useEffect(() => {
     if (state !== "SCORING") return;
-    
+
     let isSuccess = false;
     if (isQuiz && lastQuizResults) {
       isSuccess = lastQuizResults.results.some((r) => r.correct);
@@ -833,6 +858,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     type="button"
                     disabled={!nextRoundData}
                     onClick={async () => {
+                      setScoringCountdown(null);
                       if (!nextRoundData) return;
                       const res = await fetch(`/api/rounds/${nextRoundData.id}/start`, { method: "POST" });
                       if (!res.ok) {
@@ -842,7 +868,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     }}
                     className="w-full py-5 rounded-[24px] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-wait"
                   >
-                    SIRADAKİ TURA GEÇ
+                    {scoringCountdown !== null ? `${scoringCountdown}s` : "SIRADAKİ TURA GEÇ"}
                     <ChevronRight size={18} />
                   </button>
                 ) : (
@@ -936,6 +962,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     type="button"
                     disabled={!nextRoundData}
                     onClick={async () => {
+                      setScoringCountdown(null);
                       if (!nextRoundData) return;
                       const res = await fetch(`/api/rounds/${nextRoundData.id}/start`, { method: "POST" });
                       if (!res.ok) {
@@ -945,7 +972,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                     }}
                     className="w-full py-6 rounded-[2rem] bg-gradient-to-r from-accent to-fuchsia-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_15px_30px_rgba(168,85,247,0.3)] hover:shadow-[0_20px_40px_rgba(168,85,247,0.4)] hover:scale-[1.03] active:scale-95 transition-all flex items-center justify-center gap-3 ring-1 ring-white/20 disabled:opacity-50 disabled:cursor-wait"
                   >
-                    SIRADAKİ SORUYA GEÇ
+                    {scoringCountdown !== null ? `${scoringCountdown}s` : "SIRADAKİ SORUYA GEÇ"}
                     <ArrowRight size={20} />
                   </button>
                 ) : (
