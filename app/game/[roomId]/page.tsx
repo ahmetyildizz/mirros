@@ -35,6 +35,7 @@ import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 import { cn } from "@/lib/utils";
 import { ReactionOverlay } from "@/components/game/ReactionOverlay";
 import { ReactionToolbar } from "@/components/game/ReactionToolbar";
+import { DebugLogOverlay } from "@/components/shared/DebugLogOverlay";
 
 export default function GamePage({ params }: { params: Promise<{ roomId: string }> }) {
   const { roomId } = use(params);
@@ -996,6 +997,9 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
           <span>Mirros · {gameMode}</span>
         </div>
       </div>
+
+      {/* DEBUG — bir sonraki talimata kadar kaldır */}
+      <DebugLogOverlay />
     </main>
   );
 }
