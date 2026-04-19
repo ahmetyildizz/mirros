@@ -415,22 +415,9 @@ export async function advanceGame(gameId: string, completedRoundNumber: number) 
   }
 
   const nextNumber = completedRoundNumber + 1;
-  // Son 30 gündeki oyunlarda bu katılımcıların gördüğü soruları dışla.
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  const allRoomRounds = await db.round.findMany({
-    where: {
-      game: {
-        startedAt: { gte: thirtyDaysAgo },
-        room: {
-          participants: {
-            some: { userId: { in: participantIds } }
-          }
-        }
-      }
-    },
-    select: { questionId: true },
-  });
-  const usedIds = allRoomRounds.map((r) => r.questionId);
+  // Sadece mevcut oyundaki soruları dışla — 30 günlük geçmiş havuzu tüketince
+  // step-4 fallback'i tetikler ve aynı oyun içinde tekrar gösterir.
+  const usedIds = game.rounds.map((r) => r.questionId);
   const { round, question } = await createRound(gameId, nextNumber, participantIds, usedIds, game.room.gameMode, game.room.ageGroup, game.room.category, game.roomId);
 
   return { finished: false, round };
