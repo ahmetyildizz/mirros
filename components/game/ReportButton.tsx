@@ -18,8 +18,8 @@ export function ReportButton({ gameId, roomId, roundNumber, gameMode }: Props) {
     if (sent) return;
     Sentry.withScope((scope) => {
       scope.setContext("game", { gameId, roomId, roundNumber, gameMode });
-      scope.setLevel("warning");
-      Sentry.captureMessage("Kullanıcı sorun bildirdi", "warning");
+      scope.setLevel("error");
+      Sentry.captureMessage("Kullanıcı sorun bildirdi", "error");
     });
     setSent(true);
     setTimeout(() => setSent(false), 4000);
