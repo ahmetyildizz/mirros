@@ -12,6 +12,8 @@
   - `QuestionCard.tsx`: İsim değiştirme mantığı eklendi.
   - `app/game/[roomId]/page.tsx`: Odak oyuncu ismi (`focusName`) bileşene aktarıldı.
   - `TvDisplay.tsx`: TV ekranındaki soru metni için isim değiştirme mantığı uygulandı.
+- **QR Akış Optimizasyonu:** QR kod ile davetlerde 'Oda Kodu' giriş ekranı otomatik atlanarak doğrudan 'Karakter Seçimi' ekranına geçiş sağlandı.
+  - `JoinRoom.tsx`: Otomatik doğrulama sırasında kullanıcıyı bekleten özel bir yükleme ekranı eklendi.
 
 ---
 

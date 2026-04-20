@@ -172,41 +172,62 @@ export function JoinRoom({ onJoined, initialCode = "" }: Props) {
             exit={{ opacity: 0, x: 10 }}
             className="flex flex-col gap-4"
           >
-            <div className="relative group">
-              <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-accent transition-colors" size={20} />
-              <input
-                className={cn(
-                  "input-glass w-full pl-12 pr-4 py-4 text-lg font-black tracking-[0.2em] uppercase placeholder:tracking-normal placeholder:font-medium placeholder:text-slate-600",
-                  "focus:border-accent/40 focus:shadow-[0_0_20px_rgba(168,85,247,0.1)] transition-all"
+            {loading && initialCode ? (
+              <div className="flex flex-col items-center justify-center py-10 gap-4">
+                <div className="relative">
+                  <motion.div 
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    className="w-16 h-16 rounded-full border-4 border-accent/20 border-t-accent"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <KeyRound size={20} className="text-accent animate-pulse" />
+                  </div>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-black text-white uppercase tracking-[0.2em]">Odaya Bağlanılıyor</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Kod doğrulanıyor: {initialCode}</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="relative group">
+                  <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-accent transition-colors" size={20} />
+                  <input
+                    className={cn(
+                      "input-glass w-full pl-12 pr-4 py-4 text-lg font-black tracking-[0.2em] uppercase placeholder:tracking-normal placeholder:font-medium placeholder:text-slate-600",
+                      "focus:border-accent/40 focus:shadow-[0_0_20px_rgba(168,85,247,0.1)] transition-all"
+                    )}
+                    type="text"
+                    value={code}
+                    onChange={(e) => updateCode(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleCodeNext()}
+                    placeholder="ODA KODU"
+                    maxLength={8}
+                    autoCapitalize="characters"
+                  />
+                </div>
+
+                {error && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold"
+                  >
+                    <AlertCircle size={14} /> {error}
+                  </motion.div>
                 )}
-                type="text"
-                value={code}
-                onChange={(e) => updateCode(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleCodeNext()}
-                placeholder="ODA KODU"
-                maxLength={8}
-                autoCapitalize="characters"
-              />
-            </div>
 
-            {error && (
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold"
-              >
-                <AlertCircle size={14} /> {error}
-              </motion.div>
+                <button
+                  onClick={handleCodeNext}
+                  disabled={!code.trim() || loading}
+                  className="btn-ghost w-full py-4 rounded-2xl text-[13px] tracking-widest font-bold flex items-center justify-center gap-2"
+                >
+                  {loading ? <Loader2 className="animate-spin" size={16} /> : "DEVAM ET"} 
+                  {!loading && <ArrowRight size={16} />}
+                </button>
+              </>
             )}
-
-            <button
-              onClick={handleCodeNext}
-              disabled={!code.trim() || loading}
-              className="btn-ghost w-full py-4 rounded-2xl text-[13px] tracking-widest font-bold flex items-center justify-center gap-2"
-            >
-              {loading ? <Loader2 className="animate-spin" size={16} /> : "DEVAM ET"} 
-              {!loading && <ArrowRight size={16} />}
-            </button>
           </motion.div>
         ) : (
           <motion.div
