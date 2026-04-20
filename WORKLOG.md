@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-04-20 — Gemini
+
+- **[ISIM] Yer Tutucu Düzeltmesi:** SOCIAL modunda sorularda çıkan `[ISIM]` ve `[İSİM]` yer tutucuları o anki odak oyuncunun ismiyle değiştirilecek şekilde güncellendi.
+  - `QuestionCard.tsx`: İsim değiştirme mantığı eklendi.
+  - `app/game/[roomId]/page.tsx`: Odak oyuncu ismi (`focusName`) bileşene aktarıldı.
+  - `TvDisplay.tsx`: TV ekranındaki soru metni için isim değiştirme mantığı uygulandı.
+
+---
+
 ## 2026-04-18 — Gemini
 
 - **Sosyal Özellikler Entegrasyonu:** (Badges, Spy Mode, Reactions, Avatars)

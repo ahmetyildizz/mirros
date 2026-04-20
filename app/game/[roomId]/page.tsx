@@ -550,6 +550,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
             roundNumber={currentRound}
             answererName={!isQuiz && !isAnswerer && state === "GUESSING" ? (spotlightPlayer?.username ?? undefined) : undefined}
             answererAvatar={!isQuiz && !isAnswerer && state === "GUESSING" ? (spotlightPlayer?.avatarUrl ?? undefined) : undefined}
+            focusName={spotlightPlayer?.username}
           />
 
           {/* Interaction Area */}

@@ -119,7 +119,9 @@ export function TvDisplay({ roomId }: Props) {
             animate={{ opacity: 1, y: 0 }}
             className="text-5xl font-black leading-tight tracking-tight text-white"
           >
-            {question.text}
+            {answerer?.username 
+              ? question.text.replace(/\[İ?S[Iİ]M\]/gi, answerer.username)
+              : question.text}
           </motion.h1>
 
           {/* State label */}

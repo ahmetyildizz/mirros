@@ -10,9 +10,15 @@ interface Props {
   roundNumber: number;
   answererName?: string;
   answererAvatar?: string | null;
+  focusName?: string;
 }
 
-export function QuestionCard({ text, category, roundNumber, answererName, answererAvatar }: Props) {
+export function QuestionCard({ text, category, roundNumber, answererName, answererAvatar, focusName }: Props) {
+  // [ISIM] veya [İSİM] yer tutucularını gerçek isimle değiştir
+  const highlightedText = focusName 
+    ? text.replace(/\[İ?S[Iİ]M\]/gi, focusName)
+    : text;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -51,7 +57,7 @@ export function QuestionCard({ text, category, roundNumber, answererName, answer
         )}
 
         <h3 className="text-2xl md:text-3xl font-bold text-white leading-tight tracking-tight drop-shadow-sm">
-          {text}
+          {highlightedText}
         </h3>
       </div>
 
