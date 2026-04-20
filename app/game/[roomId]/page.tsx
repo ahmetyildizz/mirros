@@ -576,7 +576,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 </motion.div>
               ) : isBluff ? (
                 /* 2b. BLUFF MODU */
-                <motion.div key="bluff-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
+                <motion.div key={`bluff-area-${activeRoundId}`} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
                   {state === "ANSWERING" ? (
                     <div className="flex flex-col gap-3">
                       <div className="bg-violet-500/10 border border-violet-500/20 rounded-2xl px-4 py-3 text-center">
@@ -609,7 +609,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 </motion.div>
               ) : isSpy ? (
                 /* 2c. SPY MODU */
-                <motion.div key="spy-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
+                <motion.div key={`spy-area-${activeRoundId}`} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
                   {state === "ANSWERING" ? (
                     <div className="flex flex-col gap-3">
                       <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl px-4 py-3 text-center">
@@ -637,7 +637,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
               ) : (isQuiz || isExpose || (state === "ANSWERING" && !answererId)) ? (
                 /* 2. QUIZ VEYA EXPOSE: Doğrudan Giriş/Tahmin Alanı (State ne olursa olsun) */
                 /* VEYA: ANSWERING durumunda answererId yoksa bu bir senkronizasyon hatasıdır, oylamaya zorla */
-                <motion.div key="simultaneous-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
+                <motion.div key={`simultaneous-area-${activeRoundId}`} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
                   {isExpose || (state === "ANSWERING" && !answererId && !isQuiz) ? (
                     <MultipleChoiceInput
                       options={players.filter(p => p.role !== "SPECTATOR").map(p => p.username || "Anonim")}
@@ -657,7 +657,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 </motion.div>
               ) : state === "ANSWERING" && answererId !== null ? (
                 /* 3. SOCIAL MODE - ANSWERING */
-                <motion.div key="answering-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
+                <motion.div key={`answering-area-${activeRoundId}`} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
                   {isAnswerer ? (
                     question.options
                       ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
@@ -684,7 +684,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 </motion.div>
               ) : state === "GUESSING" ? (
                 /* 4. SOCIAL MODE - GUESSING */
-                <motion.div key="guessing-area" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
+                <motion.div key={`guessing-area-${activeRoundId}`} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
                   {isAnswerer ? (
                     <div className="glass-card-elevated p-8 flex flex-col items-center gap-6">
                       <p className="text-[15px] font-bold text-white tracking-tight">

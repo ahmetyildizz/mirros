@@ -12,6 +12,9 @@
   - `QuestionCard.tsx`: İsim değiştirme mantığı eklendi.
   - `app/game/[roomId]/page.tsx`: Odak oyuncu ismi (`focusName`) bileşene aktarıldı.
   - `TvDisplay.tsx`: TV ekranındaki soru metni için isim değiştirme mantığı uygulandı.
+- **Tur Senkronizasyonu ve Arayüz Sıfırlama:** EXPOSE (Gıybet) ve QUIZ modlarında turlar arası geçişte yaşanan takılı kalma sorunları giderildi.
+  - `page.tsx`: Etkileşim alanlarına tur bazlı benzersiz key'ler eklenerek her tur başında arayüzün (şıkların) sıfırlanması sağlandı.
+  - `useGameState.ts`: Yeni tur başladığında oylama ilerlemesinin (örn: 0/4 şeklinde) oyuncu sayısına göre doğru ilklendirilmesi sağlandı.
 - **QR Akış Optimizasyonu:** QR kod ile davetlerde 'Oda Kodu' giriş ekranı otomatik atlanarak doğrudan 'Karakter Seçimi' ekranına geçiş sağlandı.
   - `JoinRoom.tsx`: Otomatik doğrulama sırasında kullanıcıyı bekleten özel bir yükleme ekranı eklendi.
 
