@@ -48,9 +48,12 @@ const TEMPLATES: Template[] = [
   { icon: Cake,       label: "Doğum Günü",        desc: "Misafirler konuğu ne kadar tanıyor?",       gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 8,  color: "from-orange-400 to-red-500" },
   { icon: Briefcase,  label: "Takım Building",    desc: "Ekip arkadaşlarınızı keşfedin",             gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 10, color: "from-cyan-500 to-blue-600" },
   { icon: Flame,      label: "Ofis Kaosu",        desc: "İş yerinde maskeleri düşürün!",             gameMode: "EXPOSE", ageGroup: "ADULT", maxPlayers: 8,  color: "from-blue-600 to-slate-800" },
+  { icon: Flame,      label: "Kampüs Kaosu",      desc: "Kantin ve dersliklerdeki maskeler düşsün!", gameMode: "EXPOSE", ageGroup: "ADULT", maxPlayers: 10, color: "from-orange-500 to-red-600" },
   { icon: Brain,      label: "Bilgi Yarışması",   desc: "Eğlenceli sorular, komik cezalar",          gameMode: "QUIZ",   ageGroup: "ADULT", maxPlayers: 6,  color: "from-emerald-400 to-teal-500" },
+  { icon: Crown,      label: "Bilgelerin Meydanı", desc: "Tarih, felsefe ve derin genel kültür",     gameMode: "QUIZ",   ageGroup: "WISE",  maxPlayers: 6,  color: "from-indigo-600 to-purple-800" },
   { icon: Flame,      label: "Bluff Gecesi",      desc: "Yalan söyle, kandır, kazan! (Fibbage)",     gameMode: "BLUFF",  ageGroup: "ADULT", maxPlayers: 8,  color: "from-violet-500 to-fuchsia-600" },
   { icon: Fingerprint, label: "Casus Avı",        desc: "Aramızdaki casusu kim bulacak?",            gameMode: "SPY",    ageGroup: "ADULT", maxPlayers: 10, color: "from-slate-700 to-black" },
+  { icon: Baby,       label: "Süper Çocuklar",    desc: "Küçükler için eğlenceli ve güvenli oyun",   gameMode: "SOCIAL", ageGroup: "CHILD", maxPlayers: 6,  color: "from-cyan-400 to-blue-400" },
   { icon: Settings2,  label: "Özelleştir",        desc: "İstediğin gibi bir oda kur",                gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 4,  color: "from-slate-400 to-slate-600" },
 ];
 
@@ -90,7 +93,7 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
     else if (tpl.gameMode === "EXPOSE" || tpl.gameMode === "BLUFF") theme = "neon";
     else if (tpl.label === "Çift Gecesi") theme = "love";
     else if (tpl.label === "Ofis Kaosu" || tpl.label === "Takım Building") theme = "corporate";
-    else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü") theme = "warm";
+    else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü" || tpl.label === "Buz Kıran" || tpl.label === "Süper Çocuklar") theme = "warm";
     setTheme(theme);
 
     if (tpl.label === "Çift Gecesi") {

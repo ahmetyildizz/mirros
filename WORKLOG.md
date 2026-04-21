@@ -8,7 +8,11 @@
 
 ## 2026-04-21 — Gemini
 
+  - **Buz Kıran (Ice Breaker):** Yeni tanışan gruplar için buzları eriten sosyal soruları içeren yeni bir şablon eklendi.
+  - **Çiftler İçin Acılık Seviyesi:** "Çift Gecesi" modunda artık Normal/Alevli/Nükleer seviyeleri seçilebiliyor (Romantik vs Cesur ayrımı).
+  - **Etiket Zenginleştirme:** `themeMap` güncellenerek; `İtiraf` (Çiftler), `Coğrafya/Tarih/Bilim` (Quiz), `İş/Kariyer/Toplantı` (Ofis) ve `Çocukluk/Ebeveynlik` (Aile) etiketleri dahil edildi.
 - **Kategori ve Oyun Modu Senkronizasyonu:** Arayüzdeki şablonlar ile backend arasındaki uyumsuzluklar giderildi.
+
   - **SPY Modu:** "Casus Avı" şablonu `CreateRoom.tsx` kütüphanesine eklendi. Artık kullanıcılar doğrudan Casus modunu başlatabilir.
   - **Kategori Haritalama:** `Bilgi Yarışması`, `Bluff Gecesi` ve `Casus Avı` kategorileri `themeMap`'e eklenerek ilgili modlarda daha isabetli soruların gelmesi sağlandı.
   - **Görsel Temalar:** `Takım Building` (corporate) ve `Bluff Gecesi` (neon) modları için görsel temalar modun ruhuna uygun şekilde güncellendi.

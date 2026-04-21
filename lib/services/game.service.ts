@@ -73,6 +73,9 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     "Bilgi Yarışması": ["Genel Kültür", "Eğlence", "Gündem", "Türkiye", "Dünya", "Coğrafya", "Tarih", "Bilim", "Sanat", "Teknoloji"],
     "Bluff Gecesi": ["Eğlence", "Sosyal", "Kişilik", "Yaratıcılık"],
     "Casus Avı": ["Nesne", "Yer", "Aktivite", "Pop Kültür"],
+    "Süper Çocuklar": ["Oyun", "Okul", "Hayvanlar", "Süper Kahramanlar", "Eğlence"],
+    "Bilgelerin Meydanı": ["Tarih", "Edebiyat", "Felsefe", "Dünya", "Klasik Kültür"],
+    "Kampüs Kaosu": ["Üniversite", "Sınav", "Parti", "Ders", "Kantin"],
   };
 
   // BLUFF ve SPY modları kendi özel sorularına veya QUIZ sorularına yönelebilir
