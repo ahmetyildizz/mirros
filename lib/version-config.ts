@@ -1,4 +1,4 @@
-export const CURRENT_VERSION = "v0.5.1";
+export const CURRENT_VERSION = "v0.5.2";
 
 export interface VersionEntry {
   version: string;
@@ -8,6 +8,17 @@ export interface VersionEntry {
 }
 
 export const VERSION_HISTORY: VersionEntry[] = [
+  {
+    version: "v0.5.2",
+    date: "2026-04-21",
+    title: "Viral Paket ve Gelişmiş Navigasyon",
+    changes: [
+      "20 adet viral şablon içeren dev kategori kütüphanesi aktif edildi",
+      "Lobi ekranına kategori filtreleme sekmeleri (Sosyal, Rekabet, Yarışma) eklendi",
+      "Aile Toplantısı modu kültürel olarak (Gelenekler, Bayram) özelleştirildi",
+      "Yeni şablonlar: Ben Hiç, Z Kuşağı, Astroloji, Nostalji 90'lar, Sinema & Dizi"
+    ]
+  },
   {
     version: "v0.5.1",
     date: "2026-04-18",

@@ -8,7 +8,10 @@
 
 ## 2026-04-21 — Gemini
 
-  - **Viral Şablonlar:** `Nostalji 90'lar`, `Sinema & Dizi` ve `Kız Gecesi` şablonları eklendi. Toplam şablon sayısı 16'ya çıkarıldı.
+  - **Ultimate Kategori Kütüphanesi:** Şablon sayısı **20'ye** çıkarıldı (`Ben Hiç...`, `Z Kuşağı`, `Astroloji`, `Gurme & Mutfak` eklendi).
+  - **Tabbed Filter Sistemi:** Lobi ekranına "Sosyal, Rekabet, Yarışma" sekmeleri eklenerek 20 kategori düzenli bir yapıya kavuşturuldu.
+  - **Viral Şablonlar:** `Nostalji 90'lar`, `Sinema & Dizi` ve `Kız Gecesi` şablonları eklendi.
+
   - **Tag & Kategori Optimizasyonu:** `Aile Toplantısı` kategorisi Türk kültürüne uygun olarak (`Gelenekler`, `Bayram`, `Akraba`) özelleştirildi. Tüm yeni şablonlar için AI etiketleri (`themeMap`) senkronize edildi.
   - **Buz Kıran (Ice Breaker):** Yeni tanışan gruplar için buzları eriten sosyal soruları içeren yeni bir şablon eklendi.
 
