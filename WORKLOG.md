@@ -6,6 +6,11 @@
 
 ---
 
+## 2026-04-21 — Gemini
+
+- **Günlük Seri/Limit Düzeltmesi:** "Günlük seri yapınca level atlamasın" talebi doğrultusunda oyun sonu otomatik streak (seri) artırma mantığı devre dışı bırakıldı.
+  - `lib/services/game.service.ts`: `advanceGame` fonksiyonu içindeki `streak: { increment: 1 }` işlemi kaldırıldı. Artık seri takibi sadece günlük giriş veya manuel tetikleyici ile (gerekiyorsa) yönetilebilir.
+
 ## 2026-04-20 — Gemini
 
 - **[ISIM] Yer Tutucu Düzeltmesi:** SOCIAL modunda sorularda çıkan `[ISIM]` ve `[İSİM]` yer tutucuları o anki odak oyuncunun ismiyle değiştirilecek şekilde güncellendi.
