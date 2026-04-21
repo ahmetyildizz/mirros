@@ -650,7 +650,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                       totalGuessers={totalGuessers}
                     />
                   ) : (
-                    question.options
+                    (question.options && question.options.length > 0)
                       ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                       : <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                   )}
@@ -659,7 +659,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                 /* 3. SOCIAL MODE - ANSWERING */
                 <motion.div key={`answering-area-${activeRoundId}`} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}>
                   {isAnswerer ? (
-                    question.options
+                    (question.options && question.options.length > 0)
                       ? <MultipleChoiceInput options={question.options} onSubmit={submitAnswer} allowFreeText gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                       : <AnswerInput onSubmit={submitAnswer} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                   ) : (
@@ -692,7 +692,7 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
                       </p>
                     </div>
                   ) : (
-                    question.options
+                    (question.options && question.options.length > 0)
                       ? <MultipleChoiceInput options={question.options} onSubmit={submitGuess} allowFreeText showReason gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                       : <GuessInput opponentName={spotlightPlayer?.username ?? "Arkadaşın"} onSubmit={submitGuess} gameId={gameId} username={players.find(p => p.id === myUserId)?.username} />
                   )}

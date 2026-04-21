@@ -186,6 +186,8 @@ export async function generateAndSaveQuestionsForRoom(
   let saved = 0;
   for (const q of questions) {
     if (!q.text || q.text.length < 5) continue;
+    // QUIZ modunda şık zorunluluğu
+    if (gameMode === "QUIZ" && (!q.options || q.options.length < 2)) continue;
     try {
       await db.question.create({
         data: {
@@ -241,6 +243,8 @@ export async function refillGlobalPool(
   let saved = 0;
   for (const q of questions) {
     if (!q.text || q.text.length < 5) continue;
+    // QUIZ modunda şık zorunluluğu
+    if (gameMode === "QUIZ" && (!q.options || q.options.length < 2)) continue;
     try {
       await db.question.create({
         data: {

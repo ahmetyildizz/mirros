@@ -85,7 +85,14 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         isActive: true,
         gameMode: effectiveMode,
         ...(spiceLevel ? { difficulty: spiceLevel } : {}),
-        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {})
+        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
+        // QUIZ/BLUFF için şık zorunluluğu — Step 0 (Room specific)
+        ...(effectiveMode === "QUIZ" ? {
+          NOT: [
+            { options: { equals: [] } },
+            { options: { equals: null } }
+          ]
+        } : {})
       },
       select: { id: true },
     });
@@ -104,7 +111,12 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         gameMode: effectiveMode,
         category: { in: targetCategories },
         ...(spiceLevel ? { difficulty: spiceLevel } : {}),
-        ...(effectiveMode === "EXPOSE" ? {} : { NOT: { options: { equals: [] } } }),
+        ...(effectiveMode === "EXPOSE" || effectiveMode === "SPY" ? {} : { 
+          NOT: [
+            { options: { equals: [] } },
+            { options: { equals: null } }
+          ]
+        }),
         ...(ageGroup ? {
           OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
         } : {}),
@@ -125,6 +137,13 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
           OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
         } : {}),
         ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
+        // Fallbacklerde de QUIZ/BLUFF için şık zorunlu kalsın
+        ...(effectiveMode === "QUIZ" ? {
+          NOT: [
+            { options: { equals: [] } },
+            { options: { equals: null } }
+          ]
+        } : {})
       },
       select: { id: true },
     });
@@ -141,6 +160,13 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         ...(ageGroup ? {
           OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
         } : {}),
+        // Fallbacklerde de QUIZ/BLUFF için şık zorunlu kalsın
+        ...(effectiveMode === "QUIZ" ? {
+          NOT: [
+            { options: { equals: [] } },
+            { options: { equals: null } }
+          ]
+        } : {})
       },
       select: { id: true },
     });
@@ -161,6 +187,13 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
           OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
         } : {}),
         ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
+        // Fallbacklerde de QUIZ/BLUFF için şık zorunlu kalsın
+        ...(effectiveMode === "QUIZ" ? {
+          NOT: [
+            { options: { equals: [] } },
+            { options: { equals: null } }
+          ]
+        } : {})
       },
       select: { id: true },
     });
@@ -169,7 +202,17 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
   // 5. ADIM: Son Çare: excludeIds kısıtını da kaldır (tüm havuz)
   if (candidates.length === 0) {
     candidates = await tx.question.findMany({
-      where: { isActive: true, gameMode: effectiveMode },
+      where: { 
+        isActive: true, 
+        gameMode: effectiveMode,
+        // Son çare adımında bile QUIZ/BLUFF için şık zorunlu
+        ...(effectiveMode === "QUIZ" ? {
+          NOT: [
+            { options: { equals: [] } },
+            { options: { equals: null } }
+          ]
+        } : {})
+      },
       select: { id: true },
     });
   }
