@@ -16,7 +16,10 @@ import {
   Crown,
   Flame,
   Fingerprint,
-  Coffee
+  Coffee,
+  Tv,
+  Clock,
+  Star
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGameStore } from "@/store/game.store";
@@ -49,7 +52,10 @@ const TEMPLATES: Template[] = [
   { icon: Briefcase,  label: "Takım Building",    desc: "Ekip arkadaşlarınızı keşfedin",             gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 10, color: "from-cyan-500 to-blue-600" },
   { icon: Flame,      label: "Ofis Kaosu",        desc: "İş yerinde maskeleri düşürün!",             gameMode: "EXPOSE", ageGroup: "ADULT", maxPlayers: 8,  color: "from-blue-600 to-slate-800" },
   { icon: Flame,      label: "Kampüs Kaosu",      desc: "Kantin ve dersliklerdeki maskeler düşsün!", gameMode: "EXPOSE", ageGroup: "ADULT", maxPlayers: 10, color: "from-orange-500 to-red-600" },
+  { icon: Clock,      label: "Nostalji 90'lar",   desc: "Kasetler, atariler ve unutulmaz anılar!",   gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 8,  color: "from-yellow-500 to-orange-600" },
+  { icon: Star,       label: "Kız Gecesi",        desc: "Gıybet, moda ve dostluk dolu bir akşam!",   gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 12, color: "from-pink-400 to-rose-500" },
   { icon: Brain,      label: "Bilgi Yarışması",   desc: "Eğlenceli sorular, komik cezalar",          gameMode: "QUIZ",   ageGroup: "ADULT", maxPlayers: 6,  color: "from-emerald-400 to-teal-500" },
+  { icon: Tv,         label: "Sinema & Dizi",     desc: "Kült filmler ve viral diziler hakkında her şey!", gameMode: "QUIZ", ageGroup: "ADULT", maxPlayers: 8, color: "from-blue-500 to-indigo-600" },
   { icon: Crown,      label: "Bilgelerin Meydanı", desc: "Tarih, felsefe ve derin genel kültür",     gameMode: "QUIZ",   ageGroup: "WISE",  maxPlayers: 6,  color: "from-indigo-600 to-purple-800" },
   { icon: Flame,      label: "Bluff Gecesi",      desc: "Yalan söyle, kandır, kazan! (Fibbage)",     gameMode: "BLUFF",  ageGroup: "ADULT", maxPlayers: 8,  color: "from-violet-500 to-fuchsia-600" },
   { icon: Fingerprint, label: "Casus Avı",        desc: "Aramızdaki casusu kim bulacak?",            gameMode: "SPY",    ageGroup: "ADULT", maxPlayers: 10, color: "from-slate-700 to-black" },
@@ -93,7 +99,7 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
     else if (tpl.gameMode === "EXPOSE" || tpl.gameMode === "BLUFF") theme = "neon";
     else if (tpl.label === "Çift Gecesi") theme = "love";
     else if (tpl.label === "Ofis Kaosu" || tpl.label === "Takım Building") theme = "corporate";
-    else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü" || tpl.label === "Buz Kıran" || tpl.label === "Süper Çocuklar") theme = "warm";
+    else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü" || tpl.label === "Buz Kıran" || tpl.label === "Süper Çocuklar" || tpl.label === "Nostalji 90'lar") theme = "warm";
     setTheme(theme);
 
     if (tpl.label === "Çift Gecesi") {

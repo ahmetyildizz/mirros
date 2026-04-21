@@ -65,7 +65,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
   const themeMap: Record<string, string[]> = {
     "Çift Gecesi": ["İlişki", "Duygu", "Kişilik", "Yaşam", "İtiraf"],
     "Buz Kıran": ["Tanışma", "Hobi", "Mizah", "İlklere Yolculuk", "Eğlence"],
-    "Aile Toplantısı": ["Anılar", "Nostalji", "Yemek", "Yaşam", "Sosyal", "Çocukluk", "Ebeveynlik"],
+    "Aile Toplantısı": ["Anılar", "Nostalji", "Yemek", "Yaşam", "Sosyal", "Çocukluk", "Ebeveynlik", "Gelenekler", "Bayram", "Akraba"],
     "Doğum Günü": ["Anılar", "Eğlence", "Kişilik", "Sosyal", "Nostalji"],
     "Takım Building": ["Yaşam", "Duygu", "Değerler", "Sosyal", "Kişilik", "Dijital"],
     "Dedikodu Masası": ["Eğlence", "Tehlike", "İhanet", "Para", "Kaos"],
@@ -76,6 +76,9 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     "Süper Çocuklar": ["Oyun", "Okul", "Hayvanlar", "Süper Kahramanlar", "Eğlence"],
     "Bilgelerin Meydanı": ["Tarih", "Edebiyat", "Felsefe", "Dünya", "Klasik Kültür"],
     "Kampüs Kaosu": ["Üniversite", "Sınav", "Parti", "Ders", "Kantin"],
+    "Nostalji 90'lar": ["90lar", "2000ler", "Eski", "Atari", "Müzik", "Kaset"],
+    "Sinema & Dizi": ["Netflix", "Hollywood", "Yeşilçam", "Dizi", "Film", "Oscars"],
+    "Kız Gecesi": ["Gıybet", "Moda", "Aşk", "Kariyer", "Dostluk", "Makyaj"],
   };
 
   // BLUFF ve SPY modları kendi özel sorularına veya QUIZ sorularına yönelebilir
