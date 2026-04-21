@@ -63,13 +63,14 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
 
   // Tema/Lobi Modu eşleştirmesi
   const themeMap: Record<string, string[]> = {
-    "Çift Gecesi": ["İlişki", "Duygu", "Kişilik", "Yaşam"],
-    "Aile Toplantısı": ["Anılar", "Nostalji", "Yemek", "Yaşam", "Sosyal"],
+    "Çift Gecesi": ["İlişki", "Duygu", "Kişilik", "Yaşam", "İtiraf"],
+    "Buz Kıran": ["Tanışma", "Hobi", "Mizah", "İlklere Yolculuk", "Eğlence"],
+    "Aile Toplantısı": ["Anılar", "Nostalji", "Yemek", "Yaşam", "Sosyal", "Çocukluk", "Ebeveynlik"],
     "Doğum Günü": ["Anılar", "Eğlence", "Kişilik", "Sosyal", "Nostalji"],
     "Takım Building": ["Yaşam", "Duygu", "Değerler", "Sosyal", "Kişilik", "Dijital"],
     "Dedikodu Masası": ["Eğlence", "Tehlike", "İhanet", "Para", "Kaos"],
-    "Ofis Kaosu": ["Ofis Kaosu"],
-    "Bilgi Yarışması": ["Genel Kültür", "Eğlence", "Gündem", "Türkiye", "Dünya"],
+    "Ofis Kaosu": ["Ofis Kaosu", "İş", "Toplantı", "Kariyer", "Mola"],
+    "Bilgi Yarışması": ["Genel Kültür", "Eğlence", "Gündem", "Türkiye", "Dünya", "Coğrafya", "Tarih", "Bilim", "Sanat", "Teknoloji"],
     "Bluff Gecesi": ["Eğlence", "Sosyal", "Kişilik", "Yaratıcılık"],
     "Casus Avı": ["Nesne", "Yer", "Aktivite", "Pop Kültür"],
   };

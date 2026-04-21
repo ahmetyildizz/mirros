@@ -8,17 +8,17 @@
 
 ## 2026-04-21 — Gemini
 
+- **Kategori ve Oyun Modu Senkronizasyonu:** Arayüzdeki şablonlar ile backend arasındaki uyumsuzluklar giderildi.
+  - **SPY Modu:** "Casus Avı" şablonu `CreateRoom.tsx` kütüphanesine eklendi. Artık kullanıcılar doğrudan Casus modunu başlatabilir.
+  - **Kategori Haritalama:** `Bilgi Yarışması`, `Bluff Gecesi` ve `Casus Avı` kategorileri `themeMap`'e eklenerek ilgili modlarda daha isabetli soruların gelmesi sağlandı.
+  - **Görsel Temalar:** `Takım Building` (corporate) ve `Bluff Gecesi` (neon) modları için görsel temalar modun ruhuna uygun şekilde güncellendi.
 - **Soru Şıkları Senkronizasyon ve Veri Kalitesi Fixi:** "Sorular geliyor, şıklar gelmiyor" şikayeti üzerine 3 katmanlı iyileştirme yapıldı.
   - `app/game/[roomId]/page.tsx`: `question.options` kontrolü dizinin boş olmasını da kapsayacak şekilde güçlendirildi. Şık yoksa oyun kilitlenmek yerine otomatik olarak metin girişi (`AnswerInput`) moduna düşer.
   - `lib/services/game.service.ts`: `pickQuestion` fonksiyonunda `QUIZ` ve `BLUFF` modları için şık (options) içermeyen soruların seçilmesi tüm fallback adımlarında ve odaya özel seçimlerde engellendi.
   - `lib/services/ai.service.ts`: AI tarafından üretilen soruların kaydedilmeden önce `QUIZ` modu için en az 2 şık içermesi zorunlu kılındı.
-- **Teknik:** UI'da `options.length` kontrolü eklendi, DB sorgularında Json `NOT: { equals: [] }` filtresi yaygınlaştırıldı.
-
-## 2026-04-21 — Gemini
-
-
 - **Günlük Seri/Limit Düzeltmesi:** "Günlük seri yapınca level atlamasın" talebi doğrultusunda oyun sonu otomatik streak (seri) artırma mantığı devre dışı bırakıldı.
   - `lib/services/game.service.ts`: `advanceGame` fonksiyonu içindeki `streak: { increment: 1 }` işlemi kaldırıldı. Artık seri takibi sadece günlük giriş veya manuel tetikleyici ile (gerekiyorsa) yönetilebilir.
+
 
 ## 2026-04-20 — Gemini
 

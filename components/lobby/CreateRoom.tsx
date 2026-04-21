@@ -15,7 +15,8 @@ import {
   User,
   Crown,
   Flame,
-  Fingerprint
+  Fingerprint,
+  Coffee
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGameStore } from "@/store/game.store";
@@ -41,6 +42,7 @@ interface Template {
 
 const TEMPLATES: Template[] = [
   { icon: Users,      label: "Çift Gecesi",      desc: "Birbirinizi ne kadar tanıyorsunuz?", gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 2,  color: "from-rose-500 to-pink-600" },
+  { icon: Coffee,     label: "Buz Kıran",        desc: "Yeni tanışanlar için buzları eriten sorular", gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 8,  color: "from-sky-400 to-blue-500" },
   { icon: Flame,      label: "Dedikodu Masası",  desc: "Grupta en çok kim... (Yüzleşme)",    gameMode: "EXPOSE", ageGroup: "ADULT", maxPlayers: 10, color: "from-red-500 to-orange-600" },
   { icon: Users,      label: "Aile Toplantısı", desc: "Aile bağını güçlendirin, birlikte gülün",    gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 6,  color: "from-purple-500 to-indigo-600" },
   { icon: Cake,       label: "Doğum Günü",        desc: "Misafirler konuğu ne kadar tanıyor?",       gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 8,  color: "from-orange-400 to-red-500" },
@@ -92,10 +94,9 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
     setTheme(theme);
 
     if (tpl.label === "Çift Gecesi") {
-      handleCreate(tpl.gameMode, tpl.ageGroup, tpl.maxPlayers, tpl.label);
-    } else {
-      changeStep("config");
+      setSpiceLevel("Normal"); // Başlangıçta normal
     }
+    changeStep("config");
   };
 
   const handleCreate = async (
@@ -114,7 +115,7 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
           gameMode: finalMode, 
           ageGroup: finalAge, 
           maxPlayers: finalMax,
-          category: (finalCategory === "Özelleştir" || finalMode === "EXPOSE") ? `${finalCategory}:${spiceLevel}` : finalCategory
+          category: (finalCategory === "Özelleştir" || finalMode === "EXPOSE" || finalCategory === "Çift Gecesi") ? `${finalCategory}:${spiceLevel}` : finalCategory
         }),
       });
       if (res.ok) {
@@ -342,7 +343,7 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
                 </div>
               </div>
 
-              {(isCustom || mode === "EXPOSE") && (
+              {(isCustom || mode === "EXPOSE" || category === "Çift Gecesi") && (
                 <div className="flex flex-col gap-4 fade-up [animation-delay:0.3s]">
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1 flex items-center gap-2">
                     Eğlence Dozu <span className="text-[8px] px-1 bg-red-500/10 text-red-500 rounded border border-red-500/20 italic">Yeni</span>
