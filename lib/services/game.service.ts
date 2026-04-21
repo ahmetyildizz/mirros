@@ -69,6 +69,9 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     "Takım Building": ["Yaşam", "Duygu", "Değerler", "Sosyal", "Kişilik", "Dijital"],
     "Dedikodu Masası": ["Eğlence", "Tehlike", "İhanet", "Para", "Kaos"],
     "Ofis Kaosu": ["Ofis Kaosu"],
+    "Bilgi Yarışması": ["Genel Kültür", "Eğlence", "Gündem", "Türkiye", "Dünya"],
+    "Bluff Gecesi": ["Eğlence", "Sosyal", "Kişilik", "Yaratıcılık"],
+    "Casus Avı": ["Nesne", "Yer", "Aktivite", "Pop Kültür"],
   };
 
   // BLUFF ve SPY modları kendi özel sorularına veya QUIZ sorularına yönelebilir

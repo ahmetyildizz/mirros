@@ -14,7 +14,8 @@ import {
   Baby,
   User,
   Crown,
-  Flame
+  Flame,
+  Fingerprint
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGameStore } from "@/store/game.store";
@@ -47,6 +48,7 @@ const TEMPLATES: Template[] = [
   { icon: Flame,      label: "Ofis Kaosu",        desc: "İş yerinde maskeleri düşürün!",             gameMode: "EXPOSE", ageGroup: "ADULT", maxPlayers: 8,  color: "from-blue-600 to-slate-800" },
   { icon: Brain,      label: "Bilgi Yarışması",   desc: "Eğlenceli sorular, komik cezalar",          gameMode: "QUIZ",   ageGroup: "ADULT", maxPlayers: 6,  color: "from-emerald-400 to-teal-500" },
   { icon: Flame,      label: "Bluff Gecesi",      desc: "Yalan söyle, kandır, kazan! (Fibbage)",     gameMode: "BLUFF",  ageGroup: "ADULT", maxPlayers: 8,  color: "from-violet-500 to-fuchsia-600" },
+  { icon: Fingerprint, label: "Casus Avı",        desc: "Aramızdaki casusu kim bulacak?",            gameMode: "SPY",    ageGroup: "ADULT", maxPlayers: 10, color: "from-slate-700 to-black" },
   { icon: Settings2,  label: "Özelleştir",        desc: "İstediğin gibi bir oda kur",                gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 4,  color: "from-slate-400 to-slate-600" },
 ];
 
@@ -82,10 +84,10 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
 
     // Apply theme
     let theme: GameTheme = "purple";
-    if (tpl.gameMode === "QUIZ") theme = "intel";
-    else if (tpl.gameMode === "EXPOSE") theme = "neon";
+    if (tpl.gameMode === "QUIZ" || tpl.gameMode === "SPY") theme = "intel";
+    else if (tpl.gameMode === "EXPOSE" || tpl.gameMode === "BLUFF") theme = "neon";
     else if (tpl.label === "Çift Gecesi") theme = "love";
-    else if (tpl.label === "Ofis Kaosu") theme = "corporate";
+    else if (tpl.label === "Ofis Kaosu" || tpl.label === "Takım Building") theme = "corporate";
     else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü") theme = "warm";
     setTheme(theme);
 
