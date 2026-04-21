@@ -79,6 +79,10 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     "Nostalji 90'lar": ["90lar", "2000ler", "Eski", "Atari", "Müzik", "Kaset"],
     "Sinema & Dizi": ["Netflix", "Hollywood", "Yeşilçam", "Dizi", "Film", "Oscars"],
     "Kız Gecesi": ["Gıybet", "Moda", "Aşk", "Kariyer", "Dostluk", "Makyaj"],
+    "Ben Hiç...": ["İtiraf", "Sır", "Eğlence", "Duygu"],
+    "Z Kuşağı": ["Viral", "Trend", "Meme", "Sosyal Medya", "Müzik"],
+    "Astroloji": ["Burçlar", "Enerji", "Kişilik", "Gelecek", "Spiritüel"],
+    "Gurme & Mutfak": ["Yemek", "Mutfak", "Gurme", "Lezzet", "Tatlı"],
   };
 
   // BLUFF ve SPY modları kendi özel sorularına veya QUIZ sorularına yönelebilir

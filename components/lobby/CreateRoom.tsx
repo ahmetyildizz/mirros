@@ -16,10 +16,12 @@ import {
   Crown,
   Flame,
   Fingerprint,
-  Coffee,
-  Tv,
   Clock,
-  Star
+  Star,
+  MessageSquare,
+  Gamepad2,
+  MoonStar,
+  Utensils
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGameStore } from "@/store/game.store";
@@ -60,6 +62,10 @@ const TEMPLATES: Template[] = [
   { icon: Flame,      label: "Bluff Gecesi",      desc: "Yalan söyle, kandır, kazan! (Fibbage)",     gameMode: "BLUFF",  ageGroup: "ADULT", maxPlayers: 8,  color: "from-violet-500 to-fuchsia-600" },
   { icon: Fingerprint, label: "Casus Avı",        desc: "Aramızdaki casusu kim bulacak?",            gameMode: "SPY",    ageGroup: "ADULT", maxPlayers: 10, color: "from-slate-700 to-black" },
   { icon: Baby,       label: "Süper Çocuklar",    desc: "Küçükler için eğlenceli ve güvenli oyun",   gameMode: "SOCIAL", ageGroup: "CHILD", maxPlayers: 6,  color: "from-cyan-400 to-blue-400" },
+  { icon: MessageSquare, label: "Ben Hiç...",    desc: "İtiraflar başlasın! Kimler ne yaptı?",      gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 10, color: "from-purple-400 to-indigo-500" },
+  { icon: Gamepad2,   label: "Z Kuşağı",         desc: "Trendler, meme'ler ve yeni nesil jargon!",  gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 10, color: "from-yellow-300 to-green-400" },
+  { icon: MoonStar,   label: "Astroloji",        desc: "Yıldızlar senin için ne diyor? (Spiritüel)", gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 8,  color: "from-indigo-400 to-purple-600" },
+  { icon: Utensils,   label: "Gurme & Mutfak",   desc: "Yemek tutkunları için lezzetli sorular!",   gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 8,  color: "from-orange-400 to-amber-500" },
   { icon: Settings2,  label: "Özelleştir",        desc: "İstediğin gibi bir oda kur",                gameMode: "SOCIAL", ageGroup: "ADULT", maxPlayers: 4,  color: "from-slate-400 to-slate-600" },
 ];
 
@@ -76,6 +82,14 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
   const [loading,  setLoading] = useState(false);
   const [error,    setError]   = useState<string | null>(null);
   const [spiceLevel, setSpiceLevel] = useState<"Normal" | "Hot" | "Nuclear">("Normal");
+  const [activeTab,  setActiveTab]  = useState<"all" | "social" | "intense" | "quiz">("all");
+
+  const TABS = [
+    { id: "all",     label: "Hepsi",     count: TEMPLATES.length - 1 },
+    { id: "social",  label: "Sosyal",    count: TEMPLATES.filter(t => t.gameMode === "SOCIAL" || t.gameMode === "BLUFF").length },
+    { id: "intense", label: "Rekabet",   count: TEMPLATES.filter(t => t.gameMode === "EXPOSE" || t.gameMode === "SPY").length },
+    { id: "quiz",    label: "Yarışma",   count: TEMPLATES.filter(t => t.gameMode === "QUIZ").length },
+  ];
 
   const changeStep = (newStep: "template" | "config") => {
     setStep(newStep);
@@ -99,7 +113,9 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
     else if (tpl.gameMode === "EXPOSE" || tpl.gameMode === "BLUFF") theme = "neon";
     else if (tpl.label === "Çift Gecesi") theme = "love";
     else if (tpl.label === "Ofis Kaosu" || tpl.label === "Takım Building") theme = "corporate";
-    else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü" || tpl.label === "Buz Kıran" || tpl.label === "Süper Çocuklar" || tpl.label === "Nostalji 90'lar") theme = "warm";
+    else if (tpl.label === "Aile Toplantısı" || tpl.label === "Doğum Günü" || tpl.label === "Buz Kıran" || tpl.label === "Süper Çocuklar" || tpl.label === "Nostalji 90'lar" || tpl.label === "Gurme & Mutfak") theme = "warm";
+    else if (tpl.label === "Z Kuşağı") theme = "neon";
+    else if (tpl.label === "Astroloji") theme = "intel";
     setTheme(theme);
 
     if (tpl.label === "Çift Gecesi") {
@@ -163,41 +179,66 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
         {step === "template" ? (
           <motion.div
             key="template-step"
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 10 }}
-            className="flex flex-col gap-4"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            className="flex flex-col gap-6"
           >
-            <div className="flex items-center justify-start px-1">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Nasıl bir gece?</p>
+            {/* Filter Tabs */}
+            <div className="flex items-center gap-1.5 p-1 bg-white/[0.03] border border-white/5 rounded-2xl w-fit overflow-x-auto no-scrollbar">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={cn(
+                    "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 flex items-center gap-2 whitespace-nowrap",
+                    activeTab === tab.id 
+                      ? "bg-accent text-white shadow-[0_4px_12px_rgba(168,85,247,0.3)]" 
+                      : "text-slate-500 hover:text-slate-300 hover:bg-white/5"
+                  )}
+                >
+                  {tab.label}
+                  <span className={cn(
+                    "px-1.5 py-0.5 rounded-md text-[8px] font-bold",
+                    activeTab === tab.id ? "bg-white/20 text-white" : "bg-white/5 text-slate-600"
+                  )}>
+                    {tab.count}
+                  </span>
+                </button>
+              ))}
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {TEMPLATES.map((tpl, i) => (
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-4">
+              {TEMPLATES.filter(t => {
+                if (t.label === "Özelleştir") return true;
+                if (activeTab === "all") return true;
+                if (activeTab === "social") return t.gameMode === "SOCIAL" || t.gameMode === "BLUFF";
+                if (activeTab === "intense") return t.gameMode === "EXPOSE" || t.gameMode === "SPY";
+                if (activeTab === "quiz") return t.gameMode === "QUIZ";
+                return true;
+              }).map((tpl, i) => (
                 <motion.button
                   key={tpl.label}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: i * 0.03 }}
                   onClick={() => handleSelectTemplate(tpl)}
-                  disabled={loading}
-                  className={cn(
-                    "group relative flex flex-col items-center gap-4 p-5 rounded-[2rem] transition-all duration-500",
-                    "bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10 hover:-translate-y-1.5 active:scale-[0.98]",
-                    "backdrop-blur-xl overflow-hidden shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)]"
-                  )}
+                  className="group relative flex items-center gap-4 p-4 rounded-[2rem] bg-white/[0.03] border border-white/[0.06] hover:border-accent/40 hover:bg-white/[0.06] transition-all duration-500 text-left overflow-hidden"
                 >
                   <div className={cn(
-                    "w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 duration-500 bg-gradient-to-br shadow-lg",
+                    "w-12 h-12 rounded-2xl flex items-center justify-center bg-gradient-to-br shadow-lg group-hover:scale-110 transition-transform duration-500",
                     tpl.color
                   )}>
-                    <tpl.icon className="text-white w-7 h-7 drop-shadow-md" />
+                    <tpl.icon className="text-white" size={20} />
                   </div>
                   
-                  <div className="flex flex-col items-center gap-1.5 text-center">
-                    <span className="text-[14px] font-black text-slate-100 tracking-tight uppercase">{tpl.label}</span>
-                    <span className="text-[10px] text-slate-500 font-bold leading-tight max-w-[120px] opacity-80 group-hover:opacity-100 transition-opacity">{tpl.desc}</span>
+                  <div className="flex flex-col gap-0.5 relative z-10">
+                    <h3 className="text-[15px] font-black text-white tracking-tight uppercase italic">{tpl.label}</h3>
+                    <p className="text-[10px] font-bold text-slate-500 leading-tight pr-4 line-clamp-1 group-hover:text-slate-400 transition-colors uppercase tracking-tighter">
+                      {tpl.desc}
+                    </p>
                   </div>
- 
+
                   <div className={cn(
                     "absolute -bottom-10 -right-10 w-24 h-24 rounded-full blur-[40px] opacity-0 group-hover:opacity-10 transition-opacity duration-700 bg-gradient-to-br",
                     tpl.color
