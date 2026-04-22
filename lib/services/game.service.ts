@@ -49,7 +49,7 @@ async function markQuestionSeen(questionId: string, participantIds: string[]) {
   });
 }
 
-async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
+export async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY", ageGroup?: string | null, category?: string | null, roomId?: string | null, tx = db) {
   // Spice Level extraction (e.g., "Dedikodu Masası:Hot")
   let spiceLevel: "EASY" | "MEDIUM" | "HARD" | null = null;
   let baseCategory = category;
@@ -64,26 +64,26 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
 
   // Tema/Lobi Modu eşleştirmesi
   const themeMap: Record<string, string[]> = {
-    "Çift Gecesi": ["İlişki", "Duygu", "Kişilik", "Yaşam", "İtiraf"],
-    "Buz Kıran": ["Tanışma", "Hobi", "Mizah", "İlklere Yolculuk", "Eğlence"],
-    "Aile Toplantısı": ["Anılar", "Nostalji", "Yemek", "Yaşam", "Sosyal", "Çocukluk", "Ebeveynlik", "Gelenekler", "Bayram", "Akraba"],
-    "Doğum Günü": ["Anılar", "Eğlence", "Kişilik", "Sosyal", "Nostalji"],
-    "Takım Building": ["Yaşam", "Duygu", "Değerler", "Sosyal", "Kişilik", "Dijital"],
-    "Dedikodu Masası": ["Eğlence", "Tehlike", "İhanet", "Para", "Kaos"],
+    "Çift Gecesi": ["Çift Gecesi", "İlişki", "Duygu", "Kişilik", "Yaşam", "İtiraf"],
+    "Buz Kıran": ["Buz Kıran", "Tanışma", "Hobi", "Mizah", "İlklere Yolculuk", "Eğlence"],
+    "Aile Toplantısı": ["Aile Toplantısı", "Anılar", "Nostalji", "Yemek", "Yaşam", "Sosyal", "Çocukluk", "Ebeveynlik", "Gelenekler", "Bayram", "Akraba"],
+    "Doğum Günü": ["Doğum Günü", "Anılar", "Eğlence", "Kişilik", "Sosyal", "Nostalji"],
+    "Takım Building": ["Takım Building", "Yaşam", "Duygu", "Değerler", "Sosyal", "Kişilik", "Dijital"],
+    "Dedikodu Masası": ["Dedikodu Masası", "Eğlence", "Tehlike", "İhanet", "Para", "Kaos"],
     "Ofis Kaosu": ["Ofis Kaosu", "İş", "Toplantı", "Kariyer", "Mola"],
-    "Bilgi Yarışması": ["Genel Kültür", "Eğlence", "Gündem", "Türkiye", "Dünya", "Coğrafya", "Tarih", "Bilim", "Sanat", "Teknoloji"],
-    "Bluff Gecesi": ["Eğlence", "Sosyal", "Kişilik", "Yaratıcılık"],
-    "Casus Avı": ["Nesne", "Yer", "Aktivite", "Pop Kültür"],
-    "Süper Çocuklar": ["Oyun", "Okul", "Hayvanlar", "Süper Kahramanlar", "Eğlence"],
-    "Bilgelerin Meydanı": ["Tarih", "Edebiyat", "Felsefe", "Dünya", "Klasik Kültür"],
-    "Kampüs Kaosu": ["Üniversite", "Sınav", "Parti", "Ders", "Kantin"],
-    "Nostalji 90'lar": ["90lar", "2000ler", "Eski", "Atari", "Müzik", "Kaset"],
-    "Sinema & Dizi": ["Netflix", "Hollywood", "Yeşilçam", "Dizi", "Film", "Oscars"],
-    "Kız Gecesi": ["Gıybet", "Moda", "Aşk", "Kariyer", "Dostluk", "Makyaj"],
-    "Ben Hiç...": ["İtiraf", "Sır", "Eğlence", "Duygu"],
-    "Z Kuşağı": ["Viral", "Trend", "Meme", "Sosyal Medya", "Müzik"],
-    "Astroloji": ["Burçlar", "Enerji", "Kişilik", "Gelecek", "Spiritüel"],
-    "Gurme & Mutfak": ["Yemek", "Mutfak", "Gurme", "Lezzet", "Tatlı"],
+    "Bilgi Yarışması": ["Bilgi Yarışması", "Genel Kültür", "Eğlence", "Gündem", "Türkiye", "Dünya", "Coğrafya", "Tarih", "Bilim", "Sanat", "Teknoloji"],
+    "Bluff Gecesi": ["Bluff Gecesi", "Eğlence", "Sosyal", "Kişilik", "Yaratıcılık"],
+    "Casus Avı": ["Casus Avı", "Nesne", "Yer", "Aktivite", "Pop Kültür"],
+    "Süper Çocuklar": ["Süper Çocuklar", "Oyun", "Okul", "Hayvanlar", "Süper Kahramanlar", "Eğlence"],
+    "Bilgelerin Meydanı": ["Bilgelerin Meydanı", "Tarih", "Edebiyat", "Felsefe", "Dünya", "Klasik Kültür"],
+    "Kampüs Kaosu": ["Kampüs Kaosu", "Üniversite", "Sınav", "Parti", "Ders", "Kantin"],
+    "Nostalji 90'lar": ["Nostalji 90'lar", "90lar", "2000ler", "Eski", "Atari", "Müzik", "Kaset"],
+    "Sinema & Dizi": ["Sinema & Dizi", "Netflix", "Hollywood", "Yeşilçam", "Dizi", "Film", "Oscars"],
+    "Kız Gecesi": ["Kız Gecesi", "Gıybet", "Moda", "Aşk", "Kariyer", "Dostluk", "Makyaj"],
+    "Ben Hiç...": ["Ben Hiç...", "İtiraf", "Sır", "Eğlence", "Duygu"],
+    "Z Kuşağı": ["Z Kuşağı", "Viral", "Trend", "Meme", "Sosyal Medya", "Müzik"],
+    "Astroloji": ["Astroloji", "Burçlar", "Enerji", "Kişilik", "Gelecek", "Spiritüel"],
+    "Gurme & Mutfak": ["Gurme & Mutfak", "Yemek", "Mutfak", "Gurme", "Lezzet", "Tatlı"],
   };
 
   const effectiveMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "SPY" = 
@@ -92,54 +92,55 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
   const targetCategories = baseCategory ? themeMap[baseCategory] : null;
 
   async function findCandidates(idsToExclude: string[], limitToUnseen: boolean) {
+    const filterConditions = {
+      isActive: true,
+      gameMode: effectiveMode,
+      ...(spiceLevel ? { difficulty: spiceLevel } : {}),
+      ...(limitToUnseen && idsToExclude.length ? { id: { notIn: idsToExclude } } : {}),
+      ...(effectiveMode === "SPY" ? { NOT: { correct: null } } : {}),
+      ...(effectiveMode === "QUIZ" ? { NOT: { options: { equals: [] } } } : {}),
+      ...(ageGroup ? { OR: [{ ageGroup: ageGroup as any }, { ageGroup: null }] } : {}),
+    };
+
     // 0. ÖNCELİKLİ: Odaya Özel Soru (Yapay Zeka tarafından o an üretilenler)
     if (roomId) {
       const roomCandidates = await tx.question.findMany({
-        where: {
-          roomId,
-          isActive: true,
-          gameMode: effectiveMode,
-          ...(spiceLevel ? { difficulty: spiceLevel } : {}),
-          ...(limitToUnseen && idsToExclude.length ? { id: { notIn: idsToExclude } } : {}),
-          ...(effectiveMode === "SPY" ? { NOT: { correct: null } } : {}),
-          ...(effectiveMode === "QUIZ" ? { NOT: { options: { equals: [] } } } : {})
-        },
+        where: { roomId, ...filterConditions },
         select: { id: true },
       });
       if (roomCandidates.length > 0) return roomCandidates;
     }
 
-    // 1. ADIM: Tema Eşleşen Sorular
+    // 1. ADIM: Tam Kategori Eşleşmesi (En Keskin Sonuç)
+    if (baseCategory) {
+      const exactCandidates = await tx.question.findMany({
+        where: { category: baseCategory, ...filterConditions },
+        select: { id: true },
+      });
+      if (exactCandidates.length > 0) return exactCandidates;
+    }
+
+    // 2. ADIM: Tema Etiketleri (Genişletilmiş Havuz)
     if (targetCategories) {
       const themeCandidates = await tx.question.findMany({
-        where: {
-          isActive: true,
-          gameMode: effectiveMode,
+        where: { 
           category: { in: targetCategories },
-          ...(spiceLevel ? { difficulty: spiceLevel } : {}),
-          ...(effectiveMode === "SPY" ? { NOT: { correct: null } } : {}),
-          ...(effectiveMode === "QUIZ" ? { NOT: { options: { equals: [] } } } : {}),
-          ...(ageGroup ? { OR: [{ ageGroup: ageGroup as any }, { ageGroup: null }] } : {}),
-          ...(limitToUnseen && idsToExclude.length ? { id: { notIn: idsToExclude } } : {}),
+          ...filterConditions 
         },
         select: { id: true },
       });
       if (themeCandidates.length > 0) return themeCandidates;
     }
 
-    // 2. ADIM: Genel Havuz
-    return tx.question.findMany({
-      where: {
-        isActive: true,
-        gameMode: effectiveMode,
-        ...(spiceLevel ? { difficulty: spiceLevel } : {}),
-        ...(ageGroup ? { OR: [{ ageGroup: ageGroup as any }, { ageGroup: null }] } : {}),
-        ...(limitToUnseen && idsToExclude.length ? { id: { notIn: idsToExclude } } : {}),
-        ...(effectiveMode === "SPY" ? { NOT: { correct: null } } : {}),
-        ...(effectiveMode === "QUIZ" ? { NOT: { options: { equals: [] } } } : {})
-      },
-      select: { id: true },
-    });
+    // 3. ADIM: Genel Havuz (Sadece SOCIAL modunda ve son çare olarak)
+    if (effectiveMode === "SOCIAL") {
+      return tx.question.findMany({
+        where: filterConditions,
+        select: { id: true },
+      });
+    }
+
+    return [];
   }
 
   // Önce görülmemiş soruları ara

@@ -8,14 +8,21 @@
 
 ## 2026-04-22 — Gemini
 
-- **1.000 Soru Hedefi Tamamlandı:** Mirros'un içerik kütüphanesi 20 farklı kategoride toplamda 1.000 soru barajına ulaştırıldı. Her kategori için 50'şer adet yüksek kaliteli, Türk kültürüne ve modern trendlere (Z Kuşağı, 90lar Nostalji, vb.) uygun soru seti hazırlandı.
-- **Veri Havuzu (Data Pool) Oluşturuldu:** `data/pool/` dizini altında 20 adet JSON dosyası oluşturularak içerikler standartlaştırıldı.
-- **Veritabanı İçe Aktarımı (Database Import):** Hazırlanan 1.000 yeni soru, `import-pool.ts` scripti kullanılarak Neon Tech veritabanına başarıyla aktarıldı. Toplam soru sayısı 1.500+ seviyesine ulaştı.
-- **SPY Modu Stabilitesi:** Tüm yeni içeriklerde SPY modu için `correct` (Spy Subject) alanı zorunlu tutularak 'null' veri hatası kalıcı olarak önlendi.
+- **Yapay Zeka "Sıfır Tekrar" Sistemi:** `pickQuestion` mantığı tamamen yenilenerek "görülmemiş soru" önceliği %100'e çıkarıldı. Eğer bir kategoride tüm sorular bittiyse, sistem otomatik ve senkron olarak Gemini AI'ı tetikleyip 3-5 saniye içinde taze sorular üretir.
+- **Her Oyuna Özel Kişiselleştirme:** Artık her oyun başlangıcında (`startGame`), oyuncu isimleri ve geçmiş cevap hafızası kullanılarak o odaya özel 20 adet taze soru üretilmektedir.
+- **Proaktif Havuz Bakımı:** `/api/admin/maintenance/refill` endpoint'i üzerinden tüm kategorilerin soru sayıları takip edilerek 30'un altına düşenler otomatik olarak doldurulmaktadır.
+- **Lobi UI Güncellemesi:** Oyunu başlatırken "Yapay Zeka Taze Sorular Hazırlıyor..." göstergesi eklenerek AI entegrasyonu görünür kılındı.
+- **1.000 Soru Hedefi Tamamlandı:** Mirros'un içerik kütüphanesi 20 farklı kategoride toplamda 1.000 soru barajına ulaştırıldı. Her kategori için 50'şer adet yüksek kaliteli soru seti hazırlandı ve veritabanına aktarıldı.
 
 ---
 
-## 2026-04-22 — Gemini\n\n- **Canlıya Çıkış (Deployment) Fixi:** CreateRoom.tsx içerisinde tanımlanan yeni viral şablon kategorilerinde (Buz Kıran, Sinema vs) kullanılan Coffee ve Tv ikonları lucide-react üzerinden import edilmediği için Vercel üzerinde Next.js build hatası alınıyordu. İlgili eksik importlar eklenerek üretim yapılandırması (build) hatasız hale getirildi.\n- **Kategori Senkronizasyonu Kontrolü:** Oyun kategorilerinin UI (CreateRoom.tsx) ile Backend (game.service.ts) arasındaki eşleşmeleri (	hemeMap üzerinden) doğrulandı. Seçilen kategoriye ve moda (SOCIAL, EXPOSE, vb.) uygun soruların sorunsuz çağrıldığı teyit edildi.\n\n---\n\n
+## 2026-04-22 — Gemini
+
+- **Canlıya Çıkış (Deployment) Fixi:** CreateRoom.tsx içerisinde tanımlanan yeni viral şablon kategorilerinde (Buz Kıran, Sinema vs) kullanılan Coffee ve Tv ikonları lucide-react üzerinden import edilmediği için Vercel üzerinde Next.js build hatası alınıyordu. İlgili eksik importlar eklenerek üretim yapılandırması (build) hatasız hale getirildi.
+- **Kategori Senkronizasyonu Kontrolü:** Oyun kategorilerinin UI (CreateRoom.tsx) ile Backend (game.service.ts) arasındaki eşleşmeleri (	hemeMap üzerinden) doğrulandı. Seçilen kategoriye ve moda (SOCIAL, EXPOSE, vb.) uygun soruların sorunsuz çağrıldığı teyit edildi.
+
+---
+
 ## 2026-04-21 — Gemini
 
   - **Ultimate Kategori Kütüphanesi:** Şablon sayısı **20'ye** çıkarıldı (`Ben Hiç...`, `Z Kuşağı`, `Astroloji`, `Gurme & Mutfak` eklendi).
