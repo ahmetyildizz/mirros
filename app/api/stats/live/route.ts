@@ -13,6 +13,10 @@ export async function GET() {
       },
     });
 
+    const dailyAnswersCount = await db.dailyAnswer.count();
+    const roundAnswersCount = await db.roundAnswer.count();
+    const totalAnswersCount = dailyAnswersCount + roundAnswersCount;
+
     const categories = await db.room.groupBy({
       by: ["category"],
       where: { status: "ACTIVE" },
@@ -29,6 +33,7 @@ export async function GET() {
     return NextResponse.json({
       activeRooms: activeRoomsCount,
       activePlayers: activeParticipantsCount,
+      totalAnswers: totalAnswersCount,
       categoryDistribution: categories.map(c => ({
         name: c.category || "Genel",
         count: c._count.id
