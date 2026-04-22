@@ -12,7 +12,8 @@ import {
   Star,
   Diamond,
   Fingerprint,
-  Cloud
+  Cloud,
+  Edit2
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { MIRROS_AVATARS } from "@/lib/constants/avatars";
@@ -39,16 +40,14 @@ export function ProfileModal({ isOpen, onClose, user, onUpdate }: ProfileModalPr
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(user.avatarUrl);
 
-  const handleSave = async () => {
-    const data: any = {};
-    if (newName.trim() && newName !== user.username) data.username = newName;
-    if (selectedAvatar !== user.avatarUrl) data.avatarUrl = selectedAvatar;
+  const hasChanges = (newName.trim() !== user.username && newName.trim().length >= 3) || (selectedAvatar !== user.avatarUrl);
 
-    if (Object.keys(data).length === 0) {
-      setIsEditing(false);
-      setIsSelectingAvatar(false);
-      return;
-    }
+  const handleSave = async () => {
+    if (!hasChanges) return;
+
+    const data: any = {};
+    if (newName.trim() !== user.username) data.username = newName;
+    if (selectedAvatar !== user.avatarUrl) data.avatarUrl = selectedAvatar;
 
     setLoading(true);
     try {
@@ -64,7 +63,7 @@ export function ProfileModal({ isOpen, onClose, user, onUpdate }: ProfileModalPr
 
   const handleAvatarSelect = (url: string) => {
     setSelectedAvatar(url);
-    setIsSelectingAvatar(false);
+    // Don't close immediately so user can see it selected
   };
 
   const handleLogout = async () => {
@@ -158,14 +157,14 @@ export function ProfileModal({ isOpen, onClose, user, onUpdate }: ProfileModalPr
                     >
                       <div className="flex flex-col gap-3">
                          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest text-center italic">Mirros Personanı Seç</p>
-                         <div className="flex justify-center gap-3 py-2 px-1">
+                         <div className="grid grid-cols-5 gap-3 py-2 px-1">
                             {MIRROS_AVATARS.map((avatar) => (
                                <motion.div
                                  key={avatar.id}
                                  whileHover={{ scale: 1.1, y: -5 }}
                                  whileTap={{ scale: 0.9 }}
                                  onClick={() => handleAvatarSelect(avatar.url)}
-                                 className={`w-14 h-14 rounded-2xl bg-white/5 border-2 cursor-pointer transition-all overflow-hidden p-1 ${selectedAvatar === avatar.url ? 'border-accent shadow-[0_0_15px_var(--accent-glow)]' : 'border-white/5'}`}
+                                 className={`w-full aspect-square rounded-2xl bg-white/5 border-2 cursor-pointer transition-all overflow-hidden p-1 ${selectedAvatar === avatar.url ? 'border-accent shadow-[0_0_15px_var(--accent-glow)]' : 'border-white/5'}`}
                                >
                                   <img src={avatar.url} alt={avatar.name} className="w-full h-full object-cover rounded-xl" title={avatar.name} />
                                </motion.div>
@@ -178,67 +177,53 @@ export function ProfileModal({ isOpen, onClose, user, onUpdate }: ProfileModalPr
 
                 {/* Info & Name Edit */}
                 <div className="text-center w-full space-y-3 mb-10">
-                  {isEditing ? (
-                    <motion.div 
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center gap-4"
-                    >
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="relative w-full">
                       <input 
-                        className="w-full bg-white/[0.03] border-2 border-white/10 rounded-2xl px-6 py-4 text-center text-xl font-black text-white outline-none focus:border-accent/40 focus:bg-white/[0.05] transition-all transition-duration-500"
+                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-center text-xl font-black text-white outline-none focus:border-accent/40 focus:bg-white/[0.05] transition-all"
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
-                        autoFocus
                         maxLength={20}
                         placeholder="İsim girin..."
                       />
-                      <div className="flex gap-2 w-full">
-                        <button 
-                          onClick={handleSave}
-                          disabled={loading}
-                          className="flex-1 h-14 bg-accent text-black rounded-2xl font-black text-xs tracking-widest flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_var(--accent-glow)]"
-                        >
-                          {loading ? <RefreshCcw className="animate-spin" size={16} /> : <Check size={18} strokeWidth={3} />} ONAYLA
-                        </button>
-                        <button 
-                          onClick={() => setIsEditing(false)}
-                          className="px-6 h-14 bg-white/5 text-slate-400 rounded-2xl font-black text-xs tracking-widest hover:bg-white/10 transition-colors"
-                        >
-                          İPTAL
-                        </button>
-                      </div>
-                    </motion.div>
-                  ) : (
-                    <>
-                      <motion.div
-                        layoutId="profile-name"
-                        onClick={() => setIsEditing(true)}
-                        className="inline-flex items-center gap-3 px-4 py-1 rounded-full hover:bg-white/5 transition-colors cursor-pointer group"
-                      >
-                         <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">
-                           {user.username}
-                         </h2>
-                         <button className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Star size={14} className="text-amber-500 fill-amber-500" />
-                         </button>
-                      </motion.div>
-                      
-                      <div className="flex items-center justify-center gap-3">
-                         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 border border-accent/20">
-                            <Diamond size={10} className="text-accent fill-accent" />
-                            <span className="text-[10px] font-black text-accent uppercase tracking-widest italic">
-                              {user.provider === "GUEST" ? "GUEST" : "ELİTE ÜYE"}
-                            </span>
-                         </div>
-                      </div>
-                    </>
-                  )}
+                      <Edit2 size={14} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
+                    </div>
+                    
+                    <div className="flex items-center justify-center gap-3">
+                       <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 shadow-[0_0_15px_rgba(var(--accent-rgb),0.1)]">
+                          <Diamond size={10} className="text-accent fill-accent" />
+                          <span className="text-[10px] font-black text-accent uppercase tracking-widest italic">
+                            {user.provider === "GUEST" ? "GUEST" : "ELİTE ÜYE"}
+                          </span>
+                       </div>
+                    </div>
+                  </div>
                   {error && (
                     <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-400 text-[10px] font-black uppercase tracking-widest">
                        {error}
                     </motion.p>
                   )}
                 </div>
+
+                {/* Save Action Banner (ONLY SHOW IF MODIFIED) */}
+                <AnimatePresence>
+                   {hasChanges && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 5 }}
+                        className="w-full mb-8 pt-2"
+                      >
+                         <button 
+                            onClick={handleSave}
+                            disabled={loading}
+                            className="w-full h-14 bg-accent text-black rounded-2xl font-black text-xs tracking-widest flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(var(--accent-rgb),0.4)]"
+                         >
+                            {loading ? <RefreshCcw className="animate-spin" size={16} /> : <Check size={20} strokeWidth={3} />} DEĞİŞİKLİKLERİ KAYDET
+                         </button>
+                      </motion.div>
+                   )}
+                </AnimatePresence>
 
                 {/* Account Benefits Section */}
                 <div className="w-full space-y-4 mb-10">
