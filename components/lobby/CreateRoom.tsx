@@ -21,7 +21,9 @@ import {
   MessageSquare,
   Gamepad2,
   MoonStar,
-  Utensils
+  Utensils,
+  Coffee,
+  Tv
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGameStore } from "@/store/game.store";
