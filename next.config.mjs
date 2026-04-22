@@ -16,7 +16,7 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Build-Version',
-            value: "0.8.0-PREMIUM-FINISH",
+            value: "0.9.0-DEADLOCK-FIX",
           },
         ],
       },
@@ -24,6 +24,9 @@ const nextConfig = {
   },
 };
 
+export default nextConfig;
+
+/*
 export default withSentryConfig(nextConfig, {
   org: "noyan-pi",
   project: "javascript-nextjsmirros",
@@ -33,3 +36,4 @@ export default withSentryConfig(nextConfig, {
   disableLogger: true,
   automaticVercelMonitors: true,
 });
+*/
