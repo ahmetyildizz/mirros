@@ -187,7 +187,7 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
             className="flex flex-col gap-6"
           >
             {/* Filter Tabs */}
-            <div className="flex items-center gap-1.5 p-1 bg-white/[0.03] border border-white/5 rounded-2xl w-fit overflow-x-auto no-scrollbar">
+            <div className="flex items-center gap-1.5 p-1 bg-white/[0.03] border border-white/5 rounded-2xl w-full overflow-x-auto no-scrollbar">
               {TABS.map((tab) => (
                 <button
                   key={tab.id}
