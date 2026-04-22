@@ -16,7 +16,7 @@ export async function GET() {
     });
 
     const dailyAnswersCount = await db.dailyAnswer.count();
-    const roundAnswersCount = await db.roundAnswer.count();
+    const roundAnswersCount = await db.answer.count();
     const totalAnswersCount = dailyAnswersCount + roundAnswersCount;
 
     const categories = await db.room.groupBy({
