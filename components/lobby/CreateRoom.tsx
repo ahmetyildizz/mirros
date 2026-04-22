@@ -34,7 +34,7 @@ interface Props {
   onStepChange?: (step: "template" | "config") => void;
 }
 
-type GameMode = "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF";
+type GameMode = "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY";
 type AgeGroup = "CHILD" | "ADULT" | "WISE";
 
 interface Template {

@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 import { pusherServer, safeTrigger } from "@/lib/pusher/server";
 import { createAuditLog } from "@/lib/audit";
 import { generateAndSaveQuestionsForRoom, refillGlobalPool } from "@/lib/services/ai.service";
@@ -104,7 +105,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         ...(effectiveMode === "QUIZ" ? {
           NOT: [
             { options: { equals: [] } },
-            { options: { equals: null } }
+            { options: { equals: Prisma.AnyNull } }
           ]
         } : {})
       },
@@ -128,7 +129,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         ...(effectiveMode === "EXPOSE" || effectiveMode === "SPY" ? {} : { 
           NOT: [
             { options: { equals: [] } },
-            { options: { equals: null } }
+            { options: { equals: Prisma.AnyNull } }
           ]
         }),
         ...(ageGroup ? {
@@ -155,7 +156,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         ...(effectiveMode === "QUIZ" ? {
           NOT: [
             { options: { equals: [] } },
-            { options: { equals: null } }
+            { options: { equals: Prisma.AnyNull } }
           ]
         } : {})
       },
@@ -178,7 +179,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         ...(effectiveMode === "QUIZ" ? {
           NOT: [
             { options: { equals: [] } },
-            { options: { equals: null } }
+            { options: { equals: Prisma.AnyNull } }
           ]
         } : {})
       },
@@ -205,7 +206,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         ...(effectiveMode === "QUIZ" ? {
           NOT: [
             { options: { equals: [] } },
-            { options: { equals: null } }
+            { options: { equals: Prisma.AnyNull } }
           ]
         } : {})
       },
@@ -223,7 +224,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         ...(effectiveMode === "QUIZ" ? {
           NOT: [
             { options: { equals: [] } },
-            { options: { equals: null } }
+            { options: { equals: Prisma.AnyNull } }
           ]
         } : {})
       },

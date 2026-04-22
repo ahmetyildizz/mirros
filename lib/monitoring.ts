@@ -12,7 +12,7 @@ export function captureGameError(error: unknown, context: GameContext, label?: s
   console.error(`[${label ?? "game-error"}]`, context, error);
   Sentry.withScope((scope) => {
     scope.setTag("game_mode", context.gameMode ?? "unknown");
-    scope.setContext("game", context);
+    scope.setContext("game", context as Record<string, unknown>);
     if (context.userId) scope.setUser({ id: context.userId });
     Sentry.captureException(error);
   });
