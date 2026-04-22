@@ -162,12 +162,12 @@ export async function generateAndSaveQuestionsForRoom(
   ageGroup:    "CHILD" | "ADULT" | "WISE" | null,
   playerNames: string[],
   spiceLevel:  "EASY" | "MEDIUM" | "HARD" = "MEDIUM",
-  answerMemory?: string   // Önceki oyunlardaki cevaplar — kişiselleştirme için
+  answerMemory?: string,   // Önceki oyunlardaki cevaplar — kişiselleştirme için
+  count = 15               // Üretilecek soru sayısı
 ): Promise<number> {
   if (!API_KEY) return 0;
 
   const cat   = category ?? "Genel";
-  const count = 12;
 
   let questions: AIQuestion[] = [];
 
@@ -188,6 +188,8 @@ export async function generateAndSaveQuestionsForRoom(
     if (!q.text || q.text.length < 5) continue;
     // QUIZ modunda şık zorunluluğu
     if (gameMode === "QUIZ" && (!q.options || q.options.length < 2)) continue;
+    // SPY modunda casus konusu zorunluluğu
+    if (gameMode === "SPY" && (!q.correct || q.correct.length < 2)) continue;
     try {
       await db.question.create({
         data: {

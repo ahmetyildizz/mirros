@@ -48,10 +48,13 @@ export async function GET(
   let displayQuestionText = currentRound.question.text;
   if (game.room.gameMode === "SPY" && currentRound.metadata) {
     const meta = currentRound.metadata as any;
+    const spySubject = meta?.spySubject || "Konu belirlenemedi";
+    const citizenSubject = meta?.citizenSubject || "Konu belirlenemedi";
+
     if (user.id === currentRound.spyId) {
-      displayQuestionText = `SEN CASUSSUN! Senin gizli konun: ${meta.spySubject}`;
+      displayQuestionText = `SEN CASUSSUN! Senin gizli konun: ${spySubject}`;
     } else {
-      displayQuestionText = `Sen Vatandaşsın. Ortak konunuz: ${meta.citizenSubject}`;
+      displayQuestionText = `Sen Vatandaşsın. Ortak konunuz: ${citizenSubject}`;
     }
   }
 

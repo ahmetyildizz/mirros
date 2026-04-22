@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-04-22 — Gemini
+
+- **1.000 Soru Hedefi Tamamlandı:** Mirros'un içerik kütüphanesi 20 farklı kategoride toplamda 1.000 soru barajına ulaştırıldı. Her kategori için 50'şer adet yüksek kaliteli, Türk kültürüne ve modern trendlere (Z Kuşağı, 90lar Nostalji, vb.) uygun soru seti hazırlandı.
+- **Veri Havuzu (Data Pool) Oluşturuldu:** `data/pool/` dizini altında 20 adet JSON dosyası oluşturularak içerikler standartlaştırıldı.
+- **Veritabanı İçe Aktarımı (Database Import):** Hazırlanan 1.000 yeni soru, `import-pool.ts` scripti kullanılarak Neon Tech veritabanına başarıyla aktarıldı. Toplam soru sayısı 1.500+ seviyesine ulaştı.
+- **SPY Modu Stabilitesi:** Tüm yeni içeriklerde SPY modu için `correct` (Spy Subject) alanı zorunlu tutularak 'null' veri hatası kalıcı olarak önlendi.
+
+---
+
 ## 2026-04-22 — Gemini\n\n- **Canlıya Çıkış (Deployment) Fixi:** CreateRoom.tsx içerisinde tanımlanan yeni viral şablon kategorilerinde (Buz Kıran, Sinema vs) kullanılan Coffee ve Tv ikonları lucide-react üzerinden import edilmediği için Vercel üzerinde Next.js build hatası alınıyordu. İlgili eksik importlar eklenerek üretim yapılandırması (build) hatasız hale getirildi.\n- **Kategori Senkronizasyonu Kontrolü:** Oyun kategorilerinin UI (CreateRoom.tsx) ile Backend (game.service.ts) arasındaki eşleşmeleri (	hemeMap üzerinden) doğrulandı. Seçilen kategoriye ve moda (SOCIAL, EXPOSE, vb.) uygun soruların sorunsuz çağrıldığı teyit edildi.\n\n---\n\n
 ## 2026-04-21 — Gemini
 

@@ -422,9 +422,17 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
                   )}
                 >
                   {starting ? (
-                    <>
-                      <Loader2 className="animate-spin" size={20} /> BAŞLATILIYOR...
-                    </>
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex items-center gap-3"
+                    >
+                      <Sparkles className="animate-pulse text-yellow-400" size={18} />
+                      <span className="flex flex-col items-start leading-tight">
+                        <span className="text-[11px] font-black">YAPAY ZEKA</span>
+                        <span className="text-[9px] font-bold opacity-60">TAZE SORULAR HAZIRLIYOR...</span>
+                      </span>
+                    </motion.div>
                   ) : (
                     <>OYUNU BAŞLAT <ArrowRight size={18} /></>
                   )}

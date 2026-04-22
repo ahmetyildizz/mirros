@@ -6,7 +6,7 @@ import { generateAndSaveQuestionsForRoom, refillGlobalPool } from "@/lib/service
 import { captureApiError } from "@/lib/monitoring";
 
 // Havuzda bu sayının altına düşünce AI ile doldur
-const LOW_WATER_MARK = 5;
+const LOW_WATER_MARK = 20;
 
 const SOCIAL_ROUNDS = 10;
 const QUIZ_ROUNDS   = 10;
@@ -86,158 +86,77 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     "Gurme & Mutfak": ["Yemek", "Mutfak", "Gurme", "Lezzet", "Tatlı"],
   };
 
-  // BLUFF ve SPY modları kendi özel sorularına veya QUIZ sorularına yönelebilir
   const effectiveMode: "SOCIAL" | "QUIZ" | "EXPOSE" | "SPY" = 
     gameMode === "BLUFF" ? "QUIZ" : gameMode;
 
   const targetCategories = baseCategory ? themeMap[baseCategory] : null;
 
-  // 0. ÖNCELİKLİ: Varsa Odaya Özel Soru
-  if (roomId) {
-    const roomCandidates = await tx.question.findMany({
-      where: {
-        roomId,
-        isActive: true,
-        gameMode: effectiveMode,
-        ...(spiceLevel ? { difficulty: spiceLevel } : {}),
-        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
-        // QUIZ/BLUFF için şık zorunluluğu — Step 0 (Room specific)
-        ...(effectiveMode === "QUIZ" ? {
-          NOT: [
-            { options: { equals: [] } },
-            { options: { equals: Prisma.AnyNull } }
-          ]
-        } : {})
-      },
-      select: { id: true },
-    });
-    if (roomCandidates.length > 0) {
-      const pick = roomCandidates[Math.floor(Math.random() * roomCandidates.length)];
-      return tx.question.findUniqueOrThrow({ where: { id: pick.id } });
+  async function findCandidates(idsToExclude: string[], limitToUnseen: boolean) {
+    // 0. ÖNCELİKLİ: Odaya Özel Soru (Yapay Zeka tarafından o an üretilenler)
+    if (roomId) {
+      const roomCandidates = await tx.question.findMany({
+        where: {
+          roomId,
+          isActive: true,
+          gameMode: effectiveMode,
+          ...(spiceLevel ? { difficulty: spiceLevel } : {}),
+          ...(limitToUnseen && idsToExclude.length ? { id: { notIn: idsToExclude } } : {}),
+          ...(effectiveMode === "SPY" ? { NOT: { correct: null } } : {}),
+          ...(effectiveMode === "QUIZ" ? { NOT: { options: { equals: [] } } } : {})
+        },
+        select: { id: true },
+      });
+      if (roomCandidates.length > 0) return roomCandidates;
     }
-  }
 
-  // 1. ADIM: Tema Eşleşen VE ŞIKLI (Multiple Choice) Sorular
-  let candidates: { id: string }[] = [];
-  if (targetCategories) {
-    candidates = await tx.question.findMany({
-      where: {
-        isActive: true,
-        gameMode: effectiveMode,
-        category: { in: targetCategories },
-        ...(spiceLevel ? { difficulty: spiceLevel } : {}),
-        ...(effectiveMode === "EXPOSE" || effectiveMode === "SPY" ? {} : { 
-          NOT: [
-            { options: { equals: [] } },
-            { options: { equals: Prisma.AnyNull } }
-          ]
-        }),
-        ...(ageGroup ? {
-          OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
-        } : {}),
-        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
-      },
-      select: { id: true },
-    });
-  }
-
-  // 2. ADIM: Havuz boşsa (hiç şıklı soru yoksa veya bitmişse): Tüm Tema Soruları
-  if (candidates.length === 0 && targetCategories) {
-    candidates = await tx.question.findMany({
-      where: {
-        isActive: true,
-        gameMode: effectiveMode,
-        category: { in: targetCategories },
-        ...(ageGroup ? {
-          OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
-        } : {}),
-        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
-        // Fallbacklerde de QUIZ/BLUFF için şık zorunlu kalsın
-        ...(effectiveMode === "QUIZ" ? {
-          NOT: [
-            { options: { equals: [] } },
-            { options: { equals: Prisma.AnyNull } }
-          ]
-        } : {})
-      },
-      select: { id: true },
-    });
-  }
-
-  // 3. ADIM: Tema soruları var ama hepsi görüldü → excludeIds gevşet, tema koru
-  // (alakasız soru göstermekten tema tekrarı daha iyi)
-  if (candidates.length === 0 && targetCategories) {
-    candidates = await tx.question.findMany({
-      where: {
-        isActive: true,
-        gameMode: effectiveMode,
-        category: { in: targetCategories },
-        ...(ageGroup ? {
-          OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
-        } : {}),
-        // Fallbacklerde de QUIZ/BLUFF için şık zorunlu kalsın
-        ...(effectiveMode === "QUIZ" ? {
-          NOT: [
-            { options: { equals: [] } },
-            { options: { equals: Prisma.AnyNull } }
-          ]
-        } : {})
-      },
-      select: { id: true },
-    });
-    // Havuz doluyken AI tetikle (arka planda)
-    if (candidates.length > 0 && baseCategory) {
-      refillGlobalPool(effectiveMode, baseCategory, 30).catch(() => {});
+    // 1. ADIM: Tema Eşleşen Sorular
+    if (targetCategories) {
+      const themeCandidates = await tx.question.findMany({
+        where: {
+          isActive: true,
+          gameMode: effectiveMode,
+          category: { in: targetCategories },
+          ...(spiceLevel ? { difficulty: spiceLevel } : {}),
+          ...(effectiveMode === "SPY" ? { NOT: { correct: null } } : {}),
+          ...(effectiveMode === "QUIZ" ? { NOT: { options: { equals: [] } } } : {}),
+          ...(ageGroup ? { OR: [{ ageGroup: ageGroup as any }, { ageGroup: null }] } : {}),
+          ...(limitToUnseen && idsToExclude.length ? { id: { notIn: idsToExclude } } : {}),
+        },
+        select: { id: true },
+      });
+      if (themeCandidates.length > 0) return themeCandidates;
     }
-  }
 
-  // 4. ADIM: Tema yok veya temada hiç soru yok → genel havuzdan seç (excludeIds dahil)
-  if (candidates.length === 0) {
-    candidates = await tx.question.findMany({
+    // 2. ADIM: Genel Havuz
+    return tx.question.findMany({
       where: {
         isActive: true,
         gameMode: effectiveMode,
         ...(spiceLevel ? { difficulty: spiceLevel } : {}),
-        ...(ageGroup ? {
-          OR: [{ ageGroup: ageGroup as "CHILD" | "ADULT" | "WISE" }, { ageGroup: null }],
-        } : {}),
-        ...(excludeIds.length ? { id: { notIn: excludeIds } } : {}),
-        // Fallbacklerde de QUIZ/BLUFF için şık zorunlu kalsın
-        ...(effectiveMode === "QUIZ" ? {
-          NOT: [
-            { options: { equals: [] } },
-            { options: { equals: Prisma.AnyNull } }
-          ]
-        } : {})
+        ...(ageGroup ? { OR: [{ ageGroup: ageGroup as any }, { ageGroup: null }] } : {}),
+        ...(limitToUnseen && idsToExclude.length ? { id: { notIn: idsToExclude } } : {}),
+        ...(effectiveMode === "SPY" ? { NOT: { correct: null } } : {}),
+        ...(effectiveMode === "QUIZ" ? { NOT: { options: { equals: [] } } } : {})
       },
       select: { id: true },
     });
   }
 
-  // 5. ADIM: Son Çare: excludeIds kısıtını da kaldır (tüm havuz)
-  if (candidates.length === 0) {
-    candidates = await tx.question.findMany({
-      where: { 
-        isActive: true, 
-        gameMode: effectiveMode,
-        // Son çare adımında bile QUIZ/BLUFF için şık zorunlu
-        ...(effectiveMode === "QUIZ" ? {
-          NOT: [
-            { options: { equals: [] } }
-          ]
-        } : {})
-      },
-      select: { id: true },
-    });
+  // Önce görülmemiş soruları ara
+  let candidates = await findCandidates(excludeIds, true);
+
+  // Görülmemiş soru yoksa AI'dan taze soru iste (Senkron - Kullanıcıyı 3-5 sn bekletebilir)
+  if (candidates.length === 0 && baseCategory) {
+    console.log(`[AI] Görülmemiş soru bitti, ${baseCategory} için taze sorular üretiliyor...`);
+    await refillGlobalPool(effectiveMode, baseCategory, 15).catch(console.error);
+    // Tekrar dene
+    candidates = await findCandidates(excludeIds, true);
   }
 
-  // 6. ADIM: TAMAMIYLA ÇIKMAZ: Herhangi bir kategoriden, herhangi bir moddan, görülmüş olsa bile getir
+  // AI da bir şey üretemediyse (veya API hatası), mecburen görülmüşlere dön (En son çare)
   if (candidates.length === 0) {
-    candidates = await tx.question.findMany({
-      where: { isActive: true },
-      select: { id: true },
-      take: 20
-    });
+    console.warn(`[Game] SIFIR TEKRAR sistemi zorlanıyor, görülmüş sorulara dönülüyor: ${baseCategory}`);
+    candidates = await findCandidates([], false);
   }
 
   if (candidates.length === 0) {
@@ -246,9 +165,8 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     throw err;
   }
 
-  // Havuz azaldığında daha agresif dolum: 30 soru üret (önceden 15'ti)
+  // Havuz azaldıysa (Background): AI'yı tetikle ama bekleme
   if (candidates.length < LOW_WATER_MARK && baseCategory) {
-    captureApiError(new Error("Soru havuzu kritik seviyede"), "pickQuestion/lowWaterMark", { gameMode: effectiveMode, category: baseCategory, count: candidates.length });
     refillGlobalPool(effectiveMode, baseCategory, 30).catch((e) =>
       console.error("[AI] refillGlobalPool arka plan hatası:", e)
     );
@@ -309,7 +227,7 @@ export async function startGame(roomId: string) {
   const recentAnswers = await db.answer.findMany({
     where:   { userId: { in: participantIds } },
     orderBy: { submittedAt: "desc" },
-    take:    20,
+    take:    30,
     include: {
       user:  { select: { username: true } },
       round: { include: { question: { select: { text: true } } } },
@@ -322,26 +240,15 @@ export async function startGame(roomId: string) {
     : undefined;
 
   // ── AI: Kişiselleştirilmiş sorular üret ──
-  // Kategori boşsa veya yeni bir kategoriyse, ilk soruyu garantilemek için bekleyelim
-  const poolCount = await db.question.count({
-    where: { 
-      isActive: true, 
-      gameMode: room.gameMode === "BLUFF" ? "QUIZ" : room.gameMode,
-      ...(room.category ? { category: { startsWith: room.category.split(":")[0] } } : {})
-    }
-  });
-
+  // Her oyun başlangıcında yapay zeka 20 adet taze ve kişiselleştirilmiş soru üretir.
   const aiPromise = generateAndSaveQuestionsForRoom(
-    roomId, room.gameMode, room.category, room.ageGroup, playerNames, baseSpiceLevel, answerMemory
+    roomId, room.gameMode, room.category, room.ageGroup, playerNames, baseSpiceLevel, answerMemory, 20
   );
 
-  if (poolCount < 5) {
-    console.log(`[AI] Havuz çok düşük (${poolCount}), ilk set için bekleniyor...`);
-    await aiPromise.catch((e) => console.error("[AI] Hazırlık hatası:", e));
-  } else {
-    // Havuzda soru varsa arka planda devam etsin
-    aiPromise.catch((e) => console.error("[AI] generateAndSaveQuestionsForRoom hatası:", e));
-  }
+  // Bu sorular odaya özel (roomId ile) kaydedilir ve pickQuestion() bunları en öncelikli olarak seçer.
+  // Sıfır tekrar ve sürekli tazelik garantisi için bu işlemi bekleyelim (senkron hazırlık)
+  console.log(`[AI] Oyun başlatılıyor, ${room.code} odası için 20 taze soru üretiliyor...`);
+  await aiPromise.catch((e) => console.error("[AI] Hazırlık hatası:", e));
 
   // Kullanıcı bazlı görülmüş soru dışlama — her oyuncu hiç aynı soruyu görmez
   const usedIds = await getSeenQuestionIds(participantIds);
