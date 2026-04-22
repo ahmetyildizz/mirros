@@ -14,6 +14,7 @@ import {
   Fingerprint,
   Cloud
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { MIRROS_AVATARS } from "@/lib/constants/avatars";
 
 interface ProfileModalProps {
@@ -24,12 +25,17 @@ interface ProfileModalProps {
     email?: string;
     avatarUrl?: string;
     provider: string;
+    providerId?: string;
   };
   onUpdate: (data: { username?: string, avatarUrl?: string }) => Promise<void>;
 }
 
 export function ProfileModal({ isOpen, onClose, user, onUpdate }: ProfileModalProps) {
   const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
+  const [newName, setNewName] = useState(user.username);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(user.avatarUrl);
 
