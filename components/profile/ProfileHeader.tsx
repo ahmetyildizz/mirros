@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { User, Edit2, ShieldCheck, Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   user: any;
@@ -92,13 +93,25 @@ export function ProfileHeader({ user, onEdit }: Props) {
             </span>
           </div>
           
-          <div className="h-2.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5 p-[1px]">
+          <div className={cn(
+            "h-2.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5 p-[1px] relative",
+            progress > 85 && "shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+          )}>
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 1.5, ease: "easeOut" }}
-              className="h-full bg-gradient-to-r from-accent/40 via-accent to-accent/40 rounded-full relative shadow-[0_0_10px_var(--accent-glow)]"
+              className={cn(
+                "h-full bg-gradient-to-r from-accent/40 via-accent to-accent/40 rounded-full relative shadow-[0_0_10px_var(--accent-glow)]",
+                progress > 85 && "animate-pulse"
+              )}
             >
+              {/* Inner animated shine */}
+              <motion.div 
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-1/2"
+              />
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
             </motion.div>
           </div>

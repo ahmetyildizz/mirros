@@ -246,8 +246,13 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
         >
           <div className="flex flex-col items-center gap-1">
             <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Davet Kodu</p>
-            <h2 className="text-6xl font-black tracking-[0.2em] text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.15)] select-all leading-tight">
+            <h2 className="text-6xl font-black tracking-[0.2em] text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] select-all leading-tight relative">
               {roomCode ?? "——"}
+              <motion.div 
+                animate={{ opacity: [0, 0.5, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute inset-0 bg-white/10 blur-xl rounded-full"
+              />
             </h2>
           </div>
 
@@ -323,26 +328,39 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
                   transition={{ delay: i * 0.05 }}
                   className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.04] border border-white/10 shadow-sm"
                 >
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-accent-2/20 flex items-center justify-center border border-white/10 shadow-[0_0_10px_rgba(168,85,247,0.1)] relative overflow-hidden">
-                    <span className="text-xl relative z-10 translate-y-[1px]">
-                      {p.avatarUrl || (p.username ?? "?")[0].toUpperCase()}
-                    </span>
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] flex items-center justify-center border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.2)] relative overflow-hidden shrink-0 group">
+                    <div className="absolute inset-0 bg-accent/5 group-hover:bg-accent/10 transition-colors" />
+                    {p.avatarUrl ? (
+                      <img 
+                        src={p.avatarUrl} 
+                        alt={p.username} 
+                        className="w-full h-full object-cover relative z-10"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <span className="text-xl font-black text-white/50 relative z-10">
+                        {(p.username ?? "?")[0].toUpperCase()}
+                      </span>
+                    )}
                     <motion.div 
                       animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.2, 1] }}
                       transition={{ duration: 3, repeat: Infinity }}
                       className="absolute inset-0 bg-accent/5" 
                     />
                   </div>
-                  <div className="flex flex-col flex-1">
+                  <div className="flex flex-col flex-1 pl-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-[13px] font-bold text-white transition-colors">{p.username}</span>
+                      <span className="text-[14px] font-black text-white transition-colors">{p.username}</span>
                       {p.username === hostName && (
-                        <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/20 text-[9px] font-black text-accent uppercase tracking-tighter">
-                          <ShieldCheck size={10} /> Host
+                        <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-accent/10 border border-accent/20 text-[8px] font-black text-accent uppercase tracking-widest">
+                          <ShieldCheck size={10} /> HOST
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] text-slate-500 font-medium">Oyuncu</span>
+                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Hazır</span>
                   </div>
                   <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
                 </motion.div>
@@ -425,12 +443,23 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
                     <motion.div 
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="flex items-center gap-3"
+                      className="flex items-center gap-4 py-1"
                     >
-                      <Sparkles className="animate-pulse text-yellow-400" size={18} />
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        className="relative"
+                      >
+                         <Sparkles className="text-yellow-400" size={24} />
+                         <motion.div 
+                           animate={{ scale: [1, 1.5, 1], opacity: [0, 0.5, 0] }}
+                           transition={{ duration: 2, repeat: Infinity }}
+                           className="absolute inset-0 bg-yellow-400/20 blur-md rounded-full"
+                         />
+                      </motion.div>
                       <span className="flex flex-col items-start leading-tight">
-                        <span className="text-[11px] font-black">YAPAY ZEKA</span>
-                        <span className="text-[9px] font-bold opacity-60">TAZE SORULAR HAZIRLIYOR...</span>
+                        <span className="text-[12px] font-black text-white italic tracking-widest">SORULAR KARALANIYOR...</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Yapay zeka zihnini okumaya geliyor</span>
                       </span>
                     </motion.div>
                   ) : (

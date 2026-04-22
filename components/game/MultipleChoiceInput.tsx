@@ -56,29 +56,59 @@ export function MultipleChoiceInput({
     const hasProgress = totalGuessers != null && totalGuessers > 0;
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="glass-card p-6 flex flex-col items-center gap-4 border-green-500/20 text-center"
+        initial={{ opacity: 0, scale: 0.9, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="glass-card-elevated p-8 flex flex-col items-center gap-6 border-green-500/20 text-center relative overflow-hidden"
       >
-        <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center text-green-500">
-          <CheckCircle2 size={24} />
+        {/* Success Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-green-500/10 blur-[40px] pointer-events-none" />
+        
+        <div className="relative">
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", damping: 12, stiffness: 200 }}
+            className="w-20 h-20 rounded-[2rem] bg-green-500/10 flex items-center justify-center text-green-500 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.1)]"
+          >
+            <CheckCircle2 size={40} strokeWidth={2.5} />
+          </motion.div>
+          <motion.div
+            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="absolute inset-0 rounded-[2rem] border-2 border-green-500/30"
+          />
         </div>
-        <p className="text-[13px] font-black text-green-400 uppercase tracking-widest">Oyun Gönderildi</p>
+
+        <div className="space-y-1">
+          <p className="text-[15px] font-black text-white uppercase tracking-[0.2em] italic">Cevabın Alındı!</p>
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Şimdi diğerlerinin hamlesini bekle...</p>
+        </div>
+
         {hasProgress && (
-          <div className="w-full flex flex-col items-center gap-2">
-            <p className="text-[11px] font-bold text-slate-400">
-              {guessCount} / {totalGuessers} kişi oy kullandı
-            </p>
-            <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+          <div className="w-full space-y-4 pt-4 border-t border-white/5">
+            <div className="flex justify-between items-center px-1">
+               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+                  <Loader2 size={12} className="animate-spin text-accent" />
+                  BEKLENENLER
+               </span>
+               <span className="text-[11px] font-black text-accent italic">
+                  {guessCount} / {totalGuessers}
+               </span>
+            </div>
+            
+            <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5 p-[1px] relative">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${Math.min(100, ((guessCount ?? 0) / totalGuessers) * 100)}%` }}
-                className="h-full bg-accent rounded-full"
-              />
+                className="h-full bg-gradient-to-r from-accent/60 via-accent to-accent/60 rounded-full relative shadow-[0_0_15px_rgba(var(--accent-rgb),0.4)]"
+              >
+                  <motion.div 
+                    animate={{ x: ["-100%", "200%"] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent w-full"
+                  />
+              </motion.div>
             </div>
-            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest animate-pulse">
-              Diğerleri bekleniyor...
-            </p>
           </div>
         )}
       </motion.div>

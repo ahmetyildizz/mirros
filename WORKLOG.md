@@ -6,6 +6,20 @@
 
 ---
 
+## 2026-04-23 — Gemini
+
+- **Premium Görsel Deneyim Revizyonu:** Uygulamanın en kritik noktaları "Juicy UI" prensipleriyle yeniden tasarlandı.
+    - **Lobby Dinamizmi:** Oda oluşturma sırasında statik beklemeler; parmak izi animasyonlu, akıcı durum metinli premium bir "HAZIRLANIYOR" ekranına dönüştürüldü.
+    - **XP & Gamification:** Seviye atlamaya yaklaşıldığında (>%85) XP çubuğunun parlaması ve ışık süzülmesi (shine effect) eklendi.
+    - **Oyun İçi Geri Bildirim:**
+        - **Score Reveal:** Tam isabet durumunda `canvas-confetti` patlamaları, Trophy ikonu ve derinlikli gölge efektleri eklendi.
+        - **Reactions:** Yüzen emojilere sinüzoidal yalpalama (wobble) ve rastgele rotasyon eklenerek daha organik bir "balon" hissi (bubble physics) verildi.
+        - **Round Indicator:** Basit noktalar yerine, pulse efektli, cam görünümlü "DNA Gem" tasarımına geçildi.
+    - **Submission UX:** Cevap gönderildiğinde beliren başarı ekranı; nabız gibi atan yeşil bir halka, spring animasyonlu onay ikonu ve şık bir ilerleme çubuğuyla zenginleştirildi.
+    - **Oda Bekleme Odası (Room Lobby):** Oda kodu görseli devleştirildi, QR kod derinlik kazandı ve oyuncu listesindeki avatarlar (resim desteği dahil) modern bir kart görünümüne kavuşturuldu.
+
+---
+
 ## 2026-04-22 — Gemini
 
 - **AI Question Engine Scaling:** Yeni Gemini API anahtarı entegre edildi. `pickQuestion` mantığı "Odaya Özel > Tam Kategori > Tema" hiyerarşisiyle %100 kategori hassasiyetine kavuşturuldu.

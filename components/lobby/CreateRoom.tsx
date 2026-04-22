@@ -198,9 +198,9 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
                     <tpl.icon className="text-white" size={20} />
                   </div>
                   
-                  <div className="flex flex-col gap-0.5 relative z-10">
+                  <div className="flex flex-col gap-1 relative z-10">
                     <h3 className="text-[15px] font-black text-white tracking-tight uppercase italic">{tpl.label}</h3>
-                    <p className="text-[10px] font-bold text-slate-500 leading-tight pr-4 line-clamp-1 group-hover:text-slate-400 transition-colors uppercase tracking-tighter">
+                    <p className="text-[11px] font-bold text-slate-500 leading-snug pr-4 line-clamp-2 group-hover:text-slate-300 transition-colors uppercase tracking-tight">
                       {tpl.desc}
                     </p>
                   </div>
@@ -403,29 +403,49 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
               </motion.div>
             )}
  
-            <button
-              onClick={() => handleCreate()}
-              disabled={loading}
-              className={cn(
-                "group relative w-full py-5 rounded-[2rem] text-[13px] tracking-[0.2em] font-black flex items-center justify-center gap-3 transition-all duration-500 overflow-hidden",
-                loading 
-                  ? "bg-white/5 text-slate-500 cursor-not-allowed" 
-                  : "bg-gradient-to-r from-accent to-fuchsia-600 text-white shadow-[0_10px_40px_-10px_rgba(168,85,247,0.5)] hover:shadow-[0_15px_50px_-5px_rgba(168,85,247,0.6)] hover:scale-[1.02] active:scale-95"
-              )}
-            >
-              {loading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-slate-500 border-t-white rounded-full animate-spin" />
-                  HAZIRLANIYOR...
-                </div>
-              ) : (
-                <>
-                  <span>ODAYI KUR</span>
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-10 transition-opacity" />
-                </>
-              )}
-            </button>
+            <div className="relative min-h-[80px] flex items-center justify-center">
+              <AnimatePresence mode="wait">
+                {loading ? (
+                  <motion.div
+                    key="loading-state"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="flex flex-col items-center gap-4 py-4"
+                  >
+                    <div className="relative">
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                        className="w-16 h-16 rounded-[1.5rem] border-2 border-accent/20 border-dashed"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                         <Fingerprint className="text-accent animate-pulse" size={24} />
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center">
+                       <span className="text-[12px] font-black text-white tracking-[0.3em] uppercase animate-pulse">Mirros Hazırlanıyor</span>
+                       <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">Sorular Karıştırılıyor...</span>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.button
+                    key="create-button"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    onClick={() => handleCreate()}
+                    className={cn(
+                      "group relative w-full py-5 rounded-[2rem] text-[13px] tracking-[0.2em] font-black flex items-center justify-center gap-3 transition-all duration-500 overflow-hidden",
+                      "bg-gradient-to-r from-accent to-fuchsia-600 text-white shadow-[0_10px_40px_-10px_rgba(168,85,247,0.5)] hover:shadow-[0_15px_50px_-5px_rgba(168,85,247,0.6)] hover:scale-[1.02] active:scale-95"
+                    )}
+                  >
+                    <span>ODAYI KUR</span>
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-10 transition-opacity" />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -70,17 +70,35 @@ export function ReactionOverlay() {
         {reactions.map((r) => (
           <motion.div
             key={r.id}
-            initial={{ y: "95vh", opacity: 0, scale: 0.6 }}
-            animate={{ y: "5vh",  opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 2.2, ease: "easeOut" }}
-            style={{ left: `${r.x}%`, position: "absolute" }}
-            className="flex flex-col items-center gap-1"
+            initial={{ y: "98vh", x: `${r.x}%`, opacity: 0, scale: 0.5, rotate: -20 }}
+            animate={{ 
+              y: "-15vh", 
+              opacity: [0, 1, 1, 0],
+              scale: [0.5, 1.2, 1, 0.8],
+              rotate: [r.id % 2 === 0 ? -10 : 10, r.id % 2 === 0 ? 10 : -10],
+              x: [`${r.x}%`, `${r.x + (r.id % 3 === 0 ? 5 : -5)}%`, `${r.x}%`]
+            }}
+            transition={{ 
+              y: { duration: 3.5, ease: "linear" },
+              opacity: { times: [0, 0.1, 0.8, 1], duration: 3.5 },
+              scale: { times: [0, 0.15, 0.5, 1], duration: 3.5 },
+              rotate: { duration: 3.5, ease: "easeInOut" },
+              x: { duration: 3.5, ease: "easeInOut" }
+            }}
+            className="fixed pointer-events-none flex flex-col items-center gap-1.5"
+            style={{ left: 0, top: 0 }}
           >
-            <div className="text-4xl drop-shadow-lg">{r.emoji}</div>
-            <div className="bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded-full text-[9px] text-white whitespace-nowrap font-bold">
-              {r.username}
+            <div className="text-5xl drop-shadow-[0_10px_20px_rgba(0,0,0,0.4)] filter saturate-[1.2]">
+              {r.emoji}
             </div>
+            <motion.div 
+               initial={{ opacity: 0, y: 5 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.2 }}
+               className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] text-white/90 whitespace-nowrap font-black uppercase tracking-widest border border-white/10 shadow-xl"
+            >
+              {r.username}
+            </motion.div>
           </motion.div>
         ))}
       </AnimatePresence>
