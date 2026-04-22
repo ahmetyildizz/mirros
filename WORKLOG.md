@@ -6,6 +6,7 @@
 
 ---
 
+## 2026-04-22 — Gemini\n\n- **Canlıya Çıkış (Deployment) Fixi:** CreateRoom.tsx içerisinde tanımlanan yeni viral şablon kategorilerinde (Buz Kıran, Sinema vs) kullanılan Coffee ve Tv ikonları lucide-react üzerinden import edilmediği için Vercel üzerinde Next.js build hatası alınıyordu. İlgili eksik importlar eklenerek üretim yapılandırması (build) hatasız hale getirildi.\n- **Kategori Senkronizasyonu Kontrolü:** Oyun kategorilerinin UI (CreateRoom.tsx) ile Backend (game.service.ts) arasındaki eşleşmeleri (	hemeMap üzerinden) doğrulandı. Seçilen kategoriye ve moda (SOCIAL, EXPOSE, vb.) uygun soruların sorunsuz çağrıldığı teyit edildi.\n\n---\n\n
 ## 2026-04-21 — Gemini
 
   - **Ultimate Kategori Kütüphanesi:** Şablon sayısı **20'ye** çıkarıldı (`Ben Hiç...`, `Z Kuşağı`, `Astroloji`, `Gurme & Mutfak` eklendi).
