@@ -2,9 +2,10 @@
 
 import { use, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Flame, Trophy, Zap, Users, Monitor } from "lucide-react";
+import { Monitor, Loader2 } from "lucide-react";
 import { useGameStore } from "@/store/game.store";
 import { useGameState, useRoomState } from "@/hooks/useGameState";
+import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -16,12 +17,45 @@ export function TvDisplay({ roomId }: Props) {
     gameId, state, question, answererId, gameMode,
     players, playerScores, lastRoundScore, lastQuizResults,
     currentRound, totalRounds, activeRoundId, guessCount, totalGuessers,
+    setTheme
   } = useGameStore();
 
   const [timeLeft, setTimeLeft] = useState(60);
+  const [loading, setLoading] = useState(!gameId);
 
   useGameState(gameId ?? "", "");
   useRoomState(roomId);
+
+  // Recovery Logic for TV Mode
+  useEffect(() => {
+    if (gameId && question) {
+      setLoading(false);
+      return;
+    }
+
+    const recover = async () => {
+      try {
+        const res = await fetch(`/api/rooms/${roomId}`);
+        const room = await res.json();
+        
+        if (room.activeGameId) {
+          const gameRes = await fetch(`/api/games/${room.activeGameId}`);
+          const gameData = await gameRes.json();
+          
+          if (gameData.gameId) {
+            useGameStore.getState().hydrate(gameData);
+            setTheme(getThemeFromRoom(room.category, gameData.gameMode || "SOCIAL"));
+          }
+        }
+      } catch (e) {
+        console.error("[TV] Recovery failed", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    recover();
+  }, [roomId, gameId, question, setTheme]);
 
   // Timer
   useEffect(() => {
@@ -51,16 +85,35 @@ export function TvDisplay({ roomId }: Props) {
     timeLeft > 10 ? "text-yellow-400" :
     "text-red-500";
 
-  if (!gameId || !question) {
+  if (loading || !gameId || !question) {
     return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-6">
-        <Monitor size={64} className="text-accent/40" />
-        <p className="text-white font-black tracking-[0.3em] text-2xl uppercase animate-pulse">
-          Mirros TV Modu
-        </p>
-        <p className="text-slate-500 text-sm uppercase tracking-widest">
-          Oyun başlaması bekleniyor…
-        </p>
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-8 relative overflow-hidden">
+        <div className="aurora-bg fixed inset-0 pointer-events-none opacity-20" />
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          className="relative z-10"
+        >
+          <Monitor size={80} className="text-accent/40" />
+        </motion.div>
+        
+        <div className="relative z-10 text-center space-y-4">
+          <h2 className="text-white font-black tracking-[0.4em] text-3xl uppercase">
+            Mirros <span className="text-accent">TV</span>
+          </h2>
+          <div className="flex flex-col items-center gap-2">
+            <Loader2 className="animate-spin text-accent/60" size={24} />
+            <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] animate-pulse">
+              {loading ? "Oyun Verileri Senkronize Ediliyor..." : "Oyunun Başlaması Bekleniyor..."}
+            </p>
+          </div>
+        </div>
+
+        <div className="absolute bottom-12 left-0 right-0 text-center">
+          <p className="text-white/10 text-[8px] font-black uppercase tracking-[0.5em]">
+            mirros.vercel.app — Social Gaming Framework
+          </p>
+        </div>
       </div>
     );
   }

@@ -223,8 +223,7 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
         // Son çare adımında bile QUIZ/BLUFF için şık zorunlu
         ...(effectiveMode === "QUIZ" ? {
           NOT: [
-            { options: { equals: [] } },
-            { options: { equals: Prisma.AnyNull } }
+            { options: { equals: [] } }
           ]
         } : {})
       },
@@ -232,8 +231,17 @@ async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "QUIZ" | 
     });
   }
 
+  // 6. ADIM: TAMAMIYLA ÇIKMAZ: Herhangi bir kategoriden, herhangi bir moddan, görülmüş olsa bile getir
   if (candidates.length === 0) {
-    const err = new Error("Soru havuzu gerçekten boş");
+    candidates = await tx.question.findMany({
+      where: { isActive: true },
+      select: { id: true },
+      take: 20
+    });
+  }
+
+  if (candidates.length === 0) {
+    const err = new Error("Soru havuzu tamamen boş. Lütfen yöneticiye bildirin.");
     captureApiError(err, "pickQuestion", { gameMode: effectiveMode, category: baseCategory, excludeCount: excludeIds.length });
     throw err;
   }
@@ -313,10 +321,27 @@ export async function startGame(roomId: string) {
         .join("\n")
     : undefined;
 
-  // ── AI: Kişiselleştirilmiş sorular üret (arka planda) ──
-  generateAndSaveQuestionsForRoom(
+  // ── AI: Kişiselleştirilmiş sorular üret ──
+  // Kategori boşsa veya yeni bir kategoriyse, ilk soruyu garantilemek için bekleyelim
+  const poolCount = await db.question.count({
+    where: { 
+      isActive: true, 
+      gameMode: room.gameMode === "BLUFF" ? "QUIZ" : room.gameMode,
+      ...(room.category ? { category: { startsWith: room.category.split(":")[0] } } : {})
+    }
+  });
+
+  const aiPromise = generateAndSaveQuestionsForRoom(
     roomId, room.gameMode, room.category, room.ageGroup, playerNames, baseSpiceLevel, answerMemory
-  ).catch((e) => console.error("[AI] generateAndSaveQuestionsForRoom hatası:", e));
+  );
+
+  if (poolCount < 5) {
+    console.log(`[AI] Havuz çok düşük (${poolCount}), ilk set için bekleniyor...`);
+    await aiPromise.catch((e) => console.error("[AI] Hazırlık hatası:", e));
+  } else {
+    // Havuzda soru varsa arka planda devam etsin
+    aiPromise.catch((e) => console.error("[AI] generateAndSaveQuestionsForRoom hatası:", e));
+  }
 
   // Kullanıcı bazlı görülmüş soru dışlama — her oyuncu hiç aynı soruyu görmez
   const usedIds = await getSeenQuestionIds(participantIds);
