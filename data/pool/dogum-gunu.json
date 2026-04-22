@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kendi doğum gününde en çok hangi detayla uğraşıyor olurdu?",
+"options": ["Müzik listesini ayarlamakla", "Geleceklerin saatini takip etmekle", "Fotoğraf köşesini düşünmekle", "Pastanın nasıl göründüğünü kontrol etmekle"],
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] sürpriz doğum günü planlasa en çok hangi rolü üstlenirdi?",
+"options": ["Herkesi organize eden kişi olurdu", "Mekânı ayarlardı", "Doğum günü sahibini oyalardı", "Süslemeleri abartırdı"],
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğum günü kutlamasında en çok hangi anda duygulanırdı?",
+"options": ["Mumları üflerken", "Herkes bir ağızdan şarkı söylerken", "Beklemediği biri gelince", "Eski fotoğraflar açılınca"],
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] birine doğum günü hediyesi alacak olsa en çok hangi yolu seçerdi?",
+"options": ["Çok düşünülmüş kişisel bir şey alırdı", "Kullanışlı bir şey seçerdi", "Komik bir hediye bulurdu", "Son anda ama nokta atışı yapardı"],
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğum günü masasındaki en önemli şeyin ne olduğunu düşünürdü?",
+"options": ["Pastanın görüntüsü", "Ortamın enerjisi", "Gelen insanların uyumu", "Yemeğin bol olması"],
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğum günü partisinde en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bir foto daha çekelim", "Pasta kesilmeden gitmek yok", "Herkes geldi mi?", "Bu şarkıyı kim açtı çok iyi oldu"],
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kendi doğum gününde en çok hangi sürprize şaşırırdı?",
+"options": ["Eski bir arkadaşının gelmesine", "El yapımı bir hediyeye", "Video mesaj hazırlanmasına", "Mekânın tamamen süslenmesine"],
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğum günü planı son anda değişse en çok neye bozulurdu?",
+"options": ["Daveti tam oturtamamaya", "Fotoğraf planının kaymasına", "Pastanın gecikmesine", "Herkesin aynı anda gelememesine"],
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir doğum günü kutlamasında en çok hangi görev ona yakışırdı?",
+"options": ["Konukları karşılamak", "Playlist yönetmek", "Hediye masasını toparlamak", "Oyun ve eğlenceyi başlatmak"],
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğum günü mesajı yazarken en çok hangi tonda olurdu?",
+"options": ["Duygusal ve içten", "Kısa ama etkili", "Komik ve iğneleyici", "Uzun uzun anılı"],
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğum günü partisinde en çok kimin ne yaptığını fark ederdi?",
+"options": ["Sessizce takılanları", "En çok eğlenenleri", "Geç gelenleri", "Sürekli foto çekenleri"],
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğum günü pastası seçse en çok neye önem verirdi?",
+"options": ["Tadına", "Görünüşüne", "Temasına", "Herkesin seveceği güvenli bir seçim olmasına"],
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir kutlamada hediye açma anında en çok nasıl davranırdı?",
+"options": ["Heyecanını saklayamazdı", "Aşırı kibar teşekkür ederdi", "Hediyeyi hemen kullanmak isterdi", "Paketi bile dikkatle açardı"],
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğum gününü en çok hangi formatta kutlamayı severdi?",
+"options": ["Yakın arkadaşlarla sakin bir yemek", "Kalabalık ve gürültülü parti", "Sürpriz planlı bir gece", "Gündüz kahvaltısı ve devamı"],
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğum günü sonunda en çok neyi hatırlıyor olurdu?",
+"options": ["Kimlerin geldiğini", "En komik anı", "En düşünceli hediyeyi", "Söylenen küçük ama anlamlı bir sözü"],
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Doğum günü pastasının üstüne genellikle ne konur?",
+"options": ["Mum", "Anahtar", "Bilet", "Kalem"],
+"correct": "Mum",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Doğum günü kutlamalarında sık söylenen klasik şarkı aşağıdakilerden hangisidir?",
+"options": ["İyi ki doğdun", "Memleketim", "Katibim", "10. Yıl Marşı"],
+"correct": "İyi ki doğdun",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi doğum günü süslemesi olarak sık kullanılır?",
+"options": ["Balon", "Çekiç", "Cetvel", "Pervane"],
+"correct": "Balon",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Doğum günü hediyesi verirken en önemli unsurlardan biri hangisidir?",
+"options": ["Kişiye uygun olması", "En pahalı olması", "Çok büyük olması", "Kutunun ağır olması"],
+"correct": "Kişiye uygun olması",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi doğum günü kutlamalarında sık tüketilen bir tatlıdır?",
+"options": ["Pasta", "Turşu", "Mercimek çorbası", "Pilav"],
+"correct": "Pasta",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Sürpriz parti' ifadesi en çok neyi anlatır?",
+"options": ["Kutlama sahibinin önceden bilmediği planı", "Sadece çocuklara özel partiyi", "Evde yapılmayan kutlamayı", "Müziksiz yapılan organizasyonu"],
+"correct": "Kutlama sahibinin önceden bilmediği planı",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi doğum günü davetinde en çok yer alan bilgilerden biridir?",
+"options": ["Saat ve yer", "Ayakkabı numarası", "Kimlik seri no", "Banka şubesi"],
+"correct": "Saat ve yer",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir doğum günü organizasyonunda 'tema' neyi ifade eder?",
+"options": ["Kutlamanın genel konseptini", "Sadece pastanın boyutunu", "Misafir sayısını", "Hediyelerin fiyatını"],
+"correct": "Kutlamanın genel konseptini",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi doğum günü mesajlarında sık geçen ifadelerden biridir?",
+"options": ["Nice mutlu yıllara", "Kolay gelsin", "Başınız sağ olsun", "Gözün aydın"],
+"correct": "Nice mutlu yıllara",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi doğum günü kutlamasında oyun başlatmak için uygun bir araç olabilir?",
+"options": ["Kartlar", "Matkap", "Ütü", "Tornavida"],
+"correct": "Kartlar",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Doğum günü partilerinde 'dress code' ne anlama gelir?",
+"options": ["Giyim kuralları veya önerilen tarz", "Hediye limiti", "Müzik sırası", "Pasta tarifi"],
+"correct": "Giyim kuralları veya önerilen tarz",
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir parti içeceği olabilir?",
+"options": ["Limonata", "Deterjan", "Mürekkep", "Sıvı sabun"],
+"correct": "Limonata",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Doğum günü planlamasında RSVP en çok neyi ifade eder?",
+"options": ["Katılım durumunun bildirilmesini", "Pasta sipariş numarasını", "Müzik türünü", "Hediye listesini"],
+"correct": "Katılım durumunun bildirilmesini",
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi doğum günü için uygun bir hediye seçimi olabilir?",
+"options": ["Kişisel kupa", "Kapı menteşesi", "Boya rulosu", "Sigorta poliçesi"],
+"correct": "Kişisel kupa",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Doğum günü kutlamasında mum üflerken genellikle ne yapılır?",
+"options": ["Dilek tutulur", "Alkış kesilir", "Işık tamamen kapatılmaz", "Hediyeler saklanır"],
+"correct": "Dilek tutulur",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kendi doğum gününü sanki küçük bir festival gibi planlıyordur?",
+"penalty": "Hayalindeki doğum günü temasını 10 saniyede anlat!",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim hediye paketini açmadan önce bile ne olduğunu tahmin etmeye çalışıyordur?",
+"penalty": "Masadaki bir kişiye hayali ama çok kötü bir hediye öner!",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim doğum günü pastası gelmeden önce en az üç foto çekilmesini şart koşuyordur?",
+"penalty": "Şu an pasta gelmiş gibi poz ver!",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim sürpriz partiyi daha kapıdan girerken anlamasına rağmen belli etmez?",
+"penalty": "Sürpriz olmuş gibi abartılı bir tepki ver!",
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim başkasının doğum gününde bile organizasyonu devralmaya en yatkın kişidir?",
+"penalty": "Masadaki herkese 5 saniyelik görev dağıtımı yap!",
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim doğum günü mesajını son dakika yazıp yine de en duygusal görünen kişidir?",
+"penalty": "Şimdi burada birine tek cümlelik doğum günü mesajı uydur!",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim mumları üflerken gerçekten çok ciddi bir dilek tutuyordur?",
+"penalty": "Geçmişte tuttuğun zararsız bir dileği paylaş!",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kutlamaya geç kalıp 'ama enerjimle telafi ederim' diye giriyordur?",
+"penalty": "Geç kalınca söylediğin klasik bahaneyi anlat!",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim doğum günü hediyesi seçerken gereğinden fazla stratejik düşünüyor?",
+"penalty": "Birine alacağın en risksiz hediyeyi şimdi söyle!",
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim partide 'ben az yerim' deyip pastadan ikinci dilimi en hızlı alan kişidir?",
+"penalty": "En sevdiğin pasta türünü savunarak açıkla!",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Pasta",
+"correct": "Cupcake",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Mum",
+"correct": "Maytap",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Balon",
+"correct": "Konfeti",
+"category": "Doğum Günü",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Hediye paketi",
+"correct": "Hediye çantası",
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Parti şapkası",
+"correct": "Taç",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Playlist",
+"correct": "DJ seti",
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Sürpriz parti",
+"correct": "Veda partisi",
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Dilek tutmak",
+"correct": "Niyet etmek",
+"category": "Doğum Günü",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Davetiye",
+"correct": "Hatırlatma mesajı",
+"category": "Doğum Günü",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Fotoğraf köşesi",
+"correct": "Selfie aynası",
+"category": "Doğum Günü",
+"difficulty": "HARD"
+}
+]

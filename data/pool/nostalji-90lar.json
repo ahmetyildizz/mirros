@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'larda yaşasaydı en çok hangi şeyin delisi olurdu?",
+"options": ["Kaset doldurmanın", "Poster biriktirmenin", "Taso kapışmasının", "Atari salonunun"],
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'lar çocukluğu yaşasa okul çıkışı en çok nereye koşardı?",
+"options": ["Bakkala", "Atari salonuna", "Mahalle parkına", "Arkadaşının evine çizgi film izlemeye"],
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'larda en çok hangi konuda aşırı takıntılı olurdu?",
+"options": ["Renkli silgi koleksiyonuna", "Çıkartma defterine", "Kaset kapağına", "Mahalle oyununda kimin ebe olacağına"],
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'lar televizyon kültüründe en çok hangi rolle öne çıkardı?",
+"options": ["Reklam jingle'ını ezberleyen", "Dizi saatini kaçırmayan", "Uzaktan kumandayı bırakmayan", "Yayın akışını ezbere bilen"],
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'larda arkadaşına en çok hangi bahaneyle sabit hattan telefon açardı?",
+"options": ["Ödev sormak için", "Sokağa çağırmak için", "Kaseti geri istemek için", "Sadece 'çıkıyor musun?' demek için"],
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'ların okul hayatında en çok hangi anda parlıyordur?",
+"options": ["Beslenme saatinde", "Beden dersinde", "And içmeden önce sıraya geçerken", "Defter kaplama işinde"],
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'larda en çok hangi şeyi kaybettiğinde çıldırırdı?",
+"options": ["Tasosunu", "Sevdiği kaseti", "Renkli kalemliğini", "Uzun süredir sakladığı oyun kartını"],
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'ların mahalle kültüründe en çok hangi özelliğiyle ünlenirdi?",
+"options": ["En hızlı koşmasıyla", "En yaratıcı oyun kuralını koymasıyla", "Herkesi sokağa toplamasıyla", "Topu en son o getirdiği için söz sahibi olmasıyla"],
+"category": "Nostalji 90'lar",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'larda en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Kaseti başa sar da dinleyelim", "Annen çağırınca ben de çıkacağım", "Kumandayı ver biraz", "Bunu kim kaydetmiş çok iyi olmuş"],
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'larda bir odasını en çok nasıl süslerdi?",
+"options": ["Posterlerle", "Parlak sticker'larla", "Dergiden kestiği resimlerle", "Oyuncaklarını sergileyerek"],
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'ların teknolojisiyle yaşasa en çok neye sabır gösteremezdi?",
+"options": ["Çevirmeli internet beklemeye", "Kaset sarmaya", "VHS geri sarmaya", "Disket taşıyıp durmaya"],
+"category": "Nostalji 90'lar",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'larda okul çantasında en çok hangi şeyi gizlice taşırdı?",
+"options": ["Taso", "Çizgi roman", "Mini oyuncak", "Atıştırmalık sakızı"],
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'ların müzik dünyasında en çok nasıl bir tip olurdu?",
+"options": ["Kaset dolduran DJ ruhlu", "Şarkı sözlerini ezberleyen", "Yavaş şarkılarda duygulanan", "Her yeni albümü takip eden"],
+"category": "Nostalji 90'lar",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'larda en çok hangi reklamı taklit ederdi?",
+"options": ["Jingle'ı akılda kalanları", "Komik sloganlı olanları", "Çocuklara hitap edenleri", "Abartılı oyunculuklu reklamları"],
+"category": "Nostalji 90'lar",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 90'lar akşamında en çok neyi hatırlıyor olurdu?",
+"options": ["Mahallede oynanan son oyunu", "Televizyondaki efsane sahneyi", "Bakkaldan alınan abur cuburu", "Arkadaşla yapılan telefon konuşmasını"],
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi 90'larda müzik dinlemek için yaygın kullanılan bir formattı?",
+"options": ["Kaset", "Blu-ray", "USB bellek", "Podcast uygulaması"],
+"correct": "Kaset",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "VHS en çok ne için kullanılırdı?",
+"options": ["Video izlemek ve kaydetmek için", "İnternete bağlanmak için", "Müzik indirmek için", "Oyun konsolu çalıştırmak için"],
+"correct": "Video izlemek ve kaydetmek için",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi 90'lar çocuk kültüründe koleksiyon amacıyla biriktirilen şeylerden biriydi?",
+"options": ["Taso", "QR kod", "Bluetooth kulaklık", "Şarj kablosu"],
+"correct": "Taso",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Walkman en çok ne için kullanılırdı?",
+"options": ["Kaset dinlemek için", "Fotoğraf çekmek için", "Televizyon izlemek için", "İnternete girmek için"],
+"correct": "Kaset dinlemek için",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi 90'larda bilgisayarda veri taşımak için kullanılırdı?",
+"options": ["Disket", "Bulut depolama", "AirDrop", "SSD kutusu"],
+"correct": "Disket",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Çevirmeli internet bağlantısında hangi şey tipik olarak duyulurdu?",
+"options": ["Bağlantı sesi", "Piyano melodisi", "Film fragmanı", "Radyo anonsu"],
+"correct": "Bağlantı sesi",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi 90'larda oyun oynamak için gidilen yerlerden biri olabilir?",
+"options": ["Atari salonu", "Podcast stüdyosu", "Veri merkezi", "Drone pisti"],
+"correct": "Atari salonu",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Sabit hatlı telefonlar genellikle nasıl çalışırdı?",
+"options": ["Kabloyla bağlı şekilde", "Sadece uygulamayla", "Uydu sinyaliyle elde taşınır şekilde", "Kablosuz kulaklıkla doğrudan"],
+"correct": "Kabloyla bağlı şekilde",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi 90'larda televizyon izleme deneyiminin parçasıydı?",
+"options": ["Yayın akışını beklemek", "İstediğin bölümü anında açmak", "Reklamları atlamak", "Diziye çevrimdışı yorum yazmak"],
+"correct": "Yayın akışını beklemek",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Game Boy en çok hangi amaçla bilinen bir cihazdır?",
+"options": ["Taşınabilir oyun oynamak", "Kaset kaydetmek", "Video kaset oynatmak", "Radyo yayını yapmak"],
+"correct": "Taşınabilir oyun oynamak",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi 90'larda çocukların sokakta oynadığı oyunlardan biri olabilir?",
+"options": ["Yakan top", "VR savaşı", "Mobil battle royale", "Drone yarışı"],
+"correct": "Yakan top",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir video kaseti izledikten sonra başa almak için ne yapılırdı?",
+"options": ["Geri sarılırdı", "Şarj edilirdi", "Güncellenirdi", "Eşleştirilirdi"],
+"correct": "Geri sarılırdı",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi 90'larda popüler bir kayıt yöntemi olabilir?",
+"options": ["Kasete şarkı çekmek", "Playliste link atmak", "Buluta yüklemek", "Sesli not uygulaması kullanmak"],
+"correct": "Kasete şarkı çekmek",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Poster biriktirmek en çok hangi amaçla yapılırdı?",
+"options": ["Odayı sevilen kişi veya karakterlerle süslemek için", "İnternete bağlanmak için", "Ders notu saklamak için", "TV sinyali çekmek için"],
+"correct": "Odayı sevilen kişi veya karakterlerle süslemek için",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi 90'lar teknolojisinin sınırlamalarından biri olarak görülebilir?",
+"options": ["Daler yavaş erişim ve daha az taşınabilirlik", "Her şeye anında buluttan ulaşmak", "Kablosuz her yerde yüksek hız", "Sınırsız depolama alanı"],
+"correct": "Daler yavaş erişim ve daha az taşınabilirlik",
+"category": "Nostalji 90'lar",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 90'larda yaşasa taso koleksiyonunu kimseye dokundurmayan kişi olurdu?",
+"penalty": "Hayali koleksiyonunu koruyormuş gibi ciddiyetle bir uyarı yap!",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kasete şarkı çekerken en duygusal sırayı hazırlayan kişi olurdu?",
+"penalty": "Hayali bir kaset için ilk şarkıyı sunucu gibi anons et!",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim televizyon yayın akışını ezbere takip edecek kadar takıntılı olurdu?",
+"penalty": "Bir diziyi kaçırmamak için evdekilere acele ettiren bir cümle kur!",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim sabit hattan arkadaşını arayıp önce annesiyle konuşunca en çok panikleyen kişi olurdu?",
+"penalty": "Arkadaşını isterken aşırı kibar bir telefon konuşması yap!",
+"category": "Nostalji 90'lar",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim atari salonunda kaybetse bile bir jeton daha isterdi?",
+"penalty": "Bir oyunda rövanş istiyormuş gibi dramatik şekilde ısrar et!",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 90'larda posterlerini en estetik şekilde asan kişi olurdu?",
+"penalty": "Duvara hayali poster asıyormuş gibi gururla bak!",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim okul çantasında gizli gizli en fazla nostaljik şey taşıyan kişidir?",
+"penalty": "Çantandan gizli bir şey çıkarmış gibi mimik yap!",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 90'lar mahalle oyunlarında kuralı en çok kendi lehine çevirmeye çalışırdı?",
+"penalty": "Hayali bir oyun için kendine avantajlı kural koy!",
+"category": "Nostalji 90'lar",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 90'larda reklam jingle'larını en hızlı ezberleyen kişi olurdu?",
+"penalty": "Uydurduğun üç kelimelik saçma bir reklam melodisi söyle!",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim çevirmeli internet sesini bile duygusal bir anıya dönüştürürdü?",
+"penalty": "Bağlantı bekliyormuş gibi sabırsız ama umutlu yüz ifadesi yap!",
+"category": "Nostalji 90'lar",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Kaset",
+"correct": "CD",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Walkman",
+"correct": "Discman",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "VHS",
+"correct": "Disket",
+"category": "Nostalji 90'lar",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Atari salonu",
+"correct": "İnternet kafe",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Taso",
+"correct": "Çıkartma",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Sabit telefon",
+"correct": "Telsiz telefon",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Poster",
+"correct": "Dergi kupürü",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Çevirmeli internet",
+"correct": "Kablolu modem",
+"category": "Nostalji 90'lar",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Bakkal",
+"correct": "Market",
+"category": "Nostalji 90'lar",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Mahalle oyunu",
+"correct": "Kutu oyunu",
+"category": "Nostalji 90'lar",
+"difficulty": "MEDIUM"
+}
+]

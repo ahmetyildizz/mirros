@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bilgi yarışmasında en çok hangi rolle öne çıkardı?",
+"options": ["Hızlı cevap veren", "Soğukkanlı düşünen", "Takımı motive eden", "Son anda doğruyu bulan"],
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yarışmada emin olmadığı bir soruya en çok nasıl yaklaşırdı?",
+"options": ["Cesurca tahmin yapardı", "Şıkları eleyerek ilerlerdi", "İçgüdüsüne güvenir gibi yapardı", "Son saniyeye kadar beklerdi"],
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] takım yarışmasında en çok hangi tür sorularda parlıyordur?",
+"options": ["Genel kültür", "Popüler kültür", "Tarih", "Günlük hayat bilgisi"],
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yarışmada doğru bildiği bir sorudan sonra en çok nasıl tepki verirdi?",
+"options": ["Sakin görünmeye çalışırdı", "Minik bir zafer bakışı atardı", "Hemen sonraki soruya odaklanırdı", "Bunu biliyordum der gibi gülümserdi"],
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bilgi yarışmasında en çok hangi konuda sabırsızlanırdı?",
+"options": ["Sorunun bir an önce gelmesine", "Şıkların açılmasına", "Süre sayacının başlamasına", "Sonucun açıklanmasına"],
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] çok zor bir soru gelince en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Dur, bir yerden tanıdık geliyor", "Bunu kesin duymuştum", "Şıklarda yakalarız", "Bence mantıktan gideriz"],
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yarışmada yanlış cevap verince en çok ne yapardı?",
+"options": ["Kendi kendine analiz yapardı", "Gülüp geçerdi", "Nerede kaydığını açıklardı", "Bir sonraki soruya odaklanırdı"],
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yarışma öncesi en çok hangi hazırlığı yapıyor gibi görünür?",
+"options": ["Rahatlamaya çalışırdı", "Genel kültür moduna girerdi", "Takım arkadaşlarını tartardı", "Bugün benim günüm derdi"],
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yarışmada en çok hangi detaydan rakipleri hakkında fikir edinirdi?",
+"options": ["Cevap verme hızlarından", "Birbirleriyle göz temasından", "Risk alma biçimlerinden", "Sessizliklerinden"],
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir soruda takım içinde fikir ayrılığı olursa en çok ne yapardı?",
+"options": ["Orta yolu bulmaya çalışırdı", "Kendi cevabını savunurdu", "En mantıklı kişiyi dinlerdi", "Süreye göre hızlı karar verirdi"],
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] en çok hangi tür soruda içinden 'işte bu benim alanım' diyordur?",
+"options": ["Duyduğu ama tam hatırlamadığı sorularda", "Kesin bildiği klasik sorularda", "Gündelik hayat bilgisinde", "İlişkilendirme gerektiren sorularda"],
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yarışmada jokersiz kalınca en çok nasıl görünürdü?",
+"options": ["Daha dikkatli", "Daha gergin", "Daha hırslı", "Daha komik"],
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bilgi yarışmasında en çok hangi cümleyi söylemeye meyillidir?",
+"options": ["Bence cevap bu", "Eleyelim", "Çok tanıdık geliyor", "Son kararın ne?"],
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yarışmada en çok hangi anda parlıyordur?",
+"options": ["Herkes sustuğunda", "Süre azalırken", "Basit görünen ama çeldirici sorularda", "Takım kararsız kaldığında"],
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yarışma sonunda en çok neyi konuşuyor olurdu?",
+"options": ["Kaçırdığı soruları", "En iyi bildiği anı", "Rakiplerin taktiğini", "Şansının bugün nasıl olduğunu"],
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Türkiye'nin başkenti neresidir?",
+"options": ["İstanbul", "Ankara", "İzmir", "Bursa"],
+"correct": "Ankara",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir haftada kaç gün vardır?",
+"options": ["5", "6", "7", "8"],
+"correct": "7",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir gezegendir?",
+"options": ["Ay", "Mars", "Güneş", "Kutup Yıldızı"],
+"correct": "Mars",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Suyun kimyasal formülü hangisidir?",
+"options": ["CO2", "H2O", "O2", "NaCl"],
+"correct": "H2O",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir kıtadır?",
+"options": ["Sibirya", "Asya", "İskandinavya", "Amazon"],
+"correct": "Asya",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir saatte kaç dakika vardır?",
+"options": ["30", "45", "60", "90"],
+"correct": "60",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir renk değildir?",
+"options": ["Mavi", "Turuncu", "Kare", "Mor"],
+"correct": "Kare",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Dünyanın uydusu hangisidir?",
+"options": ["Güneş", "Venüs", "Ay", "Mars"],
+"correct": "Ay",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi memeli bir hayvandır?",
+"options": ["Kurbağa", "Yunus", "Kartal", "Kertenkele"],
+"correct": "Yunus",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Cumhuriyet hangi yılda ilan edilmiştir?",
+"options": ["1919", "1920", "1923", "1938"],
+"correct": "1923",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir müzik aletidir?",
+"options": ["Mikser", "Keman", "Perde", "Dolap"],
+"correct": "Keman",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir yıl kaç aydır?",
+"options": ["10", "11", "12", "13"],
+"correct": "12",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir asal sayıdır?",
+"options": ["9", "15", "17", "21"],
+"correct": "17",
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "İnsan vücudunda en büyük organ hangisidir?",
+"options": ["Kalp", "Karaciğer", "Deri", "Akciğer"],
+"correct": "Deri",
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir okyanustur?",
+"options": ["Pasifik", "Akdeniz", "Karadeniz", "Marmara"],
+"correct": "Pasifik",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bilgi yarışmasında bildiği soruda aşırı sakin görünmeye çalışıyordur?",
+"penalty": "Bir sorunun cevabını biliyormuş gibi gizemli bir yüz ifadesi yap!",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim emin olmadığı halde en net ses tonuyla cevap verir?",
+"penalty": "Şimdi çok eminmiş gibi ama tamamen rastgele bir cevap ver!",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yarışmada en çok 'dur ben bunu bir yerden biliyorum' diyen kişidir?",
+"penalty": "Bu cümleyi abartılı bir yarışma tonuyla tekrar et!",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim takım yarışmasında gizlice liderliği ele alır?",
+"penalty": "Masadakilere tek cümlelik bir yarışma taktiği ver!",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yanlış cevap çıkınca en uzun açıklamayı yapar?",
+"penalty": "Yanlış bir cevabı savunuyormuş gibi 5 saniyelik açıklama yap!",
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yarışmada süre azalınca en çok panik olan kişidir?",
+"penalty": "Son 3 saniyede kalmış gibi dramatik bir geri sayım yap!",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim genel kültürünü olduğundan biraz daha fazla belli etmeye çalışıyordur?",
+"penalty": "Kendin hakkında hafif havalı ama komik bir yarışma unvanı uydur!",
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim şıkları eleyerek mucizevi şekilde doğruya en çok yaklaşan kişidir?",
+"penalty": "Şu an dört hayali şıktan ikisini eleyip ciddi görün!",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yarışma bittikten sonra bile kaçırdığı soruyu akşam eve taşıyordur?",
+"penalty": "Bugün unutamayacağın hayali bir yanlış cevabı ilan et!",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bilgi yarışmasını kişisel intikam sahasına çevirme potansiyeli en yüksek kişidir?",
+"penalty": "Masadaki birine gülerek 'seni bu tur geçerim' de!",
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Ankara",
+"correct": "İstanbul",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Gezegen",
+"correct": "Yıldız",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Asal sayı",
+"correct": "Çift sayı",
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Kıta",
+"correct": "Ülke",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Roman",
+"correct": "Hikâye",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Okyanus",
+"correct": "Deniz",
+"category": "Bilgi Yarışması",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Kimyasal formül",
+"correct": "Matematik formülü",
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Tarih",
+"correct": "Arkeoloji",
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Mikroskop",
+"correct": "Teleskop",
+"category": "Bilgi Yarışması",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Harita",
+"correct": "Kroki",
+"category": "Bilgi Yarışması",
+"difficulty": "HARD"
+}
+]

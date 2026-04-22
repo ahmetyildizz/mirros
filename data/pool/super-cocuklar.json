@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir süper kahraman ekibinde en çok hangi güce sahip olmak isterdi?",
+"options": ["Uçmak", "Görünmez olmak", "Süper hız", "Zihin okumak"],
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gizli kahraman üssünü en çok nereye kurardı?",
+"options": ["Ağaç evin içine", "Yer altındaki gizli tünele", "Bulutların üstüne", "Kitaplığın arkasına"],
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kahraman kostümünde en çok hangi detaya önem verirdi?",
+"options": ["Pelerini", "Maskesi", "Renkleri", "Özel ayakkabıları"],
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir göreve çıkarken en çok hangi eşyayı yanında taşırdı?",
+"options": ["Çok amaçlı mini çanta", "Işıklı harita", "Süper dürbün", "Enerji veren atıştırmalık"],
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kahraman ekibinde en çok hangi rolle öne çıkardı?",
+"options": ["Plan yapan", "Cesaret veren", "Hızlı koşan", "Bulmaca çözen"],
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kaybolan bir hazineyi bulmak için en çok hangi yöntemi denerdi?",
+"options": ["İpuçlarını takip ederdi", "Harita çizerdi", "Herkese görev verirdi", "Önce çevreyi dikkatle incelerdi"],
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kahraman adı seçecek olsa en çok nasıl bir isim isterdi?",
+"options": ["Hızlı ve havalı", "Komik ama güçlü", "Gizemli", "Parlak ve neşeli"],
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] dünyayı kurtarmadan önce en çok neyi kontrol ederdi?",
+"options": ["Takımın hazır olup olmadığını", "Planın doğru işleyip işlemediğini", "Ekipmanını", "Atıştırmalık stoğunu"],
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir kötü karakteri yenmek için en çok hangi yöntemi seçerdi?",
+"options": ["Zekâ oyunu kurardı", "Takımıyla birlikte hareket ederdi", "Onu şaşırtırdı", "Sabırla doğru anı beklerdi"],
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kahraman eğitim kampında en çok hangi bölümde başarılı olurdu?",
+"options": ["Engel parkuru", "Bulmaca odası", "Takım çalışması", "Dikkat testi"],
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir görev sırasında en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bence bir ipucu kaçırıyoruz", "Merak etmeyin, bunu çözeriz", "Herkes yerini alsın", "Durun, aklıma bir fikir geldi"],
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] sihirli bir cihaz bulsa en çok ne için kullanırdı?",
+"options": ["İyilik yapmak için", "Gizli görevlerde kolaylık sağlamak için", "Arkadaşlarını korumak için", "Yeni şeyler keşfetmek için"],
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir kahraman filminde en çok hangi sahnede parıldardı?",
+"options": ["Son anda plan kurulan sahnede", "Herkesi kurtaran sahnede", "Gizli geçit bulunan sahnede", "Komik ama akıllı çözüm bulunan sahnede"],
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gökyüzünde parlayan gizemli bir ışık görse ilk ne yapardı?",
+"options": ["Merakla peşine düşerdi", "Arkadaşlarını çağırırdı", "Harita çizerdi", "Önce bunun ne olabileceğini tahmin ederdi"],
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir süper çocuk ekibinde en çok hangi özelliğiyle vazgeçilmez olurdu?",
+"options": ["Cesaretiyle", "Hayal gücüyle", "Dikkatiyle", "Arkadaşlarını bir arada tutmasıyla"],
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir süper kahraman gücü olabilir?",
+"options": ["Uçmak", "Silgi olmak", "Kare çizmek", "Masa taşımak"],
+"correct": "Uçmak",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir haritada yön bulmaya yardımcı olan araç hangisidir?",
+"options": ["Pusula", "Kaşık", "Yastık", "Fırça"],
+"correct": "Pusula",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir kahramanın kimliğini gizlemek için takabileceği bir şeydir?",
+"options": ["Maske", "Terlik", "Mendil kutusu", "Çalar saat"],
+"correct": "Maske",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Takım çalışmasında en önemli şeylerden biri hangisidir?",
+"options": ["Birlikte hareket etmek", "Herkesin ayrı ayrı kaybolması", "Kimsenin konuşmaması", "Kuralları unutmak"],
+"correct": "Birlikte hareket etmek",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir gizli üs için uygun bir yer olabilir?",
+"options": ["Ağaç ev", "Buzdolabının içi", "Otobüs durağının ortası", "Market kasası"],
+"correct": "Ağaç ev",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir bulmacayı çözmek için en çok ne gerekir?",
+"options": ["Dikkat", "Uykusuzluk", "Gürültü", "Acele etmek"],
+"correct": "Dikkat",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi gökyüzünde görülen doğal bir ışık kaynağıdır?",
+"options": ["Güneş", "Televizyon", "El feneri", "Oyun konsolu"],
+"correct": "Güneş",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir kahramanın arkadaşlarını koruması en çok hangi değeri gösterir?",
+"options": ["Sorumluluk", "Tembellik", "Kararsızlık", "İnatçılık"],
+"correct": "Sorumluluk",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir iletişim aracıdır?",
+"options": ["Telsiz", "Tencere", "Yorgan", "Silgi"],
+"correct": "Telsiz",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Gece gökyüzünde parlayan noktaların büyük kısmı nedir?",
+"options": ["Yıldız", "Şeker", "Balon", "Yaprak"],
+"correct": "Yıldız",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir görev sırasında önce plan yapmak neden faydalıdır?",
+"options": ["Ne yapacağını bilmeyi sağlar", "Her şeyi daha karışık yapar", "Zamanı durdurur", "Kuralları yok eder"],
+"correct": "Ne yapacağını bilmeyi sağlar",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi cesaret göstermeye örnektir?",
+"options": ["Korksa da doğru olanı yapmak", "Hemen pes etmek", "Arkadaşını yalnız bırakmak", "Hiç düşünmeden kaçmak"],
+"correct": "Korksa da doğru olanı yapmak",
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir keşif aracıdır?",
+"options": ["Dürbün", "Yastık", "Tabak", "Kalorifer"],
+"correct": "Dürbün",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir ekipte herkesin farklı görev alması neyi kolaylaştırır?",
+"options": ["İşlerin daha düzenli ilerlemesini", "Herkesin aynı anda karışmasını", "Planın unutulmasını", "Görevin yarıda kalmasını"],
+"correct": "İşlerin daha düzenli ilerlemesini",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi gizli bir mesajı korumak için kullanılabilir?",
+"options": ["Şifre", "Kaşık", "Top", "Silgi kutusu"],
+"correct": "Şifre",
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim süper kahraman pelerini olsa onu evde de çıkarmadan dolaşırdı?",
+"penalty": "Hayali pelerinini takmış gibi kahraman pozu ver!",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim gizli üs kurmaya kalksa en çok plan çizen kişi olurdu?",
+"penalty": "Havada parmağınla gizli üs kapısını çizerek anlat!",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir görevde en hızlı şekilde liderliğe soyunurdu?",
+"penalty": "Masadakilere tek cümlelik bir kahraman görevi ver!",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kötü karakteri konuşarak ikna etmeye ilk çalışan kişi olurdu?",
+"penalty": "Hayali bir kötü karaktere nazik ama kararlı bir uyarı yap!",
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim en küçük ipucunu bile büyütüp koca bir maceraya çevirirdi?",
+"penalty": "Masadaki sıradan bir eşyayı gizemli bir hazine gibi tanıt!",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kahraman adı seçerken en havalı ismi almak isterdi?",
+"penalty": "Kendine şimdi anında bir süper kahraman adı bul ve söyle!",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim göreve çıkmadan önce en çok atıştırmalık stoklayan kişi olurdu?",
+"penalty": "Bir göreve götüreceğin tek atıştırmalığı ilan et!",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim gizli mesajları çözmede en iddialı kişidir?",
+"penalty": "Şimdi tek kelimelik hayali bir şifre söyle!",
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim görünmez olsaydı ilk beş dakikada çok meraklı davranırdı?",
+"penalty": "Görünmez olmuş gibi sessizce yürüme performansı yap!",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim süper hız gücünü ders, oyun ve atıştırmalık arasında en yaratıcı kullanan kişi olurdu?",
+"penalty": "Süper hızlı konuşuyormuş gibi üç kelimeyi art arda söyle!",
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Pelerin",
+"correct": "Maske",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Gizli üs",
+"correct": "Ağaç ev",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Pusula",
+"correct": "Harita",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Telsiz",
+"correct": "Megafon",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Yıldız",
+"correct": "Gezegen",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Süper hız",
+"correct": "Uçmak",
+"category": "Süper Çocuklar",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Şifre",
+"correct": "Bilmece",
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Dürbün",
+"correct": "Mikroskop",
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Robot yardımcı",
+"correct": "Oyuncak yardımcı",
+"category": "Süper Çocuklar",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Hazine sandığı",
+"correct": "Sürpriz kutu",
+"category": "Süper Çocuklar",
+"difficulty": "HARD"
+}
+]

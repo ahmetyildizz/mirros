@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yeni tanıştığı bir ortamda ilk olarak en çok neyle dikkat çekmeye çalışırdı?",
+"options": ["Esprileriyle", "Sakin tavrıyla", "İlginç bir anısıyla", "İnsanlara soru sorarak"],
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir etkinlikte kimseyi tanımıyorsa en yüksek ihtimalle nasıl ısınırdı?",
+"options": ["Yanındaki kişiyle hemen muhabbete girerdi", "Telefonuna kısa süre sığınıp ortamı süzerdi", "Bir ortak konu arardı", "İkram masasının yanında konumlanırdı"],
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] tanışma faslında en çok hangi soruyu sormaya meyillidir?",
+"options": ["Nerelisin?", "Ne işle uğraşıyorsun?", "Buraya nasıl düştün?", "Boş zamanda ne yaparsın?"],
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir grup oyununda en çok hangi rolle öne çıkardı?",
+"options": ["Ortama enerji veren", "Kuralları toparlayan", "Sessizce gözlem yapan", "Kazanmaya odaklanan"],
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] sohbet tıkandığında ortamı açmak için en çok ne yapardı?",
+"options": ["Komik bir anı anlatırdı", "Birine soru sorardı", "Mekânla ilgili yorum yapardı", "Herkesi dahil edecek konu açardı"],
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ilk izlenimde en çok nasıl biri gibi görünürdü?",
+"options": ["Güven veren", "Eğlenceli", "Biraz mesafeli ama tatlı", "Aşırı rahat"],
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir grubun içine yeni girdiğinde en hızlı hangi konuda konuşmaya başlardı?",
+"options": ["Yemek", "Seyahat", "Günlük hayat aksilikleri", "Müzik ve dizi"],
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ortak ilgi alanı bulunca en çok hangi tepkiyi verirdi?",
+"options": ["Bir anda açılırdı", "Hemen örnek verirdi", "Sakin ama mutlu şekilde devam ederdi", "Konuya fazla heyecanlı girerdi"],
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ilk kez katıldığı bir ekip buluşmasında en çok neye dikkat ederdi?",
+"options": ["Kimin en konuşkan olduğuna", "Grubun enerjisine", "Kimin kimle yakın olduğuna", "Konuşmaların tonuna"],
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kendini tanıtırken en çok hangi detayı söylemeyi seçerdi?",
+"options": ["Mesleğini", "Memleketini", "Garip bir hobisini", "Kısa ama komik bir özelliğini"],
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir yabancıyla asansörde kaldığında sessizliği bozmak için en çok ne söylerdi?",
+"options": ["Bugün hava iyice garip", "Bu bina hep böyle mi?", "Asansörle aram hiç iyi değil", "Siz de mi aynı kata çıkıyorsunuz?"],
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] buzları eritmek için en çok hangi kozunu kullanırdı?",
+"options": ["Samimiyetini", "Mimiklerini", "Hazır cevaplığını", "İnsanları rahatlatan tavrını"],
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yeni tanıştığı biriyle ortak nokta bulunca en çok hangi konuda derine giderdi?",
+"options": ["Yolculuk anıları", "Yemek zevkleri", "Çocukluk hikâyeleri", "İşten kaçış planları"],
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kalabalık bir ortamda en çok nasıl fark edilirdi?",
+"options": ["Gülüşüyle", "Sorduğu yaratıcı sorularla", "Sessiz ama dikkatli duruşuyla", "Ortamdaki herkese ayrı ayrı dokunmasıyla"],
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir tanışma oyununda en çok hangi şeyi kazara ele verirdi?",
+"options": ["Aşırı rekabetçi olduğunu", "Çok meraklı olduğunu", "Heyecanlanınca saçmaladığını", "İnsanları hızlı çözdüğünü"],
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir insanı tanımaya yönelik en açık uçlu sorudur?",
+"options": ["Evet mi hayır mı?", "Boş zamanında ne yapmaktan hoşlanırsın?", "Saat kaç?", "Bu senin mi?"],
+"correct": "Boş zamanında ne yapmaktan hoşlanırsın?",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "İlk tanışmalarda sohbeti sürdürmek için en faydalı yaklaşım hangisidir?",
+"options": ["Sürekli kendinden bahsetmek", "Karşı tarafın sözünü kesmek", "Takip soruları sormak", "Tek kelimelik cevap vermek"],
+"correct": "Takip soruları sormak",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi evrensel olarak sık kullanılan bir selamlaşma biçimidir?",
+"options": ["El sıkışmak", "Zıplamak", "Islık çalmak", "Masaya vurmak"],
+"correct": "El sıkışmak",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir grupta buz kırmak için en risksiz konulardan biri hangisidir?",
+"options": ["Hafif hobiler ve ilgi alanları", "Maaş detayları", "Aile içi tartışmalar", "Geçmiş kırgınlıklar"],
+"correct": "Hafif hobiler ve ilgi alanları",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir masa oyunu türüdür?",
+"options": ["Monopoly", "Bluetooth", "Projector", "Firewall"],
+"correct": "Monopoly",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "İletişimde 'beden dili' en çok neyi ifade eder?",
+"options": ["Sadece yazı stilini", "Sözsüz hareket ve mimikleri", "Ses kaydını", "Telefon kullanımını"],
+"correct": "Sözsüz hareket ve mimikleri",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi insanları konuşturmaya en yatkın sorulardan biridir?",
+"options": ["En sevdiğin hafta sonu planı nedir?", "Kimlik numaran nedir?", "Kaç kere taşındın tam sayı ver", "Banka uygulaman hangisi?"],
+"correct": "En sevdiğin hafta sonu planı nedir?",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir ortamda ortak ilgi alanı bulmanın en iyi yollarından biri hangisidir?",
+"options": ["Herkesi susturmak", "Genel konulardan başlayıp detaylandırmak", "Sadece kendi hobini anlatmak", "Hiç soru sormamak"],
+"correct": "Genel konulardan başlayıp detaylandırmak",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir içecek türüdür?",
+"options": ["Smoothie", "Pusula", "Zımba", "Pano"],
+"correct": "Smoothie",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Grup aktivitelerinde 'icebreaker' kelimesi en çok ne anlama gelir?",
+"options": ["Yarışma finali", "Tanışmayı kolaylaştıran açılış etkinliği", "Yemek molası", "Sürpriz hediye turu"],
+"correct": "Tanışmayı kolaylaştıran açılış etkinliği",
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi dünya genelinde bilinen bir sohbet konusu değildir?",
+"options": ["Hava durumu", "Yemek", "Hobiler", "Gizli banka şifresi"],
+"correct": "Gizli banka şifresi",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "İnsanların isimlerini akılda tutmak için en etkili yöntemlerden biri hangisidir?",
+"options": ["Duymamış gibi yapmak", "İsmi konuşma içinde tekrar etmek", "Hemen unutmak", "Takma ad uydurmak"],
+"correct": "İsmi konuşma içinde tekrar etmek",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Birinin anlattığı şeye ilgi gösterdiğini belli etmenin en temel yolu hangisidir?",
+"options": ["Telefonla uğraşmak", "Göz teması ve kısa geri bildirim vermek", "Konu değiştirip kendinden bahsetmek", "Sessizce uzaklaşmak"],
+"correct": "Göz teması ve kısa geri bildirim vermek",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi kalabalık bir ortamda en nötr ve güvenli yorumlardan biridir?",
+"options": ["Bu konu tam kavga çıkarır", "Buranın enerjisi bayağı iyi", "Kim kimi sevmiyor?", "En zayıf halka kim?"],
+"correct": "Buranın enerjisi bayağı iyi",
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi kutu oyunu ekipmanlarından biridir?",
+"options": ["Zar", "Şarj kablosu", "Makas", "Kulaklık pedi"],
+"correct": "Zar",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yeni tanıştığı biriyle üç dakikada eski arkadaş havasına giriyordur?",
+"penalty": "Az önce tanıştığın biriyle konuşurken kullandığın en klasik cümleyi söyle!",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ortam sessizleşince içinden 'tamam, yine ben kurtaracağım' diyordur?",
+"penalty": "Şu an masayı kurtarmak için anında bir konu aç!",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim birini ilk gördüğünde karakter analizine gizlice başlamıştır?",
+"penalty": "Masadaki birinin ilk izlenimini nazikçe tek cümlede anlat!",
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim adı söylendikten iki saniye sonra unutma ihtimali en yüksek kişidir?",
+"penalty": "En son unuttuğun bir ismi dürüstçe anlat!",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim tanışma oyununu fazla ciddiye alıp gizli rekabete girmiştir?",
+"penalty": "En iddialı olduğun sosyal becerini ilan et!",
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'ben utangacım' deyip en çok konuşanlardan biri çıkıyordur?",
+"penalty": "Kendini üç kelimeyle tanıt, ama biri komik olsun!",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ortamı gözleyip kiminle ne konuşacağını stratejik seçiyordur?",
+"penalty": "Masada en rahat konuşacağını düşündüğün kişiyi seç ve nedenini söyle!",
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim buz kırmak için gereğinden fazla komik olmaya çalışıyordur?",
+"penalty": "Kötü de olsa bir açılış şakası yap!",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim sohbet sırasında kendi anlattığı hikâyede en çok kaybolma ihtimali olan kişidir?",
+"penalty": "Bir anını 20 saniyede anlatmayı dene!",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ilk tanışmada en masum görünüp en enteresan hikâyeleri saklıyordur?",
+"penalty": "Hakkında ilk bakışta anlaşılmayan bir özelliğini açıkla!",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Kahve",
+"correct": "Çay",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Film",
+"correct": "Dizi",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Kedi",
+"correct": "Köpek",
+"category": "Buz Kıran",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Sahil",
+"correct": "Göl kenarı",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Piknik",
+"correct": "Barbekü",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Makarna",
+"correct": "Erişte",
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Bisiklet",
+"correct": "Scooter",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Battaniye",
+"correct": "Yorgan",
+"category": "Buz Kıran",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Defter",
+"correct": "Ajanda",
+"category": "Buz Kıran",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Mikrofon",
+"correct": "Hoparlör",
+"category": "Buz Kıran",
+"difficulty": "HARD"
+}
+]

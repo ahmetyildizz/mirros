@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir grubun içinde gizli casusu en çok hangi yolla bulmaya çalışırdı?",
+"options": ["Herkese aynı soruyu farklı şekilde sorarak", "Yüz ifadelerini izleyerek", "Fazla rahat davrananı hedef alarak", "Kelimelerdeki küçük hataları yakalayarak"],
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] casus rolündeyken en çok hangi taktikle dikkat çekmemeye çalışırdı?",
+"options": ["Az ama yerinde konuşarak", "Başkalarının söylediklerini tekrarlayarak", "Şüpheyi başkasına kaydırarak", "Aşırı sakin davranarak"],
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir oyuncunun casus olduğundan en çok hangi detay yüzünden şüphelenirdi?",
+"options": ["Sorulara geç tepki vermesinden", "Fazla genel konuşmasından", "Herkes gülerken geç gülmesinden", "Aynı kelimeyi fazla kullanmasından"],
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gizli bilgiya sahip olsa bunu en çok nasıl saklardı?",
+"options": ["Mimik vermeden", "Konuyu dağıtarak", "Sadece gerektiği kadar konuşarak", "Fazla emin görünerek"],
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] masada en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bence biri fazla rahat", "Dur, burada küçük bir açık var", "Aynı şeyi farklı söyledin", "Ben gözümle yakaladım"],
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir oyunda en çok hangi rolde tehlikeli olurdu?",
+"options": ["Sessiz gözlemci", "İkna ustası", "Şüphe dağıtan", "Detay avcısı"],
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] birini köşeye sıkıştırmak için en çok hangi yöntemi kullanırdı?",
+"options": ["Aynı soruyu farklı zamanda sorardı", "Başkasının cevabıyla karşılaştırırdı", "Aniden ayrıntı isterdi", "Sadece uzun uzun bakardı"],
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] casus avında en çok hangi anda parlıyordur?",
+"options": ["Herkes kararsız kaldığında", "Süre azalırken", "Biri çelişkiye düştüğünde", "Masada sessizlik olduğunda"],
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] suçsuz olduğu halde en çok hangi sebeple casus sanılırdı?",
+"options": ["Çok sakin kaldığı için", "Fazla akıllı konuştuğu için", "Az konuştuğu için", "Gülüşünü tutamadığı için"],
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gizli rol oyununda en çok hangi özelliğine güvenir?",
+"options": ["Soğukkanlılığına", "İnsan okuma becerisine", "İkna kabiliyetine", "Detay hafızasına"],
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biri ona suçlama yönelttiğinde en çok nasıl savunma yapardı?",
+"options": ["Mantık kurardı", "Suçu başkasına yönlendirirdi", "Sakin kalırdı", "Şaka yapıp yumuşatırdı"],
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] masadaki en büyük ipucunu en çok nerede görürdü?",
+"options": ["Kelime seçimlerinde", "Ses tonunda", "Bakış kaçırmalarda", "Fazla özgüvende"],
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gizli bir bilgiyi öğrenirse en çok ne yapardı?",
+"options": ["Sessizce beklerdi", "Hemen strateji kurardı", "Bir kişiyi test ederdi", "Bilgiyi gizlice teyit etmeye çalışırdı"],
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] casus avı sonunda en çok neyi konuşuyor olurdu?",
+"options": ["Kaçırdığı ipucunu", "Kimin çok iyi rol yaptığını", "En kritik hatayı", "Kimin gereksiz şüphe çektiğini"],
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] masadaki bir kişiyi en çok hangi durumda işaret ederdi?",
+"options": ["Cümlesi fazla yuvarlaksa", "Soru gelince gecikiyorsa", "Aşırı savunmaya geçiyorsa", "Herkesi fazla rahat suçluyorsa"],
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "'Casus' kelimesi en çok neyi ifade eder?",
+"options": ["Gizli bilgi toplayan kişi", "Yemek yapan kişi", "Yarışma sunucusu", "Takım kaptanı"],
+"correct": "Gizli bilgi toplayan kişi",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'İpucu' ne anlama gelir?",
+"options": ["Bir şeyi anlamaya yarayan küçük işaret", "Kesin sonuç", "Uzun konuşma", "Resmî karar"],
+"correct": "Bir şeyi anlamaya yarayan küçük işaret",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir kişiyi dikkatlice izleyip davranışlarından anlam çıkarmaya en yakın ifade hangisidir?",
+"options": ["Gözlem yapmak", "Ezberlemek", "Uydurmak", "Dağıtmak"],
+"correct": "Gözlem yapmak",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Şüpheli' kelimesi en çok neyi anlatır?",
+"options": ["Davranışı güven vermeyen kişiyi", "Her şeyi bilen kişiyi", "Aşırı komik kişiyi", "En sessiz kişiyi"],
+"correct": "Davranışı güven vermeyen kişiyi",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir hikâyede çelişki olması genelde neyi düşündürür?",
+"options": ["Bir şeylerin tutmadığını", "Hikâyenin daha komik olduğunu", "Konunun bittiğini", "Sorunun kolay olduğunu"],
+"correct": "Bir şeylerin tutmadığını",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Kod adı' ifadesi en çok neyi anlatır?",
+"options": ["Gerçek isim yerine kullanılan gizli adı", "Yemek tarifini", "Bilgisayar şifresini", "Toplantı notunu"],
+"correct": "Gerçek isim yerine kullanılan gizli adı",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir kişinin yüz ifadesini değiştirmeden kalmasına en yakın ifade hangisidir?",
+"options": ["Poker face", "Hızlı tur", "Açık kaynak", "Yedek plan"],
+"correct": "Poker face",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Deşifre olmak' en çok ne demektir?",
+"options": ["Gizli kimliğin açığa çıkması", "Oyunu kazanmak", "Takım kurmak", "Yeni kurala geçmek"],
+"correct": "Gizli kimliğin açığa çıkması",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir gizli rol oyununda faydalı bir beceridir?",
+"options": ["İnsanları dikkatle dinlemek", "Herkesin sözünü kesmek", "Sürekli bağırmak", "Soruları görmezden gelmek"],
+"correct": "İnsanları dikkatle dinlemek",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Sızmak' kelimesi bu bağlamda en çok neyi ifade eder?",
+"options": ["Bir grubun içine gizlice dahil olmayı", "Kapıyı kapatmayı", "Soruyu değiştirmeyi", "Kuralları yazmayı"],
+"correct": "Bir grubun içine gizlice dahil olmayı",
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Birini test etmek için aynı konu hakkında farklı zamanlarda soru sormak ne işe yarar?",
+"options": ["Tutarlılığı ölçmeye", "Süreyi uzatmaya", "Kural bozmaya", "Takımı bölmek"],
+"correct": "Tutarlılığı ölçmeye",
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "'Gizlilik' en çok neyi anlatır?",
+"options": ["Bilginin korunmasını", "Sesin yükselmesini", "Oyunun bitmesini", "Kalabalık olmayı"],
+"correct": "Bilginin korunmasını",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi sözsüz bir ipucu olabilir?",
+"options": ["Bakış kaçırmak", "Uzun mail atmak", "Liste yapmak", "Dosya paylaşmak"],
+"correct": "Bakış kaçırmak",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Tuzak soru' en çok neyi amaçlar?",
+"options": ["Karşı tarafın açık vermesini sağlamak", "Oyunu hızlandırmak", "Kural anlatmak", "Takımı bölmek"],
+"correct": "Karşı tarafın açık vermesini sağlamak",
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Birinin verdiği cevapların kısa ama çok genel olması neyi düşündürebilir?",
+"options": ["Detay bilmediğini", "Kesin doğru söylediğini", "Soruyu duymadığını", "Oyunun bittiğini"],
+"correct": "Detay bilmediğini",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim casus rolü gelince fazla keyiflenip yüzünden belli eder?",
+"penalty": "Gizli bir göreve atanmış gibi aşırı ciddi bir yüz yap!",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim masada birinin açığını yakalayınca içten içe küçük zafer konuşması yapıyordur?",
+"penalty": "Birini yakalamış gibi fısıltıyla 'buldum seni' de!",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim suçsuz olsa bile en çok şüphe çeken kişidir?",
+"penalty": "Masum olduğunu abartılı şekilde savun!",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim başkasının suçlarken kendisi fazla şüpheli hale gelir?",
+"penalty": "Masadaki hayali bir kişiyi tek cümlede suçla!",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim fazla sakin kaldığı için gizli rol oyunlarında tehlikeli oyuncudur?",
+"penalty": "On saniye boyunca taş suratla etrafa bak!",
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim birine soru sorarken fark ettirmeden sorgu memuruna dönüşür?",
+"penalty": "Masadaki birine art arda iki kısa sorgu sorusu sor!",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim en küçük mimik değişimini bile fark ettiğini iddia eder?",
+"penalty": "Şu an birini çözdüğünü düşünüyormuş gibi kaş kaldır!",
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'ben sadece dinliyorum' deyip en kritik anda noktayı koyan kişidir?",
+"penalty": "Tek cümlelik gizemli bir son karar açıkla!",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim rol yaparken gereksiz detay verip kendini ele verir?",
+"penalty": "Beş saniyede fazla detaylı bir mini hikâye uydur!",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim gizli bilgi saklamaya çalışırken gülüşünü tutamaz?",
+"penalty": "Sır biliyormuş gibi gülüşünü zor tutma performansı yap!",
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Casus",
+"correct": "Ajan",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Şifre",
+"correct": "Kod",
+"category": "Casus Avı",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "İpucu",
+"correct": "Kanıt",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Sorgu",
+"correct": "Mülakat",
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Gizli geçit",
+"correct": "Arka kapı",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Takip",
+"correct": "Gözetim",
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Kimlik",
+"correct": "Rozet",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Deşifre",
+"correct": "İfşa",
+"category": "Casus Avı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Harita",
+"correct": "Plan",
+"category": "Casus Avı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Parola",
+"correct": "Şifre cümlesi",
+"category": "Casus Avı",
+"difficulty": "HARD"
+}
+]

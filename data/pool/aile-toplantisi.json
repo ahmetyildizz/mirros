@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] aile toplantısında en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Ben biraz mutfağa bakıp geleyim", "Kim ne yapıyor anlatın bakalım", "Eski fotoğrafları çıkaralım", "Ben bu konuyu hiç hatırlamıyorum"],
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] aile grubuna mesaj yazacak olsa en çok hangi tarzda yazardı?",
+"options": ["Kısa ve net", "Ses kaydıyla", "Uzun açıklamayla", "Sadece emojiyle"],
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] aile sofrasında en çok hangi rolle öne çıkardı?",
+"options": ["Muhabbeti açan", "Servisi toparlayan", "Sessizce gözlemleyen", "Tatlıyı kollayan"],
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] eski aile anıları açılınca en çok ne yapardı?",
+"options": ["Hemen yeni detay eklerdi", "Gülmekten konuşamazdı", "Olayı düzeltmeye çalışırdı", "Ben orada yoktum derdi"],
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bayram ziyaretinde en çok hangi konuda yardım ederdi?",
+"options": ["Çay servisi", "Misafir karşılama", "Çocukları oyalama", "Tabak toplama"],
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] aile içinde en çok hangi konuda danışılan kişi gibi görünür?",
+"options": ["Teknoloji işleri", "Organizasyon planı", "Yol tarifi ve ulaşım", "Kimin neye alınacağı"],
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kalabalık aile masasından en çok hangi detayı aklında tutardı?",
+"options": ["Kimin ne dediğini", "Kimlerin geç geldiğini", "Hangi yemeğin hızlı bittiğini", "Kimin kime bakıp güldüğünü"],
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] aile toplantısında en çok hangi durumda ortalığı toparlamaya çalışırdı?",
+"options": ["Konu uzayınca", "Çocuklar gürültü yapınca", "Servis karışınca", "Bir anda herkes aynı anda konuşunca"],
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] aile büyükleri soru sormaya başlayınca en çok nasıl cevap verirdi?",
+"options": ["Kibarca geçiştirirdi", "Tek tek uzun uzun anlatırdı", "Soruyu soruyla karşılardı", "Gülümseyip konuyu değiştirirdi"],
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] aile fotoğrafı çekileceği zaman en çok ne yapardı?",
+"options": ["Herkesi hizaya sokardı", "En iyi yeri kapardı", "Ben görünmeyeyim derdi", "Işığı kontrol ederdi"],
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] aile içinde çocuklarla en hızlı hangi yolla anlaşırdı?",
+"options": ["Oyun açarak", "Komik yüzler yaparak", "Abur cubur vererek", "Onları ciddiye alarak"],
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] sofrada en çok hangi cümleyi içinden geçiriyor olurdu?",
+"options": ["Bunu bir daha alayım", "Bu konu birazdan bana gelir", "Şimdi biri fotoğraf çekecek", "Tatlıya yer bırakmalıydım"],
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] aile toplantısında en hızlı hangi haberden haberdar olurdu?",
+"options": ["Kim nerede ne yapıyor", "Kim ne zaman geldi", "Kimin ne pişirdiği", "Bir sonraki buluşmanın planı"],
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ev sahibi olsaydı en çok hangi konuda titiz davranırdı?",
+"options": ["Masa düzeni", "Misafirlerin rahatlığı", "Yemek sırası", "Çay-kahve temposu"],
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] aile toplantısında bir mini kriz çıksa en çok hangi tavrı alırdı?",
+"options": ["Sakinleştirirdi", "Espriyle dağıtırdı", "Sessizce çözmeye çalışırdı", "Hemen görev dağıtırdı"],
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi geleneksel bir aile buluşmasında sık görülen içeceklerden biridir?",
+"options": ["Çay", "Milkshake", "Enerji içeceği", "Soğuk kahve"],
+"correct": "Çay",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bayramlarda büyüklerin elini öpüp sonra ne yapmak yaygın bir gelenektir?",
+"options": ["Harçlık almak", "Şarkı söylemek", "Pasta kesmek", "Hediye saklamak"],
+"correct": "Harçlık almak",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi kalabalık bir aile sofrasında en sık kullanılan servis eşyalarından biridir?",
+"options": ["Kepçe", "Matkap", "Fener", "Zımba"],
+"correct": "Kepçe",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Geleneksel misafir ağırlamada 'ikram' kelimesi en çok neyi ifade eder?",
+"options": ["Misafire sunulan yiyecek ve içeceği", "Kapı kilidini", "Ev düzenini", "Yol tarifini"],
+"correct": "Misafire sunulan yiyecek ve içeceği",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi aile albümünde bulunma ihtimali en yüksek şeydir?",
+"options": ["Eski fotoğraflar", "Şirket sözleşmesi", "Banka dekontu", "Kullanma kılavuzu"],
+"correct": "Eski fotoğraflar",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Misafirlikte 'eline sağlık' ifadesi en çok ne için söylenir?",
+"options": ["Lezzetli yemek hazırlayan kişiye", "Arabayı park eden kişiye", "Kapıyı açan kişiye", "Televizyonu kuran kişiye"],
+"correct": "Lezzetli yemek hazırlayan kişiye",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir aile toplantısında konuşulması en güvenli konulardan biridir?",
+"options": ["Yemek ve eski anılar", "Acil tartışmalı meseleler", "Miras hesabı", "Gizli kırgınlıklar"],
+"correct": "Yemek ve eski anılar",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi Türkiye'de bayramlarda sık ikram edilen tatlılardan biridir?",
+"options": ["Baklava", "Brownie", "Cheesecake", "Donut"],
+"correct": "Baklava",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Kalabalık bir sofrada 'servis açmak' ne anlama gelir?",
+"options": ["Yemek dağıtımına başlamak", "Masa örtüsünü kaldırmak", "Televizyonu açmak", "Kapıyı kilitlemek"],
+"correct": "Yemek dağıtımına başlamak",
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi evde ağırlama kültüründe sık kullanılan bir eşya değildir?",
+"options": ["Kahve fincanı", "Servis tepsisi", "Şerit metre", "Çay bardağı"],
+"correct": "Şerit metre",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Misafir umduğunu değil, bulduğunu yer' sözü en çok neyi anlatır?",
+"options": ["Misafirin sunulana saygı göstermesi gerektiğini", "Misafirin menü seçmesi gerektiğini", "Misafirin erken gitmesi gerektiğini", "Misafirin sofrayı kurması gerektiğini"],
+"correct": "Misafirin sunulana saygı göstermesi gerektiğini",
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi aile büyüklerinden duyulabilecek klasik sorulardan biridir?",
+"options": ["Ne var ne yok?", "Sunucu şifresi nedir?", "Veri tabanı kurdun mu?", "DNS ayarın nasıl?"],
+"correct": "Ne var ne yok?",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aile buluşmalarında çocukları oyalamak için en sık yapılan şeylerden biri hangisidir?",
+"options": ["Oyun açmak", "Vergi konuşmak", "Gazete analizi yapmak", "Uzun toplantı düzenlemek"],
+"correct": "Oyun açmak",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi geleneksel Türk misafirperverliğinin bir parçası olarak görülür?",
+"options": ["Israrla ikram etmek", "Misafiri kendi yemeğini yapmaya bırakmak", "Kapıda kısa konuşup yollamak", "İçecek sormamak"],
+"correct": "Israrla ikram etmek",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aile fotoğrafı çekilirken en sık duyulan yönlendirmelerden biri hangisidir?",
+"options": ["Biraz yaklaşın", "Işıkları kapatın", "Sahneyi değiştirin", "Projeksiyonu bağlayın"],
+"correct": "Biraz yaklaşın",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim aile toplantısında mutfağa gidip olan biteni en hızlı öğreniyordur?",
+"penalty": "Aile içinde en sık duyduğun cümleyi taklit ederek söyle!",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim sofrada 'az alacağım' deyip ikinci turu en hızlı yapan kişidir?",
+"penalty": "Şu an canın en çok hangi yemekten çekiyor, dürüstçe söyle!",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim aile büyüklerinden gelen klasik sorulara en yaratıcı kaçış cevabını veriyordur?",
+"penalty": "Sana en sık sorulan aile sorusunu dramatik şekilde canlandır!",
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim eski aile fotoğrafları çıkınca en çok gülen kişidir?",
+"penalty": "Çocukluk halinle ilgili komik bir detay paylaş!",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim çocuklarla oynarken gizlice kendisi daha çok eğleniyordur?",
+"penalty": "Şu an en iyi çocuk taklidini yap!",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim aile grubundaki mesajları okuyup cevaplamayı en çok geciktiriyordur?",
+"penalty": "Aile grubuna atabileceğin en risksiz mesajı şimdi söyle!",
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim aile toplantısında bir anda ortalığı organize etmeye başlar?",
+"penalty": "Masadakilere 10 saniyelik görev dağıtımı yap!",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim evden çıkarken en son vedalaşıp kapıda en uzun kalan kişidir?",
+"penalty": "Vedalaşırken en sık kullandığın cümleyi söyle!",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim aile toplantısında birinin tabağı boş kalmasın diye en çok uğraşır?",
+"penalty": "Masadaki bir kişiye ısrarla hayali bir ikram yap!",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim aile içindeki mini gerilimleri ilk fark eden kişidir?",
+"penalty": "Ortamı yumuşatacak tek cümlelik bir çözüm öner!",
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Baklava",
+"correct": "Kadayıf",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Çay",
+"correct": "Kahve",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Yenge",
+"correct": "Teyze",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Kuzen",
+"correct": "Yeğen",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Salon",
+"correct": "Oturma odası",
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Sarma",
+"correct": "Dolma",
+"category": "Aile Toplantısı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Tepsi",
+"correct": "Sini",
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Bayram",
+"correct": "Düğün",
+"category": "Aile Toplantısı",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "El öpmek",
+"correct": "Sarılmak",
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Aile grubu",
+"correct": "Site grubu",
+"category": "Aile Toplantısı",
+"difficulty": "HARD"
+}
+]

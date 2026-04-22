@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir diziye başlasa en çok hangi sebeple üç bölüm üst üste izlerdi?",
+"options": ["Karakterlere hızlı bağlandığı için", "Final sahnesi çok iyi bittiği için", "Herkes konuşuyor diye merak ettiği için", "Bir bölüm daha derken kendini kaptırdığı için"],
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] film izlerken en çok hangi rolde olurdu?",
+"options": ["Detay yakalayan", "Tahmin yürüten", "Duygusal sahnede etkilenen", "Mantık hatası arayan"],
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir dizide en çok hangi karakter tipine bağlanırdı?",
+"options": ["Sessiz ama derin olana", "Komik ve sivri dillisine", "Sorunlu ama karizmatik olana", "Herkesi toparlayan karaktere"],
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] izlediği bir filmi anlatırken en çok neye takılırdı?",
+"options": ["Finaline", "Oyunculuklara", "Müzik kullanımına", "Beklenmedik sahnelere"],
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] spoiler yememek için en çok ne yapardı?",
+"options": ["Sosyal medyadan uzak dururdu", "Arkadaş grubunu sessize alırdı", "Hemen izlemeye çalışırdı", "Hiç yorum okumazdı"],
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir dizinin kötüye gittiğini en çok hangi noktada anlardı?",
+"options": ["Karakterler kendine benzememeye başlayınca", "Bölümler gereksiz uzayınca", "Finaller etkisini kaybedince", "Yan hikâyeler asıl konuyu geçince"],
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] film seçme işini üstlense en çok hangi kriterle karar verirdi?",
+"options": ["Türüne göre", "Oyuncu kadrosuna göre", "İzlenme hissine göre", "Fragmanın enerjisine göre"],
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir sahnede gözyaşı dökecek olsa en çok hangi tip sahnede etkilenirdi?",
+"options": ["Sessiz vedalarda", "Büyük fedakârlık anlarında", "Beklenmedik kavuşmalarda", "Arka planda müzik iyi girince"],
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] izlediği dizide en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bu karaktere güvenmiyorum", "Kesin burada bir terslik var", "Bunu baştan söylemiştim", "Bir bölüm daha açalım"],
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir polisiye dizide en çok hangi yeteneğiyle öne çıkardı?",
+"options": ["İpucu toplamakla", "Şüpheli seçmekle", "Detay hafızasıyla", "Kimseye güvenmemesiyle"],
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] romantik bir filmde en çok hangi noktada sabırsızlanırdı?",
+"options": ["İlk karşılaşmada", "Yanlış anlamanın çözülmesinde", "Büyük itirafta", "Finalde ne olacağında"],
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] korku filmi izlerken en çok nasıl davranırdı?",
+"options": ["Gözlerini kapatıp parmak arasından bakardı", "En çok sesi kısalım derdi", "Herkesten önce irkilirdi", "Gerginliği şakayla dağıtırdı"],
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir filmi ikinci kez açacak olsa en çok hangi sebeple açardı?",
+"options": ["Detay kaçırdığını düşündüğü için", "Atmosferini sevdiği için", "Belli bir sahneye dönmek için", "Yanında biri ilk kez izleyecek diye"],
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir dizide finalden sonra en çok neyi konuşuyor olurdu?",
+"options": ["Karakterlerin hakkının verilmediğini", "Bir sahnenin efsane olduğunu", "Başka türlü bitmeliydi dediği noktayı", "Yeni sezon olsa ne olurduyu"],
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir film gecesinde en çok hangi görevi alırdı?",
+"options": ["Film seçmek", "Atıştırmalıkları ayarlamak", "Ortamı hazırlamak", "Ne izleneceği tartışmasını bitirmek"],
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir film türüdür?",
+"options": ["Gerilim", "Priz", "Şablon", "Perde rayı"],
+"correct": "Gerilim",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir filmin kısa tanıtım videosuna ne denir?",
+"options": ["Fragman", "Altyazı", "Sahne notu", "Jenerik"],
+"correct": "Fragman",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Dizi veya filmde bölüm sonunda akışı merakta bırakan tekniğe en yakın ifade hangisidir?",
+"options": ["Cliffhanger", "Montaj", "Dekor", "Kadro"],
+"correct": "Cliffhanger",
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir yapımda oyuncuların adlarının yazdığı başlangıç veya bitiş kısmına verilen addır?",
+"options": ["Jenerik", "Replik", "Senkron", "Dekupaj"],
+"correct": "Jenerik",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir yapımın çekim ve sahne yorumlama sürecini en çok yöneten kişi kimdir?",
+"options": ["Yönetmen", "Makyaj asistanı", "Işık taşıyıcı", "Bilet görevlisi"],
+"correct": "Yönetmen",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi izlerken metin olarak ekranda görülen çeviri yazılardır?",
+"options": ["Altyazı", "Storyboard", "Kostüm", "Sahne geçişi"],
+"correct": "Altyazı",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Korku, komedi ve bilim kurgu aşağıdakilerden hangisine örnektir?",
+"options": ["Tür", "Platform", "Jenerik", "Kadro listesi"],
+"correct": "Tür",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir yapımda arka planda duyulan, atmosferi güçlendiren müziğe en yakın ifade hangisidir?",
+"options": ["Film müziği", "Dublaj", "Afiş", "Dekor çizimi"],
+"correct": "Film müziği",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir dizi sezonunun parçasıdır?",
+"options": ["Bölüm", "Ders notu", "Manşet", "Makbuz"],
+"correct": "Bölüm",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir oyuncunun canlandırdığı kişiye ne denir?",
+"options": ["Karakter", "Dekor", "Işık planı", "Kayıt cihazı"],
+"correct": "Karakter",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir filmin ana hikâyesini kısaca anlatan yazıya ne denir?",
+"options": ["Özet", "Replik listesi", "Aksiyon planı", "Sahne ışığı"],
+"correct": "Özet",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir dizinin yeni sezonu başlamadan önce izleyici ilgisini artırmak için en sık ne paylaşılır?",
+"options": ["Tanıtım", "Makbuz", "Masa planı", "Kira sözleşmesi"],
+"correct": "Tanıtım",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Spoiler' en çok neyi ifade eder?",
+"options": ["Önemli olayın önceden söylenmesini", "Filmin uzun sürmesini", "Görüntünün bulanıklaşmasını", "Oyuncu değişmesini"],
+"correct": "Önemli olayın önceden söylenmesini",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir yapımın geçtiği yer ve zaman düzenine en yakın ifade hangisidir?",
+"options": ["Atmosfer", "Fatura", "Kumanda", "Logo tasarımı"],
+"correct": "Atmosfer",
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi beyaz perdede film izlenen yere verilen addır?",
+"options": ["Sinema salonu", "Reji odası", "Arşiv odası", "Kostüm dolabı"],
+"correct": "Sinema salonu",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim film açılınca ilk beş dakikada 'bence sonu şöyle bitecek' diyen kişidir?",
+"penalty": "Şimdi tamamen uydurma bir final tahmini yap!",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim dizi izlerken en çok spoiler verme riski taşıyan kişidir?",
+"penalty": "Spoiler vermeden heyecanlı bir sahneyi anlatmayı dene!",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'bir bölüm daha' deyip sabahı en rahat ettiren kişidir?",
+"penalty": "Bir bölüm daha açmak için ikna cümlesi kur!",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kötü karaktere bile gereğinden fazla empati yapan kişidir?",
+"penalty": "Hayali bir kötü karakteri tek cümlede savun!",
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim film sırasında mantık hatası bulunca artık hikâyeye dönemeyen kişidir?",
+"penalty": "Çok ufak bir hayali mantık hatasını ciddi ciddi anlat!",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim duygusal sahnede 'toz kaçtı herhalde' moduna en hızlı girer?",
+"penalty": "Gözün dolmamış gibi yapıp bir duygusal replik söyle!",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim film seçme işini alıp sonunda herkesi kararsız bırakan kişidir?",
+"penalty": "Şu an üç türü birden savunarak film seçmeye çalış!",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir karaktere gereğinden fazla bağlanıp sanki gerçek biriymiş gibi konuşur?",
+"penalty": "Hayali bir karaktere kısa bir destek mesajı ver!",
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim korku filminde en çok 'ben korkmam' deyip ilk sıçrayan kişidir?",
+"penalty": "Ani sahne gelmiş gibi tek seferlik tepki ver!",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir final bölümünden sonra en uzun analiz yapan kişidir?",
+"penalty": "Final hakkında aşırı ciddi tek cümlelik bir yorum yap!",
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Film",
+"correct": "Dizi",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Fragman",
+"correct": "Tanıtım",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Altyazı",
+"correct": "Dublaj",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Yönetmen",
+"correct": "Senarist",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Karakter",
+"correct": "Oyuncu",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Sezon",
+"correct": "Bölüm",
+"category": "Sinema & Dizi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Spoiler",
+"correct": "Tahmin",
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Jenerik",
+"correct": "Afiş",
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Polisiye",
+"correct": "Gerilim",
+"category": "Sinema & Dizi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Final sahnesi",
+"correct": "Açılış sahnesi",
+"category": "Sinema & Dizi",
+"difficulty": "HARD"
+}
+]

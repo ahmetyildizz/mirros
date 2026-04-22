@@ -1,0 +1,375 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir arkadaş grubunda en çok hangi dedikodu türüne kulak kabartırdı?",
+"options": ["Kim kime ne demiş", "Kim kimi gizlice beğeniyor", "Kim neden küsmüş", "Kim iş değiştirmeyi düşünüyormuş"],
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 'bana anlat ama kimseye söylemem' dedikten sonra en çok hangi durumda kendini zor tutardı?",
+"options": ["Olay aşırı komikse", "Konuda yakın arkadaşı varsa", "Bütün grup zaten merak ediyorsa", "Kendi teorisi varsa"],
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir olayın dedikoduya dönüştüğünü en çok hangi anda anlardı?",
+"options": ["Ses tonu düşünce", "Herkes birbirine yaklaşınca", "İsim verilmeden konuşulmaya başlayınca", "Cümle 'bak şimdi...' diye açılınca"],
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir arkadaşının anlattığı olayı dinlerken en çok hangi rolle öne çıkardı?",
+"options": ["Detay isteyen", "Taraf tutan", "Sessizce analiz yapan", "Komik yorum atan"],
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir dedikodu sırasında en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Ben karışmam ama...", "Bir şey diyeyim mi?", "Dur, olayın başını kaçırdım", "Bence burada asıl mesele başka"],
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] duyduğu bir olayı en çok hangi açıdan değerlendirirdi?",
+"options": ["Kimin haklı olduğuna", "Olayın nasıl başladığına", "İnsanların niyetine", "İşin nereye varacağına"],
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] grup içinde gizli gizli kimin ne düşündüğünü en çok hangi yolla anlardı?",
+"options": ["Bakışlardan", "Sessizlikten", "Verilen küçük tepkilerden", "Cümlelerin tonundan"],
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biri 'sana özel anlatıyorum' dediğinde en çok nasıl tepki verirdi?",
+"options": ["Hemen dikkat kesilirdi", "İlk başta istemiyormuş gibi yapardı", "Detay sormadan duramazdı", "Önce kimle ilgili olduğunu anlamaya çalışırdı"],
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir olayın aslını en çok hangi yöntemle çözmeye çalışırdı?",
+"options": ["Herkesi tek tek dinleyerek", "Eski konuşmaları hatırlayarak", "İpuçlarını birleştirerek", "İnsanların davranışlarına bakarak"],
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] masada biri eksik bilgi anlatıyorsa en çok ne yapardı?",
+"options": ["Dur, orada bir şey var derdi", "Dinleyip sonra düzeltirdi", "Sorularla açtırırdı", "Kendi tahminini ortaya atardı"],
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir olayın ardından en çok hangi detay aklında kalırdı?",
+"options": ["Kim ne kelime kullandı", "Kimin yüz ifadesi değişti", "Kimin sessiz kaldığı", "Olayın geçtiği an"],
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] arkadaş ortamında en çok hangi tür bilgiyi 'bende kalsın' diye saklamaya çalışırdı?",
+"options": ["Hoşlanma hikâyelerini", "Küslük sebeplerini", "İş değişikliği planlarını", "Beklenmedik itirafları"],
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir olayın sonunda en çok hangi tavrı alırdı?",
+"options": ["Tarafını net belli ederdi", "Yorum yapmadan toparlardı", "Bütün resmi çizmeye çalışırdı", "İşin komik tarafını bulurdu"],
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biri yanlış kişiye yanlış mesaj atsa en çok ne yapardı?",
+"options": ["Panik yönetirdi", "Hemen çözüm planı çıkarırdı", "Önce güler sonra toparlardı", "Mesajın ekran görüntüsünü isteyip analiz ederdi"],
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir dedikodu masasının en vazgeçilmez unsuru olarak en çok neyi görürdü?",
+"options": ["Güvenilir kaynak", "Doğru zamanlama", "Yüz ifadeleri", "Yeterli detay"],
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "'Kulaktan kulağa yayılmak' ifadesi en çok neyi anlatır?",
+"options": ["Bir bilginin hızla kişiden kişiye aktarılmasını", "Bir şarkının ezberlenmesini", "Telefonla konuşmayı", "Sessizce beklemeyi"],
+"correct": "Bir bilginin hızla kişiden kişiye aktarılmasını",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi dedikodu sırasında en çok kullanılan davranışlardan biridir?",
+"options": ["Ses tonunu düşürmek", "Alkışlamak", "Ayağa kalkmak", "Yüksek sesle şarkı söylemek"],
+"correct": "Ses tonunu düşürmek",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'İpucu' kelimesi en çok ne anlama gelir?",
+"options": ["Bir şeyi anlamaya yarayan küçük işaret", "Uzun açıklama", "Kesin karar", "Gereksiz tekrar"],
+"correct": "Bir şeyi anlamaya yarayan küçük işaret",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir olayı doğru anlamak için aşağıdakilerden hangisi en faydalıdır?",
+"options": ["Birden fazla tarafı dinlemek", "Sadece ilk duyulana inanmak", "Detayları yok saymak", "Tahminleri gerçek kabul etmek"],
+"correct": "Birden fazla tarafı dinlemek",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Varsayım' kelimesi en çok neyi ifade eder?",
+"options": ["Kesinleşmemiş tahmini", "Belgeli bilgiyi", "Yazılı kuralı", "Resmi açıklamayı"],
+"correct": "Kesinleşmemiş tahmini",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir olayın 'detay' kısmına örnektir?",
+"options": ["Olayın saat kaçta olduğu", "Olayın hiç olmaması", "Kimsenin konuşmaması", "Konunun kapanması"],
+"correct": "Olayın saat kaçta olduğu",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Tarafsız kalmak' en çok hangi anlama gelir?",
+"options": ["Kimseyi hemen haklı ilan etmemek", "Herkesile aynı fikirde olmak", "Hiç dinlememek", "Konuyu değiştirmek"],
+"correct": "Kimseyi hemen haklı ilan etmemek",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir olayın 'detay' kısmına örnektir?",
+"options": ["Olayın saat kaçta olduğu", "Olayın hiç olmaması", "Kimsenin konuşmaması", "Konunun kapanması"],
+"correct": "Olayın saat kaçta olduğu",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi insan davranışını anlamada önemli bir ipucu olabilir?",
+"options": ["Beden dili", "Ayakkabı numarası", "Kalem rengi", "Telefon modeli"],
+"correct": "Beden dili",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Dedikodu' kelimesi gündelik dilde en çok neyi anlatır?",
+"options": ["Başkalarıyla ilgili konuşulan gayriresmî bilgi ve yorumları", "Resmî duyuruyu", "Hukuki kararı", "Teknik raporu"],
+"correct": "Başkalarıyla ilgili konuşulan gayriresmî bilgi ve yorumları",
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir sohbeti daha dikkatli dinlediğini gösterir?",
+"options": ["Takip soruları sormak", "Konu değiştirip kendinden bahsetmek", "Telefonla uğraşmak", "Hiç tepki vermemek"],
+"correct": "Takip soruları sormak",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Sessiz kalmak' bir tartışma sırasında bazen ne anlama gelebilir?",
+"options": ["Düşünmek veya tepkiyi saklamak", "Her şeyi kabul etmek", "Hiçbir şey duymamak", "Konudan tamamen çıkmak"],
+"correct": "Düşünmek veya tepkiyi saklamak",
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir bilginin güvenilirliğini artırır?",
+"options": ["Birden fazla kaynaktan doğrulanması", "Çok ilginç olması", "Abartılı anlatılması", "Herkesin merak etmesi"],
+"correct": "Birden fazla kaynaktan doğrulanması",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'İma etmek' ne demektir?",
+"options": ["Bir şeyi doğrudan söylemeden hissettirmek", "Yüksek sesle ilan etmek", "Tamamen inkâr etmek", "Yazılı olarak bildirmek"],
+"correct": "Bir şeyi doğrudan söylemeden hissettirmek",
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Bir olay anlatılırken 'arka plan' ifadesi en çok neyi anlatır?",
+"options": ["Olayın öncesindeki bağlamı", "Sadece sonucun kendisini", "Mekânın dekorunu", "Konuyla alakasız ayrıntıları"],
+"correct": "Olayın öncesindeki bağlamı",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir hikâyeyi ilginç kılan unsurlardan biridir?",
+"options": ["Beklenmedik detaylar", "Tamamen tekrar eden cümleler", "Hiçbir karakter olmaması", "Bağlantısız anlatım"],
+"correct": "Beklenmedik detaylar",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'ben dedikodu yapmam' deyip en kritik detayları ilk fark eden kişidir?",
+"penalty": "Şu an masada en hızlı gözlemlediğin mini detayı söyle!",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir olay anlatılırken araya girip 'dur, eksik yer var' deme ihtimali en yüksek kişidir?",
+"penalty": "Bir cümleyi 'dur bak ben toparlıyorum' diye başlayarak kur!",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim başta ilgilenmiyormuş gibi yapıp sonra en çok soru soran kişidir?",
+"penalty": "Merakını belli etmeden sorabileceğin en sinsi soruyu söyle!",
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir olayın bütün taraflarını dinlemeden rahat edemez?",
+"penalty": "Şu an hayali bir olay için 'karşı tarafı da dinlemek lazım' diye mini savunma yap!",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim arkadaş grubunda en çok gizli dedektif gibi davranıyordur?",
+"penalty": "Bir olay çözer gibi kaşlarını kaldırıp tek kelimelik tepki ver!",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim duyduğu bir şeyin sonunu meraktan bekleyemeden tahmin yürütmeye başlar?",
+"penalty": "Masadaki biri için tamamen zararsız bir tahmin yürüt!",
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'bana özel anlat' cümlesini duysa içten içe mutlu olan kişidir?",
+"penalty": "Şaşırmış ama kontrollü bir yüz ifadesi yap!",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir olayın komik tarafını ilk bulan kişidir?",
+"penalty": "Az önceki hayali olay için kısa bir komik yorum yap!",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim masadaki en küçük bakış değişimini bile fark eder?",
+"penalty": "Masadaki birinin şu anki yüz ifadesini nazikçe yorumla!",
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yanlış kişiye yanlış şey söyleme ihtimali en yüksek kişidir?",
+"penalty": "Telefonunda biriyle karışabilecek bir isim tipini itiraf et!",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "İpucu",
+"correct": "İma",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Bakış",
+"correct": "Kaş hareketi",
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Mesaj",
+"correct": "Ses kaydı",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Stalk",
+"correct": "Kontrol etmek",
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Ekran görüntüsü",
+"correct": "Bağlantı paylaşımı",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Küslük",
+"correct": "Uzaklaşma",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Flört",
+"correct": "Hoşlanma",
+"category": "Dedikodu Masası",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Gizli hesap",
+"correct": "Yedek hesap",
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Sessizlik",
+"correct": "Gerginlik",
+"category": "Dedikodu Masası",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Yorum",
+"correct": "Analiz",
+"category": "Dedikodu Masası",
+"difficulty": "MEDIUM"
+}
+]

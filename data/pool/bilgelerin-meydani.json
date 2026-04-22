@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] derin bir soru duyunca en çok hangi yolla düşünmeye başlardı?",
+"options": ["Hemen örnek verirdi", "Önce sessizce tartardı", "Soruyu başka soruyla açardı", "Günlük hayattan bir bağlantı kurardı"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir tartışmada en çok hangi rolle öne çıkardı?",
+"options": ["Mantığı toparlayan", "İlginç açı getiren", "Herkesi dinleyen", "Tek cümleyle noktayı koyan"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bilgeliği en çok hangi davranışla gösterirdi?",
+"options": ["Hemen cevap vermemesiyle", "Doğru soruyu sormasıyla", "Herkesi sakinleştirmesiyle", "Basit anlatmasıyla"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] karmaşık bir konuda en çok neyi arardı?",
+"options": ["Temel mantığı", "Gizli ayrıntıyı", "Karşı görüşü", "Günlük hayattaki karşılığını"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biri büyük laflar edince en çok ne düşünürdü?",
+"options": ["Güzel ama eksik", "Önce bir örnek ver", "Bu kadar net olmayabilir", "Asıl mesele başka olabilir"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] en çok hangi tür sorularda parlıyordur?",
+"options": ["Neden sorularında", "Ne olursa sorularında", "Doğru-yanlış ayrımlarında", "Hayat dersi çıkaran sorularda"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] uzun bir tartışmada en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bir adım geri çıkalım", "Kavramları karıştırıyoruz", "Burada niyet önemli", "Önce tanımı netleştirelim"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir konuda emin değilse en çok nasıl davranırdı?",
+"options": ["Açıkça bilmediğini söylerdi", "Önce başkalarını dinlerdi", "Olasılıklarla konuşurdu", "Örnekler üzerinden ilerlerdi"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir fikir değiştirince bunu en çok nasıl belli ederdi?",
+"options": ["Sessizce yön değiştirirdi", "Bunu ilk kez böyle gördüm derdi", "Karşı tarafın hakkını teslim ederdi", "Önce kendi eski fikrini sorgulardı"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir sözün gerçekten etkileyici olup olmadığını en çok neye bakarak anlardı?",
+"options": ["Basit ama güçlü olmasına", "Hayata değmesine", "Sadece havalı durmamasına", "İçinde gerçek payı olmasına"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir meydan okumada en çok hangi avantajına güvenir?",
+"options": ["Hızlı düşünmesine", "Bağlantı kurmasına", "Sakin kalmasına", "Soru sormasına"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir bilmece ya da düşünce sorusunda en çok hangi yoldan giderdi?",
+"options": ["En basit ihtimali denerdi", "Şıkları eleyerek ilerlerdi", "Tersinden düşünürdü", "İnsan davranışını hesaba katardı"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bilgeliği en çok hangi ortamda daha görünür olurdu?",
+"options": ["Sessiz sohbetlerde", "Tartışmalı konularda", "Birine akıl verirken", "Kriz anında herkes paniklerken"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] en çok hangi durumda içinden 'asıl soru bu değil' diyordur?",
+"options": ["Konu gereksiz uzayınca", "Herkes aynı noktaya takılınca", "Kimse temel sebebi sormayınca", "Cevaplar yüzeyde kalınca"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] günün sonunda en çok neyi aklında tutardı?",
+"options": ["Doğru cevabı", "En iyi soruyu", "Kimin fikrini neden değiştirdiğini", "Basit ama güçlü bir cümleyi"],
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir erdem olarak görülür?",
+"options": ["Adalet", "Tembellik", "Sabırsızlık", "Umursamazlık"],
+"correct": "Adalet",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Sorgulamak' en çok ne anlama gelir?",
+"options": ["Bir şeyi düşünerek incelemek", "Hemen kabul etmek", "Duymamış gibi yapmak", "Ezberlemek"],
+"correct": "Bir şeyi düşünerek incelemek",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi mantıklı bir tartışmanın temel unsurlarından biridir?",
+"options": ["Gerekçe sunmak", "Ses yükseltmek", "Söz kesmek", "Konudan sapmak"],
+"correct": "Gerekçe sunmak",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Empati' kelimesi en çok neyi ifade eder?",
+"options": ["Başkasının duygusunu anlamaya çalışmayı", "Sadece kendini düşünmeyi", "Hızlı karar vermeyi", "Kural koymayı"],
+"correct": "Başkasının duygusunu anlamaya çalışmayı",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir düşünceyi destekleyen örnek vermek ne işe yarar?",
+"options": ["Fikri daha anlaşılır kılar", "Konuyu mutlaka uzatır", "Tartışmayı kapatır", "Her zaman haklı çıkarır"],
+"correct": "Fikri daha anlaşılır kılar",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Çelişki' ne demektir?",
+"options": ["Birbiriyle uyuşmayan durum", "Kesin doğru cevap", "Kısa açıklama", "Sessiz kalma"],
+"correct": "Birbiriyle uyuşmayan durum",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir düşünce hatasına örnek olabilir?",
+"options": ["Yetersiz bilgiyle kesin sonuca varmak", "Karşı tarafı dinlemek", "Örnek vermek", "Soruyu netleştirmek"],
+"correct": "Yetersiz bilgiyle kesin sonuca varmak",
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "'Sabır' en çok hangi durumu anlatır?",
+"options": ["Zor anda acele etmeden dayanabilmeyi", "Hemen pes etmeyi", "Sürekli ertelemeyi", "Sadece susmayı"],
+"correct": "Zor anda acele etmeden dayanabilmeyi",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir konuda 'kanıt' istemek en çok neyi gösterir?",
+"options": ["İddianın dayanağını aramayı", "Karşı tarafı küçümsemeyi", "Konuya ilgisiz kalmayı", "Konuyu kapatmayı"],
+"correct": "İddianın dayanağını aramayı",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Tevazu' en çok hangi anlama gelir?",
+"options": ["Alçakgönüllülük", "Gösteriş", "Kararsızlık", "İnatçılık"],
+"correct": "Alçakgönüllülük",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi öğrenmeyi destekleyen bir davranıştır?",
+"options": ["Soru sormak", "Her şeyi bildiğini sanmak", "Yanlışı gizlemek", "Dinlememek"],
+"correct": "Soru sormak",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Önyargı' ne demektir?",
+"options": ["Yeterli bilgi olmadan peşin hükme varmak", "Detaylı araştırma yapmak", "Görüş değiştirmek", "Tarafsız kalmak"],
+"correct": "Yeterli bilgi olmadan peşin hükme varmak",
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Bir fikri güçlü kılan unsurlardan biri hangisidir?",
+"options": ["Tutarlı olması", "Çok yüksek sesle söylenmesi", "Çok karmaşık olması", "Mutlaka herkesin hoşuna gitmesi"],
+"correct": "Tutarlı olması",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Bilgelik' en çok neyle ilişkilendirilir?",
+"options": ["Bilgiyi doğru yerde kullanmakla", "Sadece çok konuşmakla", "Sadece çok yaş almakla", "Her konuda kesin konuşmakla"],
+"correct": "Bilgiyi doğru yerde kullanmakla",
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi iyi bir dinleyicinin özelliğidir?",
+"options": ["Karşı tarafı bölmeden dinlemek", "Hemen kendi örneğine geçmek", "Konuyu değiştirmek", "Sadece cevap hazırlamak"],
+"correct": "Karşı tarafı bölmeden dinlemek",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim en basit soruyu bile beş katman derine indirme potansiyeline sahiptir?",
+"penalty": "Şu anki en basit eşyaya felsefi anlam yükleyerek tek cümle kur!",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'aslında mesele bundan büyük' cümlesini söylemeye en yatkın kişidir?",
+"penalty": "Hayali bir konuda ciddi bir tonla 'asıl mesele şu' diye başla!",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim tartışmada en çok doğru soruyu sorarak herkesi susturur?",
+"penalty": "Masaya tek cümlelik düşündürücü bir soru bırak!",
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir konuda emin değilken bile en sakin görünen kişidir?",
+"penalty": "Bilmiyor olsan da çok sakince 'ilginç bir nokta' de!",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim iki tarafı da anlayıp en çok ara bulucu olmaya uygundur?",
+"penalty": "Hayali iki kişiyi barıştıracak tek cümle kur!",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim en çok duyduğu bir sözü hayat dersi gibi tekrar eder?",
+"penalty": "Şimdi burada kendi uydurduğun bir bilge sözü söyle!",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim karşı tarafın mantık hatasını fark edince içten içe sevinen kişidir?",
+"penalty": "Nazikçe bir mantık hatası bulmuş gibi kaş kaldırıp yorum yap!",
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim konuşurken en çok 'önce kavramı netleştirelim' deme potansiyeline sahiptir?",
+"penalty": "Masadaki sıradan bir şeyin tanımını gereksiz ciddiyetle yap!",
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yanıldığını kabul etse bile bunu en olgun şekilde yapan kişidir?",
+"penalty": "Küçük bir konuda 'tamam, burada haklısın' de!",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim en sıradan sohbette bile beklenmedik derecede derin bir yorum yapar?",
+"penalty": "Bugün hava hakkında derinmiş gibi tek cümlelik yorum yap!",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Bilgelik",
+"correct": "Tecrübe",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Mantık",
+"correct": "Sezgi",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Soru",
+"correct": "Cevap",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Kanıt",
+"correct": "Gerekçe",
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Erdem",
+"correct": "İlke",
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Sabır",
+"correct": "Dayanıklılık",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Tevazu",
+"correct": "Nezaket",
+"category": "Bilgelerin Meydanı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Düşünce",
+"correct": "Görüş",
+"category": "Bilgelerin Meydanı",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Çelişki",
+"correct": "Tutarsızlık",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Empati",
+"correct": "Anlayış",
+"category": "Bilgelerin Meydanı",
+"difficulty": "MEDIUM"
+}
+]

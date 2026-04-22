@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] Z Kuşağı enerjisini en çok hangi davranışla verirdi?",
+"options": ["Bir olayı üç meme ile özetleyerek", "Her şeye hızlıca yorum yaparak", "Trendleri herkesten önce fark ederek", "İroniyi hiç bozmadan konuşarak"],
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir trend görse en çok ne yapardı?",
+"options": ["Hemen denerdi", "Önce uzaktan izlerdi", "Komik tarafını bulurdu", "Kimse yapmadan önce keşfetmiş gibi davranırdı"],
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] sosyal medyada en çok hangi konuda aşırı hızlı fikir değiştiriyor gibi durur?",
+"options": ["Trend seslerde", "Favori içerik üreticilerinde", "Estetik anlayışında", "Bir şeye 'cringe' deyip dememekte"],
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir şeyi beğenmediğini en çok nasıl belli ederdi?",
+"options": ["Sadece bakışıyla", "Tek kelimelik ironik yorumla", "Sessizce ekranı kaydırarak", "Abartılı şekilde 'yok artık' diyerek"],
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] internette bir şey çok popüler olunca en çok ne düşünürdü?",
+"options": ["Ben bunu daha önce görmüştüm", "Bir hafta sonra biter", "Şu an herkes abartıyor", "Birazdan bunun parodisi çıkar"],
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir arkadaş grubunda en çok hangi Z Kuşağı rolünü alırdı?",
+"options": ["Trend habercisi", "Meme uzmanı", "İroni makinesi", "Sessiz ama çok nokta atan yorumcu"],
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir içerik izlerken en çok hangi anda kopardı?",
+"options": ["Beklenmedik bir cut gelince", "Aşırı gerçek bir yorum duyunca", "Bir yüz ifadesi tam yerine oturunca", "Alakasız ama çok doğru benzetme yapılınca"],
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir şeyi 'çok iyi' bulduğunu en çok nasıl anlatırdı?",
+"options": ["Aşırı sakin ama ölümcül bir övgüyle", "Beş farklı kişiye göndererek", "Defalarca dönüp izleyerek", "Bir cümleyle efsane statüsüne çıkararak"],
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] Z Kuşağı dilini en çok hangi durumda kullanırdı?",
+"options": ["Bir şeyi anlatmaya üşenince", "Aşırı haklı olduğu anda", "Arkadaşını hafif tiye alırken", "Bir şeye bayıldığını söylerken"],
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir şeyin 'cringe' olduğuna en çok hangi sebeple karar verirdi?",
+"options": ["Fazla zorlama görünüyorsa", "Eski moda ama yeni gibi sunuluyorsa", "Kendi doğallığını kaybetmişse", "Herkes aynı şeyi kopyalıyorsa"],
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] arkadaş grubunda en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bu çok iyi ya", "Yok artık bu tam benlik", "Bu olay fazla iyi bağlandı", "Bunu açıklayamam ama komik"],
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir trendin bittiğini en çok hangi anda anlardı?",
+"options": ["Markalar kullanmaya başlayınca", "Aile gruplarına düşünce", "Aynı format çok tekrar edince", "Kimse artık üzerine şaka yapmayınca"],
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] internette en çok hangi içerik türünde kaybolurdu?",
+"options": ["Kısa komik videolarda", "Aşırı niş bilgi videolarında", "Dramatik hikâye anlatımlarında", "Estetik düzenleme videolarında"],
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] Z Kuşağı ruhunu en çok hangi şey özetlerdi?",
+"options": ["İroniyle baş etmek", "Her şeyi hızlı tüketmek", "Bir anda çok şey bilmek", "Hem dalga geçip hem çok ciddiye almak"],
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gün sonunda internette en çok neyi hatırlıyor olurdu?",
+"options": ["En komik içeriği", "En alakasız ama doğru benzetmeyi", "Bir anda patlayan trendi", "Bir yorumun herkesten iyi oluşunu"],
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Meme' internet kültüründe en çok neyi ifade eder?",
+"options": ["Hızla yayılan esprili içerik formatını", "Sadece müzik listesini", "Telefon modelini", "Oyun konsolu ayarını"],
+"correct": "Hızla yayılan esprili içerik formatını",
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Trend' kelimesi dijital kültürde en çok ne anlama gelir?",
+"options": ["Kısa sürede yaygınlaşan içerik veya akım", "Eski ve unutulmuş konu", "Sadece reklam metni", "Kapalı grup konuşması"],
+"correct": "Kısa sürede yaygınlaşan içerik veya akım",
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Cringe' en çok hangi durumu anlatır?",
+"options": ["Rahatsız edici derecede zorlama görünen şeyi", "Aşırı başarılı durumu", "Sessiz kalmayı", "Duygusal sahneyi"],
+"correct": "Rahatsız edici derecede zorlama görünen şeyi",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi kısa video platformlarında sık görülen bir davranıştır?",
+"options": ["Ses kullanarak içerik üretmek", "Mektup yazarak paylaşmak", "Gazete kupürü kesmek", "Kaset doldurmak"],
+"correct": "Ses kullanarak içerik üretmek",
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Viral olmak' ne demektir?",
+"options": ["Bir içeriğin çok hızlı ve geniş şekilde yayılması", "Sadece bir kişiye ulaşması", "Tamamen silinmesi", "Uzun süre gizli kalması"],
+"correct": "Bir içeriğin çok hızlı ve geniş şekilde yayılması",
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi dijital içerik üretiminde sık kullanılan bir unsur olabilir?",
+"options": ["Filtre", "Daktilo şeridi", "VHS kaseti", "Faks kağıdı"],
+"correct": "Filtre",
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'POV' içerikleri genellikle ne yapar?",
+"options": ["Bir durumu belirli bir bakış açısından gösterir", "Sadece haber okur", "Ürün fiyat listesi verir", "Canlı yayın bitişi yapar"],
+"correct": "Bir durumu belirli bir bakış açısından gösterir",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir içeriğin yorumlar kısmında çok konuşulması genelde neyi gösterir?",
+"options": ["İçeriğin etkileşim aldığını", "Kesin yanlış olduğunu", "Silindiğini", "Kimsenin izlemediğini"],
+"correct": "İçeriğin etkileşim aldığını",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Aesthetic' ifadesi internet dilinde en çok neyi anlatır?",
+"options": ["Belli bir görsel tarz ve hissi", "Sadece ses kaydını", "Matematik çözümünü", "Dosya formatını"],
+"correct": "Belli bir görsel tarz ve hissi",
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi sosyal medya içeriğinde dikkat çekmeyi artırabilir?",
+"options": ["İlk saniyelerde merak uyandırmak", "Çok uzun giriş yapmak", "Hiç görsel kullanmamak", "Tamamen alakasız başlık atmak"],
+"correct": "İlk saniyelerde merak uyandırmak",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'İroni' en çok neyi ifade eder?",
+"options": ["Bir şeyi düz anlamının tersine olacak şekilde söylemeyi", "Her şeyi ciddiye almayı", "Kural yazmayı", "Sessiz kalmayı"],
+"correct": "Bir şeyi düz anlamının tersine olacak şekilde söylemeyi",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi çevrimiçi kültürde topluluk hissini güçlendirebilir?",
+"options": ["Ortak şaka ve referanslar", "Tam sessizlik", "Tek yönlü konuşma", "Hiç yorum olmaması"],
+"correct": "Ortak şaka ve referanslar",
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "'Algorithm' sosyal medya bağlamında en çok neyle ilişkilidir?",
+"options": ["Kullanıcıya neyin gösterileceğini belirleyen sistemle", "Telefonun pil kapağıyla", "Kameranın çözünürlüğüyle", "Klavyenin ışığıyla"],
+"correct": "Kullanıcıya neyin gösterileceğini belirleyen sistemle",
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Bir içeriğin çok kişi tarafından tekrar kullanılması neyi gösterebilir?",
+"options": ["Formatın popülerleştiğini", "İçeriğin işe yaramadığını", "Konunun yasak olduğunu", "Uygulamanın kapandığını"],
+"correct": "Formatın popülerleştiğini",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi dijital dünyada bir içerik üreticisinin yaptığı işlerden biri olabilir?",
+"options": ["Video kurgulamak", "Tren rayı döşemek", "Pencere doğramak", "Harç karıştırmak"],
+"correct": "Video kurgulamak",
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yeni çıkan bir trendi ilk görüp herkese 'ben bunu dün görmüştüm' diyen kişidir?",
+"penalty": "Yeni bir şey keşfetmiş gibi aşırı cool bir yorum yap!",
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir şeyi beğenmediğinde en yıkıcı ama kısa yorumu yapar?",
+"penalty": "Tek kelimelik ama çok şey anlatan bir tepki ver!",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'çok iyi' dediği bir şeyi üç dakika sonra başka bir şeyle değiştirir?",
+"penalty": "Az önce övdüğün hayali bir şeyi şimdi hafifçe geri çek!",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim internette gördüğü her şeyi 'bunu açıklayamam ama komik' diye savunur?",
+"penalty": "Hiç açıklamadan komik bulduğun hayali bir şeyi savun!",
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim sosyal medya üzerinden stalk yapmada en iddialı kişidir?",
+"penalty": "Hiç bakmamış gibi yapıp çok şey biliyormuş gibi bir cümle kur!",
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim trend bir sesi duyar duymaz içinden içerik fikri kurmaya başlar?",
+"penalty": "Hayali bir trend sese tek cümlelik video fikri uydur!",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir şeyi 'cringe' bulduğunda yüz ifadesiyle her şeyi anlatır?",
+"penalty": "Hiç konuşmadan sadece mimikle hafif utanç tepkisi ver!",
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ironiyi o kadar çok kullanır ki bazen ciddi mi şaka mı anlaşılmaz?",
+"penalty": "Şimdi yarı ciddi yarı şaka bir cümle kur!",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yorumlar kısmını içerikten daha çok önemseyen kişidir?",
+"penalty": "Hayali bir videonun yorumlarına bakıyormuş gibi tepki ver!",
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir meme'i gerçek hayata en hızlı taşıyan kişidir?",
+"penalty": "Şu an günlük hayata uyarlanmış saçma ama komik bir ifade üret!",
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Trend",
+"correct": "Akım",
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Meme",
+"correct": "Şablon içerik",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "POV",
+"correct": "Vlog",
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "İroni",
+"correct": "Sarkazm",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Cringe",
+"correct": "Utanç hissi",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Viral",
+"correct": "Popüler",
+"category": "Z Kuşağı",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Aesthetic",
+"correct": "Stil",
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Yorumlar",
+"correct": "DM",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Filtre",
+"correct": "Efekt",
+"category": "Z Kuşağı",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Algoritma",
+"correct": "Keşfet",
+"category": "Z Kuşağı",
+"difficulty": "HARD"
+}
+]

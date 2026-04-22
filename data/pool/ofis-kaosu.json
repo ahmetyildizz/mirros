@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ofiste en çok hangi durumda içinden 'bugün de bir şeyler olacak' diyordur?",
+"options": ["Takvimde ani toplantı görünce", "Yazıcı yine hata verince", "Birisi 'iki dakikan var mı?' deyince", "Ortak gruba uzun mesaj düşünce"],
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ofiste en çok hangi rolle öne çıkardı?",
+"options": ["Krizi sakinleştiren", "Her şeyi ilk duyan", "İşi toparlayan", "Olayı komediye çeviren"],
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] sabah ofise gelir gelmez en çok neyi kontrol ederdi?",
+"options": ["Maillerini", "Takvimini", "Kahve durumunu", "Kimlerin gelmiş olduğunu"],
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir toplantı uzadığında en çok hangi tepkiyi verirdi?",
+"options": ["Not alıyormuş gibi yapıp içten içe kopardı", "Toplantıyı toparlamaya çalışırdı", "Sessizce saati kontrol ederdi", "Yeni aksiyon çıkar diye dikkat kesilirdi"],
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ofiste biri 'acil' dediğinde en çok ne düşünürdü?",
+"options": ["Gerçekten acil mi acaba?", "Yine son dakika işi geldi", "Önce detay lazım", "Tam kahvemi almıştım"],
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] açık ofiste en çok hangi şeye takılırdı?",
+"options": ["Yüksek sesle konuşanlara", "Sürekli sandalye çekenlere", "Bir anda gelen mini toplantılara", "Mutfağa gidip dönmeyenlere"],
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ofis içi bir karışıklıkta en çok hangi detayı fark ederdi?",
+"options": ["Kimin aslında neyi unuttuğunu", "Krizin nerede başladığını", "Kimin gereksiz panik yaptığını", "Kimsenin okumadığı mesajı"],
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] iş çıkışına yakın gelen bir taleple en çok nasıl başa çıkardı?",
+"options": ["Yarın ilk iş yapalım derdi", "Hızlıca çözüp kapatmaya çalışırdı", "Öncelik sorgulardı", "Kimden geldiğine bakardı"],
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ofis grubunda en çok hangi mesajı atıyor gibi durur?",
+"options": ["Toplantı linki burada", "Bunu kim güncelleyecek?", "Kahveye çıkan var mı?", "Son durumu biri özet geçebilir mi?"],
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biri yanlış kişiye mail atsa en çok ne yapardı?",
+"options": ["Geri çekme şansına bakardı", "Panik yönetirdi", "Olayı sessizce çözmeye çalışırdı", "İçinden çok gülerdi ama belli etmezdi"],
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ofiste en çok hangi konuda gizli uzman gibi görünürdü?",
+"options": ["Toplantı kurtarmakta", "Yazıcıyla uğraşmakta", "Doğru kişiyi bulmakta", "Sıkışan işi sessizce çözmekte"],
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] masasına biri uğrayıp 'ufak bir şey soracağım' dediğinde en çok hangi tepkiyi verirdi?",
+"options": ["Buyur derdi ama içten içe hazırlanırdı", "Hemen not moduna geçerdi", "Bunun ufacık olmayacağını anlardı", "Önce konuyu tahmin etmeye çalışırdı"],
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ofiste en çok hangi anda moralinin düştüğünü belli ederdi?",
+"options": ["Üçüncü revize isteği gelince", "Aynı toplantı ikinci kez açılınca", "Konu sahibi ortada olmayınca", "Tam bitmiş iş geri dönünce"],
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ofis kaosunu en çok hangi yöntemle yönetirdi?",
+"options": ["Liste yaparak", "Öncelik sıralayarak", "İnsanları tek tek dürterek", "Gülüp geçerek"],
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gün sonunda ofiste en çok neyi hatırlıyor olurdu?",
+"options": ["Kimin ne söz verdiğini", "En saçma aksiliği", "Hangi işin gerçekten ilerlediğini", "Kimlerin ortadan kaybolduğunu"],
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi ofis ortamında sık kullanılan bir iletişim aracıdır?",
+"options": ["E-posta", "Dürbün", "Termosifon", "Matkap"],
+"correct": "E-posta",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Toplantı daveti' en çok ne için kullanılır?",
+"options": ["Bir görüşmenin zamanını ve katılımcılarını belirlemek için", "Yemek siparişi vermek için", "Yıllık izin onayı için", "Yazıcı kurmak için"],
+"correct": "Bir görüşmenin zamanını ve katılımcılarını belirlemek için",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi ofiste sık karşılaşılan teknik sorunlardan biridir?",
+"options": ["Yazıcının çalışmaması", "Çekmecenin şiir yazması", "Masanın konuşması", "Perdenin bildirim atması"],
+"correct": "Yazıcının çalışmaması",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Cc' alanı e-postada ne işe yarar?",
+"options": ["Bilgi için başka alıcıları eklemeye", "Mesajı silmeye", "Dosyayı sıkıştırmaya", "Takvimi kapatmaya"],
+"correct": "Bilgi için başka alıcıları eklemeye",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir ofis malzemesidir?",
+"options": ["Zımba", "Pala", "Düdük", "Kürek"],
+"correct": "Zımba",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Deadline' kelimesi iş hayatında en çok neyi ifade eder?",
+"options": ["Teslim tarihini", "Öğle molasını", "Maaş gününü", "Toplantı odasını"],
+"correct": "Teslim tarihini",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir işin önceliğini netleştirmek en çok neyi sağlar?",
+"options": ["Zamanı daha verimli kullanmayı", "Konuyu uzatmayı", "Daha çok toplantı yapmayı", "Belirsizliği artırmayı"],
+"correct": "Zamanı daha verimli kullanmayı",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi ofiste dosya saklamak için kullanılabilir?",
+"options": ["Klasör", "Tost makinesi", "Hoparlör", "Mikser"],
+"correct": "Klasör",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Ajanda' ne işe yarar?",
+"options": ["Not ve plan tutmaya", "İnternet hızını artırmaya", "Kahve yapmaya", "Işıkları kapatmaya"],
+"correct": "Not ve plan tutmaya",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi toplantı verimini artıran bir davranıştır?",
+"options": ["Gündemi önceden paylaşmak", "Konuyu sürekli dağıtmak", "Her şeyi son dakikaya bırakmak", "Kimseye söz vermemek"],
+"correct": "Gündemi önceden paylaşmak",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Revize' kelimesi iş hayatında en çok ne anlama gelir?",
+"options": ["Düzenleme veya yeniden gözden geçirme", "Tamamen silme", "İşi devretme", "Mola verme"],
+"correct": "Düzenleme veya yeniden gözden geçirme",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir ofis toplantı alanı olabilir?",
+"options": ["Toplantı odası", "Motor dairesi", "Soyunma kabini", "Balkon korkuluğu"],
+"correct": "Toplantı odası",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Follow-up' ifadesi en çok neyi anlatır?",
+"options": ["Bir işin takibini yapmayı", "Yeni dosya açmayı", "Bilgisayarı kapatmayı", "Masayı toplamayı"],
+"correct": "Bir işin takibini yapmayı",
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi ofiste dikkat dağıtan unsurlardan biri olabilir?",
+"options": ["Sürekli gelen bildirimler", "Düzenli yapılmış plan", "Açık gündem", "Net görev paylaşımı"],
+"correct": "Sürekli gelen bildirimler",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir e-postayı göndermeden önce kontrol edilmesi en mantıklı şey hangisidir?",
+"options": ["Alıcıların ve eklerin doğru olup olmadığı", "Sandalyenin yüksekliği", "Kahvenin sıcaklığı", "Ofis lambasının açısı"],
+"correct": "Alıcıların ve eklerin doğru olup olmadığı",
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ofiste 'çok kısa bir toplantı' lafına en az inanan kişidir?",
+"penalty": "Toplantı uzayınca yüzünde oluşan ifadeyi canlandır!",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yazıcı bozulunca sanki şirkette tek teknik uzman kendisiymiş gibi çağrılıyordur?",
+"penalty": "Yazıcıya söylenecek en kibar ama sitemli cümleyi kur!",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim iş çıkışına yakın gelen işi görünce içten içe dramatik müzik duymaya başlar?",
+"penalty": "Akşam üstü gelen acil talebe vereceğin ilk tepkiyi oynayarak göster!",
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ofiste en çok 'ben bunu söylemiştim' deme hakkına sahip kişidir?",
+"penalty": "Şimdi tek cümleyle çok bilmiş ama haklı bir uyarı yap!",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim gelen mailleri konu satırından ruh hâline göre sınıflandırıyordur?",
+"penalty": "En korkutucu mail başlangıcını yüksek sesle söyle!",
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim mutfakta kahve alırken en çok ofis istihbaratı toplayan kişidir?",
+"penalty": "Kahve almaya giderken söylenecek en masum bahaneyi söyle!",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ofis içi mini krizlerde sakin görünse de içten içe tam bir panik yaşar?",
+"penalty": "Sakinmiş gibi yaparken içinden geçen tek cümleyi itiraf et!",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim en gereksiz uzun maili bile sonuna kadar okuyup özet çıkarabilecek kişidir?",
+"penalty": "Bu mailin özeti şu diye başlayarak 5 kelimelik özet yap!",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim toplantıda kamerayı açınca bir anda ekstra profesyonel kesiliyordur?",
+"penalty": "Toplantı yüzünü üç saniye boyunca göster!",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ortak işlerde en çok sessizce yük çeken kişidir?",
+"penalty": "Ofiste en çok kullandığın iç çekişi kısa bir performansla göster!",
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Toplantı",
+"correct": "Brief",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Yazıcı",
+"correct": "Fotokopi makinesi",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Takvim daveti",
+"correct": "Hatırlatma bildirimi",
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Revize",
+"correct": "Onay",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Klasör",
+"correct": "Arşiv kutusu",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Kahve molası",
+"correct": "Öğle molası",
+"category": "Ofis Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Aksiyon listesi",
+"correct": "Toplantı notu",
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Cc",
+"correct": "Bcc",
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Açık ofis",
+"correct": "Ortak çalışma alanı",
+"category": "Ofis Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Deadline",
+"correct": "Milestone",
+"category": "Ofis Kaosu",
+"difficulty": "HARD"
+}
+]

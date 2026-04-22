@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 'ben hiç...' oyunu oynarken en çok hangi durumda kahkahayı patlatırdı?",
+"options": ["Birinin beklenmedik itirafında", "Soruyu kimin sorduğuna bakınca", "Kendi başına gelen şeyi başkasında görünce", "Masada herkes aynı anda tepki verince"],
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 'ben hiç...' turunda en çok hangi tarz soruları seçerdi?",
+"options": ["Masum başlayıp sonradan açılanları", "Komik itiraf çıkartanları", "Gündelik hayatla ilgili olanları", "Herkesi şaşırtan küçük detaylı olanları"],
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir itiraf sonrası en çok hangi tepkiyi verirdi?",
+"options": ["Yok artık derdi", "Sessizce gülüp izlerdi", "Detay isterdi", "Ben de onu diyecektim derdi"],
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] oyunda en çok hangi konuda kendini ele verirdi?",
+"options": ["Eski mesaj alışkanlıklarında", "Günlük küçük utanç anılarında", "Arkadaşlık krizlerinde", "Plansız yaptığı şeylerde"],
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] masada biri fazla masum görünüyorsa en çok ne düşünürdü?",
+"options": ["Kesin en ilginç geçmiş onda", "Birazdan açılacak", "Şu an rol yapıyor", "Yanlış kişiye güveniyoruz"],
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 'ben hiç...' oynarken en çok hangi rolde öne çıkardı?",
+"options": ["En iyi soru seçen", "En çok şaşıran", "En sakin görünen", "Detay avcısı"],
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biri çok tanıdık bir itiraf yapınca en çok ne yapardı?",
+"options": ["Göz göze gelip kahkaha atardı", "Aşırı sessiz kalırdı", "Konu değiştiriyormuş gibi yapardı", "Kendi hikâyesini de açardı"],
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] oyunda en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Dur, burada detay var", "Ben buna inanmıyorum", "Bunu açıklaman lazım", "Bu kadarını beklemiyordum"],
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kendi sırası geldiğinde en çok hangi taktiği kullanırdı?",
+"options": ["Masum görünüp kritik soru sorardı", "Herkesi aynı anda yakalayacak soru seçerdi", "Önce ortalığı yoklardı", "Komik bir giriş yapardı"],
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biri çok hızlı tepki verince en çok hangi şeyi fark ederdi?",
+"options": ["Konunun tanıdık geldiğini", "O kişinin panik yaptığını", "Masada ortak bir geçmiş olduğunu", "Asıl hikâyenin daha büyük olduğunu"],
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 'ben hiç...' oyununda en çok hangi konularda rahat görünürdü?",
+"options": ["Günlük küçük sakarlıklarda", "Eski okul anılarında", "Yanlış kişiye mesaj atma anlarında", "Plansız maceralarda"],
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] masadaki en güvenli görünen kişiden itiraf çıkınca en çok nasıl tepki verirdi?",
+"options": ["Sessizce şok olurdu", "Anında detay isterdi", "Bunu beklemiyordum derdi", "Hemen başka bir örnek verirdi"],
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] oyunda en çok hangi anda rahatını kaybederdi?",
+"options": ["Soru fazla tanıdık gelince", "Herkes ona bakınca", "Detay istenince", "Aynı şeyi yapan başka biri çıkmayınca"],
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] 'ben hiç...' gecesinden sonra en çok neyi hatırlıyor olurdu?",
+"options": ["En komik itirafı", "En şaşırtan kişiyi", "Kendi istemeden ele verdiği şeyi", "Masada değişen dengeleri"],
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] oyunda birini en çok hangi durumda suçüstü yakalanmış gibi görürdü?",
+"options": ["Çok hızlı tepki verince", "Gülmemesi gereken yerde gülünce", "Bir anda susunca", "Konu değiştirince"],
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "'Ben Hiç...' oyununun temel amacı en çok nedir?",
+"options": ["Katılımcılar hakkında eğlenceli bilgiler ortaya çıkarmak", "Hızlı matematik çözmek", "Sessiz kalma yarışması yapmak", "Takım kurup görev tamamlamak"],
+"correct": "Katılımcılar hakkında eğlenceli bilgiler ortaya çıkarmak",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir itiraf oyununda en önemli unsurlardan biridir?",
+"options": ["Güvenli ve rahat ortam", "Yüksek sesli müzik zorunluluğu", "Not tutmak", "Kuralları sürekli değiştirmek"],
+"correct": "Güvenli ve rahat ortam",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'İtiraf' kelimesi en çok ne anlama gelir?",
+"options": ["Normalde saklanan bir şeyi açıkça söylemek", "Konuyu değiştirmek", "Soruyu geri sormak", "Hiç konuşmamak"],
+"correct": "Normalde saklanan bir şeyi açıkça söylemek",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir oyunda insanların daha rahat paylaşım yapmasını sağlayan şey hangisidir?",
+"options": ["Yargılanmayacaklarını hissetmeleri", "Sürekli bölünmeleri", "Cevapların zorunlu kaydedilmesi", "Herkesin aynı anda konuşması"],
+"correct": "Yargılanmayacaklarını hissetmeleri",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi gündelik hayatta yaşanabilecek komik bir 'ben hiç...' konusu olabilir?",
+"options": ["Yanlış kişiye mesaj atmak", "Ay'a gitmek", "Denizaltı üretmek", "Volkan patlatmak"],
+"correct": "Yanlış kişiye mesaj atmak",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Tepki vermek' en çok neyi anlatır?",
+"options": ["Bir duruma karşı davranış veya söz göstermek", "Sadece susmak", "Soruyu atlamak", "Kural yazmak"],
+"correct": "Bir duruma karşı davranış veya söz göstermek",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir arkadaş ortamında oyunun eğlenceli kalması için hangisi daha uygundur?",
+"options": ["Sınırları aşmayan sorular sormak", "İnsanları rahatsız edecek şekilde zorlamak", "Sadece tek kişiyi hedef almak", "Herkesi susturmak"],
+"correct": "Sınırları aşmayan sorular sormak",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Utanç verici anı' ifadesi en çok neyi anlatır?",
+"options": ["Hatırlanınca hafif mahcup olunan olayı", "Bilimsel deneyi", "Spor müsabakasını", "Resmî duyuruyu"],
+"correct": "Hatırlanınca hafif mahcup olunan olayı",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir sohbette merak uyandıran bir davranıştır?",
+"options": ["Detay vermeden gülmek", "Hiç tepki vermemek", "Masadan kalkmak", "Soruyu duymamış gibi yapmak"],
+"correct": "Detay vermeden gülmek",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Ortak deneyim' en çok ne demektir?",
+"options": ["Birden fazla kişinin yaşamış olduğu benzer durum", "Sadece tek kişinin bildiği sır", "Yanlış anlaşılmış konu", "Kurgu hikâye"],
+"correct": "Birden fazla kişinin yaşamış olduğu benzer durum",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir oyunda 'buzları eritmek' en çok ne anlama gelir?",
+"options": ["İnsanların daha rahat ve samimi hale gelmesi", "Ortamı tamamen sessizleştirmek", "Kuralları kaldırmak", "Oyunu aniden bitirmek"],
+"correct": "İnsanların daha rahat ve samimi hale gelmesi",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi sosyal bir parti oyunu örneğidir?",
+"options": ["İtiraf ve sohbet oyunu", "Vergi hesaplama formu", "Katalog dizimi", "Dosya yedekleme yazılımı"],
+"correct": "İtiraf ve sohbet oyunu",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Mahcup olmak' en çok hangi durumu ifade eder?",
+"options": ["Bir şeyden hafif utanmak", "Aşırı öfkelenmek", "Hiç umursamamak", "Kazandığı için sevinmek"],
+"correct": "Bir şeyden hafif utanmak",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir arkadaş grubunda aynı anda birçok kişinin güldüğü an genelde neyi gösterir?",
+"options": ["Ortak ve eğlenceli bir bağ kurulduğunu", "Oyunun bittiğini", "Birinin kesin kazandığını", "Kuralların iptal olduğunu"],
+"correct": "Ortak ve eğlenceli bir bağ kurulduğunu",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi 'ben hiç...' oyununda en sık aranan etki olabilir?",
+"options": ["Şaşırtıcı ama eğlenceli açıklık", "Tam sessizlik", "Resmî sunum havası", "Tek doğru cevap"],
+"correct": "Şaşırtıcı ama eğlenceli açıklık",
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'ben çok sakinim' deyip ilk itirafta yüzü düşen kişidir?",
+"penalty": "Yakalanmış gibi minicik bir şok yüzü yap!",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim en masum soruyu sorup en büyük kaosu çıkarma potansiyeline sahiptir?",
+"penalty": "Masum görünümlü ama hafif tehlikeli bir soru uydur!",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'ben bunu anlatmayacaktım aslında' deyip yine de en çok detay veren kişidir?",
+"penalty": "Bir cümlelik yarım itiraf yapıp orada bırak!",
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim başkasının itirafında kendini ele veren bir yüz ifadesi takınır?",
+"penalty": "Tanıdık gelmiş gibi sadece mimikle tepki ver!",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim detay isteme konusunda sınır tanımayan kişidir?",
+"penalty": "Şimdi tek cümlelik çok meraklı bir takip sorusu sor!",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim oyunun başında rahat görünüp ortalarda 'ben neden buradayım' moduna girer?",
+"penalty": "Pişman olmuş gibi ama gülerek tek kelimelik tepki ver!",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim başkasının anlattığı bir şeyde en çok 'ben de yapmıştım' deme potansiyeline sahiptir?",
+"penalty": "Bir itirafta kendini ele vermiş gibi boğaz temizle!",
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim en sıradan konudan bile mini skandal çıkarabilecek kişidir?",
+"penalty": "Tamamen sıradan bir şeyi aşırı dramatik anlat!",
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ilk turda çok sessiz kalıp son turlarda herkesi şaşırtan kişidir?",
+"penalty": "Şimdi gizemli bir şekilde 'daha hiçbir şey görmediniz' de!",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim oyunun sonunda en çok 'bu konuşma burada kalacak' diyen kişidir?",
+"penalty": "Masaya gizli anlaşma yapıyormuş gibi ciddi bir bakış at!",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "İtiraf",
+"correct": "Açıklama",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Utanç anı",
+"correct": "Komik anı",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Mesaj",
+"correct": "Ses kaydı",
+"category": "Ben Hiç...",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Yanlış anlaşılma",
+"correct": "Yanlışlık",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Sır",
+"correct": "İpucu",
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Panik",
+"correct": "Telaş",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Eski mesaj",
+"correct": "Eski fotoğraf",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Kahkaha",
+"correct": "Sırıtış",
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Şaşkınlık",
+"correct": "Merak",
+"category": "Ben Hiç...",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Detay",
+"correct": "İpucu",
+"category": "Ben Hiç...",
+"difficulty": "MEDIUM"
+}
+]

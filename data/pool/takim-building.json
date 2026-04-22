@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] takım etkinliğinde en çok hangi rolle öne çıkardı?",
+"options": ["Herkesi motive eden", "Planı toparlayan", "Sessizce gözlem yapan", "İşi oyuna çeviren"],
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ekip oyununda kurallar anlatılırken en çok ne yapardı?",
+"options": ["Dikkatle dinlerdi", "Hemen strateji kurardı", "Bir espri patlatırdı", "Kimle aynı takımda olduğunu kontrol ederdi"],
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] takım arkadaşları arasında en çok hangi konuda güven verirdi?",
+"options": ["Krizi sakin yönetmekte", "İletişimi güçlü tutmakta", "Hızlı çözüm bulmakta", "Moral yükseltmekte"],
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] grup çalışmasında en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bir toparlayalım", "Bence önce amacı netleştirelim", "Bunu daha kolay yapmanın yolu var", "Tamam, ben not alıyorum"],
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] takım etkinliğinde en çok hangi durumda kontrolü eline alırdı?",
+"options": ["Süre daralınca", "Herkes aynı anda konuşunca", "Kimse karar veremeyince", "Puan kaybedilince"],
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ekip içindeki sessiz birini oyuna katmak için en çok ne yapardı?",
+"options": ["Doğrudan fikrini sorardı", "Yanına oturup dahil ederdi", "Küçük bir görev verirdi", "Espriyle rahatlatırdı"],
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] takım oyununda kaybetmeye yaklaşınca en çok nasıl davranırdı?",
+"options": ["Daha da hırslanırdı", "Moral bozmazdı", "Yeni plan önerirdi", "Durumu komediye vururdu"],
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ekip etkinliğinde en çok hangi görev ona yakışırdı?",
+"options": ["Sunumu yapmak", "Zamanı yönetmek", "Görev dağıtmak", "Herkesin fikrini toplamak"],
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] takım içinde en hızlı hangi detayı fark ederdi?",
+"options": ["Kimin motive düştüğünü", "Kimin liderlik aldığını", "Kimin işi geciktirdiğini", "Kimin aslında çözümü bildiğini"],
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir beyin fırtınasında en çok hangi tarz fikri ortaya atardı?",
+"options": ["Pratik ve uygulanabilir", "Cesur ve farklı", "Risk almayan güvenli", "Komik ama işe yarayan"],
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] takım arkadaşını en çok hangi sözle motive ederdi?",
+"options": ["Bence bu sende", "Bir deneyelim, çıkar", "Takılırsak beraber çözeriz", "Şu ana kadar iyiyiz, devam"],
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ekip etkinliğinde en çok hangi kişiye yakın oynardı?",
+"options": ["En planlı olana", "En enerjik olana", "En yaratıcı olana", "En sakin olana"],
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] takım çalışmasında en çok hangi konuda sabırsızlanırdı?",
+"options": ["Sonuca ulaşmakta", "Karar vermekte", "Uygulamaya geçmekte", "Kimin ne yapacağını netleştirmekte"],
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ekip oyunu bittikten sonra en çok neyi hatırlıyor olurdu?",
+"options": ["En komik anı", "Kimin kritik katkı yaptığını", "Nerede hata yapıldığını", "Beklenmedik iş birliğini"],
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] takım içinde mini bir anlaşmazlık çıkarsa en çok nasıl davranırdı?",
+"options": ["Orta yolu bulurdu", "Net karar verirdi", "Herkesi sırayla dinlerdi", "Gerginliği dağıtırdı"],
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi güçlü ekip çalışmasının temel unsurlarından biridir?",
+"options": ["İletişim", "Gizlilik", "Kararsızlık", "Dağınıklık"],
+"correct": "İletişim",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir takımda görevlerin net olması en çok neyi sağlar?",
+"options": ["Belirsizliği azaltmayı", "Sohbeti uzatmayı", "Toplantıyı büyütmeyi", "Mola sayısını artırmayı"],
+"correct": "Belirsizliği azaltmayı",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi ekip içinde güven oluşturan davranışlardan biridir?",
+"options": ["Sözünü tutmak", "Bilgiyi saklamak", "Sorumluluktan kaçmak", "Başkalarını suçlamak"],
+"correct": "Sözünü tutmak",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Beyin fırtınasının temel amacı nedir?",
+"options": ["Çok sayıda fikir üretmek", "Tek kişiyi konuşturmak", "Sadece eleştiri yapmak", "Kararı ertelemek"],
+"correct": "Çok sayıda fikir üretmek",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi takım etkinliklerinde sık kullanılan bir araç olabilir?",
+"options": ["Zamanlayıcı", "Pense", "Matkap", "Kilit anahtarı"],
+"correct": "Zamanlayıcı",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir ekipte geri bildirimin etkili olması için en önemli özelliklerden biri hangisidir?",
+"options": ["Yapıcı olması", "Belirsiz olması", "Geç verilmesi", "Kişiselleştirilmesi"],
+"correct": "Yapıcı olması",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Takım çalışmasında ortak hedef ne işe yarar?",
+"options": ["Ekibi aynı yöne toplar", "Bireyselliği artırır", "Rolleri gizler", "Süreyi uzatır"],
+"correct": "Ekibi aynı yöne toplar",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir ekip oyunu türü olabilir?",
+"options": ["Hazine avı", "Sigorta poliçesi", "Arşiv düzeni", "Bina planı"],
+"correct": "Hazine avı",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Toplantılarda 'moderasyon' en çok neyi ifade eder?",
+"options": ["Süreci ve konuşma akışını yönetmeyi", "Not defterini değiştirmeyi", "Sadece karar yazmayı", "Oturma planı yapmayı"],
+"correct": "Süreci ve konuşma akışını yönetmeyi",
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Bir takım içinde çatışma doğru yönetilirse neye dönüşebilir?",
+"options": ["Faydalı gelişime", "Kalıcı sessizliğe", "Tam kopuşa", "Sürekli ertelemeye"],
+"correct": "Faydalı gelişime",
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi ekip içi motivasyonu artıran unsurlardan biridir?",
+"options": ["Takdir edilmek", "Görmezden gelinmek", "Belirsiz görevler", "Sürekli eleştiri"],
+"correct": "Takdir edilmek",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Takım çalışmasında 'delegasyon' ne anlama gelir?",
+"options": ["Görev devretmek", "Toplantı iptal etmek", "Kararı tek başına almak", "Sadece rapor yazmak"],
+"correct": "Görev devretmek",
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi iyi bir ekip oyuncusunun özelliğidir?",
+"options": ["Dinlemeyi bilmek", "Her fikri reddetmek", "Tüm işi sahiplenmek", "Hiç konuşmamak"],
+"correct": "Dinlemeyi bilmek",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir etkinlikte takım ruhunu artırmak için en etkili şeylerden biri hangisidir?",
+"options": ["Ortak başarı duygusu", "Sürekli kıyaslama", "Belirsiz kurallar", "Tek kişinin öne çıkması"],
+"correct": "Ortak başarı duygusu",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi takım kurma etkinliğinin ana amaçlarından biridir?",
+"options": ["İş birliğini güçlendirmek", "Sadece vakit geçirmek", "Sorumluluğu azaltmak", "İletişimi kesmek"],
+"correct": "İş birliğini güçlendirmek",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim takım oyununda fark ettirmeden liderliği eline alıyordur?",
+"penalty": "Masadaki herkese 10 saniyelik motivasyon konuşması yap!",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ekip işi başlayınca gizlice puan hesabı yapmaya başlar?",
+"penalty": "Ne kadar rekabetçi olduğunu yüzde olarak söyle!",
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim görev dağılımında en rahat şekilde iyi işi seçmeye çalışıyordur?",
+"penalty": "Takım içindeki ideal rolünü tek cümlede ilan et!",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim etkinlikte işler karışınca ilk panik olan gibi görünür ama yine de toparlar?",
+"penalty": "Panik anındaki klasik cümleni şimdi söyle!",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim herkes yorulunca hala enerjiyi ayakta tutmaya çalışıyordur?",
+"penalty": "Şu an takımı ayağa kaldıracak bir slogan uydur!",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim takım etkinliğinde en çok gizli strateji kuran kişidir?",
+"penalty": "Kazandıracak tek cümlelik planını açıkla!",
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim takım arkadaşının moralinin düştüğünü ilk fark eden kişidir?",
+"penalty": "Masadaki birine kısa bir moral cümlesi söyle!",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim takım oyunu bitince en uzun analiz yapan kişidir?",
+"penalty": "Az önceki oyuna dair gereksiz detaylı bir yorum yap!",
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ekip çalışmasında sessiz kalıp en kritik anda konuşur?",
+"penalty": "Şimdi tam zamanında söylenmiş gibi etkili bir cümle kur!",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim takım içinde en çok barıştırıcı rolüne uygundur?",
+"penalty": "İki kişinin arası bozulmuş gibi yap ve ortamı tek cümleyle yumuşat!",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Lider",
+"correct": "Koç",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Toplantı",
+"correct": "Atölye",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Beyin fırtınası",
+"correct": "Strateji oturumu",
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Takvim",
+"correct": "Ajanda",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Sunum",
+"correct": "Demo",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Görev",
+"correct": "Sorumluluk",
+"category": "Takım Building",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Geri bildirim",
+"correct": "Değerlendirme",
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Moderasyon",
+"correct": "Kolaylaştırıcılık",
+"category": "Takım Building",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Motivasyon",
+"correct": "Moral",
+"category": "Takım Building",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Hedef",
+"correct": "KPI",
+"category": "Takım Building",
+"difficulty": "HARD"
+}
+]

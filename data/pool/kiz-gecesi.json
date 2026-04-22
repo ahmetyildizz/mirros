@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bu gece birine özel mesaj atacak olsa en çok hangi bahaneyle yazardı?",
+"options": ["Yanlışlıkla story'ne bastım diye", "Bir şarkı göndermek için", "Mekân önerisi istemek için", "Hiç bahanesiz direkt yazardı"],
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gece sonunda en çok hangi şeyi abartılı şekilde anlatıyor olurdu?",
+"options": ["Garsonla yaşadığı mini diyaloğu", "Bir bakışmayı destan gibi", "Tatlı siparişini büyük olay gibi", "Ayakkabısının vurmasını dramatik şekilde"],
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bu masada birinin yeni flörtünü görünce ilk olarak neye dikkat ederdi?",
+"options": ["Bakışlarına", "Yazışma tarzına", "Fotoğraf seçimine", "Arkadaş çevresine"],
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] arkadaş grubunda en çok hangi konuda gizli danışman gibi çalışıyordur?",
+"options": ["Flört mesajı düzeltmekte", "Kombin seçmekte", "Dedikodu toparlamakta", "Barışma konuşması yazmakta"],
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir arkadaşının telefonunu bir dakika eline alsa en çok hangi uygulamada oyalanırdı?",
+"options": ["Instagram keşfette", "WhatsApp arşiv sohbetlerinde", "Notlar uygulamasında", "Online alışveriş sepetinde"],
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gece boyunca en çok hangi cümleyi kurmuş gibi duruyor?",
+"options": ["Ben bir şey demiyorum ama...", "Bak şimdi olayı yanlış anlama...", "Bunu sadece size söylüyorum...", "Normalde asla yapmam ama..."],
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bu gece eve gidince aklında en çok hangi detay kalırdı?",
+"options": ["Kimin neye bozulduğu", "Birinin anlattığı küçücük detay", "Çekilen fotoğraflar", "Kimsenin fark etmediği bakışmalar"],
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yanlışlıkla bir sırrı ağzından kaçıracak olsa bunu en çok nasıl yapardı?",
+"options": ["Kahkaha arasında patlatırdı", "İpucu verip toparlayamazdı", "Birine fısıldayıp yayılmasına sebep olurdu", "Ben bunu söylememeliydim diyerek söylerdi"],
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir arkadaşını yeni tanıştığı birine överken en çok hangi özelliğini parlatırdı?",
+"options": ["Aşırı sadık oluşunu", "Komikliğini", "Flört radarını", "Ortam kurtarma becerisini"],
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bu grupta birini en hızlı hangi sebeple sessize alırdı?",
+"options": ["Arka arkaya ses kaydı atması", "Eski sevgili analizini uzatması", "Sürekli link göndermesi", "Her fotoğrafa ayrı onay istemesi"],
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir arkadaşına ilişki tavsiyesi verirken en çok hangi yaklaşımı seçerdi?",
+"options": ["Kalbini dinle derdi", "Net ol derdi", "Hiç yazma derdi", "Önce ekran görüntüsünü at derdi"],
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bu akşam birini stalklayacak olsa en çok hangi bahaneyle bakardı?",
+"options": ["Meraktan", "Arkadaşına bilgi vermek için", "Story'ye yanlışlıkla girince devamı geldiği için", "Sadece profil fotoğrafı değişmiş mi diye"],
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gece planı son anda değişse en çok neye bozulurdu?",
+"options": ["Hazırladığı kombinin boşa gitmesine", "Çekilecek fotoğrafların iptal olmasına", "Yapılacak dedikodunun ertelenmesine", "Tatlı yenmeyecek olmasına"],
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bu masada birine 'iyi görünüyorsun' derken aslında en çok neyi övüyor olurdu?",
+"options": ["Saçını", "Enerjisini", "Kombinini", "Bugünkü özgüvenini"],
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bu grupta en çok hangi durumda içinden 'bunu ben çözmek zorundayım' diyordur?",
+"options": ["Yanlış kişiye mesaj atılınca", "Mekân seçimi uzayınca", "Birinin morali düşünce", "Grup içinde mini kriz çıkınca"],
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi cilt bakımında sık duyulan bir içeriktir?",
+"options": ["Niasinamid", "Selüloz", "Lateks", "Titanyum tel"],
+"correct": "Niasinamid",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Moda dünyasında geçen 'capsule wardrobe' neyi ifade eder?",
+"options": ["Sadece siyah kıyafetlerden oluşan dolabı", "Az sayıda uyumlu temel parçalardan oluşan dolabı", "Sadece gece kıyafetlerini", "Yalnızca indirimden alınan ürünleri"],
+"correct": "Az sayıda uyumlu temel parçalardan oluşan dolabı",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'French manicure' denince en çok hangi görünüm akla gelir?",
+"options": ["Tamamen siyah oje", "Doğal ton zemin üzerine beyaz uçlar", "Renkli taşlarla kaplı tırnak", "Mat neon sarı tırnak"],
+"correct": "Doğal ton zemin üzerine beyaz uçlar",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir kahve türüdür?",
+"options": ["Flat White", "Mochi", "Kombucha", "Granola"],
+"correct": "Flat White",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi astrologların kullandığı bir element grubudur?",
+"options": ["Ateş", "Metal", "Buhar", "Kristal"],
+"correct": "Ateş",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Oversize blazer' ifadesindeki 'oversize' ne anlama gelir?",
+"options": ["Kısa kesim", "Vücuda tam oturan", "Bol ve geniş kalıp", "Parlak kumaşlı"],
+"correct": "Bol ve geniş kalıp",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi makyajda yüzü aydınlık göstermek için sık kullanılır?",
+"options": ["Highlighter", "Kapatıcı fırçası", "Saç spreyi", "Oje bazı"],
+"correct": "Highlighter",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Brunch' en doğru hangi öğünü tanımlar?",
+"options": ["Geç kahvaltı ile erken öğle yemeğinin birleşimi", "Gece atıştırması", "Sadece tatlıdan oluşan menü", "Akşam yemeği öncesi kahve molası"],
+"correct": "Geç kahvaltı ile erken öğle yemeğinin birleşimi",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi saç şekillendirmede ısıyla çalışan bir alettir?",
+"options": ["Maşa", "Toner", "Serum", "Duş jeli"],
+"correct": "Maşa",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Ghosting' en çok hangi durumu anlatır?",
+"options": ["Birini durduk yere tamamen görmezden gelmeyi", "Çok hızlı aşık olmayı", "Eski sevgiliyle barışmayı", "Yanlış kişiye mesaj atmayı"],
+"correct": "Birini durduk yere tamamen görmezden gelmeyi",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi tatlı bir Fransız makaronunun doğru yazımıdır?",
+"options": ["Macaron", "Makarnon", "Macaroony", "Maccarun"],
+"correct": "Macaron",
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi tırnak bakımında kullanılan bir üründür?",
+"options": ["Kütikül yağı", "Yüz misti", "Bronzer", "Kirpik kıvırıcı"],
+"correct": "Kütikül yağı",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Mat ruj' ifadesindeki 'mat' neyi anlatır?",
+"options": ["Parlak ve ışıltılı bitişi", "Kokusuz olmasını", "Işığı yansıtmayan düz bitişi", "Kalıcı olmamasını"],
+"correct": "Işığı yansıtmayan düz bitişi",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi sosyal medyada bir içeriği daha sonra bakmak için saklama eylemidir?",
+"options": ["Kaydetmek", "Kopyalamak", "Yansıtmak", "Sabitlemek"],
+"correct": "Kaydetmek",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi klasik bir çanta modeli adıdır?",
+"options": ["Clutch", "Contour", "Primer", "Mousse"],
+"correct": "Clutch",
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'ben geç kalmam' deyip hazırlanma süresini tam bir prodüksiyona çeviriyordur?",
+"penalty": "Hazırlanırken yaptığın en gereksiz ama vazgeçilmez ritüeli itiraf et!",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim birinin yeni flörtünü görür görmez üç saniyede karakter analizi çıkarıyordur?",
+"penalty": "Masadaki bir kişi için ilk izlenimini tek kelimeyle söyle!",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'ben karışmam' deyip dedikodunun tam ortasında bulunuyordur?",
+"penalty": "En sevdiğin dedikodu açılış cümleni dramatik şekilde canlandır!",
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim story atmayınca sanki gece hiç yaşanmamış gibi hissediyordur?",
+"penalty": "Galerinden silmeye kıyamadığın en gereksiz fotoğraf türünü söyle!",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim arkadaşına 'boş ver' deyip kendi olsa asla boş veremeyecek kişidir?",
+"penalty": "Son verdiğin ama kendin uygulamadığın tavsiyeyi itiraf et!",
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yanlış kişiye mesaj atma ihtimali en yüksek olan kişidir?",
+"penalty": "Telefonundan son attığın emojiyi yüksek sesle savun!",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim birinin hesabına girince kendini 'sadece bakıyorum' diye kandırıyordur?",
+"penalty": "En son kimi neden stalkladığını tek cümleyle açıkla!",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'ben az yerim' deyip tatlı menüsünün asıl lideri oluyordur?",
+"penalty": "Şu an canın en çok hangi tatlıyı çekiyor, savunarak söyle!",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim küs kaldığı biriyle barışırsa ilk beş dakikada her şeyi unutmuş gibi davranır?",
+"penalty": "Hayatında affetmeye en yakın olduğun mini bir olayı anlat!",
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'tek fotoğraf çekelim' deyip sonunda 87 karelik albüm çıkarıyordur?",
+"penalty": "Poz verirken yaptığın en bilinçli hareketi itiraf et!",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Ruj",
+"correct": "Parlatıcı",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Rimel",
+"correct": "Eyeliner",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Allık",
+"correct": "Bronzer",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Latte",
+"correct": "Cappuccino",
+"category": "Kız Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Şampanya",
+"correct": "Prosecco",
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Serum",
+"correct": "Tonik",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Blazer",
+"correct": "Trençkot",
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Topuz",
+"correct": "At kuyruğu",
+"category": "Kız Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Clutch",
+"correct": "Baget çanta",
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Highlighter",
+"correct": "Aydınlatıcı baz",
+"category": "Kız Gecesi",
+"difficulty": "HARD"
+}
+]

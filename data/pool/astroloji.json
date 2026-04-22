@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biriyle ilk tanıştığında en çok hangi astroloji detayını merak ederdi?",
+"options": ["Güneş burcunu", "Yükselenini", "Ay burcunu", "Merkür burcunu"],
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] birinin davranışını astrolojiyle açıklayacak olsa en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bu tam yükselen etkisi", "Ay burcu burada bağırıyor", "Merkürü böyle olunca normal", "Bu kadar sabit energy tesadüf değil"],
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğum haritası baktırsa en çok hangi kısmı dinlemeye odaklanırdı?",
+"options": ["İlişkiler kısmını", "Kariyer kısmını", "Duygusal dünyasını", "Hayattaki kırılma noktalarını"],
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir arkadaşını astrolojik olarak en çok hangi yolla tanımlardı?",
+"options": ["Aşırı su enerjisi var derdi", "Net ateş burcu hissi veriyor derdi", "Toprak gibi sağlam derdi", "Hava gibi dağınık ama zeki derdi"],
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] burç uyumu konuşulurken en çok hangi tavrı takınırdı?",
+"options": ["Merakla dinlerdi", "Kendi örneklerini verirdi", "Hafif şüpheyle ama ilgiyle yaklaşırdı", "Bir anda herkesin haritasını çıkarmak isterdi"],
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] birinin mesajlaşma tarzını en çok hangi astroloji başlığıyla açıklamaya çalışırdı?",
+"options": ["Merkür burcuyla", "Venüs burcuyla", "Mars burcuyla", "Yükseleniyle"],
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] astroloji sohbetinde en çok hangi rolde öne çıkardı?",
+"options": ["Merakla soru soran", "Herkesi eşleştiren", "Detay bilgiyi veren", "Her şeye örnek bulan"],
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir olayın zamanlamasını astrolojiyle yorumlasa en çok neye bakardı?",
+"options": ["Retro dönemine", "Dolunay etkisine", "Yeni ay başlangıcına", "Genel gezegen hareketine"],
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] astrolojiye en çok hangi kapıdan girmiş gibi durur?",
+"options": ["Burç uyumlarıyla", "Günlük yorumlarla", "Doğum haritalarıyla", "Retro konuşmalarıyla"],
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biri 'burçlara inanmıyorum' dediğinde en çok hangi tepkiyi verirdi?",
+"options": ["Saygıyla gülümserdi", "Ama yükselenini biliyor musun derdi", "Kendi deneyiminden örnek verirdi", "Konuyu fazla uzatmadan bırakırdı"],
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] astrolojiyle ilgili en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bunda kesin bir şey var", "Bu kadar denk gelmesi tesadüf değil", "Haritaya bakmadan yorum yapmam", "Retrodan sonra konuşalım"],
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ilişki uyumu konuşulurken en çok hangi başlığa takılırdı?",
+"options": ["Venüs uyumuna", "Ay burçlarının anlaşmasına", "Yükselenlerin enerjisine", "Mars çekimine"],
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] astroloji hesabı açsa en çok hangi içerikleri paylaşırdı?",
+"options": ["Günlük yorumlar", "Burç tipleri", "İlişki eşleşmeleri", "Komik astroloji gözlemleri"],
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir arkadaş grubunu astrolojik olarak en çok nasıl özetlerdi?",
+"options": ["Burada ateş enerjisi çok yüksek derdi", "Su burçları ortamı yönetiyor derdi", "Toprak burçları olmasa dağılırız derdi", "Hava burçları zaten kaosu seviyor derdi"],
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] astroloji sohbetinden sonra en çok neyi aklında tutardı?",
+"options": ["Kimin hangi burç olduğunu", "En şaşırtıcı eşleşmeyi", "Kendi haritasıyla ilgili detayı", "Birinin verdiği net örneği"],
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Astrolojide burç sayısı kaçtır?",
+"options": ["10", "11", "12", "13"],
+"correct": "12",
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir burçtur?",
+"options": ["Aslan", "Kartal", "Akrep Yıldızı", "Bulut"],
+"correct": "Aslan",
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Astrolojide ateş elementine ait burçlardan biri hangisidir?",
+"options": ["Koç", "Yengeç", "Başak", "Balık"],
+"correct": "Koç",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi su elementi burçlarından biridir?",
+"options": ["İkizler", "Balık", "Aslan", "Oğlak"],
+"correct": "Balık",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Yükselen burç en çok neyle ilişkilendirilir?",
+"options": ["Dışarıya yansıyan ilk izlenimle", "Sadece para durumuyla", "Yalnızca hobilerle", "Sadece uyku düzeniyle"],
+"correct": "Dışarıya yansıyan ilk izlenimle",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Ay burcu astrolojide en çok neyle ilişkilendirilir?",
+"options": ["Duygusal dünya ile", "Araba tercihi ile", "Okul notları ile", "Seyahat sıklığı ile"],
+"correct": "Duygusal dünya ile",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Merkür astrolojide en çok hangi alanla ilişkilendirilir?",
+"options": ["İletişim ve düşünce tarzı", "Sadece fiziksel güç", "Sadece dış görünüş", "Sadece aile geçmişi"],
+"correct": "İletişim ve düşünce tarzı",
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Venüs astrolojide en çok hangi başlıkla anılır?",
+"options": ["Sevgi, zevk ve ilişkiler", "Sadece kariyer", "Sadece sağlık", "Sadece taşınma"],
+"correct": "Sevgi, zevk ve ilişkiler",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Mars astrolojide en çok neyle ilişkilendirilir?",
+"options": ["Enerji ve hareket tarzı", "Yemek tercihi", "Sadece çocukluk anıları", "Sadece eğitim hayatı"],
+"correct": "Enerji ve hareket tarzı",
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi toprak elementi burçlarından biridir?",
+"options": ["Boğa", "Kova", "Terazi", "Yay"],
+"correct": "Boğa",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi hava elementi burçlarından biridir?",
+"options": ["İkizler", "Akrep", "Yengeç", "Başak"],
+"correct": "İkizler",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Retro' konuşmalarında en sık adı geçen gezegen hangisidir?",
+"options": ["Merkür", "Ay", "Güneş", "Dünya"],
+"correct": "Merkür",
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Doğum haritası çıkarmak için aşağıdakilerden hangisi önemlidir?",
+"options": ["Doğum tarihi, saati ve yeri", "Sadece yaş", "Sadece en sevdiğin renk", "Telefon numarası"],
+"correct": "Doğum tarihi, saati ve yeri",
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir burç sembolü değildir?",
+"options": ["Kova", "Yay", "Martı", "Oğlak"],
+"correct": "Martı",
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Yeni ay astroloji sohbetlerinde en çok hangi temayla anılır?",
+"options": ["Başlangıçlar ve niyetler", "Sadece bitişler", "Sadece geçmişe dönmek", "Sadece maddi hesaplar"],
+"correct": "Başlangıçlar ve niyetler",
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim biriyle tanışınca içinden ilk olarak burcunu tahmin etmeye başlıyordur?",
+"penalty": "Masadaki birinin burcunu tamamen tahmin ederek söyle!",
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'burçlara inanmıyorum' deyip yine de uyum tablosuna göz atan kişidir?",
+"penalty": "İnanmıyormuş gibi yapıp meraklı tek cümle kur!",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim Merkür retrosunu her aksiliğe bağlama potansiyeli en yüksek kişidir?",
+"penalty": "Bugünkü küçük bir aksiliği retroya bağlayan kısa bir yorum yap!",
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim birinin davranışını açıklarken en çok 'ay burcu bu' diyordur?",
+"penalty": "Hayali bir davranışı tek cümlede ay burcuna bağla!",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim doğum haritası konuşulunca bir anda aşırı ciddileşir?",
+"penalty": "Harita inceliyormuş gibi gizemli ve ciddi bir yüz ifadesi takın!",
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ilişki yorumlarında Venüs burcunu en çok gündeme getiren kişidir?",
+"penalty": "Hayali bir çift için tek cümlelik Venüs yorumu yap!",
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim burç stereotiplerini en hızlı ama en komik şekilde özetler?",
+"penalty": "Bir burç tipi için kısa ve komik bir tanım yap!",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim astroloji sohbetinde en masum görünüp en detaylı bilgiyi veren kişidir?",
+"penalty": "Bir anda bilgi patlatır gibi tek astroloji terimi söyle!",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yeni ay geldiğinde gizlice niyet listesi çıkarıyordur?",
+"penalty": "Şu an tek kelimelik bir niyet söyle!",
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'bunda astrolojik bir şey var' cümlesini en çok kullanacak kişidir?",
+"penalty": "Masadaki sıradan bir şeyi astrolojikmiş gibi yorumla!",
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Güneş burcu",
+"correct": "Yükselen burç",
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Ay burcu",
+"correct": "Venüs burcu",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Merkür",
+"correct": "Mars",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Retro",
+"correct": "Transit",
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Doğum haritası",
+"correct": "Uyum haritası",
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Yeni ay",
+"correct": "Dolunay",
+"category": "Astroloji",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Ateş elementi",
+"correct": "Hava elementi",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Terazi",
+"correct": "İkizler",
+"category": "Astroloji",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Akrep",
+"correct": "Yengeç",
+"category": "Astroloji",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Evler",
+"correct": "Burçlar",
+"category": "Astroloji",
+"difficulty": "HARD"
+}
+]

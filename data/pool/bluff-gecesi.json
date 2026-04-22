@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] blöf yaparken en çok hangi yöntemle karşı tarafı ikna etmeye çalışırdı?",
+"options": ["Aşırı kendinden emin konuşarak", "Sakin kalıp göz kırpmadan", "Detay uydurup gerçek gibi anlatarak", "Hiç tepki vermeden susarak"],
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biri ona yalan söylerken en çok hangi ipucundan şüphelenirdi?",
+"options": ["Ses tonunun değişmesinden", "Fazla detay verilmesinden", "Göz temasından kaçılmasından", "Cümlenin fazla kısa olmasından"],
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] blöf gecesinde en çok hangi rolde parlıyordur?",
+"options": ["Yalanı yakalayan", "En inandırıcı hikâyeyi anlatan", "Sessizce herkesi çözen", "Kendi heyecanını gizleyen"],
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] masada biri çok kendinden emin konuşunca en çok ne düşünürdü?",
+"options": ["Kesin sallıyor", "Biliyor ama abartıyor", "Beni test ediyor", "Gerçekten eminse tehlikeli"],
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kendi yalanını satarken en çok hangi tarzı seçerdi?",
+"options": ["Kısa ve net anlatım", "Komik ama olası detaylar", "Fazla özgüvenli bir sunum", "Hiç açıklama yapmadan dik duruş"],
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] biri blöf yaparken en çok hangi noktada açığını arardı?",
+"options": ["Zaman çizelgesinde", "İsim ve yer detaylarında", "Vücut dilinde", "Gereksiz özgüveninde"],
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] masada en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Ben buna inanmıyorum", "Dur, burada bir boşluk var", "Aşırı rahat anlattın", "Bu kadar detay fazla şüpheli"],
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir hikâyenin gerçek mi uydurma mı olduğunu en çok hangi yolla test ederdi?",
+"options": ["Çapraz soru sorarak", "Aynı detayı sonra tekrar açarak", "Diğerlerinin tepkisine bakarak", "Bir anda konu değiştirip yüzünü okuyarak"],
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] blöf oyunu ilerledikçe en çok nasıl değişirdi?",
+"options": ["Daha cesur olurdu", "Daha sessizleşirdi", "Daha şüpheci olurdu", "Daha fazla keyif almaya başlardı"],
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] doğruyu söylerken bile en çok nasıl görünürdü?",
+"options": ["Sanki yine yalan söylüyormuş gibi", "Aşırı rahat", "Gereğinden fazla ciddi", "Komik şekilde şüpheli"],
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] başkasının hikâyesinde en çok hangi detayı hafızasında tutardı?",
+"options": ["Söylenen küçük isimleri", "Saat ve sıra bilgisini", "Anlatırken verilen tepkileri", "Hikâyenin mantık hatasını"],
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] riskli bir blöf yapacak olsa en çok hangi konuda yapardı?",
+"options": ["Başına gelmiş gibi anlattığı bir olayda", "Bildim sandığı genel kültür sorusunda", "Birini analiz ederken", "Kendi duygusunu saklarken"],
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] blöf gecesinde en çok hangi anda kendini ele verirdi?",
+"options": ["Gülmemesi gereken yerde gülünce", "Detayı unutunca", "Fazla savunmaya geçince", "Çok hızlı cevap verince"],
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] masadaki en tehlikeli oyuncuyu en çok hangi özelliğinden tanırdı?",
+"options": ["Hiç panik yapmamasından", "Yalanı sade anlatmasından", "Karşı tarafı iyi okumasından", "Kendi duygusunu belli etmemesinden"],
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] oyun bitince en çok neyi konuşuyor olurdu?",
+"options": ["Kime neden kandığını", "Kendi en iyi blöfünü", "Masadaki en şüpheli kişiyi", "Kaçırdığı küçük ipuçlarını"],
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Blöf' kelimesi en çok ne anlama gelir?",
+"options": ["Karşı tarafı yanıltmak için olduğundan farklı görünmek", "Kesin doğruyu söylemek", "Sessiz kalmak", "Kural değiştirmek"],
+"correct": "Karşı tarafı yanıltmak için olduğundan farklı görünmek",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir kişinin yüz ifadesini kontrol ederek duygu gizlemeye çalışmasına en yakın ifade hangisidir?",
+"options": ["Poker face", "Speed run", "Replay", "Checklist"],
+"correct": "Poker face",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir hikâyenin tutarsız olduğunu düşündürebilir?",
+"options": ["Detayların birbiriyle çelişmesi", "Anlatıcının rahat olması", "Kısa sürmesi", "Komik olması"],
+"correct": "Detayların birbiriyle çelişmesi",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Çapraz soru sormak' en çok hangi amaçla yapılır?",
+"options": ["Bilginin tutarlılığını test etmek", "Konuyu uzatmak", "Şaka yapmak", "Süre kazanmak"],
+"correct": "Bilginin tutarlılığını test etmek",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi güvenilir bir anlatım işareti olmak zorunda değildir?",
+"options": ["Kendinden emin konuşmak", "Tarih ve sıra tutarlılığı", "Aynı detayları korumak", "Soru gelince benzer cevap vermek"],
+"correct": "Kendinden emin konuşmak",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "'İma etmek' ne demektir?",
+"options": ["Bir şeyi doğrudan söylemeden hissettirmek", "Yüksek sesle ilan etmek", "Tamamen reddetmek", "Belgelemek"],
+"correct": "Bir şeyi doğrudan söylemeden hissettirmek",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir yalanı daha inandırıcı kılan unsurlardan biri hangisidir?",
+"options": ["Gerçeğe yakın ayrıntılar içermesi", "Tamamen alakasız olması", "Sürekli değişmesi", "Aşırı uzun sürmesi zorunluluğu"],
+"correct": "Gerçeğe yakın ayrıntılar içermesi",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi beden diline örnektir?",
+"options": ["Mimikler", "Parola", "Dosya adı", "Telefon modeli"],
+"correct": "Mimikler",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Tutarlılık' kelimesi en çok neyi ifade eder?",
+"options": ["Söylenenlerin birbiriyle uyumlu olmasını", "Her seferinde farklı konuşmayı", "Sadece sessiz kalmayı", "Şansı yüksek olmayı"],
+"correct": "Söylenenlerin birbiriyle uyumlu olmasını",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi blöf oyunlarında önemli bir beceridir?",
+"options": ["Karşı tarafı gözlemlemek", "Sesini sürekli yükseltmek", "Sadece hızlı konuşmak", "Herkese aynı anda cevap vermek"],
+"correct": "Karşı tarafı gözlemlemek",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Şüphe' kelimesi en çok neyi anlatır?",
+"options": ["Bir şeyden tam emin olmamayı", "Kesin bilgiye sahip olmayı", "Acele karar vermeyi", "Hiç düşünmemeyi"],
+"correct": "Bir şeyden tam emin olmamayı",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir anlatımda gereğinden fazla detay verilmesi bazen neyi düşündürebilir?",
+"options": ["Hikâyenin fazla inandırılmaya çalışıldığını", "Her zaman tamamen doğru olduğunu", "Konunun önemsiz olduğunu", "Hiçbir anlam taşımadığını"],
+"correct": "Hikâyenin fazla inandırılmaya çalışıldığını",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "'Sezgi' en çok neyi ifade eder?",
+"options": ["Mantık dışı ama güçlü bir hisle sonuca varmayı", "Sadece ezber bilgi kullanmayı", "Belgeleri incelemeyi", "Sayısal hesap yapmayı"],
+"correct": "Mantık dışı ama güçlü bir hisle sonuca varmayı",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir kişinin heyecanlandığını gösterebilir?",
+"options": ["Konuşma hızının değişmesi", "Saç renginin değişmesi", "Masanın büyümesi", "Odanın sessizleşmesi"],
+"correct": "Konuşma hızının değişmesi",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir oyunda blöf yapmak neden işe yarayabilir?",
+"options": ["Karşı tarafın algısını yönetebildiği için", "Kuralları yok ettiği için", "Doğru cevabı otomatik verdiği için", "Süreyi durdurduğu için"],
+"correct": "Karşı tarafı algısını yönetebildiği için",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim doğruyu söylerken bile en şüpheli görünen kişidir?",
+"penalty": "Tamamen doğru bir cümleyi aşırı gizemli şekilde söyle!",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim en kötü yalanı bile yüzünü bozmadan anlatabilecek kişidir?",
+"penalty": "Beş kelimelik minicik bir blöf uydur ve bozuntuya verme!",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim başkasının blöfünü yakalayınca aşırı tatmin olmuş gibi görünür?",
+"penalty": "Birini yakalamış gibi 'işte buydu' bakışı at!",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim gereğinden fazla detay verdiği için kendini ilk ele veren kişidir?",
+"penalty": "Bir olayı üç gereksiz detay ekleyerek anlat!",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim masada en iyi poker face yapabildiğini düşünüyordur?",
+"penalty": "On saniye boyunca hiçbir duygu vermeden yüzünü sabit tut!",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kendine fazla güvendiği için en riskli blöfü yapma potansiyeline sahiptir?",
+"penalty": "Kendine aşırı güvenli tek cümlelik bir meydan okuma yap!",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim karşısındakini soru yağmuruna tutarak gerçeği söktürür?",
+"penalty": "Masadaki birine art arda iki çapraz soru sor!",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim blöf oyunu ilerledikçe dedektif moduna tam geçer?",
+"penalty": "Şüpheli gördüğün hayali bir kişiyi tek cümlede suçla!",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yalan söylemeye çalışırken gülmemek için en çok zorlanan kişidir?",
+"penalty": "Ciddi kalmaya çalışırken minik bir gülüş kaçırma performansı yap!",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim masadaki herkesi çözdüğünü sanıp bazen kendini fazla kaptırır?",
+"penalty": "Masadaki birine tamamen zararsız ama iddialı bir analiz yap!",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Yalan",
+"correct": "Abartı",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Blöf",
+"correct": "Tuzak",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Poker face",
+"correct": "Taş surat",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "İpucu",
+"correct": "Kanıt",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Sezgi",
+"correct": "Şüphe",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Detay",
+"correct": "Ayrıntı",
+"category": "Bluff Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Çapraz soru",
+"correct": "Takip sorusu",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Maske",
+"correct": "Rol",
+"category": "Bluff Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Göz teması",
+"correct": "Kaçamak bakış",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Tutarlılık",
+"correct": "Özgüven",
+"category": "Bluff Gecesi",
+"difficulty": "HARD"
+}
+]

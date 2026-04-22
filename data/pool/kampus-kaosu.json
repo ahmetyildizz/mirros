@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kampüste en çok hangi durumda 'bugün kesin bir şeyler olacak' diyordur?",
+"options": ["Amfiye son anda girince", "Kulüp standları kurulunca", "Vize haftası yaklaşınca", "Kampüs grubuna uzun mesaj düşünce"],
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ders çıkışı en çok hangi planı yapan kişidir?",
+"options": ["Kahveye gidelim diyen", "Kütüphaneye kaçalım diyen", "Bugün yok yazalım modunda olan", "Bir etkinlik bulup sürükleyen"],
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kampüste en çok hangi rolle öne çıkardı?",
+"options": ["Not toplayan", "Ortama enerji veren", "Herkesi bir araya getiren", "Kaosu sakin yöneten"],
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] sabah ilk derse yetişmeye çalışırken en çok ne yapardı?",
+"options": ["Koşarken simit alırdı", "Sınıfa sessizce sızmaya çalışırdı", "Arkadaşına 'yoklama alındı mı' yazardı", "Bugün de kader der geçerdi"],
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kampüste biriyle yeni tanışınca en çok hangi konudan sohbet açardı?",
+"options": ["Hocalar", "Yemekhane", "Kulüpler", "Ders programı"],
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] vize haftasında en çok hangi tavra bürünürdü?",
+"options": ["Son gün gazıyla çalışırdı", "Renkli plan yapardı", "Herkesin notunu toplardı", "Stresini şakaya vururdu"],
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kampüste en çok hangi detayı ilk fark ederdi?",
+"options": ["Kimlerin derse geç kaldığını", "Hangi etkinliğin kalabalık toplayacağını", "Kimin gerçekten çalıştığını", "Kampüste yayılan son haberi"],
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] grup ödevi verilince en çok hangi tepkiyi verirdi?",
+"options": ["Bir görev dağıtalım derdi", "Önce konuyu seçelim derdi", "Ben sunumu alırım derdi", "İçinden sessizce of çekip toparlardı"],
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kampüs hayatında en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bu hafta çok yoğun", "Bir kahveyle hallolur", "Slaytı biri atabilir mi?", "Bunu da son gece yapmayalım"],
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] amfide en çok nereye oturmayı seçerdi?",
+"options": ["Orta sıralara", "En arkaya", "Kapıya yakın yere", "Hocanın dikkatini çekmeyecek ama duyacak bir noktaya"],
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kampüs içi mini krizlerde en çok nasıl davranırdı?",
+"options": ["Hızlı çözüm bulurdu", "Herkesi sakinleştirirdi", "İşin komik tarafını bulurdu", "Detayları netleştirirdi"],
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir kulüp etkinliğinde en çok hangi görev ona yakışırdı?",
+"options": ["Sunuculuk", "Organizasyon", "Sosyal medya duyurusu", "Katılımcıları toplamak"],
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kampüste en çok hangi anda içinden 'bunu not almak lazım' diyordur?",
+"options": ["Hoca ipucu verince", "Bir arkadaş pratik yöntem anlatınca", "Sınav tarihi değişince", "Kulüpte fırsat çıkınca"],
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kampüste kaybolan bir arkadaş grubunu en çok nasıl toparlardı?",
+"options": ["Konum atın derdi", "Bir buluşma noktası belirlerdi", "Telefonla tek tek arardı", "En merkezi yere geçip beklerdi"],
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] gün sonunda kampüsten ayrılırken en çok neyi hatırlıyor olurdu?",
+"options": ["En komik anı", "Bir hocanın söylediği kritik cümleyi", "Kimle hangi planı yaptığını", "Yapılması gerekenleri"],
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi kampüs içinde ders çalışmak için sık tercih edilen yerlerden biridir?",
+"options": ["Kütüphane", "Otopark çizgisi", "Çatı oluğu", "Teknik servis dolabı"],
+"correct": "Kütüphane",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Üniversitede 'vize' en çok neyi ifade eder?",
+"options": ["Dönem içi sınavı", "Yurt başvurusunu", "Kulüp kaydını", "Mezuniyet törenini"],
+"correct": "Dönem içi sınavı",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir ders materyali olabilir?",
+"options": ["Slayt", "Termosifon", "Minder", "Kapı kolu"],
+"correct": "Slayt",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Final haftası' en çok neyi anlatır?",
+"options": ["Dönem sonu sınavlarının yoğun olduğu dönemi", "Kulüp tanışma gününü", "Ders seçim haftasını", "Sadece mezuniyet provasını"],
+"correct": "Dönem sonu sınavlarının yoğun olduğu dönemi",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi kampüste öğrenci topluluklarının yaptığı bir etkinlik olabilir?",
+"options": ["Söyleşi", "Gümrük kontrolü", "Fabrika vardiyası", "Meteoroloji raporu"],
+"correct": "Söyleşi",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Yoklama' ne için alınır?",
+"options": ["Katılımı takip etmek için", "Not ortalamasını hesaplamak için", "Sınıfı temizlemek için", "Sunum sırasını gizlemek için"],
+"correct": "Katılımı takip etmek için",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi grup ödevinde önemli bir unsurdur?",
+"options": ["Görev paylaşımı", "Herkesin susması", "Konuyu sürekli değiştirmek", "Teslim tarihini unutmamak yerine yok saymak"],
+"correct": "Görev paylaşımı",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Kredi' kelimesi üniversite bağlamında en çok neyi ifade eder?",
+"options": ["Dersin akademik yük değerini", "Banka kart limitini", "Yemekhane puanını", "Kulüp aidatını"],
+"correct": "Dersin akademik yük değerini",
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi kampüs içinde sık kullanılan bir iletişim yolu olabilir?",
+"options": ["Öğrenci grubu mesajlaşması", "Duman işareti", "Megafon zorunluluğu", "Mektupla günlük haberleşme"],
+"correct": "Öğrenci grubu mesajlaşması",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Danışman hoca' en çok ne işe yarar?",
+"options": ["Akademik süreçlerde yol göstermeye", "Kampüs kapısını açmaya", "Yemek dağıtmaya", "Spor salonunu yönetmeye"],
+"correct": "Akademik süreçlerde yol göstermeye",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir kampüs mekânı olabilir?",
+"options": ["Amfi", "Liman kulesi", "Tünel kazısı", "Maden sahası"],
+"correct": "Amfi",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Ofis saati' bir hocanın en çok neyi ifade eder?",
+"options": ["Öğrencilerle görüşmeye ayrılmış zamanı", "Sadece maaş gününü", "Dersin gizli süresini", "Sınav sonuç açıklama kodunu"],
+"correct": "Öğrencilerle görüşmeye ayrılmış zamanı",
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi kampüste zaman yönetimini kolaylaştırır?",
+"options": ["Ders programını takip etmek", "Her şeyi son geceye bırakmak", "Tarihleri not almamak", "Teslimleri ezbere hatırlamaya çalışmak"],
+"correct": "Ders programını takip etmek",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Seçmeli ders' ne anlama gelir?",
+"options": ["Öğrencinin tercih ederek aldığı ders", "Zorunlu olarak herkese verilen ders", "Sadece yazın açılan ders", "Sınavsız geçen ders"],
+"correct": "Öğrencinin tercih ederek aldığı ders",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir kampüs etkinliğinde faydalı olabilir?",
+"options": ["Kayıt masası", "Vinç operatörü", "Şantiye iskelesi", "Tarla sulama planı"],
+"correct": "Kayıt masası",
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ders notunu 'düzenliyorum' deyip son anda bütün sınıfın umudu olan kişidir?",
+"penalty": "Bir arkadaşına not atıyormuş gibi aşırı ciddi bir cümle kur!",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kampüste en çok 'bir kahve içelim, sonra bakarız' diyen kişidir?",
+"penalty": "Şu an kahve çağrısı yapıyormuş gibi ikna edici bir davet yap!",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim vize haftasında en çok 'ben daha başlamadım' deyip yine de bir şekilde çıkan kişidir?",
+"penalty": "Son gece çalışan öğrenci gibi kısa bir iç konuşma yap!",
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim grup ödevinde en çok sessizce yük çeken kişidir?",
+"penalty": "Hayali ekip arkadaşlarına tek cümlelik görev dağıtımı yap!",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kampüste yeni bir etkinlik duyunca herkesi sürüklemeye çalışan kişidir?",
+"penalty": "Masadakileri hayali bir kulüp etkinliğine davet et!",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim amfiye geç girse bile sanki hiçbir şey olmamış gibi davranabilecek kişidir?",
+"penalty": "Geç kalmış ama coolmuş gibi sessiz giriş performansı yap!",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim hocaların küçük ipuçlarını en çok hafızasında tutan kişidir?",
+"penalty": "Bir hocanın kritik ipucu veriyormuş gibi tonlama yap!",
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kampüs dedikodusunu en hızlı ama sakin şekilde öğrenen kişidir?",
+"penalty": "Yeni bir haber almış gibi sadece yüz ifadesiyle tepki ver!",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'kütüphaneye gidiyorum' deyip en çok arkadaş sohbetine düşen kişidir?",
+"penalty": "Ders çalışmaya gidip dikkatinin dağılma anını kısa kısa canlandır!",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yoklama konusunda en stratejik düşünen kişidir?",
+"penalty": "Yoklama başlamadan önce söylenecek en mantıklı cümleyi kur!",
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Amfi",
+"correct": "Sınıf",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Kütüphane",
+"correct": "Çalışma salonu",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Vize",
+"correct": "Final",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Kulüp standı",
+"correct": "Tanıtım masası",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Yoklama",
+"correct": "Katılım listesi",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Danışman hoca",
+"correct": "Asistan",
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Grup ödevi",
+"correct": "Sunum",
+"category": "Kampüs Kaosu",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Ders programı",
+"correct": "Sınav takvimi",
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Kahve kuyruğu",
+"correct": "Yemekhane sırası",
+"category": "Kampüs Kaosu",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Kredi",
+"correct": "Ortalama",
+"category": "Kampüs Kaosu",
+"difficulty": "HARD"
+}
+]

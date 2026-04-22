@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] romantik bir akşam planlasa en çok hangi detaya önem verirdi?",
+"options": ["Ortamın sakinliğine", "Mekânın atmosferine", "Konuşmanın akışına", "Yemeğin güzel olmasına"],
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] partneriyle tartıştıktan sonra ilk barışma adımını en çok nasıl atardı?",
+"options": ["Sessizce yaklaşarak", "Mesaj atarak", "Küçük bir jest yaparak", "Konuyu açıkça konuşarak"],
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir ilişkide en çok hangi davranışı sevgi göstergesi olarak görürdü?",
+"options": ["Küçük şeyleri hatırlamayı", "Beraber vakit ayırmayı", "Destek olmayı", "Komik anlar yaratmayı"],
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] çiftler arasında en çok hangi konuda danışman gibi davranırdı?",
+"options": ["İletişim kurmakta", "Hediye seçmekte", "Barışma cümlesi bulmakta", "Plan yapıp ilişkiyi canlandırmakta"],
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] partneriyle ilk tatilde en çok hangi şeyi planlardı?",
+"options": ["Gidilecek yerleri", "Yenecek şeyleri", "Fotoğraf noktalarını", "Beraber boş kalınacak anları"],
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir ilişkide en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bunu konuşarak çözeriz", "Biraz anlayış lazım", "Bu çok tatlı bir detaydı", "Asıl mesele hissetmek"],
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] partnerinin jest yaptığını en çok hangi anda fark ederdi?",
+"options": ["Detaylara bakınca", "Söylenmeyen şeyleri hissedince", "Zamanlamasından", "Gündelik küçük hareketlerinden"],
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] çift olarak bir oyunda en çok hangi rolle öne çıkardı?",
+"options": ["Uyumu sağlayan", "Liderliği alan", "Komik anları çıkaran", "Sessizce işi çözen"],
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] partneriyle bir akşamı unutulmaz yapmak için en çok ne yapardı?",
+"options": ["Küçük sürpriz eklerdi", "Ortamı özel hale getirirdi", "Anlamlı bir konuşma açardı", "Beraber yapılacak bir şey seçerdi"],
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir ilişkide en çok hangi şeyi affetmekte zorlanırdı?",
+"options": ["İlgisizliği", "Sözünde durmamayı", "Aynı hatayı tekrar etmeyi", "Küçük şeyleri önemsememeyi"],
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] partneriyle mesajlaşırken en çok hangi tarzda olurdu?",
+"options": ["Kısa ama tatlı", "Bol emojili", "Komik ve iğneleyici", "Uzun ve açıklayıcı"],
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir çift gecesinde en çok hangi aktiviteyi seçerdi?",
+"options": ["Birlikte yemek yapmayı", "Film izlemeyi", "Uzun yürüyüşü", "Masa oyunu oynamayı"],
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] partnerini en çok hangi durumda savunurdu?",
+"options": ["Yanlış anlaşıldığında", "Morali bozulduğunda", "Haksız eleştiri aldığında", "Kendini ifade edemediğinde"],
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] ilişkide en çok hangi anda duygulanırdı?",
+"options": ["Beklenmedik bir söz duyunca", "Küçük bir jest görünce", "Beraber eski bir anıyı hatırlayınca", "Destek gördüğünü hissedince"],
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] çift gecesinden sonra en çok neyi aklında tutardı?",
+"options": ["Söylenen anlamlı bir cümleyi", "En komik anı", "Küçük ama güzel bir detayı", "Gecenin genel hissini"],
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir ilişkide sağlıklı iletişimin parçası olabilir?",
+"options": ["Açık konuşmak", "Sürekli kaçmak", "Hiç dinlememek", "Sadece varsaymak"],
+"correct": "Açık konuşmak",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi romantik bir jest örneği olabilir?",
+"options": ["Anlamlı bir not bırakmak", "Kapıyı çarpmak", "Mesajları görmezden gelmek", "Planı sürekli iptal etmek"],
+"correct": "Anlamlı bir not bırakmak",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir ilişkide 'güven' en çok neyle ilişkilidir?",
+"options": ["Tutarlılık ve dürüstlükle", "Sadece hediye almakla", "Sadece aynı şeyi sevmekle", "Hiç tartışmamakla"],
+"correct": "Tutarlılık ve dürüstlükle",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir çiftin birlikte yapabileceği sakin bir aktivite olabilir?",
+"options": ["Yürüyüş", "Fabrika kurulumu", "Maden araması", "Motor sökümü"],
+"correct": "Yürüyüş",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Empati' bir ilişkide en çok neyi destekler?",
+"options": ["Karşı tarafı anlamayı", "Konuyu büyütmeyi", "Sessiz savaşı", "İnatlaşmayı"],
+"correct": "Karşı tarafı anlamayı",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi çiftler arasında sık görülen bir özel gün planı olabilir?",
+"options": ["Akşam yemeği", "Şantiye turu", "Banka eğitimi", "Depo sayımı"],
+"correct": "Akşam yemeği",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Sevgi dili' ifadesi en çok neyi anlatır?",
+"options": ["İnsanların sevgiyi gösterme ve alma biçimini", "Sadece şiir yazmayı", "Yabancı dil öğrenmeyi", "Resmî hitap şeklini"],
+"correct": "İnsanların sevgiyi gösterme ve alma biçimini",
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Bir ilişkide küçük detayları hatırlamak genelde ne olarak algılanır?",
+"options": ["İlgi göstergesi", "Kıskançlık", "Kararsızlık", "Mesafe koyma"],
+"correct": "İlgi göstergesi",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir tartışmayı daha yapıcı hale getirebilir?",
+"options": ["Sakin ve net konuşmak", "Alay etmek", "Geçmişi sürekli açmak", "Söz kesmek"],
+"correct": "Sakin ve net konuşmak",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi ortak anı biriktirmeye örnek olabilir?",
+"options": ["Beraber seyahat etmek", "Ayrı ayrı sessiz kalmak", "Plan iptal etmek", "Mesajları silmek"],
+"correct": "Beraber seyahat etmek",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Sürpriz' romantik bağlamda en çok neyi ifade eder?",
+"options": ["Beklenmeyen hoş bir jesti", "Zorunlu görevi", "Planlı tartışmayı", "Resmî duyuruyu"],
+"correct": "Beklenmeyen hoş bir jesti",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir ilişkide sınır koymak en çok ne sağlar?",
+"options": ["Karşılıklı saygıyı", "Sürekli küslüğü", "İletişimsizliği", "Belirsizliği"],
+"correct": "Karşılıklı saygıyı",
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi partnerine değer verdiğini göstermenin yollarından biridir?",
+"options": ["Dikkatle dinlemek", "Sürekli telefona bakmak", "Konuşurken uzaklaşmak", "Önemli günü unutmak"],
+"correct": "Dikkatle dinlemek",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "'Kaliteli zaman' en çok ne demektir?",
+"options": ["Beraber gerçekten odaklı vakit geçirmek", "Aynı odada ama alakasız olmak", "Sadece pahalı plan yapmak", "Sürekli dışarıda olmak"],
+"correct": "Beraber gerçekten odaklı vakit geçirmek",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Bir ilişkide takdir edilmek genelde neyi güçlendirir?",
+"options": ["Bağlılık hissini", "Belirsizliği", "Gerginliği", "Mesafeyi"],
+"correct": "Bağlılık hissini",
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim partnerine alınacak hediyeyi seçerken en çok abartan kişidir?",
+"penalty": "Şu an hayali bir hediye sunumu yap!",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ilişkide tartışma sonrası ilk 'tamam konuşalım' diyen kişidir?",
+"penalty": "Barışma cümlesi gibi kısa ama etkili bir cümle kur!",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim romantik plan yaparken Pinterest seviyesinde hayal kuruyordur?",
+"penalty": "Hayalindeki çift gecesini tek cümlede fazla estetik anlat!",
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim partnerinin attığı küçücük bir mesaja bile aşırı anlam yükleyebilecek kişidir?",
+"penalty": "Hayali bir tek kelimelik mesaja fazla anlam yükleyen yorum yap!",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir ilişkide en çok sürpriz yapıyormuş gibi görünüp aslında kendini ele verirdi?",
+"penalty": "Sürpriz saklıyormuş gibi yap ama yüzünden belli et!",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim çift fotoğrafı çekilirken en çok açı ve ışık düşünen kişidir?",
+"penalty": "Hayali bir çifte poz verdiriyormuş gibi yönlendirme yap!",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ilişkiler konusunda fark ettirmeden çevresine en çok tavsiye veren kişidir?",
+"penalty": "Tek cümlelik ilişki tavsiyesi ver!",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim partnerine kırılınca önce çok sakin görünüp sonra detaylı konuşan kişidir?",
+"penalty": "Sakin ama hafif sitemli bir cümle kur!",
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim romantik film izlerken en çok 'bunu gerçek hayatta kim yapar' diyen kişidir?",
+"penalty": "Hayali romantik bir sahneyi hafif alaylı yorumla!",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim ilişkide küçük jestlerden en çok etkilenen kişidir?",
+"penalty": "Seni mutlu edecek minicik bir jesti tek cümlede söyle!",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "İlk buluşma",
+"correct": "İkinci buluşma",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Sürpriz hediye",
+"correct": "El yazısı not",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Akşam yemeği",
+"correct": "Brunch",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Yıldönümü",
+"correct": "İlk tanışma günü",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Barışma mesajı",
+"correct": "Özlem mesajı",
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Yürüyüş",
+"correct": "Piknik",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Sevgi dili",
+"correct": "İletişim tarzı",
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Çift fotoğrafı",
+"correct": "Selfie",
+"category": "Çift Gecesi",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Romantik jest",
+"correct": "Küçük sürpriz",
+"category": "Çift Gecesi",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Kaliteli zaman",
+"correct": "Beraber rutin",
+"category": "Çift Gecesi",
+"difficulty": "HARD"
+}
+]

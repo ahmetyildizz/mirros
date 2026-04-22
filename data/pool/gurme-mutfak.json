@@ -1,0 +1,367 @@
+[
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir restoranda menüyü eline alınca en çok hangi tavrı takınırdı?",
+"options": ["Önce en ilginç şeyi arardı", "Klasik ve güvenli seçeneğe giderdi", "Herkesin tabağından gözüyle sipariş verirdi", "Garsona uzun uzun soru sorardı"],
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] mutfakta en çok hangi rolle öne çıkardı?",
+"options": ["Tarifi yöneten", "Sunumu kurtaran", "Tadım yapıp yorumlayan", "Son anda krizi çözen"],
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yeni bir lezzeti denerken en çok neye dikkat ederdi?",
+"options": ["Dengesine", "Sunumuna", "İçindeki malzemelere", "İlk lokmadaki hissine"],
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] mutfakta en çok hangi cümleyi kuruyor gibi durur?",
+"options": ["Bir tutam daha yakışır", "Dur, önce tadına bakalım", "Bunu biraz daha çıtır yapabiliriz", "Sunumu da önemli ama"],
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir yemek sipariş ederken en çok hangi tip seçim yapardı?",
+"options": ["Herkesin övdüğünü denerdi", "Menüde en niş olanı seçerdi", "Çocukluktan tanıdık tatlara giderdi", "Yanına en iyi eşlik edecek şeyi düşünürdü"],
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] mutfakta bir şey ters gidince en çok nasıl davranırdı?",
+"options": ["Sakin kalıp kurtarmaya çalışırdı", "Yeni plan uydururdu", "Gülüp devam ederdi", "Hatanın nerede olduğunu hemen bulurdu"],
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] kahvaltı sofrasında en çok hangi detayı önemserdi?",
+"options": ["Çeşit bolluğunu", "Sıcakların zamanlamasını", "Peynir-zeytin dengesini", "Sofranın görünüşünü"],
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir tatlıyı değerlendirirken en çok hangi noktaya takılırdı?",
+"options": ["Şeker oranına", "Dokusuna", "İlk kaşıktaki etkiye", "Yanındaki eşlikçilere"],
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] arkadaş grubunda en çok hangi yemek görevini üstlenirdi?",
+"options": ["Mekân seçmeyi", "Siparişi toparlamayı", "Tatlı işini üstlenmeyi", "Herkese ne alınacağını önermeyi"],
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir yemeğin gerçekten iyi olduğunu en çok hangi anda anlardı?",
+"options": ["Masadaki sohbet bir an durunca", "İlk lokmada kaş kalkınca", "Tabak hızlı boşalınca", "Kimse paylaşmak istemeyince"],
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] pazara ya da markete girse en çok hangi bölümde oyalanırdı?",
+"options": ["Peynir şarküteride", "Baharatlarda", "Tatlı reyonunda", "Taze sebze meyvede"],
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] bir kahve sipariş ederken en çok hangi tavrı alırdı?",
+"options": ["Her seferinde aynı şeyi söylerdi", "Mevsime göre değiştirirdi", "Yeni bir şey denerdi", "Yanına ne yiyeceğini de düşünürdü"],
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] sofrada en çok hangi kişiye dönüşürdü?",
+"options": ["Fotoğraf çekmeden başlatmayan", "Herkese tattıran", "Sessizce keyif alan", "Kimin ne sevdiğini bilen"],
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] mutfakla ilgili en çok hangi konuda iddialı görünürdü?",
+"options": ["Kahvaltı kurmakta", "Makarnayı doğru yapmakta", "Tatlı seçmekte", "En iyi eşleşmeyi bulmakta"],
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "SOCIAL",
+"text": "[İSİM] yemekten sonra en çok neyi hatırlıyor olurdu?",
+"options": ["En iyi lokmayı", "Mekânın atmosferini", "Bir sosun akılda kalan tadını", "Masadaki genel uyumu"],
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir kahve türüdür?",
+"options": ["Latte", "Lazanya", "Limonata", "Lokma"],
+"correct": "Latte",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Risotto'nun temel malzemelerinden biri hangisidir?",
+"options": ["Pirinç", "Nohut", "Mercimek", "Mısır unu"],
+"correct": "Pirinç",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir baharattır?",
+"options": ["Kimyon", "Yoğurt", "Nohut", "Fesleğen sosu"],
+"correct": "Kimyon",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Makarna pişirme derecesi olarak kullanılan 'al dente' ifadesi en çok neyi anlatır?",
+"options": ["Hafif diri kıvamı", "Tamamen lapa olmuş hali", "Çok soğuk servis edilmesini", "İçine bol peynir konmasını"],
+"correct": "Hafif diri kıvamı",
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi kahvaltılık bir üründür?",
+"options": ["Reçel", "Köfte", "Makarna", "Mercimek köftesi"],
+"correct": "Reçel",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Sushi'nin temel bileşenlerinden biri hangisidir?",
+"options": ["Pirinç", "Bulgur", "Lavaş", "İrmik"],
+"correct": "Pirinç",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir pişirme yöntemi değildir?",
+"options": ["Fırınlamak", "Haşlamak", "Sotelemek", "Kaydırmak"],
+"correct": "Kaydırmak",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Degustasyon' en çok neyi ifade eder?",
+"options": ["Küçük porsiyonlarla tadım deneyimini", "Büyük aile yemeğini", "Sadece tatlı servisini", "Sokak lezzeti turunu"],
+"correct": "Küçük porsiyonlarla tadım deneyimini",
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir peynir türüdür?",
+"options": ["Brie", "Brioche", "Brownie", "Brokoli"],
+"correct": "Brie",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Humusun ana malzemesi hangisidir?",
+"options": ["Nohut", "Patates", "Kabak", "Pırasa"],
+"correct": "Nohut",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Bir yemeğin üzerine taze fesleğen, zeytinyağı ve çam fıstığıyla yapılan sos hangisidir?",
+"options": ["Pesto", "Beşamel", "Aioli", "Teriyaki"],
+"correct": "Pesto",
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi tatlıdır?",
+"options": ["Tiramisu", "Tortellini", "Tost", "Tarhana"],
+"correct": "Tiramisu",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "Espresso bazlı sütlü kahvelerden biri hangisidir?",
+"options": ["Cappuccino", "Komposto", "Boza", "Ayran"],
+"correct": "Cappuccino",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "QUIZ",
+"text": "Aşağıdakilerden hangisi bir sofra düzeni unsurudur?",
+"options": ["Peçete", "Matkap", "Fener", "Defter zımbası"],
+"correct": "Peçete",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "QUIZ",
+"text": "'Umami' en çok hangi tat profilini anlatır?",
+"options": ["Derin ve doyurucu lezzeti", "Sadece ekşiliği", "Aşırı şekerli tadı", "Nötr ve tatsız hissi"],
+"correct": "Derin ve doyurucu lezzeti",
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim menüye bakınca sanki jüri üyesi gibi her şeyi analiz eden kişidir?",
+"penalty": "Hayali bir menüden bir yemeği aşırı ciddi şekilde değerlendir!",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim masaya yemek gelince ilk işi fotoğraf açısını düşünmek olan kişidir?",
+"penalty": "Hayali bir tabağın en iyi açısını bulmuş gibi pozisyon al!",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim 'ben biraz tadına bakayım' deyip yarım tabağı götürme potansiyeline sahiptir?",
+"penalty": "Sadece küçücük alıyormuş gibi yapıp abartılı minik bir lokma taklidi yap!",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim yeni bir mekân keşfedince bir anda gurme eleştirmenine dönüşür?",
+"penalty": "Hayali bir restoran için tek cümlelik sert ama komik yorum yap!",
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kahvaltı sofrasında en çok düzen takıntısı yaşayan kişidir?",
+"penalty": "Masadaki hayali bir şeyi 'o oraya olmaz' diyerek düzelt!",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim tatlı menüsü açılınca aniden gözleri parlayan kişidir?",
+"penalty": "En sevdiğin tatlıyı savunarak tek cümlede ilan et!",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim mutfakta bir şey yanınca bile 'bunu kurtarırız' diyen kişidir?",
+"penalty": "Tam mutfak krizi anındaymış gibi sakin ama iddialı bir cümle kur!",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim bir yemekte gizli malzemeyi bulduğunu iddia edip çoğu zaman haklı çıkan kişidir?",
+"penalty": "Hayali bir yemekte tattığın uydurma bir malzemeyi tahmin et!",
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim sipariş verirken en çok 'bir de bunu deneyelim' diyerek masayı büyütür?",
+"penalty": "Masaya hayali bir ekstra sipariş öner ve ısrarcı ol!",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "EXPOSE",
+"text": "Bu gruptan kim kahve siparişinde kendi damak zevkini en ayrıntılı anlatan kişidir?",
+"penalty": "Hayali bir kahve siparişini abartılı detayla ver!",
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Latte",
+"correct": "Cappuccino",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Pesto",
+"correct": "Beşamel",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Makaron",
+"correct": "Mereng",
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Brunch",
+"correct": "Kahvaltı",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Espresso",
+"correct": "Americano",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Sushi",
+"correct": "Poke bowl",
+"category": "Gurme & Mutfak",
+"difficulty": "HARD"
+},
+{
+"mode": "SPY",
+"text": "Reçel",
+"correct": "Marmelat",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Kimyon",
+"correct": "Köri",
+"category": "Gurme & Mutfak",
+"difficulty": "MEDIUM"
+},
+{
+"mode": "SPY",
+"text": "Fırınlamak",
+"correct": "Izgara yapmak",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+},
+{
+"mode": "SPY",
+"text": "Tiramisu",
+"correct": "Cheesecake",
+"category": "Gurme & Mutfak",
+"difficulty": "EASY"
+}
+]
