@@ -18,16 +18,16 @@ interface Props {
 export function TabProfile({ user, onRefresh, onVersionClick }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleUpdateName = async (newName: string) => {
+  const handleUpdateProfile = async (data: { username?: string, avatarUrl?: string }) => {
     const res = await fetch("/api/profile", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: newName }),
+      body: JSON.stringify(data),
     });
 
     if (!res.ok) {
-      const data = await res.json();
-      throw new Error(data.error || "Güncelleme başarısız");
+      const result = await res.json();
+      throw new Error(result.error || "Güncelleme başarısız");
     }
 
     onRefresh();
@@ -102,12 +102,11 @@ export function TabProfile({ user, onRefresh, onVersionClick }: Props) {
         </motion.div>
       </motion.div>
 
-      {/* Edit Modal */}
       <ProfileModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         user={user}
-        onUpdate={handleUpdateName}
+        onUpdate={handleUpdateProfile}
       />
     </div>
   );

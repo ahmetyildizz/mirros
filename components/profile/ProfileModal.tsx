@@ -14,7 +14,7 @@ import {
   Fingerprint,
   Cloud
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { MIRROS_AVATARS } from "@/lib/constants/avatars";
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -25,30 +25,40 @@ interface ProfileModalProps {
     avatarUrl?: string;
     provider: string;
   };
-  onUpdate: (newName: string) => Promise<void>;
+  onUpdate: (data: { username?: string, avatarUrl?: string }) => Promise<void>;
 }
 
 export function ProfileModal({ isOpen, onClose, user, onUpdate }: ProfileModalProps) {
   const router = useRouter();
-  const [isEditing, setIsEditing] = useState(false);
-  const [newName, setNewName] = useState(user.username);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(user.avatarUrl);
 
   const handleSave = async () => {
-    if (!newName.trim() || newName === user.username) {
+    const data: any = {};
+    if (newName.trim() && newName !== user.username) data.username = newName;
+    if (selectedAvatar !== user.avatarUrl) data.avatarUrl = selectedAvatar;
+
+    if (Object.keys(data).length === 0) {
       setIsEditing(false);
+      setIsSelectingAvatar(false);
       return;
     }
+
     setLoading(true);
     try {
-      await onUpdate(newName);
+      await onUpdate(data);
       setIsEditing(false);
+      setIsSelectingAvatar(false);
     } catch (err: any) {
-      setError(err.message || "İsim değiştirilemedi");
+      setError(err.message || "Güncelleme başarısız");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAvatarSelect = (url: string) => {
+    setSelectedAvatar(url);
+    setIsSelectingAvatar(false);
   };
 
   const handleLogout = async () => {
@@ -103,27 +113,62 @@ export function ProfileModal({ isOpen, onClose, user, onUpdate }: ProfileModalPr
                     className="absolute inset--3 rounded-[3rem] border border-accent/20 border-dashed"
                   />
                   
-                  <div className="relative w-28 h-28 rounded-[2.5rem] bg-black border-2 border-white/10 p-1 group-hover:border-accent/40 transition-colors duration-700 shadow-2xl">
+                  <motion.div 
+                    onClick={() => setIsSelectingAvatar(!isSelectingAvatar)}
+                    className="relative w-28 h-28 rounded-[2.5rem] bg-black border-2 border-white/10 p-1 group-hover:border-accent/40 transition-colors duration-700 shadow-2xl cursor-pointer"
+                  >
                     <div className="w-full h-full rounded-[2.2rem] bg-gradient-to-b from-white/10 to-transparent flex items-center justify-center overflow-hidden">
-                      {user.avatarUrl ? (
-                        <img src={user.avatarUrl} alt="Profil" className="w-full h-full object-cover" />
+                      {selectedAvatar ? (
+                        <img src={selectedAvatar} alt="Profil" className="w-full h-full object-cover" />
                       ) : (
                         <User size={48} className="text-slate-500" />
                       )}
+                      
+                      {/* Overlay Edit Icon */}
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                         <Star size={24} className="text-white drop-shadow-lg" />
+                      </div>
                     </div>
                     
-                    {/* Level Overlay Badge */}
+                    {/* Provider/Level Overlay Badge */}
                     <div className="absolute -bottom-1 -right-1 w-10 h-10 rounded-2xl bg-black border border-white/10 flex items-center justify-center shadow-2xl">
                       {user.provider === "GOOGLE" ? (
                         <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="Google" />
-                      ) : user.provider === "APPLE" ? (
-                        <img src="https://apple.com/favicon.ico" className="w-5 h-5 translate-y-[-1px]" alt="Apple" />
                       ) : (
                         <Star size={16} className="text-amber-500 fill-amber-500" />
                       )}
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
+
+                {/* Persona Selection Tray */}
+                <AnimatePresence>
+                  {isSelectingAvatar && (
+                    <motion.div 
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="w-full mb-8 overflow-hidden"
+                    >
+                      <div className="flex flex-col gap-3">
+                         <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest text-center italic">Mirros Personanı Seç</p>
+                         <div className="flex justify-center gap-3 py-2 px-1">
+                            {MIRROS_AVATARS.map((avatar) => (
+                               <motion.div
+                                 key={avatar.id}
+                                 whileHover={{ scale: 1.1, y: -5 }}
+                                 whileTap={{ scale: 0.9 }}
+                                 onClick={() => handleAvatarSelect(avatar.url)}
+                                 className={`w-14 h-14 rounded-2xl bg-white/5 border-2 cursor-pointer transition-all overflow-hidden p-1 ${selectedAvatar === avatar.url ? 'border-accent shadow-[0_0_15px_var(--accent-glow)]' : 'border-white/5'}`}
+                               >
+                                  <img src={avatar.url} alt={avatar.name} className="w-full h-full object-cover rounded-xl" title={avatar.name} />
+                               </motion.div>
+                            ))}
+                         </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 {/* Info & Name Edit */}
                 <div className="text-center w-full space-y-3 mb-10">

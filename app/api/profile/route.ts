@@ -6,7 +6,7 @@ import { createAuditLog } from "@/lib/audit";
 export async function PATCH(req: NextRequest) {
   try {
     const user = await requireAuth();
-    const { username, passcode } = await req.json();
+    const { username, avatarUrl, passcode } = await req.json();
 
     // ADMIN RECLAIM LOGIC — passcode env'den okunur, kaynak kodda hardcoded değil
     const adminPasscode = process.env.ADMIN_RECLAIM_PASSCODE;
@@ -21,21 +21,33 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    if (!username || username.length < 3) {
-      return NextResponse.json({ error: "Kullanıcı adı en az 3 karakter olmalıdır" }, { status: 400 });
+    const updateData: any = {};
+    
+    if (username) {
+      if (username.length < 3) {
+        return NextResponse.json({ error: "Kullanıcı adı en az 3 karakter olmalıdır" }, { status: 400 });
+      }
+      if (username.length > 20) {
+        return NextResponse.json({ error: "Kullanıcı adı çok uzun" }, { status: 400 });
+      }
+
+      // Is username taken?
+      const existing = await db.user.findUnique({
+        where: { username },
+      });
+
+      if (existing && existing.id !== user.id) {
+        return NextResponse.json({ error: "Bu kullanıcı adı zaten alınmış" }, { status: 409 });
+      }
+      updateData.username = username;
     }
 
-    if (username.length > 20) {
-      return NextResponse.json({ error: "Kullanıcı adı çok uzun" }, { status: 400 });
+    if (avatarUrl) {
+      updateData.avatarUrl = avatarUrl;
     }
 
-    // Is username taken?
-    const existing = await db.user.findUnique({
-      where: { username },
-    });
-
-    if (existing && existing.id !== user.id) {
-      return NextResponse.json({ error: "Bu kullanıcı adı zaten alınmış" }, { status: 409 });
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json({ error: "Güncellenecek veri bulunamadı" }, { status: 400 });
     }
 
     const oldUsername = user.username;
@@ -43,7 +55,7 @@ export async function PATCH(req: NextRequest) {
     // Update DB
     const updated = await db.user.update({
       where: { id: user.id },
-      data: { username },
+      data: updateData,
     });
 
     // AUDIT LOG
