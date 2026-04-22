@@ -1,8 +1,5 @@
-import { withSentryConfig } from "@sentry/nextjs";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -16,7 +13,7 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Build-Version',
-            value: "0.9.0-DEADLOCK-FIX",
+            value: "0.9.5-MINIMAL-FORCE",
           },
         ],
       },
@@ -25,15 +22,3 @@ const nextConfig = {
 };
 
 export default nextConfig;
-
-/*
-export default withSentryConfig(nextConfig, {
-  org: "noyan-pi",
-  project: "javascript-nextjsmirros",
-  silent: true,
-  widenClientFileUpload: true,
-  hideSourceMaps: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
-});
-*/
