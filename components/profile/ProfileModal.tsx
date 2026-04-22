@@ -12,7 +12,7 @@ import {
   Star,
   Diamond,
   Fingerprint,
-  CloudRocket
+  Cloud
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -204,7 +204,7 @@ export function ProfileModal({ isOpen, onClose, user, onUpdate }: ProfileModalPr
                       accent="accent"
                     />
                     <BenefitCard 
-                      icon={<CloudRocket size={20} />}
+                      icon={<Cloud size={20} />}
                       title="Bulut Senkronizasyon"
                       desc="Tüm Mirros verilerin bulutta güvende."
                       accent="blue-500"
