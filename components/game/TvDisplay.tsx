@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Monitor, Loader2 } from "lucide-react";
+import { Monitor, Loader2, Flame, Trophy, Zap, Users } from "lucide-react";
 import { useGameStore } from "@/store/game.store";
 import { useGameState, useRoomState } from "@/hooks/useGameState";
 import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
