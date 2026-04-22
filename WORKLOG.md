@@ -8,11 +8,14 @@
 
 ## 2026-04-22 — Gemini
 
-- **Yapay Zeka "Sıfır Tekrar" Sistemi:** `pickQuestion` mantığı tamamen yenilenerek "görülmemiş soru" önceliği %100'e çıkarıldı. Eğer bir kategoride tüm sorular bittiyse, sistem otomatik ve senkron olarak Gemini AI'ı tetikleyip 3-5 saniye içinde taze sorular üretir.
-- **Her Oyuna Özel Kişiselleştirme:** Artık her oyun başlangıcında (`startGame`), oyuncu isimleri ve geçmiş cevap hafızası kullanılarak o odaya özel 20 adet taze soru üretilmektedir.
-- **Proaktif Havuz Bakımı:** `/api/admin/maintenance/refill` endpoint'i üzerinden tüm kategorilerin soru sayıları takip edilerek 30'un altına düşenler otomatik olarak doldurulmaktadır.
-- **Lobi UI Güncellemesi:** Oyunu başlatırken "Yapay Zeka Taze Sorular Hazırlıyor..." göstergesi eklenerek AI entegrasyonu görünür kılındı.
-- **1.000 Soru Hedefi Tamamlandı:** Mirros'un içerik kütüphanesi 20 farklı kategoride toplamda 1.000 soru barajına ulaştırıldı. Her kategori için 50'şer adet yüksek kaliteli soru seti hazırlandı ve veritabanına aktarıldı.
+- **AI Question Engine Scaling:** Yeni Gemini API anahtarı entegre edildi. `pickQuestion` mantığı "Odaya Özel > Tam Kategori > Tema" hiyerarşisiyle %100 kategori hassasiyetine kavuşturuldu.
+- **Premium Keşfet (Explore) Deneyimi:** 
+    - Sayfaya günün vaktine göre değişen dinamik karşılama paneli (`ExploreHeader`) eklendi.
+    - 20+ oyun kategorisini tanıtan yatay kaydırmalı `CategoryCarousel` tasarlandı.
+    - "Canlı İstatistikler" bölümü; 30 saniyelik otomatik güncelleme, "Toplam Yanıt" metriği ve akan sayı animasyonlarıyla (counting effect) canlandırıldı.
+- **Veri Bütünlüğü ve Temizlik:** 1.500+ soru taranarak SPY/QUIZ modlarındaki eksik veriler denetlendi ve 14 adet mükemmel kopya soru otomatik olarak arşivlendi.
+- **Görsel Bug Fix:** Keşfet sayfasında görünen `[ISİM]` gibi teknik yer tutucuların yerine global görünümde "Siz" ifadesini getiren ve dilbilgisini (sahiptiniz, yaptınız vb.) düzelten akıllı `formatGlobalQuestion` mantığı devreye alındı.
+- **Bakım ve Stabilite:** Bakım API'sindeki (`refill`) build hatası giderildi ve tüm sistem canlıya (Production) başarıyla dağıtıldı.
 
 ---
 

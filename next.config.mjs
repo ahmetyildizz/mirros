@@ -16,7 +16,7 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Build-Version',
-            value: "0.3.0-Synced-Final",
+            value: "0.8.0-PREMIUM-FINISH",
           },
         ],
       },

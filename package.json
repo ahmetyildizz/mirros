@@ -1,6 +1,5 @@
-{
   "name": "mirros",
-  "version": "0.5.1",
+  "version": "0.8.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
