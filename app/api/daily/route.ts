@@ -100,9 +100,39 @@ export async function GET(req: NextRequest) {
       return acc;
     }, {} as Record<string, number>);
 
+    // 6. Soruyu global kullanım için formatla ([İSİM] -> Siz)
+    const formatGlobalQuestion = (text: string) => {
+      let formatted = text.replace(/\[İSİM\]/gi, "Siz");
+      
+      // Bazı temel dilbilgisi düzeltmeleri (Opsiyonel ama şık durur)
+      // Örn: "Siz ... sahipti?" -> "Siz ... sahiptiniz?"
+      formatted = formatted
+        .replace(/miydi\?/g, "miydiniz?")
+        .replace(/mıydı\?/g, "mıydınız?")
+        .replace(/muydu\?/g, "muydunuz?")
+        .replace(/müydü\?/g, "müydünüz?")
+        .replace(/rdi\?/g, "rdiniz?")
+        .replace(/rdı\?/g, "rdınız?")
+        .replace(/ti\?/g, "tiniz?")
+        .replace(/tı\?/g, "tınız?")
+        .replace(/tu\?/g, "tunuz?")
+        .replace(/tü\?/g, "tünüz?")
+        .replace(/di\?/g, "diniz?")
+        .replace(/dı\?/g, "dınız?")
+        .replace(/du\?/g, "dunuz?")
+        .replace(/dü\?/g, "dünüz?");
+      
+      return formatted;
+    };
+
+    const formattedQuestion = {
+      ...daily.question,
+      text: formatGlobalQuestion(daily.question.text)
+    };
+
     return NextResponse.json({
       id: daily.id,
-      question: daily.question,
+      question: formattedQuestion,
       answered: !!userAnswer,
       userAnswer: userAnswer?.content,
       totalParticipants: total,

@@ -106,7 +106,7 @@ function LobbyContent() {
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="absolute inset-0"
             >
-              <TabDiscover onDailyAnswered={() => {}} />
+              <TabDiscover user={user} onDailyAnswered={() => {}} />
             </motion.div>
           )}
 
