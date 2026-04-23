@@ -27,8 +27,8 @@ export async function GET() {
     if (!full) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
     // İstatistikleri hesapla (isteğe bağlı, hata verse bile profil dönmeli)
-    let totalPoints = 0;
-    let gamesPlayed = 0;
+    let totalPoints: number | null = null;
+    let gamesPlayed: number | null = null;
     try {
       const stats = await db.score.aggregate({
         where: { guesserId: user.id },
@@ -39,6 +39,7 @@ export async function GET() {
       gamesPlayed = stats._count.id;
     } catch (e) {
       console.error("Stats aggregation failed", e);
+      // null döner — UI "—" göstermeli, 0 değil
     }
 
     return NextResponse.json({
