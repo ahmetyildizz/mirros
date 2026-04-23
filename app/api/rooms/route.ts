@@ -82,6 +82,10 @@ export async function POST(req: NextRequest) {
       details: { gameMode: body.gameMode, maxPlayers: body.maxPlayers, category: body.category },
     });
 
+    // Kapasite kontrolü (Limitlere yaklaşıldıysa mail atar)
+    const { checkCapacityAndAlert } = await import("@/lib/monitoring/capacity");
+    checkCapacityAndAlert().catch(e => console.error("Capacity check failed:", e));
+
     return NextResponse.json({ 
       id: room.id, 
       code: room.code, 
@@ -90,10 +94,13 @@ export async function POST(req: NextRequest) {
       category: room.category 
     }, { status: 201 });
   } catch (error: any) {
-    console.error("Room creation error:", error);
     if (error.message === "UNAUTHORIZED") {
       return NextResponse.json({ error: "Oturum açmanız gerekiyor" }, { status: 401 });
     }
-    return NextResponse.json({ error: error.message || "Oda oluşturulamadı" }, { status: 500 });
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: "Geçersiz istek parametreleri" }, { status: 400 });
+    }
+    console.error("Room creation error:", error);
+    return NextResponse.json({ error: "Oda oluşturulamadı" }, { status: 500 });
   }
 }

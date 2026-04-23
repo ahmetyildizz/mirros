@@ -23,8 +23,13 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Dev bypass: getSession() ile tutarlı olması için aynı koşul
-  if (process.env.NODE_ENV === "development" && process.env.DEV_USER_ID) {
+  // Dev bypass — admin/seed endpoint'leri kapsam dışı (üretimde bypass kapanır)
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.DEV_USER_ID &&
+    !pathname.startsWith("/api/admin") &&
+    !SEED_PATHS.some((p) => pathname.startsWith(p))
+  ) {
     return NextResponse.next();
   }
 

@@ -172,7 +172,6 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
         // AGGRESSIVE SYNC: Eğer EXPOSE/QUIZ modundaysak ve state ANSWERING olarak gelmişse (race condition), GUESSING'e zorla
         if ((data.gameMode === "EXPOSE" || data.gameMode === "QUIZ" || !data.answererId) && data.state === "ANSWERING") {
-          console.log("Auto-correcting state to GUESSING for non-answering mode");
           useGameStore.getState().setGameState("GUESSING");
         }
       }
@@ -188,7 +187,6 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   // Otomatik olarak GUESSING'e zorla.
   useEffect(() => {
     if (state === "ANSWERING" && !isQuiz && !answererId && gameId) {
-      console.log("Global Flow Guard: Auto-correcting state to GUESSING (null answerer detected)");
       useGameStore.getState().setGameState("GUESSING");
     }
   }, [state, answererId, isQuiz, gameId]);
@@ -266,7 +264,6 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
   }, [timeLeft, state]);
 
   useEffect(() => {
-    console.log("[MIRROS] 🔄 state →", state, { myRole, gameMode, answererId, activeRoundId, questionText: question?.text?.slice(0, 40) });
     if (state === "ANSWERING") {
       sounds.newRound();
       sounds.ping(); // Ekstra bildirim sesi
@@ -380,7 +377,6 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
 
   async function submitAnswer(content: string) {
     if (!activeRoundId) return;
-    console.log("[MIRROS] 📤 submitAnswer", { roundId: activeRoundId, content: content.slice(0, 30) });
     const res = await fetch(`/api/rounds/${activeRoundId}/answer`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content }),
@@ -395,12 +391,10 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
       }
       throw new Error(err.error || "Cevap gönderilemedi");
     }
-    console.log("[MIRROS] ✅ submitAnswer ok");
   }
 
   async function submitGuess(content: string, reason?: string) {
     if (!activeRoundId) return;
-    console.log("[MIRROS] 📤 submitGuess", { roundId: activeRoundId, content: content.slice(0, 30) });
     const res = await fetch(`/api/rounds/${activeRoundId}/guess`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content, reason }),
@@ -415,24 +409,20 @@ export default function GamePage({ params }: { params: Promise<{ roomId: string 
       }
       throw new Error(err.error || "Tahmin gönderilemedi");
     }
-    console.log("[MIRROS] ✅ submitGuess ok");
   }
 
   async function triggerScore() {
     if (!activeRoundId) return;
-    console.log("[MIRROS] 📤 triggerScore", { roundId: activeRoundId });
     const res = await fetch(`/api/rounds/${activeRoundId}/score`, { method: "POST" });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Skor hesaplanamadı" }));
       console.error("[MIRROS] ❌ triggerScore failed", res.status, err);
       throw new Error(err.error || "Skor hesaplanamadı");
     }
-    console.log("[MIRROS] ✅ triggerScore ok");
   }
 
   async function skipRound() {
     if (!activeRoundId) return;
-    console.log("[MIRROS] ⏭️ skipRound", { roundId: activeRoundId });
     const res = await fetch(`/api/rounds/${activeRoundId}/skip`, { method: "POST" });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: "Geçilemedi" }));

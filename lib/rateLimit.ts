@@ -12,8 +12,7 @@ export async function rateLimit(
 ): Promise<{ allowed: boolean; remaining: number }> {
   try {
     if (!redis.isReady) {
-      // Redis hazır değil — kısıtlama yapma, geçişe izin ver
-      return { allowed: true, remaining: max };
+      return { allowed: false, remaining: 0 };
     }
     const redisKey = `rate:${key}`;
     const count = await Promise.race([
@@ -27,7 +26,6 @@ export async function rateLimit(
     const remaining = Math.max(0, max - count);
     return { allowed, remaining };
   } catch {
-    // Redis bağlantı hatası veya timeout — kısıtlama yapma
-    return { allowed: true, remaining: max };
+    return { allowed: false, remaining: 0 };
   }
 }

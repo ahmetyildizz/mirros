@@ -94,34 +94,37 @@ export async function POST(
     const realAnswer = bluffRound.question.correct ?? "";
     const bluffGuessResults: { userId: string; username: string; guess: string; reason: string | null; matchLevel: string; points: number }[] = [];
 
-    // 1. Doğru cevabı tahmin edenlere +5 puan
+    // 1+2: Tüm puanları önce bellekte hesapla, sonra toplu yaz
+    const pointsMap: Record<string, { matchLevel: string; points: number }> = {};
+
     for (const g of bluffRound.guesses) {
       const isCorrect = normalize(g.content) === normalize(realAnswer);
-      const pts = isCorrect ? 5 : 0;
-      await db.score.upsert({
-        where:  { roundId_guesserId: { roundId, guesserId: g.userId } },
-        create: { roundId, gameId: round.gameId, guesserId: g.userId, matchLevel: isCorrect ? "EXACT" : "WRONG", points: pts },
-        update: { matchLevel: isCorrect ? "EXACT" : "WRONG", points: pts },
-      });
-      bluffGuessResults.push({ userId: g.userId, username: g.user.username ?? "?", guess: g.content, reason: g.reason ?? null, matchLevel: isCorrect ? "EXACT" : "WRONG", points: pts });
+      pointsMap[g.userId] = { matchLevel: isCorrect ? "EXACT" : "WRONG", points: isCorrect ? 5 : 0 };
+      bluffGuessResults.push({ userId: g.userId, username: g.user.username ?? "?", guess: g.content, reason: g.reason ?? null, matchLevel: isCorrect ? "EXACT" : "WRONG", points: isCorrect ? 5 : 0 });
     }
 
-    // 2. Sahte cevabına oy gelen oyunculara +3 puan/oy
+    // Sahte cevabına oy gelen oyunculara +3 puan/oy (bellekte aggregation)
     for (const ans of bluffRound.answers) {
       const votesForBluff = bluffRound.guesses.filter(g => normalize(g.content) === normalize(ans.content)).length;
       if (votesForBluff > 0) {
-        const bonusPts = votesForBluff * 3;
-        // Mevcut skoru oku, üzerine ekle (Prisma upsert.update fonksiyon kabul etmez)
-        const existing = await db.score.findUnique({
-          where: { roundId_guesserId: { roundId, guesserId: ans.userId } },
-        });
-        await db.score.upsert({
-          where:  { roundId_guesserId: { roundId, guesserId: ans.userId } },
-          create: { roundId, gameId: round.gameId, guesserId: ans.userId, matchLevel: "CLOSE", points: bonusPts },
-          update: { matchLevel: "CLOSE", points: (existing?.points ?? 0) + bonusPts },
-        });
+        const existing = pointsMap[ans.userId];
+        pointsMap[ans.userId] = {
+          matchLevel: "CLOSE",
+          points: (existing?.points ?? 0) + votesForBluff * 3,
+        };
       }
     }
+
+    // Tek seferde toplu upsert (paralel)
+    await Promise.all(
+      Object.entries(pointsMap).map(([guesserId, { matchLevel, points }]) =>
+        db.score.upsert({
+          where:  { roundId_guesserId: { roundId, guesserId } },
+          create: { roundId, gameId: round.gameId, guesserId, matchLevel: matchLevel as any, points },
+          update: { matchLevel: matchLevel as any, points },
+        })
+      )
+    );
 
     // round.update kaldırıldı — optimistic lock ile yukarıda zaten SCORED yapıldı
 
