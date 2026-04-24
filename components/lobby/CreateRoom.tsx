@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -56,6 +56,11 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
     { id: "intense", label: "Rekabet",   count: TEMPLATES.filter(t => t.gameMode === "EXPOSE" || t.gameMode === "SPY").length },
     { id: "quiz",    label: "Yarışma",   count: TEMPLATES.filter(t => t.gameMode === "QUIZ").length },
   ];
+
+  useEffect(() => {
+    return () => { onStepChange?.("template"); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const changeStep = (newStep: "template" | "config") => {
     setStep(newStep);

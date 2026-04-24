@@ -51,10 +51,11 @@ function LobbyContent() {
     router.push(`/room/${roomId}`);
   };
 
-  // Oda kurulumu sırasında sekme değişimini engelle
   const handleTabChange = (tab: BottomTab) => {
-    if (isConfiguring) return;
     setActiveTab(tab);
+    // Play dışına geçilince config kilidi temizle — React 18 batch'leme nedeniyle
+    // isConfiguring eski değerle okunabilir ve kullanıcı Oyna tab'ına dönemez
+    if (tab !== "play") setIsConfiguring(false);
   };
 
   useEffect(() => {
