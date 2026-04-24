@@ -166,30 +166,24 @@ export const useGameStore = create<GameStore>()(
       setCategoryName:    (categoryName) => set({ categoryName }),
       setNextRoundData:   (nextRoundData) => set({ nextRoundData }),
       hydrate:           (data) => set((s) => ({ ...s, ...data })),
-      reset:             () => set(initialState),
+      reset: () => {
+        set(initialState);
+        // Persist'ten de temizle — aksi hâlde yenileme eski state'i geri yükler
+        useGameStore.persist.clearStorage?.();
+      },
     }),
     {
       name:    "mirros-game",
       storage: createJSONStorage(() => localStorage),
-      // Geçici/türetilebilir alanları persist etme
+      // Sadece sayfa yenilemesinde recovery için gereken minimum alanları sakla.
+      // Round verisi (question, state, playerScores, players vb.) sunucudan yeniden çekilir.
+      // Cross-tab/cross-room state kirliliğini önlemek için listeyi minimal tut.
       partialize: (s) => ({
-        gameId:       s.gameId,
-        roomId:       s.roomId,
-        roomCode:     s.roomCode,
-        isHostPlayer: s.isHostPlayer,
-        gameMode:     s.gameMode,
-        players:      s.players,
-        currentRound: s.currentRound,
-        totalRounds:  s.totalRounds,
-        activeRoundId:s.activeRoundId,
-        answererId:   s.answererId,
-        state:        s.state,
-        playerScores: s.playerScores,
-        theme:        s.theme,
-        question:     s.question,
-        myRole:       s.myRole,
-        guessCount:   s.guessCount,
-        totalGuessers:s.totalGuessers,
+        gameId:      s.gameId,
+        roomId:      s.roomId,
+        roomCode:    s.roomCode,
+        gameMode:    s.gameMode,
+        theme:       s.theme,
         categoryName: s.categoryName,
       }),
     }

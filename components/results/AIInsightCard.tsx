@@ -75,7 +75,7 @@ export function AIInsightCard({ intro, tag, story }: Props) {
               </div>
             </div>
             
-            <h3 className="text-[13px] font-black text-white uppercase tracking-[0.3em] mb-4">Veri Analiz Ediliyor</h3>
+            <h3 className="text-[15px] font-black text-accent uppercase tracking-[0.4em] mb-4 drop-shadow-[0_0_15px_rgba(var(--accent-rgb),0.5)] italic">SİSTEM ANALİZ EDİYOR</h3>
             
             <div className="w-48 h-1.5 bg-white/5 rounded-full overflow-hidden mb-2">
               <motion.div 
@@ -114,10 +114,11 @@ export function AIInsightCard({ intro, tag, story }: Props) {
             </div>
 
             <div className="relative">
-              <Quote className="absolute -top-2 -left-3 text-white/5" size={48} />
-              <p className="text-[15px] font-bold text-slate-200 leading-relaxed italic relative z-10 antialiased pt-2">
-                {story}
+              <Quote className="absolute -top-4 -left-4 text-accent/10" size={64} />
+              <p className="text-lg md:text-xl font-black text-white leading-tight italic relative z-10 antialiased pt-4 tracking-tight drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]">
+                "{story}"
               </p>
+              <div className="absolute -bottom-2 right-0 w-32 h-px bg-gradient-to-l from-accent/50 to-transparent" />
             </div>
 
             <div className="pt-4 border-t border-white/5 flex items-center justify-between">

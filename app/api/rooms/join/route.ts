@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
 
   const players = (updated?.participants ?? []).map((p) => ({
     id:        p.userId,
-    username:  p.user.username ?? p.user.email,
+    username:  p.user.username ?? "Anonim",
     avatarUrl: p.user.avatarUrl,
     role:      (p as any).role,
   }));
@@ -145,6 +145,10 @@ export async function POST(req: NextRequest) {
       }
     }
   }
+
+  // Kapasite kontrolü (Limitlere yaklaşıldıysa mail atar)
+  const { checkCapacityAndAlert } = await import("@/lib/monitoring/capacity");
+  checkCapacityAndAlert().catch(e => console.error("Capacity check failed:", e));
 
   return NextResponse.json({ 
     id: room.id, 

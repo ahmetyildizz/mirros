@@ -63,12 +63,20 @@ export function ProfileModal({ isOpen, onClose, user, onUpdate }: ProfileModalPr
 
   const handleAvatarSelect = (url: string) => {
     setSelectedAvatar(url);
-    // Don't close immediately so user can see it selected
+    // Auto-save if name hasn't changed
+    if (newName.trim() === user.username) {
+      const data = { avatarUrl: url };
+      onUpdate(data).catch(err => setError(err.message));
+    }
   };
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      window.location.href = "/login";
+    } catch {
+      window.location.href = "/login";
+    }
   };
 
   return (
@@ -90,7 +98,7 @@ export function ProfileModal({ isOpen, onClose, user, onUpdate }: ProfileModalPr
               initial={{ scale: 0.95, opacity: 0, y: 10 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              className="w-full max-w-[420px] bg-[#0A0A0A] border border-white/10 rounded-[3rem] overflow-hidden pointer-events-auto relative shadow-[0_30px_100px_rgba(0,0,0,0.8)]"
+              className="w-full max-w-[420px] max-h-[90vh] bg-[#0A0A0A] border border-white/10 rounded-[3rem] overflow-y-auto pointer-events-auto relative shadow-[0_30px_100px_rgba(0,0,0,0.8)] scrollbar-none"
             >
               {/* Animated Top Glow */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-40 bg-gradient-to-b from-accent/20 to-transparent blur-[60px] opacity-50 -z-10" />

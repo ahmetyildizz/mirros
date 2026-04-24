@@ -190,7 +190,7 @@ async function scoreQuizRound(roundId: string, gameId: string) {
     where:   { id: roundId },
     include: {
       question: true,
-      answers:  { include: { user: { select: { id: true, username: true, email: true } } } },
+      answers:  { include: { user: { select: { id: true, username: true } } } },
       game:     { include: { room: { include: { participants: true } } } },
     },
   });
@@ -219,7 +219,7 @@ async function scoreQuizRound(roundId: string, gameId: string) {
 
     results.push({
       userId:   ans.userId,
-      username: ans.user.username ?? ans.user.email,
+      username: ans.user.username ?? "Anonim",
       answer:   ans.content,
       correct:  isCorrect,
       points,

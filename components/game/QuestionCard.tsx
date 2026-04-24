@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Quote, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { formatQuestion } from "@/lib/utils/question-formatter";
+
 interface Props {
   text: string;
   category: string;
@@ -15,9 +17,8 @@ interface Props {
 
 export function QuestionCard({ text, category, roundNumber, answererName, answererAvatar, focusName }: Props) {
   // [ISIM] veya [İSİM] yer tutucularını gerçek isimle değiştir
-  const highlightedText = focusName 
-    ? text.replace(/\[İ?S[Iİ]M\]/gi, focusName)
-    : text;
+  const highlightedText = formatQuestion(text, focusName || "");
+
 
   return (
     <motion.div

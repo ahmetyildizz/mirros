@@ -10,6 +10,7 @@ export function getPusherClient(): PusherClient {
     pusherClient = new PusherClient(key, {
       cluster,
       forceTLS: true,
+      authEndpoint: "/api/pusher/auth",
     });
 
     pusherClient.connection.bind('error', (err: any) => {

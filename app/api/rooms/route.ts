@@ -6,6 +6,7 @@ import { createAuditLog } from "@/lib/audit";
 import { rateLimit } from "@/lib/rateLimit";
 
 import { refillGlobalPool } from "@/lib/services/ai.service";
+import { moderateContent } from "@/lib/logic/moderation";
 
 function generateCode(): string {
   const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -22,13 +23,6 @@ const bodySchema = z.object({
   category:    z.string().optional(),
 });
 
-const PROFANITY_FILTER = ["sik", "yarrak", "am", "göt", "fuck", "shit"]; // Örnek küfür filtresi
-
-function isOffensive(text: string): boolean {
-  if (!text) return false;
-  const lower = text.toLowerCase();
-  return PROFANITY_FILTER.some(word => lower.includes(word));
-}
 
 // ageGroup artık room'a değil katılımcıya kaydedilir
 
@@ -43,7 +37,7 @@ export async function POST(req: NextRequest) {
     const json = await req.json().catch(() => ({}));
     const body = bodySchema.parse(json);
 
-    if (body.category && isOffensive(body.category)) {
+    if (body.category && !moderateContent(body.category).isClean) {
       return NextResponse.json({ error: "Geçersiz kategori adı" }, { status: 400 });
     }
 

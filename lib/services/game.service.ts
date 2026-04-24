@@ -92,7 +92,7 @@ export async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "Q
   const targetCategories = baseCategory ? themeMap[baseCategory] : null;
 
   async function findCandidates(idsToExclude: string[], limitToUnseen: boolean) {
-    const filterConditions = {
+    const baseFilter = {
       isActive: true,
       gameMode: effectiveMode,
       ...(spiceLevel ? { difficulty: spiceLevel } : {}),
@@ -102,19 +102,22 @@ export async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "Q
       ...(ageGroup ? { OR: [{ ageGroup: ageGroup as any }, { ageGroup: null }] } : {}),
     };
 
-    // 0. ÖNCELİKLİ: Odaya Özel Soru (Yapay Zeka tarafından o an üretilenler)
+    // 0. ÖNCELİKLİ: Odaya Özel Soru (Kullanıcı eklemiş veya AI o an üretmişse)
     if (roomId) {
       const roomCandidates = await tx.question.findMany({
-        where: { roomId, ...filterConditions },
+        where: { roomId, ...baseFilter },
         select: { id: true },
       });
       if (roomCandidates.length > 0) return roomCandidates;
     }
 
+    // Küresel havuz sadece genel (Genel = roomId: null) soruları içermeli
+    const globalFilter = { ...baseFilter, roomId: null };
+
     // 1. ADIM: Tam Kategori Eşleşmesi (En Keskin Sonuç)
     if (baseCategory) {
       const exactCandidates = await tx.question.findMany({
-        where: { category: baseCategory, ...filterConditions },
+        where: { category: baseCategory, ...globalFilter },
         select: { id: true },
       });
       if (exactCandidates.length > 0) return exactCandidates;
@@ -125,7 +128,7 @@ export async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "Q
       const themeCandidates = await tx.question.findMany({
         where: { 
           category: { in: targetCategories },
-          ...filterConditions 
+          ...globalFilter 
         },
         select: { id: true },
       });
@@ -135,7 +138,7 @@ export async function pickQuestion(excludeIds: string[], gameMode: "SOCIAL" | "Q
     // 3. ADIM: Genel Havuz (Sadece SOCIAL modunda ve son çare olarak)
     if (effectiveMode === "SOCIAL") {
       return tx.question.findMany({
-        where: filterConditions,
+        where: globalFilter,
         select: { id: true },
       });
     }

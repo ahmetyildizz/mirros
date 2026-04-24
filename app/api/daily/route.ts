@@ -1,8 +1,16 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
 import { startOfDay, endOfDay } from "date-fns";
+
+import { formatQuestion } from "@/lib/utils/question-formatter";
+
+const postSchema = z.object({
+  dailyQuestionId: z.string().cuid(),
+  content: z.string().min(1).max(200),
+});
 
 export async function GET(req: NextRequest) {
   try {
@@ -101,34 +109,11 @@ export async function GET(req: NextRequest) {
     }, {} as Record<string, number>);
 
     // 6. Soruyu global kullanım için formatla ([İSİM] -> Siz)
-    const formatGlobalQuestion = (text: string) => {
-      let formatted = text.replace(/\[İSİM\]/gi, "Siz");
-      
-      // Bazı temel dilbilgisi düzeltmeleri (Opsiyonel ama şık durur)
-      // Örn: "Siz ... sahipti?" -> "Siz ... sahiptiniz?"
-      formatted = formatted
-        .replace(/miydi\?/g, "miydiniz?")
-        .replace(/mıydı\?/g, "mıydınız?")
-        .replace(/muydu\?/g, "muydunuz?")
-        .replace(/müydü\?/g, "müydünüz?")
-        .replace(/rdi\?/g, "rdiniz?")
-        .replace(/rdı\?/g, "rdınız?")
-        .replace(/ti\?/g, "tiniz?")
-        .replace(/tı\?/g, "tınız?")
-        .replace(/tu\?/g, "tunuz?")
-        .replace(/tü\?/g, "tünüz?")
-        .replace(/di\?/g, "diniz?")
-        .replace(/dı\?/g, "dınız?")
-        .replace(/du\?/g, "dunuz?")
-        .replace(/dü\?/g, "dünüz?");
-      
-      return formatted;
-    };
-
     const formattedQuestion = {
       ...daily.question,
-      text: formatGlobalQuestion(daily.question.text)
+      text: formatQuestion(daily.question.text, "Siz")
     };
+
 
     return NextResponse.json({
       id: daily.id,
@@ -149,11 +134,11 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const { id: userId } = await requireAuth();
-    const { dailyQuestionId, content } = await req.json();
-
-    if (!dailyQuestionId || !content) {
-      return NextResponse.json({ error: "Missing data" }, { status: 400 });
+    const parsed = postSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
+    const { dailyQuestionId, content } = parsed.data;
 
     // Cevabı kaydet
     const answer = await db.dailyAnswer.upsert({

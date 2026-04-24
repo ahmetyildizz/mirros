@@ -58,5 +58,35 @@ export const MIRROS_AVATARS = [
     name: "Kraliçe",
     url: "https://api.dicebear.com/7.x/notionists/svg?seed=Queen&backgroundColor=ffd5dc,ffdfbf&mood=happy",
     color: "#ffd5dc"
+  },
+  {
+    id: "persona-empath",
+    name: "Duygusal",
+    url: "https://api.dicebear.com/7.x/notionists/svg?seed=Empath&backgroundColor=d1d4f9,c0aede&mood=happy",
+    color: "#d1d4f9"
+  },
+  {
+    id: "persona-mischief",
+    name: "Yaramaz",
+    url: "https://api.dicebear.com/7.x/notionists/svg?seed=Mischief&backgroundColor=ffdfbf,b6e3f4&mood=happy",
+    color: "#ffdfbf"
+  },
+  {
+    id: "persona-genius",
+    name: "Dahi",
+    url: "https://api.dicebear.com/7.x/notionists/svg?seed=Genius&backgroundColor=b6e3f4,d1d4f9&mood=focused",
+    color: "#b6e3f4"
+  },
+  {
+    id: "persona-traveler",
+    name: "Gezgin",
+    url: "https://api.dicebear.com/7.x/notionists/svg?seed=Traveler&backgroundColor=c0aede,ffd5dc&mood=happy",
+    color: "#c0aede"
+  },
+  {
+    id: "persona-elegant",
+    name: "Şık",
+    url: "https://api.dicebear.com/7.x/notionists/svg?seed=Elegant&backgroundColor=ffd5dc,d1d4f9&mood=happy",
+    color: "#ffd5dc"
   }
 ];

@@ -85,7 +85,7 @@ export async function GET(
       p.userId,
       {
         id:       p.userId,
-        username: (p as any).user?.username ?? (p as any).user?.email ?? "?",
+        username: (p as any).user?.username ?? "Anonim",
       }
     ])).values()),
   });

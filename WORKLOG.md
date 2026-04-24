@@ -4,6 +4,14 @@
 > Her oturum sonunda çalışan AI buraya kısa not düşer.
 > Format: `## YYYY-MM-DD — [Claude|Gemini]`
 
+## 2026-04-23 — Gemini
+
+- **Güvenlik & Moderasyon:** Özel soru ekleme kısmına kapsamlı Türkçe küfür ve uygunsuz içerik filtresi eklendi.
+- **Sosyal Özellikler:** Arkadaşlık sistemi ve Odaya Davet (Friend Invite) mekanizması Pusher ile eklendi.
+- **Oturum & Navigasyon:** "Oturum Kapat" hataları giderildi, profil sayfasından oyun sekmesine hızlı dönüş için "Geri Dön" butonu eklendi.
+- **Mobil & UI:** Modalların ekran taşma hatası giderildi (`max-h-[90vh]`), avatar fallback sistemi iyileştirildi ve AI Analiz ekranı görsel olarak dramatik bir dile kavuşturuldu.
+- **İçerik:** 5 yeni "Notionists" personası eklendi.
+
 ---
 
 ## 2026-04-23 — Gemini

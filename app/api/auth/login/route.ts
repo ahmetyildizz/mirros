@@ -93,9 +93,13 @@ export async function POST(req: NextRequest) {
       // Cihaz zaten başka birine ait mi kontrol et
       const otherUserWithDevice = deviceId ? await db.user.findFirst({ where: { deviceId, NOT: { id: user.id } } }) : null;
 
-      // Cihazı yoksa ve başka birine ait değilse kilitle
-      if (!user.deviceId && deviceId && !otherUserWithDevice) {
-        user = await db.user.update({ where: { id: user.id }, data: { deviceId } });
+      // Hesapta deviceId yoksa → cihaz bağlanamaz, sahiplik kanıtlanamaz
+      // Sessizce yeni cihazı bağlamak hesap ele geçirmeye izin verir
+      if (!user.deviceId) {
+        return NextResponse.json(
+          { error: "Bu kullanıcı adı kayıtlı ve cihaz bilgisi yok. Farklı bir isim seç." },
+          { status: 403 }
+        );
       }
     }
   } else {

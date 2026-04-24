@@ -11,7 +11,7 @@ import {
   Loader2,
   AlertCircle
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, hapticFeedback } from "@/lib/utils";
 import { sounds } from "@/lib/sounds";
 
 interface Props {
@@ -44,8 +44,10 @@ export function MultipleChoiceInput({
     sounds.pop();
     try {
       await onSubmit(value, reason.trim() || undefined);
+      hapticFeedback("success");
       setSubmitted(true);
     } catch (e: any) {
+      hapticFeedback("error");
       setError(e?.message || "Gönderilemedi, tekrar dene");
     } finally {
       setSending(false);
@@ -126,7 +128,11 @@ export function MultipleChoiceInput({
             disabled={sending}
             whileHover={{ x: 4 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => { setSelected(opt); setShowFree(false); }}
+            onClick={() => { 
+               hapticFeedback("light");
+               setSelected(opt); 
+               setShowFree(false); 
+            }}
             className={cn(
               "group w-full flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-300",
               selected === opt && !showFree 

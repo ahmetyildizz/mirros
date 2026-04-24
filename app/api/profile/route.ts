@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAuth, createSession } from "@/lib/auth/session";
 import { createAuditLog } from "@/lib/audit";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function PATCH(req: NextRequest) {
   try {
@@ -10,14 +11,47 @@ export async function PATCH(req: NextRequest) {
 
     // ADMIN RECLAIM LOGIC — passcode env'den okunur, kaynak kodda hardcoded değil
     const adminPasscode = process.env.ADMIN_RECLAIM_PASSCODE;
-    if (adminPasscode && username === "Noyan" && passcode === adminPasscode) {
-      const noyanUser = await db.user.findUnique({
-        where: { username: "Noyan" },
-      });
+    const adminTargetUsername = process.env.ADMIN_USERNAME ?? "Noyan";
 
-      if (noyanUser) {
-        await createSession(noyanUser.id, noyanUser.username!, true);
-        return NextResponse.json({ success: true, username: noyanUser.username, reclaimed: true, isAdmin: true });
+    if (adminPasscode && username === adminTargetUsername && passcode) {
+      const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+      const { allowed, remaining } = await rateLimit(`admin-reclaim:${ip}`, { max: 3, windowMs: 15 * 60_000 });
+      if (!allowed) {
+        await createAuditLog({
+          action: "UPDATE",
+          entityType: "USER",
+          entityId: user.id,
+          resource: `Admin reclaim brute-force attempt from ${ip}`,
+          userId: user.id,
+          details: { ip, username }
+        });
+        return NextResponse.json({ error: "Çok fazla deneme. 15 dakika bekle." }, { status: 429 });
+      }
+
+      if (passcode === adminPasscode) {
+        const adminUser = await db.user.findUnique({ where: { username: adminTargetUsername } });
+        if (adminUser) {
+          await createAuditLog({
+            action: "UPDATE",
+            entityType: "USER",
+            entityId: adminUser.id,
+            resource: `Admin reclaim successful from ${ip}`,
+            userId: user.id,
+            details: { ip, remaining }
+          });
+          await createSession(adminUser.id, adminUser.username!, true);
+          return NextResponse.json({ success: true, username: adminUser.username, reclaimed: true, isAdmin: true });
+        }
+      } else {
+        await createAuditLog({
+          action: "UPDATE",
+          entityType: "USER",
+          entityId: user.id,
+          resource: `Admin reclaim failed — wrong passcode from ${ip}`,
+          userId: user.id,
+          details: { ip, remaining }
+        });
+        return NextResponse.json({ error: "Hatalı passcode" }, { status: 403 });
       }
     }
 

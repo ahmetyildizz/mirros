@@ -9,6 +9,8 @@ import { TabPlay }     from "@/components/layout/TabPlay";
 import { TabDiscover } from "@/components/layout/TabDiscover";
 import { TabProfile }  from "@/components/layout/TabProfile";
 import { VersionHistoryModal } from "@/components/lobby/VersionHistoryModal";
+import { getPusherClient } from "@/lib/pusher/client";
+import { useSocialStore } from "@/store/social.store";
 
 function LobbyContent() {
   const router   = useRouter();
@@ -16,6 +18,7 @@ function LobbyContent() {
   const joinCode = params.get("code") ?? "";
 
   const { setRoomId, setRoomCode, setIsHostPlayer } = useGameStore();
+  const { setOnlineUsers, addOnlineUser, removeOnlineUser } = useSocialStore();
 
   const [activeTab, setActiveTab]         = useState<BottomTab>("play");
   const [isConfiguring, setIsConfiguring] = useState(false);
@@ -53,6 +56,49 @@ function LobbyContent() {
     if (isConfiguring) return;
     setActiveTab(tab);
   };
+
+  useEffect(() => {
+    const handler = (e: any) => setActiveTab(e.detail);
+    window.addEventListener("mirros-change-tab", handler);
+    return () => window.removeEventListener("mirros-change-tab", handler);
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    const pusher = getPusherClient();
+    
+    // Private notifications channel
+    const privateChannel = pusher.subscribe(`private-user-${user.id}`);
+    privateChannel.bind("room-invite", (data: any) => {
+      if (confirm(`${data.senderName} seni odaya davet etti! Katılmak ister misin?`)) {
+        router.push(`/join/${data.roomCode}`);
+      }
+    });
+
+    // Global presence channel for online status
+    const presenceChannel = pusher.subscribe(`presence-mirros-online`);
+    
+    presenceChannel.bind("pusher:subscription_succeeded", (members: any) => {
+      const ids: string[] = [];
+      members.each((member: any) => ids.push(member.id));
+      setOnlineUsers(ids);
+    });
+
+    presenceChannel.bind("pusher:member_added", (member: any) => {
+      addOnlineUser(member.id);
+    });
+
+    presenceChannel.bind("pusher:member_removed", (member: any) => {
+      removeOnlineUser(member.id);
+    });
+
+    return () => {
+      privateChannel.unbind_all();
+      pusher.unsubscribe(`private-user-${user.id}`);
+      presenceChannel.unbind_all();
+      pusher.unsubscribe(`presence-mirros-online`);
+    };
+  }, [user, router, setOnlineUsers, addOnlineUser, removeOnlineUser]);
 
   return (
     <main className="fixed inset-0 bg-black flex flex-col overflow-hidden">

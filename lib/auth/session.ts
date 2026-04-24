@@ -24,9 +24,15 @@ export async function createSession(userId: string, username: string, isAdmin: b
 }
 
 export async function getSession(): Promise<{ id: string; username: string; isAdmin?: boolean } | null> {
-  // Dev bypass — sadece local development, staging veya production'da KULLANMA
-  if (process.env.NODE_ENV === "development" && process.env.DEV_USER_ID) {
-    return { id: process.env.DEV_USER_ID, username: "dev", isAdmin: false };
+  // Dev bypass — sadece local development'ta geçerli
+  if (process.env.DEV_USER_ID) {
+    if (process.env.VERCEL_ENV === "production") {
+      // Production'da DEV_USER_ID set edilmişse hard crash: yanlış config'i sessizce geçme
+      throw new Error("DEV_USER_ID production ortamında kullanılamaz — lütfen Vercel env'den kaldırın");
+    }
+    if (process.env.NODE_ENV === "development") {
+      return { id: process.env.DEV_USER_ID, username: "dev", isAdmin: false };
+    }
   }
 
   try {

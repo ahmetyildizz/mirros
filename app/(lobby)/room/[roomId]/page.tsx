@@ -24,6 +24,7 @@ import { useGameStore } from "@/store/game.store";
 import type { Player } from "@/store/game.store";
 import { cn } from "@/lib/utils";
 import { ManageQuestions } from "@/components/lobby/ManageQuestions";
+import { InviteFriendsModal } from "@/components/lobby/InviteFriendsModal";
 import { GoogleAd } from "@/components/ads/GoogleAd";
 import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 import QRCode from "react-qr-code";
@@ -63,6 +64,7 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
   const [startError,  setStartError]  = useState<string | null>(null);
   const [copied,      setCopied]      = useState(false);
   const [managerOpen, setManagerOpen] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   const {
     setGameId, setGameState, setQuestion, setCurrentRound, setTotalRounds,
@@ -330,21 +332,25 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
                 >
                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] flex items-center justify-center border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.2)] relative overflow-hidden shrink-0 group">
                     <div className="absolute inset-0 bg-accent/5 group-hover:bg-accent/10 transition-colors" />
-                    {p.avatarUrl ? (
+                    
+                    {/* Initials Fallback (Always present behind) */}
+                    <span className="text-xl font-black text-white/20 relative z-0">
+                      {(p.username ?? "?")[0].toUpperCase()}
+                    </span>
+
+                    {p.avatarUrl && (
                       <img 
                         src={p.avatarUrl} 
                         alt={p.username} 
-                        className="w-full h-full object-cover relative z-10"
+                        className="absolute inset-0 w-full h-full object-cover z-10"
+                        loading="eager"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
+                          target.style.opacity = '0';
                         }}
                       />
-                    ) : (
-                      <span className="text-xl font-black text-white/50 relative z-10">
-                        {(p.username ?? "?")[0].toUpperCase()}
-                      </span>
                     )}
+                    
                     <motion.div 
                       animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.2, 1] }}
                       transition={{ duration: 3, repeat: Infinity }}
@@ -418,13 +424,22 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
             className="flex flex-col gap-3"
           >
             {isHost && (
-              <button
-                onClick={() => setManagerOpen(true)}
-                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/10 text-slate-300 text-[11px] font-black uppercase tracking-widest transition-all mb-1"
-              >
-                <PlusCircle size={14} className="text-accent" />
-                Özel Soru Ekle
-              </button>
+              <div className="flex gap-2 mb-1">
+                <button
+                  onClick={() => setInviteOpen(true)}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/5 border border-accent/10 hover:bg-accent/10 text-accent text-[11px] font-black uppercase tracking-widest transition-all"
+                >
+                  <Users size={14} />
+                  Arkadaşlarını Davet Et
+                </button>
+                <button
+                  onClick={() => setManagerOpen(true)}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/10 text-slate-300 text-[11px] font-black uppercase tracking-widest transition-all"
+                >
+                  <PlusCircle size={14} className="text-accent" />
+                  Özel Soru Ekle
+                </button>
+              </div>
             )}
 
             {isHost ? (
@@ -498,6 +513,12 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
           <ManageQuestions 
             roomId={roomId} 
             onClose={() => setManagerOpen(false)} 
+          />
+        )}
+        {inviteOpen && (
+          <InviteFriendsModal 
+            roomId={roomId}
+            onClose={() => setInviteOpen(false)}
           />
         )}
       </AnimatePresence>

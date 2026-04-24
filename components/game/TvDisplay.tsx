@@ -6,7 +6,7 @@ import { Monitor, Loader2, Flame, Trophy, Zap, Users } from "lucide-react";
 import { useGameStore } from "@/store/game.store";
 import { useGameState, useRoomState } from "@/hooks/useGameState";
 import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
-import { cn } from "@/lib/utils";
+import { formatQuestion } from "@/lib/utils/question-formatter";
 
 interface Props {
   roomId: string;
@@ -172,9 +172,7 @@ export function TvDisplay({ roomId }: Props) {
             animate={{ opacity: 1, y: 0 }}
             className="text-5xl font-black leading-tight tracking-tight text-white"
           >
-            {answerer?.username 
-              ? question.text.replace(/\[İ?S[Iİ]M\]/gi, answerer.username)
-              : question.text}
+            {formatQuestion(question.text, answerer?.username || "")}
           </motion.h1>
 
           {/* State label */}

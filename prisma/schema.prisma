@@ -8,33 +8,64 @@ datasource db {
 }
 
 model User {
-  id          String            @id @default(cuid())
-  email       String            @unique
-  username    String?           @unique
-  deviceId    String?           @unique
-  provider    String            @default("GUEST")
-  providerId  String?           @unique
-  avatarUrl   String?
-  createdAt   DateTime          @default(now())
-  answers     Answer[]
-  guesses     Guess[]
-  insightsA   Insight[]         @relation("InsightUserA")
-  insightsB   Insight[]         @relation("InsightUserB")
-  hostedRooms Room[]            @relation("HostedRooms")
-  rooms       RoomParticipant[]
-  scores      Score[]
-  auditLogs   AuditLog[]
-  dailyAnswers   DailyAnswer[]
-  packs          QuestionPack[]
-  streak         Int            @default(0)
-  longestStreak  Int            @default(0)
-  lastPlayedAt   DateTime?
-  badges         Json?             @default("[]")
-  aiAvatar       String?
-  seenQuestions  UserSeenQuestion[]
+  id                   String             @id @default(cuid())
+  email                String             @unique
+  username             String?            @unique
+  avatarUrl            String?
+  createdAt            DateTime           @default(now())
+  deviceId             String?            @unique
+  provider             String             @default("GUEST")
+  providerId           String?            @unique
+  lastPlayedAt         DateTime?
+  longestStreak        Int                @default(0)
+  streak               Int                @default(0)
+  aiAvatar             String?
+  badges               Json?              @default("[]")
+  answers              Answer[]
+  auditLogs            AuditLog[]
+  dailyAnswers         DailyAnswer[]
+  friendshipsReceived  Friendship[]       @relation("FriendshipReceiver")
+  friendshipsInitiated Friendship[]       @relation("FriendshipRequester")
+  guesses              Guess[]
+  insightsA            Insight[]          @relation("InsightUserA")
+  insightsB            Insight[]          @relation("InsightUserB")
+  packs                QuestionPack[]
+  hostedRooms          Room[]             @relation("HostedRooms")
+  receivedInvites      RoomInvite[]       @relation("InviteReceiver")
+  sentInvites          RoomInvite[]       @relation("InviteSender")
+  rooms                RoomParticipant[]
+  scores               Score[]
+  seenQuestions        UserSeenQuestion[]
 
   @@index([deviceId])
   @@index([providerId])
+}
+
+model Friendship {
+  id          String           @id @default(cuid())
+  requesterId String
+  receiverId  String
+  status      FriendshipStatus @default(PENDING)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  receiver    User             @relation("FriendshipReceiver", fields: [receiverId], references: [id])
+  requester   User             @relation("FriendshipRequester", fields: [requesterId], references: [id])
+
+  @@unique([requesterId, receiverId])
+}
+
+model RoomInvite {
+  id         String       @id @default(cuid())
+  roomId     String
+  senderId   String
+  receiverId String
+  status     InviteStatus @default(PENDING)
+  createdAt  DateTime     @default(now())
+  receiver   User         @relation("InviteReceiver", fields: [receiverId], references: [id])
+  room       Room         @relation(fields: [roomId], references: [id])
+  sender     User         @relation("InviteSender", fields: [senderId], references: [id])
+
+  @@index([receiverId, status])
 }
 
 model Room {
@@ -46,10 +77,12 @@ model Room {
   maxPlayers   Int               @default(8)
   ageGroup     AgeGroup?
   gameMode     GameMode          @default(SOCIAL)
-  category      String?           // Örn: "Çift Gecesi", "Aile Toplantısı"
-  games         Game[]
-  host          User              @relation("HostedRooms", fields: [hostId], references: [id])
-  participants  RoomParticipant[]
+  category     String?
+  games        Game[]
+  host         User              @relation("HostedRooms", fields: [hostId], references: [id])
+  invites      RoomInvite[]
+  participants RoomParticipant[]
+  questions    Question[]        @relation("RoomQuestions")
 
   @@index([hostId])
 }
@@ -66,11 +99,6 @@ model RoomParticipant {
   user     User            @relation(fields: [userId], references: [id])
 
   @@unique([roomId, userId])
-}
-
-enum ParticipantRole {
-  PLAYER
-  SPECTATOR
 }
 
 model Game {
@@ -97,18 +125,18 @@ model Round {
   answererId String?
   status     RoundStatus @default(ANSWERING)
   createdAt  DateTime    @default(now())
+  metadata   Json?
+  spyId      String?
   answers    Answer[]
   guesses    Guess[]
   game       Game        @relation(fields: [gameId], references: [id])
   question   Question    @relation(fields: [questionId], references: [id])
   scores     Score[]
-  spyId      String?     // SPY modunda casus olan kişinin ID'si
-  metadata   Json?       // Round özelinde ek bilgiler (farklı promptlar vb.)
 
+  @@unique([gameId, number])
   @@index([gameId])
   @@index([gameId, status])
   @@index([answererId])
-  @@unique([gameId, number])
 }
 
 model Answer {
@@ -154,20 +182,21 @@ model Score {
 }
 
 model Question {
-  id         String     @id @default(cuid())
-  text       String
-  category   String
-  difficulty Difficulty @default(EASY)
-  language   String     @default("tr")
-  isActive   Boolean    @default(true)
-  ageGroup   AgeGroup?
-  correct    String?
-  gameMode   GameMode   @default(SOCIAL)
-  options    Json?
-  penalty    String?
-  roomId     String?    // Eğer null ise genel havuz, doluysa o odaya özel
-  rounds     Round[]
+  id           String             @id @default(cuid())
+  text         String
+  category     String
+  difficulty   Difficulty         @default(EASY)
+  language     String             @default("tr")
+  isActive     Boolean            @default(true)
+  ageGroup     AgeGroup?
+  correct      String?
+  gameMode     GameMode           @default(SOCIAL)
+  options      Json?
+  penalty      String?
+  roomId       String?
+  room         Room?             @relation("RoomQuestions", fields: [roomId], references: [id], onDelete: Cascade)
   dailyEntries DailyQuestion[]
+  rounds       Round[]
   seenBy       UserSeenQuestion[]
 
   @@index([roomId, isActive, gameMode])
@@ -177,19 +206,19 @@ model UserSeenQuestion {
   userId     String
   questionId String
   seenAt     DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, questionId])
   @@index([userId])
 }
 
 model DailyQuestion {
-  id         String   @id @default(cuid())
-  date       DateTime @unique @default(now())
+  id         String        @id @default(cuid())
+  date       DateTime      @unique @default(now())
   questionId String
-  question   Question @relation(fields: [questionId], references: [id])
   answers    DailyAnswer[]
+  question   Question      @relation(fields: [questionId], references: [id])
 }
 
 model DailyAnswer {
@@ -200,7 +229,7 @@ model DailyAnswer {
   createdAt       DateTime      @default(now())
   dailyQuestion   DailyQuestion @relation(fields: [dailyQuestionId], references: [id])
   user            User          @relation(fields: [userId], references: [id])
-  
+
   @@unique([dailyQuestionId, userId])
 }
 
@@ -215,6 +244,70 @@ model Insight {
   game       Game     @relation(fields: [gameId], references: [id])
   userA      User     @relation("InsightUserA", fields: [userAId], references: [id])
   userB      User     @relation("InsightUserB", fields: [userBId], references: [id])
+}
+
+model QuestionPack {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  name        String
+  description String?
+  creatorId   String
+  isPublic    Boolean        @default(false)
+  gameMode    GameMode       @default(SOCIAL)
+  category    String
+  playCount   Int            @default(0)
+  createdAt   DateTime       @default(now())
+  questions   PackQuestion[]
+  creator     User           @relation(fields: [creatorId], references: [id])
+
+  @@index([creatorId])
+  @@index([isPublic])
+}
+
+model PackQuestion {
+  id      String       @id @default(cuid())
+  packId  String
+  text    String
+  options Json?
+  correct String?
+  pack    QuestionPack @relation(fields: [packId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  action     AuditAction
+  entityType TargetType?
+  entityId   String?
+  resource   String?
+  details    Json?
+  oldValue   String?
+  newValue   String?
+  ipAddress  String?
+  userAgent  String?
+  userId     String?
+  createdAt  DateTime    @default(now())
+  user       User?       @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([entityId])
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+}
+
+enum ParticipantRole {
+  PLAYER
+  SPECTATOR
 }
 
 enum RoomStatus {
@@ -258,52 +351,6 @@ enum AgeGroup {
   CHILD
   ADULT
   WISE
-}
-
-model QuestionPack {
-  id          String         @id @default(cuid())
-  slug        String         @unique
-  name        String
-  description String?
-  creatorId   String
-  isPublic    Boolean        @default(false)
-  gameMode    GameMode       @default(SOCIAL)
-  category    String
-  playCount   Int            @default(0)
-  questions   PackQuestion[]
-  creator     User           @relation(fields: [creatorId], references: [id])
-  createdAt   DateTime       @default(now())
-
-  @@index([creatorId])
-  @@index([isPublic])
-}
-
-model PackQuestion {
-  id      String       @id @default(cuid())
-  packId  String
-  text    String
-  options Json?        // string[] — seçenekler (QUIZ için)
-  correct String?
-  pack    QuestionPack @relation(fields: [packId], references: [id], onDelete: Cascade)
-}
-
-model AuditLog {
-  id          String      @id @default(cuid())
-  action      AuditAction
-  entityType  TargetType?
-  entityId    String?
-  resource    String?     // e.g. "Room ABCD"
-  details     Json?
-  oldValue    String?     @db.Text
-  newValue    String?     @db.Text
-  ipAddress   String?
-  userAgent   String?
-  userId      String?
-  user        User?       @relation(fields: [userId], references: [id])
-  createdAt   DateTime    @default(now())
-
-  @@index([userId])
-  @@index([entityId])
 }
 
 enum AuditAction {

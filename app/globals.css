@@ -328,3 +328,11 @@ input, textarea, [contenteditable="true"] {
 .fade-up-2 { animation-delay: 0.12s; }
 .fade-up-3 { animation-delay: 0.20s; }
 .fade-up-4 { animation-delay: 0.28s; }
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

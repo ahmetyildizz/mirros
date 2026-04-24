@@ -10,7 +10,7 @@ import {
   Loader2,
   AlertCircle
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, hapticFeedback } from "@/lib/utils";
 import { sounds } from "@/lib/sounds";
 
 interface Props {
@@ -33,8 +33,10 @@ export function GuessInput({ opponentName, onSubmit, loading, gameId, username }
     sounds.pop();
     try {
       await onSubmit(value.trim(), reason.trim() || undefined);
+      hapticFeedback("success");
       setSubmitted(true);
     } catch (e: any) {
+      hapticFeedback("error");
       setError(e?.message || "Gönderilemedi, tekrar dene");
     } finally {
       setSending(false);

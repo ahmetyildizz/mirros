@@ -18,7 +18,7 @@ export async function POST(
     include: {
       question: { select: { penalty: true } },
       answers: true,
-      guesses: { include: { user: { select: { id: true, username: true, email: true } } } },
+      guesses: { include: { user: { select: { id: true, username: true } } } },
       game:    { include: { room: { include: { participants: { include: { user: true } } } } } },
     },
   });
@@ -69,7 +69,7 @@ export async function POST(
       exposeWinnerContent = tiedOptions[0];
       const normalizedWinner = exposeWinnerContent.toLowerCase().trim();
       const winnerPart = round.game.room.participants.find(
-        p => (p.user.username ?? p.user.email ?? "").toLowerCase().trim() === normalizedWinner
+        p => (p.user.username ?? "Anonim").toLowerCase().trim() === normalizedWinner
       );
       exposeWinnerId = winnerPart?.userId ?? null;
     } else {
@@ -173,7 +173,7 @@ export async function POST(
     const majorityVote = tiedOptions.length === 1 ? tiedOptions[0] : "BERABERLIK";
 
     const spyUser = round.game.room.participants.find(p => p.userId === spyId)?.user;
-    const spyUsername = spyUser?.username ?? spyUser?.email ?? "";
+    const spyUsername = spyUser?.username ?? "";
     const isSpyCaught = majorityVote.toLowerCase().trim() === spyUsername.toLowerCase().trim();
 
     const spyRoundResults: any[] = [];
@@ -203,7 +203,7 @@ export async function POST(
 
       spyRoundResults.push({
         userId:    p.userId,
-        username:  p.user.username ?? p.user.email,
+        username:  p.user.username ?? "Anonim",
         guess:     round.guesses.find(g => g.userId === p.userId)?.content ?? "-",
         reason:    round.guesses.find(g => g.userId === p.userId)?.reason ?? null,
         matchLevel: matchLabel,
@@ -273,7 +273,7 @@ export async function POST(
     scores.push(score);
     guessResults.push({
       userId:    guess.userId,
-      username:  guess.user.username ?? guess.user.email,
+      username:  guess.user.username ?? "Anonim",
       guess:     guess.content,
       reason:    guess.reason ?? null,
       matchLevel,

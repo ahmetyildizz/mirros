@@ -1,16 +1,23 @@
 import { db } from "@/lib/db";
 import { refillGlobalPool } from "@/lib/services/ai.service";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { getSession } from "@/lib/auth/session";
+import { rateLimit } from "@/lib/rateLimit";
 
 /**
  * Maintenance API: Refills the global pool for all categories if they are low.
  * Can be called by a Cron job or manually by an admin.
  */
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session?.id || !session.isAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Admin hesabı ele geçirilse bile Gemini API quota'yı yakamaması için rate-limit
+  const { allowed } = await rateLimit(`maintenance:${session.id}`, { max: 1, windowMs: 10 * 60_000 });
+  if (!allowed) {
+    return NextResponse.json({ error: "Bakım işlemi 10 dakikada bir yapılabilir" }, { status: 429 });
   }
 
   const themes = [

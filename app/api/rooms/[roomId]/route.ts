@@ -12,10 +12,10 @@ export async function GET(
   const room = await db.room.findUnique({
     where:   { id: roomId },
     include: {
-      host: { select: { id: true, username: true, email: true } },
+      host: { select: { id: true, username: true } },
       participants: {
         orderBy: { joinedAt: "asc" },
-        include: { user: { select: { id: true, username: true, email: true, avatarUrl: true } } },
+        include: { user: { select: { id: true, username: true, avatarUrl: true } } },
       },
     },
   });
@@ -24,7 +24,7 @@ export async function GET(
 
   const players = room.participants.map((p) => ({
     id:        p.userId,
-    username:  p.user.username ?? p.user.email,
+    username:  p.user.username ?? "Anonim",
     avatarUrl: p.user.avatarUrl,
     role:      (p as any).role,
     isHost:    p.userId === room.hostId,
@@ -49,7 +49,7 @@ export async function GET(
     ageGroup:     room.ageGroup,
     maxPlayers:   room.maxPlayers,
     hostId:       room.hostId,
-    hostName:     room.host.username ?? room.host.email,
+    hostName:     room.host.username ?? "Anonim",
     activeGameId: activeGame?.id ?? null,
     players,
     participantCount: players.filter(p => p.role !== "SPECTATOR").length,
