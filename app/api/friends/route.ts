@@ -54,7 +54,9 @@ export async function POST(req: NextRequest) {
 
     const { friendUsername } = parsed.data;
 
-    const friend = await db.user.findUnique({ where: { username: friendUsername } });
+    const friend = await db.user.findFirst({
+      where: { username: { equals: friendUsername, mode: "insensitive" } }
+    });
     if (!friend) return NextResponse.json({ error: "Kullanıcı bulunamadı" }, { status: 404 });
     if (friend.id === user.id) return NextResponse.json({ error: "Kendini arkadaş ekleyemezsin" }, { status: 400 });
 
