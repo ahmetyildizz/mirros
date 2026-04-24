@@ -30,8 +30,8 @@ export async function POST(req: NextRequest) {
   try {
     const user = await requireAuth();
 
-    // Rate limit: kullanıcı başına 5 oda/dakika
-    const rl = await rateLimit(`rooms:${user.id}`, { max: 5, windowMs: 60_000 });
+    // Rate limit: kullanıcı başına 10 oda/5 dakika (bot engeli, gerçek kullanıcıyı kesmemeli)
+    const rl = await rateLimit(`rooms:${user.id}`, { max: 10, windowMs: 5 * 60_000 });
     if (!rl.allowed) return NextResponse.json({ error: "Çok fazla oda oluşturuyorsun" }, { status: 429 });
 
     const json = await req.json().catch(() => ({}));
