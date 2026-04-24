@@ -26,7 +26,7 @@ async function main() {
 
     // HARD (Nuclear)
     { text: "Yalan söylerken gözü bile kırpmayan, aramıza sızmış o ajan kim?", category: "Kaos", gameMode: "EXPOSE", difficulty: "HARD", penalty: "En yüksek oyu alan, telefonundaki galeride son 5 fotoğrafı hızlıca göstersin." },
-    { text: "Kendi çıkarı için gruptaki en yakın arkadaşını bir saniyede harcayacak olan?", category: "İhanet", gameMode: "EXPOSE", difficulty: "HARD", penalty: "En yüksek oyu alan, masadaki birine 'Senin aslında şunu düşünüyorum' desin." },
+    { text: "Kendi çıkarı için gruptaki en yakın arkadaşını bir saniyede harcayabilecek kim?", category: "İhanet", gameMode: "EXPOSE", difficulty: "HARD", penalty: "En yüksek oyu alan, masadaki birine 'Aslında şunu düşünüyorum' desin." },
     { text: "Aramızda en samimiyetsiz davranıp aslında hepimizi içten içe eleştiren kim?", category: "Tehlike", gameMode: "EXPOSE", difficulty: "HARD", penalty: "En yüksek oyu alan, 15 saniye boyunca iğneleyici bir konuşma yapsın." },
 
     // OFİS KAOSU
@@ -41,8 +41,8 @@ async function main() {
 
   // ─── SOSYAL SORULAR ──────────────────────────────────────────────────────────
   const social = [
-    { text: "Gecenin 3'ünde uyandırsan bile yiyebileceğin şey nedir?", category: "Yemek", ageGroup: "ADULT", gameMode: "SOCIAL", options: ["Lahmacun", "Çikolata", "Çorba", "Pizza"] },
-    { text: "En son ne zaman yalan söyledin ve neden?", category: "İtiraf", ageGroup: "ADULT", gameMode: "SOCIAL", options: ["Bugün", "Bu hafta", "Geçen ay", "Hiç"] },
+    { text: "Gecenin 3'ünde uyandırsak [İSİM] ne yiyordur?", category: "Yemek", ageGroup: "ADULT", gameMode: "SOCIAL", options: ["Lahmacun", "Çikolata", "Çorba", "Pizza"] },
+    { text: "[İSİM] en son ne zaman yalan söyledi?", category: "İtiraf", ageGroup: "ADULT", gameMode: "SOCIAL", options: ["Bugün", "Bu hafta", "Geçen ay", "Hiç"] },
   ];
 
   for (const q of social) {

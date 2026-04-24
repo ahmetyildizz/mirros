@@ -27,26 +27,35 @@ SOSYAL MOD KURALLARI:
 - Cevapları tahmin edilebilir gibi görünüp sürpriz çıkan sorular seçilmeli
 - Her soru gerçek bir insanı derinlemesine ortaya çıkarmalı
 
+TÜRKÇE DİL BİLGİSİ KURALLARI — KESİNLİKLE UYULACAK:
+- [İSİM] veya gerçek isim HER ZAMAN 3. tekil şahıstır (o/onun). Fiiller buna göre çekimlenir.
+- DOĞRU: "[İSİM] partneriyle kavga etti ve 10 dakika geçti. Şu an ne yapıyordur?"
+- YANLIŞ: "Siz partneriyle kavga etti" — "Siz" ile 3. şahıs fiil ASLA BİR ARADA KULLANILMAZ.
+- İyelik ekleri 3. şahısa uygun olmalı: "partneriyle" ✓, "partnerinizle" ✗ (bu 2. şahıs)
+- Şıklar (options) aynı dilbilgisi yapısında olmalı: hepsi fiille bitmeli veya hepsi isim öbeğiyle.
+- Şıklarda özne tekrarı yapma; "O uyur / O yemek yer" değil, "Uyur / Yemek yer" yaz.
+- Soru sonu: "ne yapar?" / "ne yapıyordur?" / "nerededir?" — 3. şahıs spekülasyonu doğrudur.
+
 VİRAL SORU KATEGORİLERİ:
 1. Gece alışkanlıkları: "Gece 3'te [İSİM]'i bulsak ne yapıyordur?"
-2. Gizli yetenekler/korkular: "[İSİM]'in kimseye itiraf etmediği ama var olduğunu bildiğimiz korkusu ne?"
-3. Hipokrasi testi: "[İSİM] aslında... yapıyor ama bunu kabul etmez"
+2. Gizli yetenekler/korkular: "[İSİM]'in kimseye itiraf etmediği ama var olduğunu bildiğimiz korkusu nedir?"
+3. Hipokrasi testi: "[İSİM] aslında ... yapıyor ama bunu hiç kabul etmez"
 4. Hayatta kalma senaryoları: "Zombi istilası olsa [İSİM] ilk ne yapar?"
 5. Karakter tespiti: "[İSİM] filmdeki kötü adam olsa planı ne olurdu?"
-6. Dijital hayat: "[İSİM]'in telefon şifresi büyük ihtimalle ne içeriyor?"
-7. Hayal kurma: "[İSİM] tüm işleri bıraksa en çok neyi özler?"
-8. İlişki dinamikleri: "[İSİM] partneriyle kavga etse 10 dakika sonra ne yapar?"
+6. Dijital hayat: "[İSİM]'in telefon şifresi büyük ihtimalle ne içeriyordur?"
+7. Hayal kurma: "[İSİM] her şeyi bırakıp gitse en çok neyi özler?"
+8. İlişki dinamikleri: "[İSİM] partneriyle tartıştıktan 10 dakika sonra ne yapıyordur?"
 
 ŞIK YAZIM KURALLARI:
 - 4 şık: 3 yanlış (ama inandırıcı), 1 doğru gibi görünen
 - Şıklar birbirinden net ayrışmalı, kişiliği veya davranışı yorumlamalı
-- Komik ama gerçekçi kombinasyonlar: "A) Herkese şikayetini anlatır, B) Yemek yer, C) Sosyal medyaya bakar, D) Uyumaya çalışır"
+- Şıklar paralel yapıda olmalı — hepsi aynı cümle kalıbında: "Herkese şikâyet eder" / "Yemek yer" / "Sosyal medyaya gömülür" / "Uyumaya çalışır"
 - Cevaplar oyuncunun gerçekten seçebileceği şeyler olmalı
 
 JSON FORMATI — TAM OLARAK BU ŞEKILDE DÖN, BAŞKA BİR ŞEY YAZMA:
 [
   {
-    "text": "Soru metni — [İSİM] veya gerçek isim kullanılmış",
+    "text": "Soru metni — [İSİM] veya gerçek isim, 3. şahıs fiil çekimi",
     "options": ["Şık A", "Şık B", "Şık C", "Şık D"],
     "difficulty": "EASY" | "MEDIUM" | "HARD",
     "category": "${category}",
@@ -93,6 +102,12 @@ EXPOSE MOD KURALLARI:
 - Kazanan (en çok oy alan) "exposed" olur
 - Sorular grup içindeki gizli gerçekleri eğlenceli bir şekilde ortaya koyar
 - "Hepimiz bunu zaten biliyorduk ama kimse söylemiyordu" hissi yaratmalı
+
+TÜRKÇE DİL BİLGİSİ KURALLARI — KESİNLİKLE UYULACAK:
+- Sorular "Bu gruptan kim…?" veya "Aramızdan hangisi…?" kalıbıyla başlamalı
+- Soru sonu genellikle "…olan kim?" veya "…eden kimdir?" şeklinde bitmeli — "…olan?" tek başına eksik kalır
+- Ceza (penalty) cümlesi emir kipiyle yazılmalı: "yapsın", "söylesin", "göstersin"
+- Ceza cümlesinde özne belirtilmeli: "En yüksek oyu alan…" veya "Kazanan…"
 
 VİRAL EXPOSE SORU KATEGORİLERİ:
 1. Dijital itiraflar: "Eski sevgilisinin profiline en çok kim bakar?"
