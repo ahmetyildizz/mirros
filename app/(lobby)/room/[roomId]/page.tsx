@@ -25,7 +25,6 @@ import type { Player } from "@/store/game.store";
 import { cn } from "@/lib/utils";
 import { ManageQuestions } from "@/components/lobby/ManageQuestions";
 import { InviteFriendsModal } from "@/components/lobby/InviteFriendsModal";
-import { GoogleAd } from "@/components/ads/GoogleAd";
 import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 import QRCode from "react-qr-code";
 
@@ -411,8 +410,6 @@ export default function WaitingRoomPage({ params }: { params: Promise<{ roomId: 
                 </div>
               </div>
             ))}
-            {/* Ad Space */}
-            <GoogleAd slot="1234567890" className="mt-4" />
           </div>
         </motion.div>
 

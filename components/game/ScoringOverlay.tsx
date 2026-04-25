@@ -5,7 +5,6 @@ import {
   Trophy, AlertCircle, CheckCircle2, ChevronRight, ArrowRight, Zap, MessageSquareText,
 } from "lucide-react";
 import { useGameStore } from "@/store/game.store";
-import { GoogleAd } from "@/components/ads/GoogleAd";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -156,7 +155,6 @@ export function ScoringOverlay({ onNextRound }: Props) {
             )}
 
             <div className="pt-6 border-t border-white/10 flex flex-col gap-4">
-              <GoogleAd slot="2233445566" className="mt-2" />
               <NextRoundButton />
             </div>
           </motion.div>
@@ -215,7 +213,6 @@ export function ScoringOverlay({ onNextRound }: Props) {
               ))}
             </div>
 
-            <GoogleAd slot="3344556677" className="mt-4" />
 
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1 }} className="pt-8">
               <NextRoundButton className="py-6 rounded-[2rem] shadow-[0_15px_30px_rgba(168,85,247,0.3)] hover:shadow-[0_20px_40px_rgba(168,85,247,0.4)] ring-1 ring-white/20" />
