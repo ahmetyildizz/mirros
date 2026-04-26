@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, AlertCircle } from "lucide-react";
 import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function AdMockProvider({ children }: { children: React.ReactNode }) {
   const [showMockAd, setShowMockAd] = useState(false);

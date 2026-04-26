@@ -7,6 +7,7 @@ import { useGameStore } from "@/store/game.store";
 import { useGameState, useRoomState } from "@/hooks/useGameState";
 import { getThemeFromRoom } from "@/lib/logic/theme-mapper";
 import { formatQuestion } from "@/lib/utils/question-formatter";
+import { cn } from "@/lib/utils";
 
 interface Props {
   roomId: string;
