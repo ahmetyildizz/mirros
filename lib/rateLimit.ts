@@ -2,7 +2,6 @@
  * Redis tabanlı rate limiter.
  * Her instance aynı sayacı paylaşır — serverless/multi-instance ortamlarda güvenli.
  * Redis erişilemezse fail-open: rate limiting devre dışı kalır ama site ayakta kalır.
- * Kritik endpointlerin kendi fallback'i olmalı; burada availability önceliklendirilir.
  */
 
 import { redis } from "@/lib/redis";
@@ -17,20 +16,16 @@ export async function rateLimit(
       return { allowed: true, remaining: max };
     }
     const redisKey = `rate:${key}`;
-    const count = await Promise.race([
-      redis.incr(redisKey),
+    // Pipeline: INCR + PEXPIRE NX (NX = sadece TTL yoksa set et, var olanı uzatma)
+    const results = await Promise.race([
+      redis.multi().incr(redisKey).pExpire(redisKey, windowMs, "NX").exec(),
       new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error("Redis timeout")), 2000)
       ),
-    ]) as number;
-    if (count === 1) {
-      await redis.pExpire(redisKey, windowMs).catch(() => {});
-    }
-    const allowed   = count <= max;
-    const remaining = Math.max(0, max - count);
-    return { allowed, remaining };
+    ]);
+    const count = results[0] as number;
+    return { allowed: count <= max, remaining: Math.max(0, max - count) };
   } catch (err) {
-    // Redis timeout veya bağlantı hatası → fail-open, ama log'la
     console.error(`[rateLimit] Redis hatası — ${key} için rate limit atlanıyor:`, err);
     return { allowed: true, remaining: max };
   }
