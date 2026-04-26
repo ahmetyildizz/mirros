@@ -1,8 +1,6 @@
 import { Resend } from "resend";
 import { db } from "@/lib/db";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const ALERT_EMAIL = "ahmet_yildiz@hotmail.com";
 const PUSHER_LIMIT = 100;
 const THRESHOLD = 0.8; // %80 dolulukta uyar
@@ -15,6 +13,7 @@ export async function checkCapacityAndAlert() {
     console.warn("[CapacityGuard] RESEND_API_KEY bulunamadı, uyarı maili gönderilemiyor.");
     return;
   }
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
     // Aktif odalardaki toplam katılımcı sayısını bul
