@@ -24,6 +24,7 @@ function LobbyContent() {
   const [isConfiguring, setIsConfiguring] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [user, setUser]                   = useState<any>(null);
+  const [pendingModeFilter, setPendingModeFilter] = useState<string | undefined>(undefined);
 
   const fetchUser = async () => {
     try {
@@ -140,6 +141,7 @@ function LobbyContent() {
                 onCreated={handleCreated}
                 onJoined={handleJoined}
                 onStepChange={(step) => setIsConfiguring(step === "config")}
+                initialModeFilter={pendingModeFilter}
               />
             </motion.div>
           )}
@@ -153,7 +155,14 @@ function LobbyContent() {
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="absolute inset-0"
             >
-              <TabDiscover user={user} onDailyAnswered={() => {}} />
+              <TabDiscover
+            user={user}
+            onDailyAnswered={() => {}}
+            onModeSelect={(modeId) => {
+              setPendingModeFilter(modeId);
+              setActiveTab("play");
+            }}
+          />
             </motion.div>
           )}
 

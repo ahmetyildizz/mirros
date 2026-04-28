@@ -33,11 +33,20 @@ import { TEMPLATES, type Template, type GameMode, type AgeGroup } from "@/lib/co
 interface Props {
   onCreated: (roomId: string, code: string) => void;
   onStepChange?: (step: "template" | "config") => void;
+  initialModeFilter?: string;
 }
 
 const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-export function CreateRoom({ onCreated, onStepChange }: Props) {
+const MODE_TO_FILTER: Record<string, "all" | "social" | "intense" | "quiz"> = {
+  SOCIAL: "social",
+  BLUFF:  "social",
+  QUIZ:   "quiz",
+  EXPOSE: "intense",
+  SPY:    "intense",
+};
+
+export function CreateRoom({ onCreated, onStepChange, initialModeFilter }: Props) {
   const router = useRouter();
   const { setTheme, setCategoryName: setGlobalCategoryName } = useGameStore();
   const [step,     setStep]    = useState<"template" | "config">("template");
@@ -48,7 +57,9 @@ export function CreateRoom({ onCreated, onStepChange }: Props) {
   const [loading,  setLoading] = useState(false);
   const [error,    setError]   = useState<string | null>(null);
   const [spiceLevel, setSpiceLevel] = useState<"Normal" | "Hot" | "Nuclear">("Normal");
-  const [activeTab,  setActiveTab]  = useState<"all" | "social" | "intense" | "quiz">("all");
+  const [activeTab,  setActiveTab]  = useState<"all" | "social" | "intense" | "quiz">(
+    initialModeFilter ? (MODE_TO_FILTER[initialModeFilter] ?? "all") : "all"
+  );
 
   const TABS = [
     { id: "all",     label: "Hepsi",     count: TEMPLATES.length - 1 },

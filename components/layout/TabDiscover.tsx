@@ -11,12 +11,15 @@ import { ExploreHeader } from "@/components/lobby/ExploreHeader";
 import { CategoryCarousel } from "@/components/lobby/CategoryCarousel";
 import type { Template } from "@/lib/constants/templates";
 
+type ModeId = "SOCIAL" | "QUIZ" | "EXPOSE" | "BLUFF" | "SPY";
+
 interface Props {
   user: any;
   onDailyAnswered: (v: boolean) => void;
+  onModeSelect: (modeId: ModeId) => void;
 }
 
-export function TabDiscover({ user, onDailyAnswered }: Props) {
+export function TabDiscover({ user, onDailyAnswered, onModeSelect }: Props) {
   const router = useRouter();
 
   const handleSelectCategory = (tpl: Template) => {
@@ -89,7 +92,7 @@ export function TabDiscover({ user, onDailyAnswered }: Props) {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <GameGuide />
+          <GameGuide onModeSelect={onModeSelect} />
         </motion.div>
 
         <motion.div variants={itemVariants} className="pt-2">

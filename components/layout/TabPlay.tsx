@@ -8,14 +8,15 @@ import { useGameStore } from "@/store/game.store";
 import { cn } from "@/lib/utils";
 
 interface Props {
-  joinCode:      string;
-  isConfiguring: boolean;
-  onCreated:     (roomId: string, roomCode: string) => void;
-  onJoined:      (roomId: string, roomCode: string) => void;
-  onStepChange:  (step: string) => void;
+  joinCode:           string;
+  isConfiguring:      boolean;
+  onCreated:          (roomId: string, roomCode: string) => void;
+  onJoined:           (roomId: string, roomCode: string) => void;
+  onStepChange:       (step: string) => void;
+  initialModeFilter?: string;
 }
 
-export function TabPlay({ joinCode, isConfiguring, onCreated, onJoined, onStepChange }: Props) {
+export function TabPlay({ joinCode, isConfiguring, onCreated, onJoined, onStepChange, initialModeFilter }: Props) {
   const { categoryName } = useGameStore();
   const isJoining = !!joinCode;
 
@@ -61,6 +62,7 @@ export function TabPlay({ joinCode, isConfiguring, onCreated, onJoined, onStepCh
               <CreateRoom
                 onCreated={onCreated}
                 onStepChange={(step) => onStepChange(step)}
+                initialModeFilter={initialModeFilter}
               />
             </div>
           </motion.div>
