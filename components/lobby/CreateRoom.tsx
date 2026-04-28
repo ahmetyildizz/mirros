@@ -34,6 +34,7 @@ interface Props {
   onCreated: (roomId: string, code: string) => void;
   onStepChange?: (step: "template" | "config") => void;
   initialModeFilter?: string;
+  initialTemplate?: Template;
 }
 
 const PLAYER_OPTIONS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -46,20 +47,28 @@ const MODE_TO_FILTER: Record<string, "all" | "social" | "intense" | "quiz"> = {
   SPY:    "intense",
 };
 
-export function CreateRoom({ onCreated, onStepChange, initialModeFilter }: Props) {
+export function CreateRoom({ onCreated, onStepChange, initialModeFilter, initialTemplate }: Props) {
   const router = useRouter();
   const { setTheme, setCategoryName: setGlobalCategoryName } = useGameStore();
-  const [step,     setStep]    = useState<"template" | "config">("template");
-  const [mode,     setMode]   = useState<GameMode>("SOCIAL");
-  const [ageGroup, setAge]    = useState<AgeGroup>("ADULT");
-  const [maxPlayers, setMax]  = useState(4);
-  const [category, setCategory] = useState<string | null>(null);
+  const [step,     setStep]    = useState<"template" | "config">(initialTemplate ? "config" : "template");
+  const [mode,     setMode]   = useState<GameMode>(initialTemplate?.gameMode ?? "SOCIAL");
+  const [ageGroup, setAge]    = useState<AgeGroup>(initialTemplate?.ageGroup ?? "ADULT");
+  const [maxPlayers, setMax]  = useState(initialTemplate?.maxPlayers ?? 4);
+  const [category, setCategory] = useState<string | null>(initialTemplate?.label ?? null);
   const [loading,  setLoading] = useState(false);
   const [error,    setError]   = useState<string | null>(null);
   const [spiceLevel, setSpiceLevel] = useState<"Normal" | "Hot" | "Nuclear">("Normal");
   const [activeTab,  setActiveTab]  = useState<"all" | "social" | "intense" | "quiz">(
     initialModeFilter ? (MODE_TO_FILTER[initialModeFilter] ?? "all") : "all"
   );
+
+  useEffect(() => {
+    if (initialTemplate) {
+      setGlobalCategoryName(initialTemplate.label);
+      onStepChange?.("config");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const TABS = [
     { id: "all",     label: "Hepsi",     count: TEMPLATES.length - 1 },

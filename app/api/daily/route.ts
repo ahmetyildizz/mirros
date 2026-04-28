@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/session";
-import { startOfDay, endOfDay } from "date-fns";
+import { startOfDay, endOfDay, subDays } from "date-fns";
 
 import { formatQuestion } from "@/lib/utils/question-formatter";
 
@@ -90,8 +90,12 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // 4. Kullanıcının cevabını kontrol et
+    // 4. Kullanıcının cevabını ve streak'ini kontrol et
     const userAnswer = daily.answers.find((a) => a.userId === userId);
+    const currentUser = await db.user.findUnique({
+      where: { id: userId },
+      select: { streak: true, longestStreak: true },
+    });
 
     // 5. İstatistikleri hesapla
     const stats: Record<string, number> = {};
@@ -124,6 +128,8 @@ export async function GET(req: NextRequest) {
       percentages,
       counts: stats,
       participants: daily.answers.slice(0, 10).map(a => a.userId),
+      streak: currentUser?.streak ?? 0,
+      longestStreak: currentUser?.longestStreak ?? 0,
     });
   } catch (error) {
     console.error("Daily question error:", error);
@@ -142,24 +148,29 @@ export async function POST(req: NextRequest) {
 
     // Cevabı kaydet
     const answer = await db.dailyAnswer.upsert({
-      where: {
-        dailyQuestionId_userId: {
-          dailyQuestionId,
-          userId,
-        },
-      },
+      where: { dailyQuestionId_userId: { dailyQuestionId, userId } },
       update: { content },
-      create: {
-        dailyQuestionId,
-        userId,
-        content,
-      },
-      include: {
-        user: { select: { username: true } }
-      }
+      create: { dailyQuestionId, userId, content },
+      include: { user: { select: { username: true, streak: true, longestStreak: true } } },
     });
 
-    return NextResponse.json({ success: true, answer });
+    // Streak hesapla — dünün sorusunu cevapladı mı?
+    const yesterday = startOfDay(subDays(new Date(), 1));
+    const yesterdayDaily = await db.dailyQuestion.findFirst({
+      where: { date: { gte: yesterday, lte: endOfDay(yesterday) } },
+      include: { answers: { where: { userId }, select: { id: true } } },
+    });
+    const answeredYesterday = (yesterdayDaily?.answers.length ?? 0) > 0;
+    const prevStreak = answer.user.streak;
+    const newStreak = answeredYesterday ? prevStreak + 1 : 1;
+    const newLongest = Math.max(newStreak, answer.user.longestStreak);
+
+    await db.user.update({
+      where: { id: userId },
+      data: { streak: newStreak, longestStreak: newLongest },
+    });
+
+    return NextResponse.json({ success: true, answer, streak: newStreak });
   } catch (error: any) {
     console.error("Daily question POST error:", error);
     if (error.message === "UNAUTHORIZED") {

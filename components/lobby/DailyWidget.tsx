@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Sparkles, 
-  BarChart3, 
-  Users, 
-  Clock, 
-  CheckCircle2, 
+import {
+  Sparkles,
+  BarChart3,
+  Users,
+  Clock,
+  CheckCircle2,
   ArrowRight,
   TrendingUp,
-  Globe
+  Globe,
+  Flame
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import confetti from "canvas-confetti";
@@ -28,6 +29,8 @@ interface DailyData {
   totalParticipants: number;
   percentages: Record<string, number>;
   counts?: Record<string, number>;
+  streak: number;
+  longestStreak: number;
 }
 
 interface DailyWidgetProps {
@@ -110,12 +113,20 @@ export function DailyWidget({ onAnsweredStatus }: DailyWidgetProps) {
               </p>
             </div>
           </div>
-          {(!data.answered || showStats) && (
-            <div className="px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/5 flex items-center gap-2 shadow-sm">
-              <Users size={12} className="text-slate-500" />
-              <span className="text-[10px] font-black text-slate-300 tracking-tighter">{data.totalParticipants} KİŞİ</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            {data.streak > 0 && (
+              <div className="px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center gap-1.5 shadow-sm">
+                <Flame size={12} className="text-orange-400" />
+                <span className="text-[10px] font-black text-orange-300 tracking-tighter">{data.streak}</span>
+              </div>
+            )}
+            {(!data.answered || showStats) && (
+              <div className="px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/5 flex items-center gap-2 shadow-sm">
+                <Users size={12} className="text-slate-500" />
+                <span className="text-[10px] font-black text-slate-300 tracking-tighter">{data.totalParticipants} KİŞİ</span>
+              </div>
+            )}
+          </div>
         </header>
 
         <div className="space-y-7">

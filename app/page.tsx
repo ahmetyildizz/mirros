@@ -11,6 +11,7 @@ import { TabProfile }  from "@/components/layout/TabProfile";
 import { VersionHistoryModal } from "@/components/lobby/VersionHistoryModal";
 import { getPusherClient } from "@/lib/pusher/client";
 import { useSocialStore } from "@/store/social.store";
+import { TEMPLATES, type Template } from "@/lib/constants/templates";
 
 function LobbyContent() {
   const router   = useRouter();
@@ -24,7 +25,8 @@ function LobbyContent() {
   const [isConfiguring, setIsConfiguring] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [user, setUser]                   = useState<any>(null);
-  const [pendingModeFilter, setPendingModeFilter] = useState<string | undefined>(undefined);
+  const [pendingModeFilter, setPendingModeFilter]   = useState<string | undefined>(undefined);
+  const [pendingTemplate, setPendingTemplate]       = useState<Template | undefined>(undefined);
 
   const fetchUser = async () => {
     try {
@@ -142,6 +144,7 @@ function LobbyContent() {
                 onJoined={handleJoined}
                 onStepChange={(step) => setIsConfiguring(step === "config")}
                 initialModeFilter={pendingModeFilter}
+                initialTemplate={pendingTemplate}
               />
             </motion.div>
           )}
@@ -156,13 +159,26 @@ function LobbyContent() {
               className="absolute inset-0"
             >
               <TabDiscover
-            user={user}
-            onDailyAnswered={() => {}}
-            onModeSelect={(modeId) => {
-              setPendingModeFilter(modeId);
-              setActiveTab("play");
-            }}
-          />
+                user={user}
+                onDailyAnswered={() => {}}
+                onModeSelect={(modeId) => {
+                  setPendingTemplate(undefined);
+                  setPendingModeFilter(modeId);
+                  setActiveTab("play");
+                }}
+                onTemplateSelect={(tpl) => {
+                  setPendingModeFilter(undefined);
+                  setPendingTemplate(tpl);
+                  setActiveTab("play");
+                }}
+                onRandomPlay={() => {
+                  const playable = TEMPLATES.filter(t => t.label !== "Özelleştir");
+                  const tpl = playable[Math.floor(Math.random() * playable.length)];
+                  setPendingModeFilter(undefined);
+                  setPendingTemplate(tpl);
+                  setActiveTab("play");
+                }}
+              />
             </motion.div>
           )}
 
