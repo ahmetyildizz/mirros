@@ -15,10 +15,9 @@ export async function rateLimit(
       console.warn(`[rateLimit] Redis hazır değil — ${key} için rate limit atlanıyor`);
       return { allowed: true, remaining: max };
     }
-    const redisKey = `rate:${key}`;
-    // Pipeline: INCR + PEXPIRE NX (NX = sadece TTL yoksa set et, var olanı uzatma)
+    const redisKey = `rl:${key}`;
     const results = await Promise.race([
-      redis.multi().incr(redisKey).pExpire(redisKey, windowMs, "NX").exec(),
+      redis.multi().incr(redisKey).pExpire(redisKey, windowMs).exec(),
       new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error("Redis timeout")), 2000)
       ),
