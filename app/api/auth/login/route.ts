@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { createSession } from "@/lib/auth/session";
-import { rateLimit } from "@/lib/rateLimit";
 import { createAuditLog } from "@/lib/audit";
 
 import { verifyGoogleToken, verifyAppleToken } from "@/lib/auth/verify";
@@ -15,13 +14,6 @@ const bodySchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const ip  = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  // IP başına limit — aynı ağdan birden fazla kullanıcı giriş yapabilir (ev, parti, hotspot)
-  const { allowed } = await rateLimit(`login:${ip}`, { max: 60, windowMs: 60_000 });
-  if (!allowed) {
-    return NextResponse.json({ error: "Çok fazla deneme. 1 dakika bekle." }, { status: 429 });
-  }
-
   const json = await req.json();
   const body = bodySchema.safeParse(json);
   if (!body.success) {
