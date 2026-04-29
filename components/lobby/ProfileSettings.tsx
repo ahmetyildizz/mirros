@@ -8,11 +8,11 @@ import { ProfileModal } from "@/components/profile/ProfileModal";
 export function ProfileSettings({ user, onRefresh }: { user: any; onRefresh: () => void }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleUpdate = async (newName: string) => {
+  const handleUpdate = async (data: { username?: string; avatarUrl?: string }) => {
     const res = await fetch("/api/profile", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: newName }),
+      body: JSON.stringify(data),
     });
 
     if (!res.ok) {
