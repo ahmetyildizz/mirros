@@ -1,9 +1,3 @@
-/**
- * Redis tabanlı rate limiter.
- * Her instance aynı sayacı paylaşır — serverless/multi-instance ortamlarda güvenli.
- * Redis erişilemezse fail-open: rate limiting devre dışı kalır ama site ayakta kalır.
- */
-
 import { redis } from "@/lib/redis";
 
 export async function rateLimit(
@@ -15,14 +9,11 @@ export async function rateLimit(
       console.warn(`[rateLimit] Redis hazır değil — ${key} için rate limit atlanıyor`);
       return { allowed: true, remaining: max };
     }
-    const redisKey = `rl:${key}`;
-    const results = await Promise.race([
-      redis.multi().incr(redisKey).pExpire(redisKey, windowMs).exec(),
-      new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Redis timeout")), 2000)
-      ),
-    ]);
-    const count = results[0] as number;
+    const redisKey = `rl2:${key}`;
+    const windowSec = Math.ceil(windowMs / 1000);
+    // Fixed window: SET NX ile pencere oluştur (tüm Redis versiyonlarında çalışır), INCR ile say
+    await redis.set(redisKey, 0, { EX: windowSec, NX: true });
+    const count = await redis.incr(redisKey);
     return { allowed: count <= max, remaining: Math.max(0, max - count) };
   } catch (err) {
     console.error(`[rateLimit] Redis hatası — ${key} için rate limit atlanıyor:`, err);
