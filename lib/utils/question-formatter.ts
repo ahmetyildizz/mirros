@@ -113,6 +113,15 @@ export function formatQuestion(text: string, focusName: string): string {
     .replace(/etmeli\?/g,   "etmelisiniz?")
     .replace(/gitmeli\?/g,  "gitmelisiniz?");
 
+  // ── Geniş zaman hikayesi (3. tekil → 2. çoğul): -ardı/-erdi/-ırdı/-irdi/-urdu/-ürdü ──
+  q = q
+    .replace(/ardı\?/g,  "ardınız?")
+    .replace(/erdi\?/g,  "erdiniz?")
+    .replace(/ırdı\?/g,  "ırdınız?")
+    .replace(/irdi\?/g,  "irdiniz?")
+    .replace(/urdu\?/g,  "urdunuz?")
+    .replace(/ürdü\?/g,  "ürdünüz?");
+
   // ── Hikâye / rivayet geçmişi ───────────────────────────────────────────────
   q = q
     .replace(/miydi\?/g,  "miydiniz?")
